@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # diagnostic_reporter.py
 """
 Script to generate an *exhaustive* JSON “system bible”
