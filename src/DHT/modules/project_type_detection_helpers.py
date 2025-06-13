@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 project_type_detection_helpers.py - Helper functions for project type detection
 
@@ -19,7 +18,7 @@ from typing import Dict, List, Any, Set, Tuple
 from DHT.modules.project_type_enums import ProjectType, ProjectCategory
 
 
-def get_all_dependencies(analysis_result: Dict[str, Any]) -> Set[str]:
+def get_all_dependencies(analysis_result: dict[str, Any]) -> set[str]:
     """Get all project dependencies."""
     deps = set()
     
@@ -33,7 +32,7 @@ def get_all_dependencies(analysis_result: Dict[str, Any]) -> Set[str]:
     return deps
 
 
-def get_primary_dependencies(analysis_result: Dict[str, Any]) -> List[str]:
+def get_primary_dependencies(analysis_result: dict[str, Any]) -> list[str]:
     """Get primary project dependencies."""
     deps = get_all_dependencies(analysis_result)
     
@@ -52,7 +51,7 @@ def get_primary_dependencies(analysis_result: Dict[str, Any]) -> List[str]:
     return primary
 
 
-def detect_ml_frameworks(analysis_result: Dict[str, Any]) -> List[str]:
+def detect_ml_frameworks(analysis_result: dict[str, Any]) -> list[str]:
     """Detect machine learning frameworks."""
     ml_frameworks = []
     deps = get_all_dependencies(analysis_result)
@@ -72,7 +71,7 @@ def detect_ml_frameworks(analysis_result: Dict[str, Any]) -> List[str]:
     return list(set(ml_frameworks))
 
 
-def detect_cli_frameworks(analysis_result: Dict[str, Any]) -> List[str]:
+def detect_cli_frameworks(analysis_result: dict[str, Any]) -> list[str]:
     """Detect CLI frameworks."""
     cli_frameworks = []
     deps = get_all_dependencies(analysis_result)
@@ -94,7 +93,7 @@ def detect_cli_frameworks(analysis_result: Dict[str, Any]) -> List[str]:
     return list(set(cli_frameworks))
 
 
-def has_notebooks(analysis_result: Dict[str, Any]) -> bool:
+def has_notebooks(analysis_result: dict[str, Any]) -> bool:
     """Check if project has Jupyter notebooks."""
     # Check in file analysis
     for file_path in analysis_result.get("file_analysis", {}):
@@ -122,7 +121,7 @@ def has_notebooks(analysis_result: Dict[str, Any]) -> bool:
 
 def is_publishable_library(
     project_type: ProjectType,
-    analysis_result: Dict[str, Any]
+    analysis_result: dict[str, Any]
 ) -> bool:
     """Check if project is a publishable library."""
     if project_type != ProjectType.LIBRARY:
@@ -143,9 +142,9 @@ def is_publishable_library(
 
 
 def extract_markers(
-    analysis_result: Dict[str, Any],
-    heuristic_result: Dict[str, Any]
-) -> List[str]:
+    analysis_result: dict[str, Any],
+    heuristic_result: dict[str, Any]
+) -> list[str]:
     """Extract project markers."""
     markers = []
     
@@ -162,7 +161,7 @@ def extract_markers(
     return list(set(markers))
 
 
-def check_for_react_vue(analysis_result: Dict[str, Any]) -> List[ProjectType]:
+def check_for_react_vue(analysis_result: dict[str, Any]) -> list[ProjectType]:
     """Check for React or Vue in the project."""
     detected_types = []
     
@@ -201,8 +200,8 @@ def check_for_react_vue(analysis_result: Dict[str, Any]) -> List[ProjectType]:
 
 def calculate_confidence_boost(
     project_type: ProjectType,
-    analysis_result: Dict[str, Any],
-    heuristic_result: Dict[str, Any]
+    analysis_result: dict[str, Any],
+    heuristic_result: dict[str, Any]
 ) -> float:
     """Calculate confidence score boost based on markers found."""
     markers = 0
@@ -280,9 +279,9 @@ def calculate_confidence_boost(
 
 
 def detect_project_type(
-    analysis_result: Dict[str, Any],
-    heuristic_result: Dict[str, Any]
-) -> Tuple[ProjectType, List[ProjectType]]:
+    analysis_result: dict[str, Any],
+    heuristic_result: dict[str, Any]
+) -> tuple[ProjectType, list[ProjectType]]:
     """Detect project type from analysis results."""
     detected_types = []
     
@@ -370,7 +369,7 @@ def detect_project_type(
 
 def determine_category(
     project_type: ProjectType,
-    detected_types: List[ProjectType]
+    detected_types: list[ProjectType]
 ) -> ProjectCategory:
     """Determine project category from type."""
     if project_type == ProjectType.HYBRID:

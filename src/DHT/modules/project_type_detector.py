@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 project_type_detector.py - Comprehensive project type detection and configuration system
 
@@ -157,7 +156,7 @@ class ProjectTypeDetector:
     def generate_configurations(
         self, 
         analysis: ProjectAnalysis
-    ) -> Dict[str, str]:
+    ) -> dict[str, str]:
         """
         Generate configuration files based on project type.
         
@@ -189,7 +188,7 @@ class ProjectTypeDetector:
     def get_setup_recommendations(
         self, 
         analysis: ProjectAnalysis
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get setup recommendations based on project type.
         
@@ -204,7 +203,7 @@ class ProjectTypeDetector:
     @task
     def validate_configurations(
         self,
-        configs: Dict[str, str],
+        configs: dict[str, str],
         analysis: ProjectAnalysis
     ) -> ValidationResult:
         """
@@ -249,8 +248,8 @@ class ProjectTypeDetector:
     def _calculate_confidence(
         self,
         project_type: ProjectType,
-        analysis_result: Dict[str, Any],
-        heuristic_result: Dict[str, Any]
+        analysis_result: dict[str, Any],
+        heuristic_result: dict[str, Any]
     ) -> float:
         """Calculate confidence score for detection."""
         base_confidence = heuristic_result["project_type"]["confidence"]
