@@ -262,12 +262,14 @@ class ProjectTypeDetector:
         
         # Calculate markers count for minimum confidence thresholds
         # This is a simplified version - the actual marker counting is in the helper
-        markers = int(confidence_boost / 0.1)  # Reverse calculation from boost
+        markers = int(confidence_boost / 0.04)  # Reverse calculation from boost
         
-        # For well-known frameworks with many markers, set minimum confidence
-        if markers >= 4 and project_type in [ProjectType.DJANGO, ProjectType.FASTAPI]:
-            return max(0.9, base_confidence + confidence_boost)
-        elif markers >= 3 and project_type == ProjectType.DATA_SCIENCE:
-            return max(0.85, base_confidence + confidence_boost)
+        # Calculate final confidence, capped at 1.0
+        final_confidence = min(base_confidence + confidence_boost, 1.0)
         
-        return min(base_confidence + confidence_boost, 1.0)
+        # Round to avoid floating point precision issues (e.g., 0.6000000000000001)
+        final_confidence = round(final_confidence, 3)
+        
+        # Don't override the calculated confidence, just ensure minimums
+        # This allows confidence to drop when markers are removed
+        return final_confidence

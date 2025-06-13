@@ -29,7 +29,7 @@ from prefect import task, flow
 # Framework detection patterns
 FRAMEWORK_PATTERNS = {
     "django": {
-        "files": ["manage.py", "wsgi.py", "asgi.py", "settings.py"],
+        "files": ["manage.py", "wsgi.py", "asgi.py", "settings.py", "urls.py", "models.py"],
         "imports": ["django", "django.conf", "django.urls", "django.db"],
         "structure_hints": ["apps/", "templates/", "static/", "media/"],
         "config_files": ["django.ini", ".django"],
@@ -57,6 +57,18 @@ FRAMEWORK_PATTERNS = {
         "imports": ["pytest", "unittest", "nose"],
         "structure_hints": ["tests/", "test_*.py", "*_test.py"],
         "config_files": ["pytest.ini", ".pytest.ini", "pyproject.toml"],
+    },
+    "library": {
+        "files": ["setup.py", "setup.cfg", "pyproject.toml"],
+        "imports": ["setuptools", "distutils", "flit", "poetry", "hatchling"],
+        "structure_hints": ["src/", "dist/", "build/"],
+        "config_files": ["setup.cfg", "pyproject.toml", "MANIFEST.in"],
+    },
+    "data_science": {
+        "files": ["train.py", "model.py", "analysis.ipynb"],
+        "imports": ["pandas", "numpy", "sklearn", "tensorflow", "torch", "keras", "matplotlib"],
+        "structure_hints": ["notebooks/", "data/", "models/", "experiments/"],
+        "config_files": ["environment.yml", "conda.yml"],
     },
 }
 
@@ -204,19 +216,27 @@ class ProjectHeuristics:
             # Check for marker files
             for marker_file in patterns["files"]:
                 if any(marker_file in str(f) for f in file_paths):
-                    score += 10
+                    # Give less weight to generic files
+                    if marker_file in ["main.py", "app.py"] and framework in ["fastapi", "flask"]:
+                        score += 2  # Reduced from 10
+                    elif marker_file == "manage.py" and framework == "django":
+                        score += 15  # manage.py is a strong Django indicator
+                    elif marker_file in ["settings.py", "urls.py", "models.py"] and framework == "django":
+                        score += 3  # Generic Django files get less weight
+                    else:
+                        score += 10
                     matches.append(f"file:{marker_file}")
             
             # Check for imports
             for import_pattern in patterns["imports"]:
                 if import_pattern in imports:
-                    score += 5
+                    score += 3  # Reduced from 5
                     matches.append(f"import:{import_pattern}")
             
             # Check structure hints
             for hint in patterns["structure_hints"]:
                 if any(hint in str(f) for f in file_paths):
-                    score += 3
+                    score += 2  # Reduced from 3
                     matches.append(f"structure:{hint}")
             
             # Check config files
@@ -229,7 +249,7 @@ class ProjectHeuristics:
                 scores[framework] = {
                     "score": score,
                     "matches": matches,
-                    "confidence": min(score / 20.0, 1.0)  # Normalize to 0-1
+                    "confidence": min(score / 30.0, 1.0)  # Normalize to 0-1, adjusted for new scoring
                 }
         
         # Detect additional project characteristics
@@ -252,6 +272,8 @@ class ProjectHeuristics:
         # Add project category
         if result["primary_type"] in ["django", "flask", "fastapi", "streamlit"]:
             result["category"] = "web"
+        elif result["primary_type"] == "library":
+            result["category"] = "library"
         elif "data_science" in characteristics:
             result["category"] = "data_science"
         elif "cli" in characteristics:
@@ -598,8 +620,18 @@ class ProjectHeuristics:
             characteristics.append("containerized")
         
         # Library project
-        if any("setup.py" in str(f) or "setup.cfg" in str(f) for f in file_paths):
-            if not any(framework in imports for framework in ["django", "flask", "fastapi"]):
+        # Check configurations from analyzer
+        configs = analysis_result.get("configurations", {})
+        has_package_files = (
+            configs.get("has_setup_py", False) or 
+            configs.get("has_pyproject", False) or
+            any("setup.cfg" in str(f) for f in file_paths)
+        )
+        
+        if has_package_files:
+            # Check if it's not a web framework project
+            web_frameworks = {"django", "flask", "fastapi", "streamlit", "tornado", "aiohttp"}
+            if not any(framework in imports for framework in web_frameworks):
                 characteristics.append("library")
         
         return characteristics

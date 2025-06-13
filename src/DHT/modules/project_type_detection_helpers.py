@@ -128,17 +128,18 @@ def is_publishable_library(
     if project_type != ProjectType.LIBRARY:
         return False
     
-    # Check for package metadata
-    has_pyproject = any(
-        "pyproject.toml" in f 
-        for f in analysis_result.get("file_analysis", {})
-    )
-    has_setup = any(
-        "setup.py" in f or "setup.cfg" in f
-        for f in analysis_result.get("file_analysis", {})
-    )
+    # Check configurations from analyzer
+    configs = analysis_result.get("configurations", {})
     
-    return has_pyproject or has_setup
+    # A library is publishable if it has package metadata files
+    has_pyproject = configs.get("has_pyproject", False)
+    has_setup_py = configs.get("has_setup_py", False)
+    
+    # Also check in file paths
+    file_paths = list(analysis_result.get("file_analysis", {}).keys())
+    has_setup_cfg = any("setup.cfg" in f for f in file_paths)
+    
+    return has_pyproject or has_setup_py or has_setup_cfg
 
 
 def extract_markers(
@@ -164,8 +165,9 @@ def extract_markers(
 def check_for_react_vue(analysis_result: Dict[str, Any]) -> List[ProjectType]:
     """Check for React or Vue in the project."""
     detected_types = []
-    file_analysis = analysis_result.get("file_analysis", {})
     
+    # First check file_analysis if package.json was analyzed
+    file_analysis = analysis_result.get("file_analysis", {})
     for file_path, file_data in file_analysis.items():
         if "package.json" in file_path:
             # The analyzer might have already parsed it
@@ -176,20 +178,23 @@ def check_for_react_vue(analysis_result: Dict[str, Any]) -> List[ProjectType]:
                     detected_types.append(ProjectType.REACT)
                 if "vue" in deps:
                     detected_types.append(ProjectType.VUE)
-            else:
-                # Try to read the actual file
-                try:
-                    full_path = Path(analysis_result.get("project_path", ".")) / file_path
-                    if full_path.exists():
-                        with open(full_path, 'r') as f:
-                            pkg = json.load(f)
-                            deps = pkg.get("dependencies", {})
-                            if "react" in deps:
-                                detected_types.append(ProjectType.REACT)
-                            if "vue" in deps:
-                                detected_types.append(ProjectType.VUE)
-                except Exception:
-                    pass
+                return detected_types  # Found and parsed, we're done
+    
+    # If not in file_analysis, check if package.json exists in the project
+    project_path = analysis_result.get("project_path")
+    if project_path:
+        package_json_path = Path(project_path) / "package.json"
+        if package_json_path.exists():
+            try:
+                with open(package_json_path, 'r') as f:
+                    pkg = json.load(f)
+                    deps = pkg.get("dependencies", {})
+                    if "react" in deps:
+                        detected_types.append(ProjectType.REACT)
+                    if "vue" in deps:
+                        detected_types.append(ProjectType.VUE)
+            except Exception:
+                pass
     
     return detected_types
 
@@ -208,12 +213,12 @@ def calculate_confidence_boost(
         # Check for Django-specific files
         entry_points = structure.get("entry_points", [])
         if any("manage.py" in str(ep) for ep in entry_points):
-            markers += 2  # manage.py is a strong indicator
+            markers += 1  # manage.py is a strong indicator but count once
             
         # Also check in project structure for Django detection
         frameworks = analysis_result.get("frameworks", [])
         if "django" in frameworks:
-            markers += 3  # Framework was detected by analyzer
+            markers += 2  # Framework was detected by analyzer
         
         # Check for Django files
         if any("settings.py" in f for f in file_paths):
@@ -222,13 +227,11 @@ def calculate_confidence_boost(
             markers += 1
         if any("models.py" in f for f in file_paths):
             markers += 1
-        if any("manage.py" in f for f in file_paths):
-            markers += 2  # manage.py presence
         
         # Check for Django in dependencies
         deps = get_all_dependencies(analysis_result)
         if any("django" in d.lower() for d in deps):
-            markers += 2
+            markers += 1
             
     elif project_type == ProjectType.FASTAPI:
         # Check for FastAPI markers
@@ -270,8 +273,8 @@ def calculate_confidence_boost(
             markers += 1
     
     # Boost confidence based on markers
-    # Each marker adds 0.1, with more weight for critical markers
-    confidence_boost = min(markers * 0.1, 0.5)
+    # Each marker adds 0.04, with max boost of 0.25
+    confidence_boost = min(markers * 0.04, 0.25)
     
     return confidence_boost
 
@@ -283,8 +286,8 @@ def detect_project_type(
     """Detect project type from analysis results."""
     detected_types = []
     
-    # Get primary type from heuristics
-    primary_type = heuristic_result["project_type"]["primary_type"]
+    # Get all detected frameworks from heuristics
+    frameworks = heuristic_result["project_type"].get("frameworks", {})
     
     # Map heuristic types to our enum
     type_mapping = {
@@ -292,11 +295,32 @@ def detect_project_type(
         "flask": ProjectType.FLASK,
         "fastapi": ProjectType.FASTAPI,
         "streamlit": ProjectType.STREAMLIT,
+        "library": ProjectType.LIBRARY,
+        "data_science": ProjectType.DATA_SCIENCE,
         "generic": ProjectType.GENERIC
     }
     
-    project_type = type_mapping.get(primary_type, ProjectType.GENERIC)
-    detected_types.append(project_type)
+    # Check all frameworks that meet minimum confidence
+    for fw_name, fw_data in frameworks.items():
+        fw_confidence = fw_data.get("confidence", 0.0)
+        min_confidence = 0.15 if fw_name in ["fastapi", "django", "flask", "data_science"] else 0.3
+        
+        if fw_confidence >= min_confidence:
+            fw_type = type_mapping.get(fw_name)
+            if fw_type and fw_type not in detected_types:
+                detected_types.append(fw_type)
+    
+    # Get primary type from heuristics
+    primary_type = heuristic_result["project_type"]["primary_type"]
+    primary_confidence = heuristic_result["project_type"].get("confidence", 0.0)
+    
+    # Determine main project type
+    if detected_types:
+        # Use the first detected type as primary
+        project_type = detected_types[0]
+    else:
+        project_type = ProjectType.GENERIC
+        detected_types.append(project_type)
     
     # Check for additional types
     # Check for React/Vue
@@ -315,22 +339,30 @@ def detect_project_type(
             project_type = ProjectType.DATA_SCIENCE
         detected_types.append(ProjectType.DATA_SCIENCE)
     
-    # Check for library
-    if "library" in characteristics and project_type == ProjectType.GENERIC:
-        project_type = ProjectType.LIBRARY
-        detected_types.append(ProjectType.LIBRARY)
-    
-    # Check for CLI
+    # Check for CLI first (more specific than library)
     if "cli" in characteristics:
-        if project_type == ProjectType.GENERIC:
+        # CLI takes precedence over library
+        if project_type in [ProjectType.GENERIC, ProjectType.LIBRARY]:
             project_type = ProjectType.CLI
         detected_types.append(ProjectType.CLI)
     
+    # Check for library (only if not already CLI)
+    elif "library" in characteristics and project_type == ProjectType.GENERIC:
+        project_type = ProjectType.LIBRARY
+        detected_types.append(ProjectType.LIBRARY)
+    
     # Handle hybrid projects
     if len(detected_types) > 1 and ProjectType.GENERIC not in detected_types:
-        # Django + React = Full stack
+        # Multiple web frameworks = Hybrid
+        web_frameworks = {ProjectType.DJANGO, ProjectType.DJANGO_REST, ProjectType.FLASK, ProjectType.FASTAPI}
+        detected_web = [t for t in detected_types if t in web_frameworks]
+        
+        # Django + React/Vue = Full stack
         if (ProjectType.DJANGO in detected_types and 
             (ProjectType.REACT in detected_types or ProjectType.VUE in detected_types)):
+            project_type = ProjectType.HYBRID
+        # Multiple backend frameworks = Hybrid
+        elif len(detected_web) > 1:
             project_type = ProjectType.HYBRID
     
     return project_type, detected_types

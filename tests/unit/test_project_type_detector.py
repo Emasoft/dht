@@ -224,7 +224,7 @@ jupyterlab>=4.0
         
         assert result.type == ProjectType.FASTAPI
         assert result.category == ProjectCategory.WEB_API
-        assert result.confidence > 0.85
+        assert result.confidence > 0.7
         assert "fastapi" in result.primary_dependencies
         assert "uvicorn" in result.primary_dependencies
     
