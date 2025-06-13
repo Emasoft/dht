@@ -1,0 +1,349 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
+# - Initial implementation of .dhtconfig JSON Schema
+# - Defines schema for DHT configuration files
+# - Supports exact Python version specification
+# - Supports project dependencies with exact versions
+# - Supports system/platform dependencies
+# - Supports tool requirements with versions
+# - Supports build configuration and environment variables
+# - Supports validation checksums
+# - Supports platform-specific sections
+# 
+
+# YAML JSON Schema for .dhtconfig files
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://dht.dev/schemas/dhtconfig/v1.0.0"
+title: "DHT Configuration Schema"
+description: "Schema for .dhtconfig files that define project environment requirements"
+type: "object"
+required:
+  - "version"
+  - "project"
+  - "python"
+additionalProperties: false
+
+properties:
+  version:
+    description: "Schema version for the .dhtconfig file"
+    type: "string"
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    examples: ["1.0.0"]
+
+  project:
+    description: "Project metadata"
+    type: "object"
+    required: ["name", "type"]
+    additionalProperties: false
+    properties:
+      name:
+        description: "Project name"
+        type: "string"
+        minLength: 1
+      
+      type:
+        description: "Primary project type"
+        type: "string"
+        enum: ["python", "nodejs", "multi-language", "unknown"]
+      
+      subtypes:
+        description: "Project subtypes (e.g., web, cli, library)"
+        type: "array"
+        items:
+          type: "string"
+        uniqueItems: true
+      
+      description:
+        description: "Project description"
+        type: "string"
+      
+      generated_at:
+        description: "ISO 8601 timestamp when this config was generated"
+        type: "string"
+        format: "date-time"
+      
+      generated_by:
+        description: "DHT version that generated this config"
+        type: "string"
+
+  python:
+    description: "Python environment requirements"
+    type: "object"
+    required: ["version"]
+    additionalProperties: false
+    properties:
+      version:
+        description: "Exact Python version required"
+        type: "string"
+        pattern: "^\\d+\\.\\d+\\.\\d+$"
+        examples: ["3.11.6", "3.12.3"]
+      
+      implementation:
+        description: "Python implementation"
+        type: "string"
+        enum: ["cpython", "pypy"]
+        default: "cpython"
+      
+      virtual_env:
+        description: "Virtual environment settings"
+        type: "object"
+        additionalProperties: false
+        properties:
+          name:
+            description: "Virtual environment directory name"
+            type: "string"
+            default: ".venv"
+          
+          prompt:
+            description: "Custom prompt for the virtual environment"
+            type: "string"
+
+  dependencies:
+    description: "Project dependencies"
+    type: "object"
+    additionalProperties: false
+    properties:
+      python_packages:
+        description: "Python package dependencies with exact versions"
+        type: "array"
+        items:
+          type: "object"
+          required: ["name", "version"]
+          additionalProperties: false
+          properties:
+            name:
+              type: "string"
+            version:
+              type: "string"
+            extras:
+              type: "array"
+              items:
+                type: "string"
+            markers:
+              type: "string"
+              description: "PEP 508 environment markers"
+      
+      lock_files:
+        description: "References to lock files for exact dependency reproduction"
+        type: "object"
+        additionalProperties: false
+        properties:
+          requirements:
+            description: "Path to requirements.txt file"
+            type: "string"
+          
+          requirements_dev:
+            description: "Path to dev requirements file"
+            type: "string"
+          
+          uv_lock:
+            description: "Path to uv.lock file"
+            type: "string"
+          
+          poetry_lock:
+            description: "Path to poetry.lock file"
+            type: "string"
+          
+          pipfile_lock:
+            description: "Path to Pipfile.lock"
+            type: "string"
+      
+      system_packages:
+        description: "System-level package dependencies"
+        type: "array"
+        items:
+          type: "object"
+          required: ["name"]
+          additionalProperties: false
+          properties:
+            name:
+              type: "string"
+            version:
+              type: "string"
+            platform:
+              type: "string"
+              enum: ["macos", "linux", "windows", "all"]
+              default: "all"
+
+  tools:
+    description: "Required development tools with versions"
+    type: "object"
+    additionalProperties: false
+    properties:
+      required:
+        description: "Tools that must be present"
+        type: "array"
+        items:
+          type: "object"
+          required: ["name"]
+          additionalProperties: false
+          properties:
+            name:
+              type: "string"
+            version:
+              type: "string"
+              description: "Exact version or version constraint"
+            platform:
+              type: "string"
+              enum: ["macos", "linux", "windows", "all"]
+              default: "all"
+      
+      optional:
+        description: "Tools that are recommended but not required"
+        type: "array"
+        items:
+          type: "object"
+          required: ["name"]
+          additionalProperties: false
+          properties:
+            name:
+              type: "string"
+            version:
+              type: "string"
+            purpose:
+              type: "string"
+              description: "Why this tool is recommended"
+
+  build:
+    description: "Build configuration"
+    type: "object"
+    additionalProperties: false
+    properties:
+      pre_install:
+        description: "Commands to run before installing dependencies"
+        type: "array"
+        items:
+          type: "string"
+      
+      post_install:
+        description: "Commands to run after installing dependencies"
+        type: "array"
+        items:
+          type: "string"
+      
+      build_commands:
+        description: "Commands to build the project"
+        type: "array"
+        items:
+          type: "string"
+      
+      test_commands:
+        description: "Commands to test the project"
+        type: "array"
+        items:
+          type: "string"
+
+  environment:
+    description: "Environment variables"
+    type: "object"
+    additionalProperties: false
+    properties:
+      required:
+        description: "Required environment variables"
+        type: "object"
+        additionalProperties:
+          type: "string"
+      
+      optional:
+        description: "Optional environment variables with defaults"
+        type: "object"
+        additionalProperties:
+          type: "string"
+
+  platform_overrides:
+    description: "Platform-specific configuration overrides"
+    type: "object"
+    additionalProperties: false
+    properties:
+      macos:
+        $ref: "#/definitions/platform_config"
+      linux:
+        $ref: "#/definitions/platform_config"
+      windows:
+        $ref: "#/definitions/platform_config"
+
+  validation:
+    description: "Validation checksums and metadata"
+    type: "object"
+    additionalProperties: false
+    properties:
+      checksums:
+        description: "File checksums for validation"
+        type: "object"
+        additionalProperties:
+          type: "string"
+          pattern: "^[a-f0-9]{64}$"  # SHA256 hash
+      
+      tool_behaviors:
+        description: "Expected tool behavior checksums"
+        type: "object"
+        additionalProperties:
+          type: "object"
+          required: ["version", "behavior_hash"]
+          properties:
+            version:
+              type: "string"
+            behavior_hash:
+              type: "string"
+              pattern: "^[a-f0-9]{64}$"
+
+definitions:
+  platform_config:
+    description: "Platform-specific configuration"
+    type: "object"
+    additionalProperties: false
+    properties:
+      python:
+        type: "object"
+        properties:
+          version:
+            type: "string"
+            pattern: "^\\d+\\.\\d+\\.\\d+$"
+      
+      dependencies:
+        type: "object"
+        properties:
+          system_packages:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                version:
+                  type: "string"
+      
+      tools:
+        type: "object"
+        properties:
+          required:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                version:
+                  type: "string"
+      
+      environment:
+        type: "object"
+        properties:
+          required:
+            type: "object"
+            additionalProperties:
+              type: "string"
+      
+      build:
+        type: "object"
+        properties:
+          pre_install:
+            type: "array"
+            items:
+              type: "string"
+          post_install:
+            type: "array"
+            items:
+              type: "string"

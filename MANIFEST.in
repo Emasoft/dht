@@ -1,0 +1,42 @@
+# Include the main Python entry point
+include dhtl.py
+include dhtl_cli.py
+
+# Include all documentation
+include README.md
+include LICENSE
+include CHANGELOG.md
+include CONTRIBUTING.md
+
+# Include configuration files
+include pyproject.toml
+include requirements.txt
+include .gitignore
+
+# Include the DHT directory and all its contents
+recursive-include DHT *.py *.sh *.bat *.md *.yaml *.yml *.json *.txt
+recursive-include DHT/modules *
+recursive-include DHT/tests *
+recursive-include DHT/schemas *
+recursive-include DHT/docker *
+recursive-include DHT/requirements *
+
+# Include test files
+recursive-include tests *.py *.sh *.yaml *.json
+
+# Include example configurations
+include .dhtconfig.example
+
+# Exclude unnecessary files
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
+global-exclude .gitignore
+global-exclude .git
+global-exclude .pytest_cache
+global-exclude .mypy_cache
+global-exclude .ruff_cache
+recursive-exclude build *
+recursive-exclude dist *
+recursive-exclude *.egg-info *
+recursive-exclude tree-sitter-bash *

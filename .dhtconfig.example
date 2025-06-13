@@ -1,0 +1,162 @@
+# Example .dhtconfig file for DHT project
+# This file captures exact project requirements for deterministic environment regeneration
+
+version: "1.0.0"
+
+project:
+  name: "dht"
+  type: "python"
+  subtypes:
+    - "cli"
+    - "structured"
+  description: "Development Helper Toolkit - Portable project automation"
+  generated_at: "2024-01-15T10:30:00Z"
+  generated_by: "DHT 0.3.14"
+
+python:
+  version: "3.11.6"
+  implementation: "cpython"
+  virtual_env:
+    name: ".venv"
+    prompt: "dht"
+
+dependencies:
+  python_packages:
+    - name: "click"
+      version: "8.1.7"
+    - name: "rich"
+      version: "13.7.0"
+    - name: "pyyaml"
+      version: "6.0.1"
+    - name: "pytest"
+      version: "7.4.3"
+      extras: ["toml"]
+    - name: "mypy"
+      version: "1.7.1"
+    - name: "ruff"
+      version: "0.1.9"
+    - name: "black"
+      version: "23.12.1"
+    - name: "pre-commit"
+      version: "3.6.0"
+    - name: "prefect"
+      version: "2.14.11"
+    - name: "psutil"
+      version: "5.9.6"
+    - name: "distro"
+      version: "1.8.0"
+    - name: "jsonschema"
+      version: "4.20.0"
+    - name: "tree-sitter"
+      version: "0.20.4"
+    
+  lock_files:
+    requirements: "requirements.txt"
+    requirements_dev: "requirements-dev.txt"
+    uv_lock: "uv.lock"
+  
+  system_packages:
+    - name: "git"
+      platform: "all"
+    - name: "build-essential"
+      platform: "linux"
+    - name: "python3-dev"
+      platform: "linux"
+    - name: "xcode-select"
+      platform: "macos"
+
+tools:
+  required:
+    - name: "git"
+    - name: "make"
+    - name: "bash"
+      version: ">=4.0"
+    - name: "pip"
+    - name: "setuptools"
+    - name: "wheel"
+  
+  optional:
+    - name: "docker"
+      purpose: "Container builds and testing"
+    - name: "uv"
+      version: ">=0.1.0"
+      purpose: "Fast Python package management"
+    - name: "shellcheck"
+      purpose: "Shell script linting"
+    - name: "pre-commit"
+      purpose: "Git hooks management"
+
+build:
+  pre_install:
+    - "python -m pip install --upgrade pip setuptools wheel"
+  
+  post_install:
+    - "pre-commit install"
+    - "python setup_tree_sitter.py"
+  
+  build_commands:
+    - "python -m build"
+  
+  test_commands:
+    - "pytest -v"
+    - "mypy DHT/"
+    - "ruff check DHT/"
+    - "shellcheck DHT/modules/*.sh"
+
+environment:
+  required:
+    PYTHONPATH: "${PROJECT_ROOT}"
+    DHT_HOME: "${PROJECT_ROOT}/DHT"
+  
+  optional:
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTEST_TIMEOUT: "300"
+    PREFECT_API_URL: "http://localhost:4200/api"
+
+platform_overrides:
+  macos:
+    dependencies:
+      system_packages:
+        - name: "xcode-select"
+        - name: "homebrew"
+    environment:
+      required:
+        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: "YES"
+  
+  linux:
+    dependencies:
+      system_packages:
+        - name: "build-essential"
+        - name: "python3-dev"
+        - name: "python3-venv"
+        - name: "libffi-dev"
+        - name: "libssl-dev"
+  
+  windows:
+    dependencies:
+      system_packages:
+        - name: "visualstudio2019buildtools"
+    environment:
+      required:
+        PYTHONIOENCODING: "utf-8"
+    build:
+      pre_install:
+        - "python -m pip install --upgrade pip setuptools wheel"
+        - "python -m pip install pywin32"
+
+validation:
+  checksums:
+    requirements.txt: "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+    pyproject.toml: "fedcba0987654321098765432109876543210fedcba9876543210987654321fed"
+    setup.py: "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+  
+  tool_behaviors:
+    black:
+      version: "23.12.1"
+      behavior_hash: "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+    ruff:
+      version: "0.1.9"
+      behavior_hash: "fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321"
+    mypy:
+      version: "1.7.1"
+      behavior_hash: "1234567890fedcba1234567890fedcba1234567890fedcba1234567890fedcba"

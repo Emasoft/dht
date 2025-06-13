@@ -1,0 +1,145 @@
+{
+  "file_metadata": {
+    "size": 933,
+    "modified": 1749784950.7317514,
+    "created": 1749784950.7317514,
+    "permissions": "0o100600",
+    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpkn1e1j7a.sh",
+    "name": "tmpkn1e1j7a.sh",
+    "extension": ".sh"
+  },
+  "functions": [
+    {
+      "name": "hello_world",
+      "body": "    echo \"Hello, World!\"\n    return 0",
+      "line": 14,
+      "local_vars": []
+    },
+    {
+      "name": "setup_environment",
+      "body": "    local env_type=$1\n    local config_file=\"config.ini\"\n    \n    if [ \"$env_type\" = \"production\" ]; then\n        export NODE_ENV=\"production\"\n    else\n        export NODE_ENV=\"development\"\n    fi",
+      "line": 19,
+      "local_vars": [
+        "env_type",
+        "config_file"
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "PROJECT_NAME",
+      "value": "DHT",
+      "line": 5,
+      "type": "string"
+    },
+    {
+      "name": "VERSION",
+      "value": "1.0.0",
+      "line": 6,
+      "type": "string"
+    },
+    {
+      "name": "DEBUG",
+      "value": "false",
+      "line": 7,
+      "type": "boolean"
+    }
+  ],
+  "exports": [
+    {
+      "name": "PATH",
+      "value": "/usr/local/bin:$PATH",
+      "line": 10
+    },
+    {
+      "name": "PROJECT_HOME",
+      "value": "/opt/dht",
+      "line": 11
+    },
+    {
+      "name": "NODE_ENV",
+      "value": "production",
+      "line": 24
+    },
+    {
+      "name": "NODE_ENV",
+      "value": "development",
+      "line": 26
+    }
+  ],
+  "sourced_files": [
+    {
+      "path": "./common.sh",
+      "line": 31,
+      "resolved": null
+    },
+    {
+      "path": "/etc/profile",
+      "line": 32,
+      "resolved": "/etc/profile"
+    }
+  ],
+  "commands": [
+    {
+      "name": "npm",
+      "found": true
+    },
+    {
+      "name": "git",
+      "found": true
+    },
+    {
+      "name": "docker",
+      "found": true
+    }
+  ],
+  "shebang": "#!/bin/bash",
+  "comments": [
+    {
+      "text": "!/bin/bash",
+      "line": 1,
+      "is_shebang": true
+    },
+    {
+      "text": "Test script for bash parser",
+      "line": 2,
+      "is_shebang": false
+    },
+    {
+      "text": "Global variables",
+      "line": 4,
+      "is_shebang": false
+    },
+    {
+      "text": "Export environment variables",
+      "line": 9,
+      "is_shebang": false
+    },
+    {
+      "text": "Function definitions",
+      "line": 13,
+      "is_shebang": false
+    },
+    {
+      "text": "Source other files",
+      "line": 30,
+      "is_shebang": false
+    },
+    {
+      "text": "Commands",
+      "line": 34,
+      "is_shebang": false
+    },
+    {
+      "text": "Control structures",
+      "line": 39,
+      "is_shebang": false
+    }
+  ],
+  "dependencies": [
+    "docker",
+    "git",
+    "npm"
+  ],
+  "parser_type": "regex"
+}

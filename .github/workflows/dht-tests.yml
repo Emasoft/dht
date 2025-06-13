@@ -1,0 +1,119 @@
+name: DHT Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  UV_CACHE_DIR: /tmp/.uv-cache
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Checkout DHT repository
+      uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install DHT dependencies
+      run: uv sync --locked --all-extras --dev
+
+    - name: Run linters
+      run: |
+        uv run ruff check src/ tests/
+        uv run ruff format --check src/ tests/
+
+    - name: Run type checker
+      run: uv run mypy src/DHT/
+
+    - name: Test shell scripts (Unix only)
+      if: matrix.os != 'windows-latest'
+      run: |
+        # Test shell script syntax
+        for script in src/DHT/modules/*.sh; do
+          bash -n "$script"
+        done
+        # Run shellcheck if available
+        if command -v shellcheck &> /dev/null; then
+          shellcheck -S error src/DHT/modules/*.sh || true
+        fi
+
+    - name: Run unit tests
+      run: uv run pytest tests/unit/ -v --tb=short
+
+    - name: Run integration tests
+      run: uv run pytest tests/integration/ -v --tb=short --timeout=300
+
+    - name: Build DHT package
+      run: uv build
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: |
+          .coverage
+          htmlcov/
+          pytest-report.xml
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dht-dist-${{ matrix.os }}-${{ matrix.python-version }}
+        path: dist/
+
+  coverage:
+    name: Combine coverage
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+    - name: Checkout DHT repository
+      uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install coverage tools
+      run: uv pip install coverage[toml]
+
+    - name: Download all coverage reports
+      uses: actions/download-artifact@v3
+      with:
+        path: coverage-reports
+
+    - name: Combine coverage
+      run: |
+        uv run coverage combine coverage-reports/*/.coverage
+        uv run coverage report
+        uv run coverage html
+
+    - name: Upload combined coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: combined-coverage-report
+        path: htmlcov/

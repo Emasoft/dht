@@ -1,0 +1,160 @@
+name: DHT Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write  # Required for trusted publishing
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout DHT repository
+      uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install build dependencies
+      run: uv sync --locked --all-extras --dev
+
+    - name: Run tests before release
+      run: |
+        uv run pytest tests/ -v --tb=short
+        uv run ruff check src/ tests/
+        uv run mypy src/DHT/
+
+    - name: Update version (if manual trigger)
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        # Update version in pyproject.toml
+        uv run python -c "
+        import toml
+        with open('pyproject.toml', 'r') as f:
+            data = toml.load(f)
+        data['project']['version'] = '${{ github.event.inputs.version }}'
+        with open('pyproject.toml', 'w') as f:
+            toml.dump(data, f)
+        "
+
+    - name: Build DHT package
+      run: uv build
+
+    - name: Check build artifacts
+      run: |
+        ls -la dist/
+        uv run twine check dist/*
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dht-release-dist
+        path: dist/
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    environment:
+      name: pypi
+      url: https://pypi.org/p/dht
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dht-release-dist
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+
+  publish-test-pypi:
+    name: Publish to Test PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/p/dht
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dht-release-dist
+        path: dist/
+
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        verbose: true
+
+  create-github-release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout DHT repository
+      uses: actions/checkout@v4
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dht-release-dist
+        path: dist/
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: v${{ github.event.inputs.version }}
+        name: DHT v${{ github.event.inputs.version }}
+        body: |
+          # DHT v${{ github.event.inputs.version }}
+          
+          ## What's Changed
+          
+          <!-- Add release notes here -->
+          
+          ## Installation
+          
+          ```bash
+          pip install dht==${{ github.event.inputs.version }}
+          ```
+          
+          Or using uv:
+          
+          ```bash
+          uv pip install dht==${{ github.event.inputs.version }}
+          ```
+        artifacts: "dist/*"
+        draft: true
+        prerelease: false
