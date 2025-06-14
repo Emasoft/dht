@@ -3,12 +3,12 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## General Development Guidelines and Rules
-## General Development Guidelines and Rules
 - *CRITICAL*: when reading the lines of the source files, do not read just few lines like you usually do. Instead always read all the lines of the file (until you reach the limit of available context memory). No matter what is the situation, searching or editing a file, ALWAYS OBEY TO THIS RULE!!!.
 - *CRITICAL*: do not ever do unplanned things or take decisions without asking the user first. All non trivial changes to the code must be planned first, approved by the user, and added to the tasks_checklist.md first. Unless something was specifically instructed by the user, you must not do it. Do not make changes to the codebase without duscussing those with the user first and get those approved. Be conservative and act on a strict need-to-be-changed basis.
 - *CRITICAL*: COMMIT AFTER EACH CHANGE TO THE CODE, NO MATTER HOW SMALL!!!
 - *CRITICAL*: after receiving instructions from the user, before you proceed, confirm if you understand and tell the user your plan. If instead you do not understand something, or if there are choices to make, ask the user to clarify, then tell the user your plan. Do not proceed with the plan if the user does not approve it.
 - *CRITICAL*: **Auto-Lint after changes**: Always run the linters (like ruff, shellcheck, mypy, yamllint, eslint, etc.) after any changes to the code files! ALWAYS DO IT BEFORE COMMITTING!!
+- Never use pip. Use `uv pip <commands>` instead. Consider pip deprecated in favor of uv pip.
 - be extremely meticulous and accurate. always check twice any line of code for errors when you edit it.
 - never output code that is abridged or with parts replaced by placeholder comments like `# ... rest of the code ...`, `# ... rest of the function as before ...`, `# ... rest of the code remains the same ...`, or similar. You are not chatting. The code you output is going to be saved and linted, so omitting parts of it will cause errors and broken files.
 - Be conservative. only change the code that it is strictly necessary to change to implement a feature or fix an issue. Do not change anything else. You must report the user if there is a way to improve certain parts of the code, but do not attempt to do it unless the user explicitly asks you to. 
@@ -33,13 +33,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - always use type annotations
 - always keep the size of source code files below 10Kb. If writing new code in a source file will make the file size bigger than 10Kb, create a new source file , write the code there, and import it as a module. Refactor big files in multiple smaller modules.
 - always preserve comments and add them when writing new code.
- always write the docstrings of all functions and improve the existing ones. Use Google-style docstrings with Args/Returns sections, but do not use markdown.  
+- always write the docstrings of all functions and improve the existing ones. Use Google-style docstrings with Args/Returns sections, but do not use markdown. 
 - never use markdown in comments. 
 - when using the Bash tool, always set the timeout parameter to 1800000 (30 minutes).
 - always tabulate the tests result in a nice table.
 - do not use mockup tests or mocked behaviours unless it is absolutely impossible to do otherwise. If you need to use a service, local or remote, do not mock it, just ask the user to activate it for the duration of the tests. Results of mocked tests are completely useless. Only real tests can discover issues with the codebase.
 - always use a **Test-Driven Development (TDD)** methodology (write tests first, the implementation later) when implementing new features or change the existing ones. But first check that the existing tests are written correctly.
 - always plan in advance your actions, and break down your plan into very small tasks. Save a file named `DEVELOPMENT_PLAN.md` and write all tasks inside it. Update it with the status of each tasks after any changes.
+- Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
 - do not create prototypes or sketched/abridged versions of the features you need to develop. That is only a waste of time. Instead break down the new features in its elemental components and functions, subdivide it in small autonomous modules with a specific function, and develop one module at time. When each module will be completed (passing the test for the module), then you will be able to implement the original feature easily just combining the modules. The modules can be helper functions, data structures, external librries, anything that is focused and reusable. Prefer functions at classes, but you can create small classes as specialized handlers for certain data and tasks, then also classes can be used as pieces for building the final feature.
 - When commit, never mention Claude as the author of the commits or as a Co-author.
 - when refactoring, enter thinking mode first, examine the program flow, be attentive to what you're changing, and how it subsequently affects the rest of the codebase as a matter of its blast radius, the codebase landscape, and possible regressions. Also bear in mind the existing type structures and interfaces that compose the makeup of the specific code you're changing.
@@ -58,6 +59,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # <your changelog here…>
 # 
 ```
+
+### Testing Rules
+- Always use pytest and pytest-cov
+- Always run pytest with uv (`uv run pytest <commands..>`
+- Always convert the xtests in normal tests. Negative tests are confusing. Just make the test explicitly check for the negative outcome instead, and if the outcome is negative, the test is passed.
+- Always show a nicely color formatted table with the list of all tests (the functions, not the file) and the outcome (fail, success, skip, error). 
+- The table must use unicode border blocks to delimit the cells, thicker for the header row.
+- The table should report not only the name of the function, but the description of the test function in the docstrings.
+- All tests functions should include a meaningful one-line string that synthetically describes the test and its aim. 
+- If a test function lacks this description, add it to the source files of the tests.
+- All test functions must have docstrings with a short description that will be used by the table to describe the test.
+- Mark the slow tests (those usually skipped when running tests on GitHub, or that need some extra big dependencies installed) with the emoji of a snail 🐌. Be sure to account for the extra character in the table formatting.
+
 
 ## Project DHT Overview
 
@@ -89,6 +103,8 @@ The goal is to eliminate repetitive setup tasks and provide intelligent project 
 
 ## Common Development Commands
 
+- Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
+
 ### Build and Package Management
 
 # Build the Python package
@@ -113,328 +129,7 @@ dhtl test --coverage
 dhtl test_dht
 
 
-### Code Quality
-
-# Run all linters (pre-commit, ruff, black, mypy, shellcheck)
-dhtl lint
-
-# Lint with automatic fixes
-dhtl lint --fix
-
-# Format all code (uses ruff format, black, isort)
-dhtl format
-
-# Check formatting without changes
-dhtl format --check
-
-
-### Environment Setup
-
-# Initial setup (creates venv, installs deps, sets up git hooks)
-dhtl setup
-
-# Initialize DHT in a new project
-dhtl init
-
-# Restore dependencies from lock files
-dhtl restore
-
-
-### Version Management
-
-# Bump version (patch/minor/major)
-dhtl bump patch
-dhtl bump minor
-dhtl bump major
-
-# Create git tags
-dhtl tag --name v1.0.0 --message "Release version 1.0.0"
-
-
-## Examples Of Development Commands
-
-### Environment Setup
-# Python environment (using uv)
-uv venv
-source .venv/bin/activate  # Linux/macOS
-.venv_windows\Scripts\activate     # Windows
-uv sync --all-extras       # Install all dependencies
-
-# Node.js dependencies
-pnpm install
-
-
-### Running the Application
-
-# Full stack (frontend + backend)
-pnpm run start-project            # macOS/Linux
-pnpm run start-project:win        # Windows
-pnpm run start-project:debug      # Debug mode
-
-# Backend only
-uv run python3 main.py            # or: python main.py on Windows
-uv run python3 main.py --log-level debug  # Debug mode
-
-----------------------------------------
-
-TITLE: Creating Virtual Environment with Specific Python Version using uv (Console)
-DESCRIPTION: Creates a virtual environment using a specific Python version (e.g., 3.11) with the `uv` tool. Requires the requested Python version to be available or downloadable by uv.
-SOURCE: https://github.com/astral-sh/uv/blob/main/docs/pip/environments.md#_snippet_2
-
-LANGUAGE: console
-CODE:
-
-$ uv venv --python 3.11
-
-
-----------------------------------------
-
-TITLE: Creating a Virtual Environment with uv
-DESCRIPTION: This command creates a new virtual environment in the current directory using `uv venv`. It automatically detects the appropriate Python version and provides instructions for activating the environment.
-SOURCE: https://github.com/astral-sh/uv/blob/main/README.md#_snippet_14
-
-LANGUAGE: console
-CODE:
-
-$ uv venv
-Using Python 3.12.3
-Creating virtual environment at: .venv
-Activate with: source .venv/bin/activate
-
-------------------------------------------
-
-## Managed and system Python installations with uv
-Since it is common for a system to have an existing Python installation, uv supports discovering Python versions. However, uv also supports installing Python versions itself. To distinguish between these two types of Python installations, uv refers to Python versions it installs as managed Python installations and all other Python installations as system Python installations.
-
-Note
-uv does not distinguish between Python versions installed by the operating system vs those installed and managed by other tools. For example, if a Python installation is managed with pyenv, it would still be considered a system Python version in uv.
-
-
-## Requesting a version
-A specific Python version can be requested with the --python flag in most uv commands. For example, when creating a virtual environment:
-
-
-$ uv venv --python 3.11.6
-
-uv will ensure that Python 3.11.6 is available — downloading and installing it if necessary — then create the virtual environment with it.
-The following Python version request formats are supported:
-
-	•	<version> (e.g., 3, 3.12, 3.12.3)
-	•	<version-specifier> (e.g., >=3.12,<3.13)
-	•	<implementation> (e.g., cpython or cp)
-	•	<implementation>@<version> (e.g., cpython@3.12)
-	•	<implementation><version> (e.g., cpython3.12 or cp312)
-	•	<implementation><version-specifier> (e.g., cpython>=3.12,<3.13)
-	•	<implementation>-<version>-<os>-<arch>-<libc> (e.g., cpython-3.12.3-macos-aarch64-none)
-	
-Additionally, a specific system Python interpreter can be requested with:
-
-	•	<executable-path> (e.g., /opt/homebrew/bin/python3)
-	•	<executable-name> (e.g., mypython3)
-	•	<install-dir> (e.g., /some/environment/)
-	
-By default, uv will automatically download Python versions if they cannot be found on the system. This behavior can be disabled with the python-downloads option.
-
-
-## Python version files
-The .python-version file can be used to create a default Python version request. uv searches for a .python-version file in the working directory and each of its parents. If none is found, uv will check the user-level configuration directory. Any of the request formats described above can be used, though use of a version number is recommended for interoperability with other tools.
-A .python-version file can be created in the current directory with the uv python pin command:
-
-## Change to use a specific Python version in the current directory
-
-$ uv python pin 3.11
-
-Pinned `.python-version` to `3.11`
-
-
-A global .python-version file can be created in the user configuration directory with the uv python pin --global command. (not reccomended)
-
-## Discovery of .python-version files can be disabled with --no-config.
-uv will not search for .python-version files beyond project or workspace boundaries (with the exception of the user configuration directory).
-
-## Installing a Python version
-uv bundles a list of downloadable CPython and PyPy distributions for macOS, Linux, and Windows.
-
-Tip
-By default, Python versions are automatically downloaded as needed without using uv python install.
-
-To install a Python version at a specific version:
-
-
-$ uv python install 3.12.3
-
-To install the latest patch version:
-
-
-$ uv python install 3.12
-
-To install a version that satisfies constraints:
-
-
-$ uv python install '>=3.8,<3.10'
-
-To install multiple versions:
-
-
-$ uv python install 3.9 3.10 3.11
-
-To install a specific implementation:
-
-
-$ uv python install pypy
-
-All of the Python version request formats are supported except those that are used for requesting local interpreters such as a file path.
-By default uv python install will verify that a managed Python version is installed or install the latest version. If a .python-version file is present, uv will install the Python version listed in the file. A project that requires multiple Python versions may define a .python-versions file. If present, uv will install all of the Python versions listed in the file.
-
-Important:
-The available Python versions are frozen for each uv release. To install new Python versions, you may need upgrade uv.
-
-## Installing Python executables
-
-To install Python executables into your PATH, provide the --preview option:
-
-
-$ uv python install 3.12 --preview
-This will install a Python executable for the requested version into ~/.local/bin, e.g., as python3.12.
-
-Tip
-If ~/.local/bin is not in your PATH, you can add it with uv tool update-shell.
-
-To install python and python3 executables, include the --default option:
-
-
-$ uv python install 3.12 --default --preview
-
-When installing Python executables, uv will only overwrite an existing executable if it is managed by uv — e.g., if ~/.local/bin/python3.12 exists already uv will not overwrite it without the --force flag.
-uv will update executables that it manages. However, it will prefer the latest patch version of each Python minor version by default. For example:
-
-
-$ uv python install 3.12.7 --preview  # Adds `python3.12` to `~/.local/bin`
-
-$ uv python install 3.12.6 --preview  # Does not update `python3.12`
-
-$ uv python install 3.12.8 --preview  # Updates `python3.12` to point to 3.12.8
-
-## Project Python versions
-uv will respect Python requirements defined in requires-python in the pyproject.toml file during project command invocations. The first Python version that is compatible with the requirement will be used, unless a version is otherwise requested, e.g., via a .python-version file or the --python flag.
-
-## Viewing available Python versions
-To list installed and available Python versions:
-
-
-$ uv python list
-
-To filter the Python versions, provide a request, e.g., to show all Python 3.13 interpreters:
-
-
-$ uv python list 3.13
-
-Or, to show all PyPy interpreters:
-
-
-$ uv python list pypy
-
-By default, downloads for other platforms and old patch versions are hidden.
-To view all versions:
-
-
-$ uv python list --all-versions
-
-To view Python versions for other platforms:
-
-
-$ uv python list --all-platforms
-
-To exclude downloads and only show installed Python versions:
-
-
-$ uv python list --only-installed
-
-See the uv python list reference for more details.
-
-## Finding a Python executable
-To find a Python executable, use the uv python find command:
-
-$ uv python find
-
-By default, this will display the path to the first available Python executable. See the discovery rules for details about how executables are discovered.
-
-This interface also supports many request formats, e.g., to find a Python executable that has a version of 3.11 or newer:
-
-$ uv python find '>=3.11'
-
-By default, uv python find will include Python versions from virtual environments. If a .venv directory is found in the working directory or any of the parent directories or the VIRTUAL_ENV environment variable is set, it will take precedence over any Python executables on the PATH.
-To ignore virtual environments, use the --system flag:
-
-$ uv python find --system
-
-But it is not reccomended.
-
-## Discovery of Python versions
-When searching for a Python version, the following locations are checked:
-	•	Managed Python installations in the UV_PYTHON_INSTALL_DIR.
-	•	A Python interpreter on the PATH as python, python3, or python3.x on macOS and Linux, or python.exe on Windows.
-	•	On Windows, the Python interpreters in the Windows registry and Microsoft Store Python interpreters (see py --list-paths) that match the requested version.
-
-In some cases, uv allows using a Python version from a virtual environment. In this case, the virtual environment's interpreter will be checked for compatibility with the request before searching for an installation as described above. See the pip-compatible virtual environment discovery documentation for details.
-When performing discovery, non-executable files will be ignored. Each discovered executable is queried for metadata to ensure it meets the requested Python version. If the query fails, the executable will be skipped. If the executable satisfies the request, it is used without inspecting additional executables.
-When searching for a managed Python version, uv will prefer newer versions first. When searching for a system Python version, uv will use the first compatible version — not the newest version.
-If a Python version cannot be found on the system, uv will check for a compatible managed Python version download.
-
-## EXAMPLE OF INSTALLING A VERSION OF PYTHON AND CHANGING IT LATER WITH PIN:
-
-## Install multiple Python versions:
-
-
-$ uv python install 3.10 3.11 3.12
-
-Searching for Python versions matching: Python 3.10
-
-Searching for Python versions matching: Python 3.11
-
-Searching for Python versions matching: Python 3.12
-
-Installed 3 versions in 3.42s
-
- + cpython-3.10.14-macos-aarch64-none
-
- + cpython-3.11.9-macos-aarch64-none
-
- + cpython-3.12.4-macos-aarch64-none
- 
- 
-## Download Python versions as needed:
-
-
-$ uv venv --python 3.12.0
-
-Using CPython 3.12.0
-
-Creating virtual environment at: .venv
-
-Activate with: source .venv/bin/activate
-
-
-$ uv run --python pypy@3.8 -- python
-
-Python 3.8.16 (a9dbdca6fc3286b0addd2240f11d97d8e8de187a, Dec 29 2022, 11:45:30)
-
-[PyPy 7.3.11 with GCC Apple LLVM 13.1.6 (clang-1316.0.21.2.5)] on darwin
-
-Type "help", "copyright", "credits" or "license" for more information.
-
-
-## Change to use a specific Python version in the current directory:
-
-
-$ uv python pin 3.11
-
-Pinned `.python-version` to `3.11`
-
-
-------------------------------------------
-
-# Frontend only
+## Frontend only
 uv run pnpm run dev
 
 
@@ -472,10 +167,10 @@ dhtl format --check
 
 ### Code Quality
 
-# Python formatting and linting commands syntax to use internally in dhtl:
+# Python formatting and linting commands syntax:
 uv run ruff format       # format with ruff
 uv run ruff check --ignore E203,E402,E501,E266,W505,F841,F842,F401,W293,I001,UP015,C901,W291 --isolated --fix --output-format full
-COLUMNS=400 uv run mypy --strict --show-error-context --pretty --install-types --no-color-output --non-interactive --show-error-codes --show-error-code-links --no-error-summary --follow-imports=normal cli_translator.py >mypy_lint_log.txt
+COLUMNS=400 uv run mypy --strict --show-error-context --pretty --install-types --no-color-output --non-interactive --show-error-codes --show-error-code-links --no-error-summary --follow-imports=normal <files to test or pattern...>
 
 # TypeScript/JavaScript formatting and linting commands syntax to use internally in dhtl:
 uv run pnpm run lint            # ESLint
@@ -487,6 +182,11 @@ uv run shellcheck --severity=error --extended-analysis=true  # Shellcheck (alway
 
 # YAML scripts linting
 uv run yamllint
+uv run actionlint
+
+# Gitleaks and secrets preservation
+gitleaks git --verbose
+gitleaks dir --verbose
 
 
 ### Building and Packaging
@@ -1077,32 +777,435 @@ Global options:
 Use `uv help run` for more details.
 
 
+### Environment Setup
+
+# Initial setup (creates venv, installs deps, sets up git hooks)
+dhtl setup
+
+# Initialize DHT in a new project
+dhtl init
+
+# Restore dependencies from lock files
+dhtl restore
+
+
+### Version Management
+
+# Bump version (patch/minor/major)
+dhtl bump patch
+dhtl bump minor
+dhtl bump major
+
+# Create git tags
+dhtl tag --name v1.0.0 --message "Release version 1.0.0"
+
+
+## Examples Of Development Commands
+
+### Environment Setup
+# Python environment (using uv)
+uv venv
+source .venv/bin/activate  # Linux/macOS
+.venv_windows\Scripts\activate     # Windows
+uv sync --all-extras       # Install all dependencies
+
+# Node.js dependencies
+pnpm install
+
+
+### Running the Application
+
+# Full stack (frontend + backend)
+pnpm run start-project            # macOS/Linux
+pnpm run start-project:win        # Windows
+pnpm run start-project:debug      # Debug mode
+
+# Backend only
+uv run python3 main.py            # or: python main.py on Windows
+uv run python3 main.py --log-level debug  # Debug mode
+
+----------------------------------------
+
+TITLE: Creating Virtual Environment with Specific Python Version using uv (Console)
+DESCRIPTION: Creates a virtual environment using a specific Python version (e.g., 3.11) with the `uv` tool. Requires the requested Python version to be available or downloadable by uv.
+SOURCE: https://github.com/astral-sh/uv/blob/main/docs/pip/environments.md#_snippet_2
+
+LANGUAGE: console
+CODE:
+
+$ uv venv --python 3.11
+
+
+----------------------------------------
+
+TITLE: Creating a Virtual Environment with uv
+DESCRIPTION: This command creates a new virtual environment in the current directory using `uv venv`. It automatically detects the appropriate Python version and provides instructions for activating the environment.
+SOURCE: https://github.com/astral-sh/uv/blob/main/README.md#_snippet_14
+
+LANGUAGE: console
+CODE:
+
+$ uv venv
+Using Python 3.12.3
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+
+------------------------------------------
+
+## Managed and system Python installations with uv
+Since it is common for a system to have an existing Python installation, uv supports discovering Python versions. However, uv also supports installing Python versions itself. To distinguish between these two types of Python installations, uv refers to Python versions it installs as managed Python installations and all other Python installations as system Python installations.
+
+Note
+uv does not distinguish between Python versions installed by the operating system vs those installed and managed by other tools. For example, if a Python installation is managed with pyenv, it would still be considered a system Python version in uv.
+
+
+## Requesting a version
+A specific Python version can be requested with the --python flag in most uv commands. For example, when creating a virtual environment:
+
+
+$ uv venv --python 3.11.6
+
+uv will ensure that Python 3.11.6 is available — downloading and installing it if necessary — then create the virtual environment with it.
+The following Python version request formats are supported:
+
+	•	<version> (e.g., 3, 3.12, 3.12.3)
+	•	<version-specifier> (e.g., >=3.12,<3.13)
+	•	<implementation> (e.g., cpython or cp)
+	•	<implementation>@<version> (e.g., cpython@3.12)
+	•	<implementation><version> (e.g., cpython3.12 or cp312)
+	•	<implementation><version-specifier> (e.g., cpython>=3.12,<3.13)
+	•	<implementation>-<version>-<os>-<arch>-<libc> (e.g., cpython-3.12.3-macos-aarch64-none)
+	
+Additionally, a specific system Python interpreter can be requested with:
+
+	•	<executable-path> (e.g., /opt/homebrew/bin/python3)
+	•	<executable-name> (e.g., mypython3)
+	•	<install-dir> (e.g., /some/environment/)
+	
+By default, uv will automatically download Python versions if they cannot be found on the system. This behavior can be disabled with the python-downloads option.
+
+
+## Python version files
+The .python-version file can be used to create a default Python version request. uv searches for a .python-version file in the working directory and each of its parents. If none is found, uv will check the user-level configuration directory. Any of the request formats described above can be used, though use of a version number is recommended for interoperability with other tools.
+A .python-version file can be created in the current directory with the uv python pin command:
+
+## Change to use a specific Python version in the current directory
+
+$ uv python pin 3.11
+
+Pinned `.python-version` to `3.11`
+
+
+A global .python-version file can be created in the user configuration directory with the uv python pin --global command. (not reccomended)
+
+## Discovery of .python-version files can be disabled with --no-config.
+uv will not search for .python-version files beyond project or workspace boundaries (with the exception of the user configuration directory).
+
+## Installing a Python version
+uv bundles a list of downloadable CPython and PyPy distributions for macOS, Linux, and Windows.
+
+Tip
+By default, Python versions are automatically downloaded as needed without using uv python install.
+
+To install a Python version at a specific version:
+
+
+$ uv python install 3.12.3
+
+To install the latest patch version:
+
+
+$ uv python install 3.12
+
+To install a version that satisfies constraints:
+
+
+$ uv python install '>=3.8,<3.10'
+
+To install multiple versions:
+
+
+$ uv python install 3.9 3.10 3.11
+
+To install a specific implementation:
+
+
+$ uv python install pypy
+
+All of the Python version request formats are supported except those that are used for requesting local interpreters such as a file path.
+By default uv python install will verify that a managed Python version is installed or install the latest version. If a .python-version file is present, uv will install the Python version listed in the file. A project that requires multiple Python versions may define a .python-versions file. If present, uv will install all of the Python versions listed in the file.
+
+Important:
+The available Python versions are frozen for each uv release. To install new Python versions, you may need upgrade uv.
+
+## Installing Python executables
+
+To install Python executables into your PATH, provide the --preview option:
+
+
+$ uv python install 3.12 --preview
+This will install a Python executable for the requested version into ~/.local/bin, e.g., as python3.12.
+
+Tip
+If ~/.local/bin is not in your PATH, you can add it with uv tool update-shell.
+
+To install python and python3 executables, include the --default option:
+
+
+$ uv python install 3.12 --default --preview
+
+When installing Python executables, uv will only overwrite an existing executable if it is managed by uv — e.g., if ~/.local/bin/python3.12 exists already uv will not overwrite it without the --force flag.
+uv will update executables that it manages. However, it will prefer the latest patch version of each Python minor version by default. For example:
+
+
+$ uv python install 3.12.7 --preview  # Adds `python3.12` to `~/.local/bin`
+
+$ uv python install 3.12.6 --preview  # Does not update `python3.12`
+
+$ uv python install 3.12.8 --preview  # Updates `python3.12` to point to 3.12.8
+
+## Project Python versions
+uv will respect Python requirements defined in requires-python in the pyproject.toml file during project command invocations. The first Python version that is compatible with the requirement will be used, unless a version is otherwise requested, e.g., via a .python-version file or the --python flag.
+
+## Viewing available Python versions
+To list installed and available Python versions:
+
+
+$ uv python list
+
+To filter the Python versions, provide a request, e.g., to show all Python 3.13 interpreters:
+
+
+$ uv python list 3.13
+
+Or, to show all PyPy interpreters:
+
+
+$ uv python list pypy
+
+By default, downloads for other platforms and old patch versions are hidden.
+To view all versions:
+
+
+$ uv python list --all-versions
+
+To view Python versions for other platforms:
+
+
+$ uv python list --all-platforms
+
+To exclude downloads and only show installed Python versions:
+
+
+$ uv python list --only-installed
+
+See the uv python list reference for more details.
+
+## Finding a Python executable
+To find a Python executable, use the uv python find command:
+
+$ uv python find
+
+By default, this will display the path to the first available Python executable. See the discovery rules for details about how executables are discovered.
+
+This interface also supports many request formats, e.g., to find a Python executable that has a version of 3.11 or newer:
+
+$ uv python find '>=3.11'
+
+By default, uv python find will include Python versions from virtual environments. If a .venv directory is found in the working directory or any of the parent directories or the VIRTUAL_ENV environment variable is set, it will take precedence over any Python executables on the PATH.
+To ignore virtual environments, use the --system flag:
+
+$ uv python find --system
+
+But it is not reccomended.
+
+## Discovery of Python versions
+When searching for a Python version, the following locations are checked:
+	•	Managed Python installations in the UV_PYTHON_INSTALL_DIR.
+	•	A Python interpreter on the PATH as python, python3, or python3.x on macOS and Linux, or python.exe on Windows.
+	•	On Windows, the Python interpreters in the Windows registry and Microsoft Store Python interpreters (see py --list-paths) that match the requested version.
+
+In some cases, uv allows using a Python version from a virtual environment. In this case, the virtual environment's interpreter will be checked for compatibility with the request before searching for an installation as described above. See the pip-compatible virtual environment discovery documentation for details.
+When performing discovery, non-executable files will be ignored. Each discovered executable is queried for metadata to ensure it meets the requested Python version. If the query fails, the executable will be skipped. If the executable satisfies the request, it is used without inspecting additional executables.
+When searching for a managed Python version, uv will prefer newer versions first. When searching for a system Python version, uv will use the first compatible version — not the newest version.
+If a Python version cannot be found on the system, uv will check for a compatible managed Python version download.
+
+## EXAMPLE OF INSTALLING A VERSION OF PYTHON AND CHANGING IT LATER WITH PIN:
+
+## Install multiple Python versions:
+
+
+$ uv python install 3.10 3.11 3.12
+
+Searching for Python versions matching: Python 3.10
+
+Searching for Python versions matching: Python 3.11
+
+Searching for Python versions matching: Python 3.12
+
+Installed 3 versions in 3.42s
+
+ + cpython-3.10.14-macos-aarch64-none
+
+ + cpython-3.11.9-macos-aarch64-none
+
+ + cpython-3.12.4-macos-aarch64-none
+ 
+ 
+## Download Python versions as needed:
+
+
+$ uv venv --python 3.12.0
+
+Using CPython 3.12.0
+
+Creating virtual environment at: .venv
+
+Activate with: source .venv/bin/activate
+
+
+$ uv run --python pypy@3.8 -- python
+
+Python 3.8.16 (a9dbdca6fc3286b0addd2240f11d97d8e8de187a, Dec 29 2022, 11:45:30)
+
+[PyPy 7.3.11 with GCC Apple LLVM 13.1.6 (clang-1316.0.21.2.5)] on darwin
+
+Type "help", "copyright", "credits" or "license" for more information.
+
+
+## Change to use a specific Python version in the current directory:
+
+
+$ uv python pin 3.11
+
+Pinned `.python-version` to `3.11`
+
+
+------------------------------------------
+
+# Frontend only
+pnpm run dev
+
+
+### Testing
+
+# Python tests only
+uv run pytest .
+uv run pytest ./tests/test_file.py         # Specific file
+uv run pytest ./tests/test_file.py::test_function  # Specific test
+uv run pytest -k "test_name"               # By test name pattern
+uv run pytest -m "not slow"                # Skip slow tests
+
+# Frontend E2E tests
+pnpm run e2e
+npx playwright test                        # Alternative
+npx playwright test --ui                   # With UI mode
+
+
+### Code Quality
+
+# Python formatting and linting
+just format              # or: uv run ruff format .
+just lint                # or: uv run ruff check .
+uv run ruff check --fix  # Auto-fix linting issues
+
+# TypeScript/JavaScript
+pnpm run lint            # ESLint
+pnpm run format          # Prettier
+pnpm run check           # Check formatting without fixing
+
+
+
+### Building and Packaging
+
+# Frontend build
+pnpm run build
+
+# Build Python package (includes Electron app)
+./install.sh              # Full installation from source
+uv run python -m build    # Build wheel only
+
+# Install package
+pip install dist/*.whl    # Install built wheel
+pip install -e .         # Development install
+
+
 
 ## Architecture
 
 ### Directory Structure
-- `dhtl.sh` / `dhtl.bat`: Main entry points
+- `dhtl.py` Main entry point (aliased to dhtl when installed as global cli command from a pip package created with `uv build`)
 - `DHT/modules/`: Core functionality split into focused shell modules
   - `orchestrator.sh`: Loads all modules
   - `dhtl_commands_*.sh`: Command implementations (8 files)
   - `dhtl_environment_*.sh`: Environment detection and setup
   - `dhtl_uv.sh`: UV package manager integration
-  - `dhtl_guardian_*.sh`: Process resource management
+  - `dhtl_guardian_*.sh`: Process runner using Precept for queue and resource management
   - `dhtl_diagnostics.sh`: System diagnostics
   - `dhtl_error_handling.sh`: Error handling utilities
 
+### Python Module Architecture (NEW)
+To maintain code quality and adhere to the 10KB file size limit, large Python modules in `src/DHT/modules/` are refactored into smaller, focused modules using a delegation pattern:
+
+#### Refactoring Pattern
+When a Python file exceeds 10KB, it's split into:
+1. **Main orchestrator file**: Retains the public API and core flow logic
+2. **Data models module**: Contains dataclasses and type definitions (`*_models.py`)
+3. **Helper modules**: Focused functionality grouped by concern
+4. **Constants/Config module**: Shared constants and configuration (`*_helpers.py`)
+
+#### Example: Environment Configurator Refactoring
+Original: `environment_configurator.py` (48KB)
+Refactored into:
+- `environment_configurator.py` (18KB) - Main orchestrator with delegation
+- `environment_config_models.py` - Data models (EnvironmentConfig, ConfigurationResult)
+- `environment_analyzer.py` - Environment analysis and requirement detection
+- `environment_installer.py` - Python environment and package installation
+- `config_file_generators.py` - Tool configuration file generation (ruff, black, mypy, etc.)
+- `project_file_generators.py` - Project file generation (Dockerfile, CI/CD, etc.)
+- `environment_config_helpers.py` - Helper functions and constants
+
+#### Example: Environment Reproducer Refactoring
+Original: `environment_reproducer.py` (47KB)
+Refactored into:
+- `environment_reproducer.py` - Main orchestrator
+- `environment_snapshot_models.py` - Snapshot data models
+- `platform_normalizer.py` - Cross-platform compatibility utilities
+- `lock_file_manager.py` - Lock file generation and parsing
+- `environment_validator.py` - Environment validation utilities
+
+#### Delegation Pattern Implementation
+The main class maintains its public API but delegates to helper modules:
+```python
+class EnvironmentConfigurator:
+    def __init__(self):
+        self.env_analyzer = EnvironmentAnalyzer()
+        self.env_installer = EnvironmentInstaller()
+        # ... other helper instances
+    
+    def _detect_tools_from_project(self, project_path: Path, project_info: Dict[str, Any]) -> List[str]:
+        """Delegate to environment analyzer."""
+        return self.env_analyzer._detect_tools_from_project(project_path, project_info)
+```
+
+This pattern ensures:
+- Backward compatibility (public API unchanged)
+- Modular, testable components
+- Clear separation of concerns
+- Maintainable file sizes
+
 ### Testing Structure
-- `DHT/tests/unit/`: Unit tests for individual components
-- `DHT/tests/integration/`: Integration tests
-- Uses pytest with comprehensive fixtures in `conftest.py`
-- Shell script tests in `test_dhtl_basic.sh`
+- `/tests/`: pytest tests for individual components
+- `/tests/fixtures/`: Fixtures for the tests
+- Use pytest with comprehensive fixtures in `./tests/conftest.py`
+- Tests for bash scripts are executed with: `./tests/test_dhtl_basic.sh`
 
 ### Key Implementation Details
 - **UV-First**: Uses UV package manager for fast dependency management
-- **Process Guardian**: All Python commands run with memory limits (default 2048MB) and timeout protection
+- **Process Guardian**: All Python commands run with memory limits (default 4096MB) and timeout protection with Prefect
 - **Cross-Platform**: Works on macOS, Linux, Windows (Git Bash/WSL)
 - **Modular Design**: Functionality split into shell modules loaded by orchestrator
-- **Environment Isolation**: Manages Python virtual environments automatically
+- **Environment Isolation**: Manages Python virtual environments automatically with uv
 
 ### Development Workflow
 1. Commands are invoked via `dhtl` alias (when venv is active) or `./dhtl.sh`
@@ -1337,7 +1440,10 @@ tools:
    - Boolean detection
 
 ### Usage in DHT
-
+Once the user execute `dhtl setup` the .venv is created, with the toml file and the directory tree is adjusted to be normalized according to the uv specifications.
+At the end of the setup process, a file called `.dhtconfig` is created in the root of the project with the informations needed to regenerate the same configuration anywhere, with just this file and the repo files cloned. The file .dhtconfig must be tracked by git, so it must be added to git and not ignored. Any project with the .dhtconfig file will be able to be regenerated with the command `dhtl regenerate`.
+DHT stores only the minimum informations in .dhtconfig file to restore the original repo status with config, tools and env settings.
+All the other info are extracted from the codebase and from dot files and diagnostic tools that report system informations and installed tools/runtimes.
 The information extraction system powers several DHT features:
 
 1. **Environment Regeneration**: Captures exact tool versions for reproduction
@@ -1345,6 +1451,7 @@ The information extraction system powers several DHT features:
 3. **Dockerization**: Knows what system packages to install
 4. **CI/CD Setup**: Configures appropriate build environments
 5. **Project Analysis**: Understands project structure and requirements
+6. **Deterministic builds**: Deterministic build and regeneration in any platform thanks to uv project build management, uv workflows and .dhtconfig
 
 ### Extending the System
 
@@ -1376,167 +1483,5 @@ To add new tools or information sources:
 4. **Comprehensive**: Captures both tools and their configurations
 5. **Machine-Readable**: Clean YAML/JSON output for automation
 
-## Phase 2: Automatic Project Configuration
-
-The information extractor (Phase 1) creates a comprehensive category tree that captures:
-- Every tool and its version on the system
-- Project structure and dependencies
-- Language runtimes and package managers
-- Build tools and compilers
-- Everything needed to understand the environment
-
-Phase 2 uses this rich information tree to automatically configure projects:
-
-### 1. **Project Type Detection**
-The system analyzes project files and structure to identify:
-- Single `.py` file → Simple Python script setup
-- `package.json` + `pyproject.toml` → Full-stack app with frontend/backend
-- Multiple languages → Polyglot project setup
-- Large tensor files → ML/AI project with DVC/Git-LFS
-- Docker files → Container-based deployment
-- Electron configs → Desktop app packaging
-- And many other patterns...
-
-### 2. **Intelligent Configuration Generation**
-Using the info tree, DHT automatically:
-- Chooses the right Python version via `uv python pin`
-- Sets up virtual environments with `uv venv`
-- Configures `uv build` for the project structure
-- Generates appropriate git hooks (pre-commit, testing, linting)
-- Creates CI/CD workflows tailored to the project type
-- Sets up testing frameworks and coverage tools
-- Configures linters and formatters with project-specific rules
-- Creates Docker configurations if needed
-- Sets up documentation builders
-
-### 3. **Minimal .dhtconfig**
-The `.dhtconfig` file stores only what cannot be inferred:
-- Project-specific secrets/API keys (encrypted references)
-- Custom deployment targets
-- Non-standard tool configurations
-- Override settings for special cases
-
-Everything else is determined by analyzing:
-- The repository structure and files
-- The system environment via the info tree
-- Standard conventions for each project type
-
-### 4. **Deterministic Reproduction**
-When someone clones/unzips the project on any platform:
-1. DHT reads the minimal `.dhtconfig`
-2. Analyzes the repository structure
-3. Uses the info tree to understand what's available on the system
-4. Automatically installs missing tools via UV or system package managers
-5. Configures everything identically regardless of platform
-6. Handles platform differences transparently (path separators, line endings, etc.)
-7. Verifies the setup matches the original environment
-
-### Key Innovation: Information-Driven Configuration
-
-The category tree from the information extractor becomes the "brain" that understands:
-- What the project needs (from analyzing files)
-- What the system has available (from the info tree)
-- How to bridge any gaps (install tools, configure settings)
-- How to make it work identically everywhere
-
-This enables true automation - not just running templates, but intelligent analysis and configuration based on deep understanding of both the project's needs and the system's capabilities.
-
-### Example Workflow
-
-1. **Developer starts a new project**:
-   ```bash
-   dhtl init
-   ```
-   DHT analyzes the files, detects it's a FastAPI + React project with PostgreSQL
-
-2. **DHT automatically**:
-   - Sets Python 3.11 via `uv python pin 3.11`
-   - Creates venv with `uv venv`
-   - Installs all Python deps with `uv sync`
-   - Sets up Node.js environment for React
-   - Configures pre-commit hooks for Python + JS linting
-   - Creates GitHub Actions for CI/CD
-   - Sets up Docker Compose for PostgreSQL
-   - Generates `.dhtconfig` with minimal info
-
-3. **Another developer clones the repo**:
-   ```bash
-   git clone <repo>
-   cd <repo>
-   dhtl setup
-   ```
-   DHT reads `.dhtconfig`, analyzes the repo, and reproduces the exact same environment
-
-### Modular Project Type Handlers
-
-DHT implements handlers for common project patterns:
-- **PythonSimpleHandler**: Single script projects
-- **PythonPackageHandler**: Installable Python packages
-- **FullStackHandler**: Frontend + Backend combinations
-- **MLProjectHandler**: Machine learning projects with models
-- **PolyglotHandler**: Multi-language projects
-- **MicroservicesHandler**: Multi-service architectures
-- And more...
-
-Each handler knows how to:
-- Detect its project type
-- Configure the appropriate tools
-- Set up the right workflows
-- Handle platform differences
-
-This modular approach makes DHT extensible - new project types can be added as handlers without changing the core system.
-
-## Testing and TDD Methodology Rules
-
-### Test Result Reporting
-- **ALWAYS** print a tabulated test report after running tests with the following columns:
-  - Test File | Total | Passed | Failed | Error | Notes
-  - Include overall summary with percentages
-  - Identify key issues and successfully tested modules
-
-### Test Design Principles
-1. **Minimize Mockups**: Prefer real functionality over mocks to avoid shadowing bugs
-   - Use mocks ONLY when absolutely necessary (e.g., external APIs, system resources)
-   - Generate realistic, detailed fixtures at runtime instead of mocking
-   
-2. **High-Level Functional Tests**: Write tests that assess complete operations
-   - Test entire workflows, not just individual functions
-   - Include integration points between modules
-   - Verify end-to-end functionality
-   
-3. **Fine-Grained Specific Tests**: Make tests specific and isolated
-   - Each test should verify ONE specific behavior
-   - Use descriptive test names that explain what is being tested
-   - When a test fails, it should be immediately clear what broke
-   
-4. **Realistic Test Scenarios**: Create fixtures from real project examples
-   - Generate complete directory structures with actual file contents
-   - Use real-world dependency configurations
-   - Include edge cases from actual repositories
-   
-5. **Test Organization**:
-   - Group related tests in classes
-   - Use clear naming conventions: `test_<feature>_<scenario>_<expected_result>`
-   - Separate unit tests, integration tests, and end-to-end tests
-   
-6. **Error Validation**: Test both success and failure paths
-   - Verify correct behavior with valid inputs
-   - Verify appropriate errors with invalid inputs
-   - Test boundary conditions and edge cases
-
-### Test Implementation Rules
-- Write tests BEFORE implementation (TDD)
-- Each test should be independent and not rely on other tests
-- Use proper setup/teardown to ensure clean test environment
-- Tests should run quickly - mock only time-consuming operations
-- Include performance tests for critical paths
-- Use property-based testing for complex logic
-
-### Fixture Generation Guidelines
-- Create fixtures programmatically, not as static files
-- Include variations: minimal, typical, complex, edge cases  
-- Fixtures should be self-documenting with clear structure
-- Clean up fixtures after tests complete
-- Use temporary directories for file system operations
 
 
