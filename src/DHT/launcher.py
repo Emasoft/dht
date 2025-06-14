@@ -20,6 +20,7 @@ import subprocess
 import time
 import shutil
 import tempfile
+import logging
 from pathlib import Path
 from typing import Optional, List, Dict
 
@@ -32,8 +33,11 @@ except ImportError:
 class DHTLauncher:
     """Main launcher class for DHT."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the DHT launcher."""
+        # Set up logging
+        self.logger = logging.getLogger(__name__)
+        
         # Basic configuration
         self.version = "1.0.0"
         self.session_id = f"{int(time.time())}_{os.getpid()}"
@@ -116,7 +120,7 @@ class DHTLauncher:
         # If no project root found, use current directory
         return Path.cwd()
     
-    def _setup_environment(self):
+    def _setup_environment(self) -> Dict[str, str]:
         """Set up environment variables for shell modules."""
         env = os.environ.copy()
         
@@ -158,7 +162,7 @@ class DHTLauncher:
         
         return env
     
-    def display_banner(self):
+    def display_banner(self) -> None:
         """Display the DHT banner."""
         if self.quiet_mode:
             return
@@ -168,7 +172,7 @@ class DHTLauncher:
         print(f"{Colors.CYAN}╚═════════════════════════════════════════════════════════╝{Colors.ENDC}")
         print()
     
-    def display_help(self):
+    def display_help(self) -> None:
         """Display help message."""
         print(f"{Colors.CYAN}╔════════════════════════════════════════════════════════════════════════════╗{Colors.ENDC}")
         print(f"{Colors.CYAN}║              Development Helper Toolkit Launcher (DHTL) v{self.version}             ║{Colors.ENDC}")
@@ -223,7 +227,7 @@ class DHTLauncher:
             return False
         
         if self.debug_mode:
-            print(f"Found bash at: {bash_path}")
+            self.logger.debug(f"Found bash at: {bash_path}")
         
         return True
     
@@ -238,7 +242,7 @@ class DHTLauncher:
             cmd = [str(script)] + args
         
         if self.debug_mode:
-            print(f"{Colors.YELLOW}🔄 Executing: {' '.join(cmd)}{Colors.ENDC}")
+            self.logger.debug(f"Executing: {' '.join(cmd)}")
         
         try:
             # Run the command
@@ -250,7 +254,7 @@ class DHTLauncher:
             return_code = process.wait()
             
             if self.debug_mode:
-                print(f"Command exited with code: {return_code}")
+                self.logger.debug(f"Command exited with code: {return_code}")
             
             return return_code
             
@@ -319,5 +323,5 @@ fi
             # Clean up
             try:
                 os.unlink(wrapper_path)
-            except:
-                pass
+            except (OSError, FileNotFoundError):
+                pass  # Ignore errors during cleanup

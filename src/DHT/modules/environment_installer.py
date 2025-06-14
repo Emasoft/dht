@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 import sys
 import subprocess
+import logging as std_logging
 from pathlib import Path
 from typing import List, Optional
 
@@ -29,6 +30,14 @@ from DHT.modules.uv_prefect_tasks import (
     install_dependencies,
     add_dependency
 )
+
+
+def _get_logger():
+    """Get logger, falling back to standard logging if not in Prefect context."""
+    try:
+        return get_run_logger()
+    except Exception:
+        return std_logging.getLogger(__name__)
 
 
 class EnvironmentInstaller:
@@ -53,7 +62,7 @@ class EnvironmentInstaller:
         Returns:
             True if installation succeeded
         """
-        logger = get_run_logger()
+        logger = _get_logger()
         
         try:
             # Check UV availability
@@ -113,7 +122,12 @@ class EnvironmentInstaller:
         result: ConfigurationResult
     ) -> bool:
         """Fallback installation using system pip."""
-        logger = get_run_logger()
+        try:
+            logger = _get_logger()
+        except Exception:
+            # Not in a Prefect context, use standard logging
+            import logging
+            logger = logging.getLogger(__name__)
         
         try:
             # Create virtual environment with venv
@@ -155,7 +169,7 @@ class EnvironmentInstaller:
         if not packages:
             return
         
-        logger = get_run_logger()
+        logger = _get_logger()
         
         try:
             # Use UV to install packages
@@ -175,7 +189,7 @@ class EnvironmentInstaller:
     
     def _install_quality_tools(self, project_path: Path, tools: List[str]) -> None:
         """Install quality tools as development dependencies."""
-        logger = get_run_logger()
+        logger = _get_logger()
         
         # Map tool names to package names
         tool_packages = {
@@ -221,7 +235,7 @@ class EnvironmentInstaller:
         Returns:
             True if installation succeeded
         """
-        logger = get_run_logger()
+        logger = _get_logger()
         
         if not config.system_packages:
             logger.info("No system packages to install")
@@ -291,7 +305,7 @@ class EnvironmentInstaller:
         Returns:
             True if all commands succeeded
         """
-        logger = get_run_logger()
+        logger = _get_logger()
         
         if not config.post_install_commands:
             return True

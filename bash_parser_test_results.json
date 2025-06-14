@@ -1,11 +1,11 @@
 {
   "file_metadata": {
     "size": 933,
-    "modified": 1749784950.7317514,
-    "created": 1749784950.7317514,
+    "modified": 1749888575.2278516,
+    "created": 1749888575.2278516,
     "permissions": "0o100600",
-    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpkn1e1j7a.sh",
-    "name": "tmpkn1e1j7a.sh",
+    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmp3nyl1bgd.sh",
+    "name": "tmp3nyl1bgd.sh",
     "extension": ".sh"
   },
   "functions": [
@@ -81,7 +81,7 @@
   ],
   "commands": [
     {
-      "name": "npm",
+      "name": "docker",
       "found": true
     },
     {
@@ -89,7 +89,7 @@
       "found": true
     },
     {
-      "name": "docker",
+      "name": "npm",
       "found": true
     }
   ],

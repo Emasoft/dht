@@ -190,7 +190,7 @@ def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
             capture_output=True
         )
         return result.returncode == 0
-    except:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
 

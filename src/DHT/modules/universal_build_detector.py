@@ -111,7 +111,7 @@ class UniversalBuildDetector:
         with open(pyproject_path, "rb") as f:
             try:
                 pyproject = tomllib.load(f)
-            except:
+            except (AttributeError, tomllib.TOMLDecodeError):
                 # Fallback for older Python without tomllib
                 import toml
                 pyproject = toml.load(pyproject_path)

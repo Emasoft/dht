@@ -25,7 +25,7 @@ def test_diagnostic_reporter_v2_module():
 @patch('subprocess.run')
 def test_build_system_report(mock_subprocess):
     """Test the build_system_report function from diagnostic_reporter_v2."""
-    from diagnostic_reporter_v2 import build_system_report
+    from DHT.diagnostic_reporter_v2 import build_system_report
     
     # Mock subprocess responses
     def mock_run(*args, **kwargs):
@@ -94,10 +94,10 @@ def test_diagnostic_cli_registry():
     assert "python" in language_runtime_cmds
 
 @pytest.mark.unit
-@patch('diagnostic_reporter_v2.build_system_report')
+@patch('DHT.diagnostic_reporter_v2.build_system_report')
 def test_diagnostic_main_function(mock_build_report, tmp_path):
     """Test the main function of diagnostic_reporter_v2."""
-    from diagnostic_reporter_v2 import main
+    from DHT.diagnostic_reporter_v2 import main
     
     # Mock the system report
     mock_report = {
@@ -160,7 +160,7 @@ def test_diagnostic_taxonomy():
 @pytest.mark.unit
 def test_diagnostic_output_formats(tmp_path):
     """Test different output formats for diagnostics."""
-    from diagnostic_reporter_v2 import build_system_report
+    from DHT.diagnostic_reporter_v2 import build_system_report
     import yaml
     import json
     

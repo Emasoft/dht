@@ -139,16 +139,22 @@ class TestDuplicationElimination:
         assert not pkg_requirements.exists(), "Duplicate requirements directory in package"
     
     def test_no_duplicate_diagnostic_reporters(self):
-        """Test that diagnostic reporter is properly linked, not duplicated."""
+        """Test that diagnostic reporter v2 exists in the package without duplication."""
+        # We now only have diagnostic_reporter_v2 in the package
+        pkg_reporter_v2 = self.dht_root / "src" / "DHT" / "diagnostic_reporter_v2.py"
+        
+        # Should exist in package
+        assert pkg_reporter_v2.exists(), "Package diagnostic reporter v2 missing"
+        
+        # Should not have old versions
+        old_reporter = self.dht_root / "src" / "DHT" / "diagnostic_reporter.py"
+        old_reporter_old = self.dht_root / "src" / "DHT" / "diagnostic_reporter_old.py"
+        assert not old_reporter.exists(), "Old diagnostic_reporter.py should be removed"
+        assert not old_reporter_old.exists(), "Old diagnostic_reporter_old.py should be removed"
+        
+        # Should not exist at root level
         root_reporter = self.dht_root / "diagnostic_reporter.py"
-        pkg_reporter = self.dht_root / "src" / "DHT" / "diagnostic_reporter.py"
-        
-        # Both should exist
-        assert root_reporter.exists(), "Root diagnostic reporter missing"
-        assert pkg_reporter.exists(), "Package diagnostic reporter missing"
-        
-        # Root should be a symlink to package version (no duplication)
-        assert root_reporter.is_symlink(), "Root diagnostic reporter should be symlink"
+        assert not root_reporter.exists(), "No diagnostic reporter should be at root level"
     
     def test_no_orphaned_files(self):
         """Test that there are no orphaned shell scripts at root level."""

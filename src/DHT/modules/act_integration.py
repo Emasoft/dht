@@ -123,7 +123,7 @@ class ActIntegration:
                     check=True
                 )
                 results["has_actionlint"] = True
-            except:
+            except (subprocess.CalledProcessError, FileNotFoundError):
                 # Try Docker as fallback
                 if self._check_docker_available():
                     console.print("[yellow]⚠️  Actionlint not found locally[/yellow]")
@@ -204,7 +204,7 @@ class ActIntegration:
                 check=True
             )
             return result.returncode == 0
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             return False
     
     def lint_with_docker(self, tag: str = "latest", color: bool = True) -> Dict[str, Any]:
@@ -313,7 +313,7 @@ class ActIntegration:
             )
             if result.returncode == 0 and "nektos/gh-act" in result.stdout:
                 availability["gh_extension"] = True
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             pass
         
         # Check standalone act
@@ -325,7 +325,7 @@ class ActIntegration:
             )
             if result.returncode == 0:
                 availability["standalone_act"] = True
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             pass
         
         # Check if we can run act in container
@@ -353,7 +353,7 @@ class ActIntegration:
                 text=True
             )
             return result.returncode == 0
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             return False
     
     def setup_act_config(self, config: Optional[ActConfig] = None) -> Path:
@@ -486,7 +486,7 @@ GITHUB_REPOSITORY=local/project
                     container_args.append(custom_image)
                 else:
                     container_args.append("nektos/act:latest")
-            except:
+            except (subprocess.CalledProcessError, FileNotFoundError):
                 container_args.append("nektos/act:latest")
         else:
             container_args.append("nektos/act:latest")

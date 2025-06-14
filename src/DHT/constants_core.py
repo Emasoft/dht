@@ -48,8 +48,8 @@ HEARTBEAT_FILE = os.path.join(GUARDIAN_STATE_DIR, "heartbeat.json")
 MAX_PROCESS_QUEUE_SIZE = 50  # Maximum processes in queue
 
 # Calculate system resources based on available memory
-def calculate_system_resources():
-    """Calculate system resources and set appropriate limits"""
+def calculate_system_resources() -> None:
+    """Calculate system resources and set appropriate limits."""
     global MAX_TOTAL_MEMORY_MB, DEFAULT_MAX_MEMORY_MB, MAX_CONCURRENT_PROCESSES, HAS_PSUTIL
     
     # Default conservative values

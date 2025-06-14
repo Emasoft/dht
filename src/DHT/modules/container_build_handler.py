@@ -69,7 +69,7 @@ class ContainerBuildHandler:
                 )
                 if result.returncode == 0:
                     return "docker"
-            except:
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
                 pass
         
         # Check for buildah (another rootless option)
@@ -87,7 +87,7 @@ class ContainerBuildHandler:
                 check=True
             )
             return True
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             return False
     
     def find_compose_files(self) -> List[str]:
