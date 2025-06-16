@@ -7,8 +7,13 @@ This file contains improved code snippets that address the issues found.
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import subprocess
+
+
+class UVNotFoundError(Exception):
+    """Raised when UV is not found on the system."""
+    pass
 
 
 class UVManagerImproved:
