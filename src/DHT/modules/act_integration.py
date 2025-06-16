@@ -6,6 +6,7 @@
 # - Integrates with container build system for isolation
 # - Supports both standalone act and gh extension
 # - Provides deterministic CI/CD testing environment
+# - Refactored into smaller modules to reduce file size
 # 
 
 """
@@ -16,15 +17,22 @@ Provides isolated, deterministic CI/CD testing environment.
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import subprocess
-import json
-import yaml
-import os
-from dataclasses import dataclass
 
 from prefect import flow, task, get_run_logger
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+
+# Import extracted modules
+from DHT.modules.act_integration_models import (
+    ActConfig, WorkflowInfo, LintResult, 
+    ActCheckResult, ContainerSetupResult
+)
+from DHT.modules.act_workflow_manager import ActWorkflowManager
+from DHT.modules.act_linter import ActLinter
+from DHT.modules.act_setup_manager import ActSetupManager
+from DHT.modules.act_container_manager import ActContainerManager
+from DHT.modules.act_command_builder import ActCommandBuilder
 
 console = Console()
 
@@ -34,19 +42,6 @@ try:
     HAS_CONTAINER_RUNNER = True
 except ImportError:
     HAS_CONTAINER_RUNNER = False
-
-
-@dataclass
-class ActConfig:
-    """Configuration for act runner."""
-    runner_image: str = "catthehacker/ubuntu:act-latest"
-    platform: str = "ubuntu-latest"
-    container_runtime: str = "podman"  # Prefer podman for rootless
-    use_gh_extension: bool = True
-    artifact_server_path: Optional[str] = None
-    cache_server_path: Optional[str] = None
-    reuse_containers: bool = False
-    bind_workdir: bool = True
     
 
 class ActIntegration:
@@ -59,41 +54,19 @@ class ActIntegration:
         self.act_config_path = self.venv_path / "dht-act"
         self.container_config = None
         
+        # Initialize helper classes
+        self.workflow_manager = ActWorkflowManager(project_path)
+        self.linter = ActLinter(project_path)
+        self.setup_manager = ActSetupManager(project_path)
+        self.container_manager = ActContainerManager(project_path)
+        
     def has_workflows(self) -> bool:
         """Check if project has GitHub workflows."""
-        return self.workflows_path.exists() and any(
-            f.suffix in ['.yml', '.yaml'] 
-            for f in self.workflows_path.iterdir() 
-            if f.is_file()
-        )
+        return self.workflow_manager.has_workflows()
     
-    def get_workflows(self) -> List[Dict[str, Any]]:
+    def get_workflows(self) -> List[WorkflowInfo]:
         """Get list of workflows with their metadata."""
-        workflows = []
-        
-        if not self.has_workflows():
-            return workflows
-        
-        for workflow_file in sorted(self.workflows_path.glob("*.y*ml")):
-            try:
-                with open(workflow_file) as f:
-                    workflow_data = yaml.safe_load(f)
-                
-                workflows.append({
-                    "file": workflow_file.name,
-                    "name": workflow_data.get("name", workflow_file.stem),
-                    "on": workflow_data.get("on", {}),
-                    "jobs": list(workflow_data.get("jobs", {}).keys()),
-                    "path": str(workflow_file)
-                })
-            except Exception as e:
-                workflows.append({
-                    "file": workflow_file.name,
-                    "name": workflow_file.stem,
-                    "error": str(e)
-                })
-        
-        return workflows
+        return self.workflow_manager.get_workflows()
     
     def lint_workflows(self, use_docker: bool = False) -> Dict[str, Any]:
         """Lint GitHub Actions workflows using actionlint.
@@ -106,106 +79,11 @@ class ActIntegration:
         
         This is different from 'act' which actually executes workflows.
         """
-        results = {
-            "has_actionlint": False,
-            "workflows": {},
-            "total_issues": 0,
-            "summary": [],
-            "method": "native" if not use_docker else "docker"
-        }
-        
-        # Check if actionlint is available or use Docker
-        if not use_docker:
-            try:
-                subprocess.run(
-                    ["actionlint", "--version"],
-                    capture_output=True,
-                    check=True
-                )
-                results["has_actionlint"] = True
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                # Try Docker as fallback
-                if self._check_docker_available():
-                    console.print("[yellow]⚠️  Actionlint not found locally[/yellow]")
-                    console.print("[yellow]🐳 Using Docker image automatically...[/yellow]")
-                    return self.lint_with_docker()
-                else:
-                    results["summary"].append("actionlint not found. Install with: brew install actionlint")
-                    results["summary"].append("Or use Docker: docker run --rm -v $(pwd):/repo --workdir /repo rhysd/actionlint:latest")
-                    return results
-        
-        if not self.has_workflows():
-            results["summary"].append("No GitHub workflows found")
-            return results
-        
-        # Run actionlint on all workflows
-        try:
-            if use_docker:
-                # Use Docker to run actionlint
-                cmd = [
-                    "docker", "run", "--rm",
-                    "-v", f"{self.project_path}:/repo",
-                    "--workdir", "/repo",
-                    "rhysd/actionlint:latest",
-                    "-format", "{{json .}}"
-                ]
-                result = subprocess.run(
-                    cmd,
-                    capture_output=True,
-                    text=True
-                )
-                results["has_actionlint"] = True
-            else:
-                result = subprocess.run(
-                    ["actionlint", "-format", "{{json .}}"],
-                    cwd=str(self.project_path),
-                    capture_output=True,
-                    text=True
-                )
-            
-            if result.stdout:
-                # Parse each line as JSON (actionlint outputs one JSON per line)
-                for line in result.stdout.strip().split('\n'):
-                    if line:
-                        try:
-                            issue = json.loads(line)
-                            filepath = issue.get("filepath", "")
-                            filename = Path(filepath).name if filepath else "unknown"
-                            
-                            if filename not in results["workflows"]:
-                                results["workflows"][filename] = []
-                            
-                            results["workflows"][filename].append({
-                                "line": issue.get("line", 0),
-                                "column": issue.get("column", 0),
-                                "message": issue.get("message", ""),
-                                "kind": issue.get("kind", "error")
-                            })
-                            results["total_issues"] += 1
-                        except json.JSONDecodeError:
-                            pass
-            
-            if results["total_issues"] == 0:
-                results["summary"].append("✅ All workflows passed validation!")
-            else:
-                results["summary"].append(f"❌ Found {results['total_issues']} issue(s) in workflows")
-                
-        except Exception as e:
-            results["summary"].append(f"Error running actionlint: {str(e)}")
-        
-        return results
+        return self.linter.lint_workflows(use_docker=use_docker)
     
     def _check_docker_available(self) -> bool:
         """Check if Docker is available."""
-        try:
-            result = subprocess.run(
-                ["docker", "--version"],
-                capture_output=True,
-                check=True
-            )
-            return result.returncode == 0
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            return False
+        return self.linter._check_docker_available()
     
     def lint_with_docker(self, tag: str = "latest", color: bool = True) -> Dict[str, Any]:
         """Run actionlint using official Docker image.
@@ -213,402 +91,70 @@ class ActIntegration:
         This is the recommended way to run actionlint as it includes
         all dependencies (shellcheck, pyflakes) in the container.
         """
-        results = {
-            "method": "docker",
-            "docker_tag": tag,
-            "workflows": {},
-            "total_issues": 0,
-            "summary": []
-        }
-        
-        if not self._check_docker_available():
-            results["summary"].append("Docker not available")
-            return results
-        
-        # Pull the official actionlint image
-        image_name = f"rhysd/actionlint:{tag}"
-        console.print(f"[yellow]🐳 Pulling {image_name}...[/yellow]")
-        
-        try:
-            pull_result = subprocess.run(
-                ["docker", "pull", image_name],
-                capture_output=True,
-                text=True
-            )
-            if pull_result.returncode != 0:
-                results["summary"].append(f"Failed to pull Docker image: {pull_result.stderr}")
-                return results
-        except Exception as e:
-            results["summary"].append(f"Error pulling Docker image: {str(e)}")
-            return results
-        
-        # Run actionlint in Docker with proper volume mounting
-        cmd = [
-            "docker", "run", "--rm",
-            "-v", f"{self.project_path}:/repo:ro",  # Read-only mount
-            "--workdir", "/repo",
-            image_name,
-            "-format", "{{json .}}"
-        ]
-        
-        if color:
-            cmd.insert(-2, "-color")
-        
-        console.print(f"[yellow]🔍 Running actionlint in Docker...[/yellow]")
-        
-        try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True
-            )
-            
-            # Process the output same as native actionlint
-            if result.stdout:
-                for line in result.stdout.strip().split('\n'):
-                    if line:
-                        try:
-                            issue = json.loads(line)
-                            filepath = issue.get("filepath", "")
-                            filename = Path(filepath).name if filepath else "unknown"
-                            
-                            if filename not in results["workflows"]:
-                                results["workflows"][filename] = []
-                            
-                            results["workflows"][filename].append({
-                                "line": issue.get("line", 0),
-                                "column": issue.get("column", 0),
-                                "message": issue.get("message", ""),
-                                "kind": issue.get("kind", "error")
-                            })
-                            results["total_issues"] += 1
-                        except json.JSONDecodeError:
-                            pass
-            
-            if results["total_issues"] == 0:
-                results["summary"].append("✅ All workflows passed validation!")
-            else:
-                results["summary"].append(f"❌ Found {results['total_issues']} issue(s) in workflows")
-                
-        except Exception as e:
-            results["summary"].append(f"Error running actionlint: {str(e)}")
-        
-        return results
+        return self.linter.lint_with_docker(tag=tag, color=color)
     
-    def check_act_available(self) -> Dict[str, bool]:
+    def _parse_actionlint_output(self, output: str, results: Dict[str, Any]) -> None:
+        """Parse actionlint JSON output and update results."""
+        return self.linter._parse_actionlint_output(output, results)
+    
+    def check_act_available(self) -> ActCheckResult:
         """Check if act is available via various methods."""
-        availability = {
-            "gh_extension": False,
-            "standalone_act": False,
-            "container_act": False,
-            "preferred_method": None
+        result = self.setup_manager.check_act_available()
+        # Convert to legacy format for compatibility
+        return {
+            "gh_extension": result.act_extension_installed,
+            "standalone_act": result.standalone_act_available,
+            "container_act": self.container_manager.setup_container_environment().runtime_available,
+            "preferred_method": result.preferred_method
         }
-        
-        # Check gh extension
-        try:
-            result = subprocess.run(
-                ["gh", "extension", "list"],
-                capture_output=True,
-                text=True
-            )
-            if result.returncode == 0 and "nektos/gh-act" in result.stdout:
-                availability["gh_extension"] = True
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            pass
-        
-        # Check standalone act
-        try:
-            result = subprocess.run(
-                ["act", "--version"],
-                capture_output=True,
-                text=True
-            )
-            if result.returncode == 0:
-                availability["standalone_act"] = True
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            pass
-        
-        # Check if we can run act in container
-        from container_build_handler import ContainerBuildHandler
-        handler = ContainerBuildHandler(self.project_path)
-        if handler.detect_container_builder():
-            availability["container_act"] = True
-        
-        # Determine preferred method
-        if availability["gh_extension"]:
-            availability["preferred_method"] = "gh_extension"
-        elif availability["standalone_act"]:
-            availability["preferred_method"] = "standalone"
-        elif availability["container_act"]:
-            availability["preferred_method"] = "container"
-        
-        return availability
     
     def install_gh_act_extension(self) -> bool:
         """Install the gh act extension."""
-        try:
-            result = subprocess.run(
-                ["gh", "extension", "install", "https://github.com/nektos/gh-act"],
-                capture_output=True,
-                text=True
-            )
-            return result.returncode == 0
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            return False
+        return self.setup_manager.install_gh_act_extension()
     
     def setup_act_config(self, config: Optional[ActConfig] = None) -> Path:
         """Set up act configuration in project."""
-        if config is None:
-            config = ActConfig()
-        
-        self.act_config_path.mkdir(parents=True, exist_ok=True)
-        
-        # Create .actrc file with configuration
-        actrc_content = f"""
-# Act configuration for DHT
-# Generated automatically - do not edit manually
-
-# Container options
---container-architecture linux/amd64
---platform {config.platform}
---pull=false
-
-# Use local project directory
---bind
-
-# Container runtime
---container-daemon-socket unix://{self._get_container_socket(config.container_runtime)}
-
-# Runner image
---image {config.runner_image}
-
-# Artifact server (if configured)
-{f'--artifact-server-path {config.artifact_server_path}' if config.artifact_server_path else '# No artifact server'}
-
-# Cache server (if configured)  
-{f'--cache-server-path {config.cache_server_path}' if config.cache_server_path else '# No cache server'}
-
-# Reuse containers
-{'--reuse' if config.reuse_containers else '# No container reuse'}
-"""
-        
-        actrc_path = self.act_config_path / ".actrc"
-        with open(actrc_path, "w") as f:
-            f.write(actrc_content.strip())
-        
-        # Create secrets file template
-        secrets_template = """
-# GitHub Secrets for local testing
-# Add your secrets here (DO NOT COMMIT!)
-# Format: SECRET_NAME=secret_value
-
-# Example:
-# GITHUB_TOKEN=your_github_token
-# NPM_TOKEN=your_npm_token
-"""
-        
-        secrets_path = self.act_config_path / ".secrets"
-        if not secrets_path.exists():
-            with open(secrets_path, "w") as f:
-                f.write(secrets_template.strip())
-            # Make secrets file readable only by owner
-            os.chmod(secrets_path, 0o600)
-        
-        # Create env file template
-        env_template = """
-# Environment variables for act
-# These simulate GitHub Actions environment
-
-GITHUB_ACTIONS=true
-CI=true
-GITHUB_WORKSPACE=/workspace
-GITHUB_REPOSITORY_OWNER=local
-GITHUB_REPOSITORY=local/project
-"""
-        
-        env_path = self.act_config_path / ".env"
-        if not env_path.exists():
-            with open(env_path, "w") as f:
-                f.write(env_template.strip())
-        
-        return actrc_path
+        return self.setup_manager.setup_act_config(config)
     
     def _get_container_socket(self, runtime: str) -> str:
         """Get container runtime socket path."""
-        sockets = {
-            "docker": "/var/run/docker.sock",
-            "podman": f"{os.environ.get('XDG_RUNTIME_DIR', '/tmp')}/podman/podman.sock",
-            "buildah": f"{os.environ.get('XDG_RUNTIME_DIR', '/tmp')}/buildah/buildah.sock"
-        }
-        return sockets.get(runtime, "/var/run/docker.sock")
+        return self.container_manager._get_container_socket(runtime)
     
     def _get_container_act_command(self) -> List[str]:
         """Get command to run act inside a container."""
-        runtime = ActConfig().container_runtime
-        
-        # Setup container configuration
-        container_args = []
-        
-        # Basic container setup
-        container_args.extend([
-            runtime, "run", "--rm",
-            "-v", f"{self.project_path}:/workspace:z",  # :z for SELinux compatibility
-            "-v", f"{self.act_config_path}:/root/.config/act:z",
-            "-w", "/workspace",
-            "--network", "host",  # Allow network access
-        ])
-        
-        # Add container runtime socket mount
-        socket_path = self._get_container_socket(runtime)
-        if os.path.exists(socket_path):
-            container_args.extend(["-v", f"{socket_path}:{socket_path}"])
-            
-        # Add privileged mode for Docker-in-Docker
-        container_args.append("--privileged")
-        
-        # Add environment variables
-        container_args.extend([
-            "-e", "DOCKER_HOST=unix:///var/run/docker.sock",
-            "-e", "HOME=/root",
-            "-e", "USER=root",
-        ])
-        
-        # Use custom act container image with act pre-installed
-        # Check if we have our custom image first
-        if HAS_CONTAINER_RUNNER:
-            custom_image = "dht-act:latest"
-            try:
-                check_result = subprocess.run(
-                    [runtime, "image", "exists", custom_image],
-                    capture_output=True
-                )
-                if check_result.returncode == 0:
-                    container_args.append(custom_image)
-                else:
-                    container_args.append("nektos/act:latest")
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                container_args.append("nektos/act:latest")
-        else:
-            container_args.append("nektos/act:latest")
-        
-        # The act command itself
-        container_args.append("act")
-        
-        return container_args
+        return self.container_manager._get_container_act_command(ActConfig())
     
     def setup_container_environment(self) -> Dict[str, Any]:
         """Set up container environment for act."""
-        result = {
-            "container_config_created": False,
-            "act_image_available": False,
-            "runtime_available": False
+        container_result = self.container_manager.setup_container_environment()
+        # Convert to legacy format for compatibility
+        return {
+            "container_config_created": container_result.success,
+            "act_image_available": container_result.success,
+            "runtime_available": container_result.runtime_available,
+            "runtime": container_result.runtime,
+            "error": container_result.error
         }
-        
-        # Check container runtime
-        from container_build_handler import ContainerBuildHandler
-        handler = ContainerBuildHandler(self.project_path)
-        runtime = handler.detect_container_builder()
-        
-        if runtime:
-            result["runtime_available"] = True
-            result["runtime"] = runtime
-            
-            # Pull act container image
-            console.print(f"[yellow]🐳 Pulling act container image...[/yellow]")
-            try:
-                pull_result = subprocess.run(
-                    [runtime, "pull", "nektos/act:latest"],
-                    capture_output=True,
-                    text=True
-                )
-                if pull_result.returncode == 0:
-                    result["act_image_available"] = True
-                    console.print("[green]✅ Act container image ready[/green]")
-                else:
-                    console.print("[red]❌ Failed to pull act image[/red]")
-                    result["error"] = pull_result.stderr
-            except Exception as e:
-                result["error"] = str(e)
-        
-        # Create container configuration
-        if runtime == "podman":
-            # Setup podman-specific config
-            podman_config_dir = self.act_config_path / "containers"
-            podman_config_dir.mkdir(parents=True, exist_ok=True)
-            
-            # Create containers.conf for rootless operation
-            containers_conf = podman_config_dir / "containers.conf"
-            with open(containers_conf, "w") as f:
-                f.write("""
-[containers]
-userns = "keep-id"
-label = true
-log_driver = "k8s-file"
-
-[engine]
-cgroup_manager = "cgroupfs"
-events_logger = "file"
-runtime = "crun"
-""")
-            
-            result["container_config_created"] = True
-            result["config_path"] = str(podman_config_dir)
-        
-        return result
     
     def get_act_command(self, event: str = "push", job: Optional[str] = None, use_container: bool = False) -> List[str]:
         """Get the act command to run."""
         availability = self.check_act_available()
+        config = ActConfig()
+        builder = ActCommandBuilder(self.project_path, config)
         
-        cmd = []
-        
-        # Force container mode if requested
-        if use_container:
-            cmd = self._get_container_act_command()
-        # Use preferred method
-        elif availability["preferred_method"] == "gh_extension":
-            cmd = ["gh", "act"]
-        elif availability["preferred_method"] == "standalone":
-            cmd = ["act"]
-        elif availability["preferred_method"] == "container":
-            cmd = self._get_container_act_command()
-        else:
-            raise RuntimeError("No act runner available")
-        
-        # Add configuration file
-        if (self.act_config_path / ".actrc").exists():
-            cmd.extend(["--actrc", str(self.act_config_path / ".actrc")])
-        
-        # Add secrets if available
-        secrets_file = self.act_config_path / ".secrets"
-        if secrets_file.exists():
-            cmd.extend(["--secret-file", str(secrets_file)])
-        
-        # Add env file
-        env_file = self.act_config_path / ".env"
-        if env_file.exists():
-            cmd.extend(["--env-file", str(env_file)])
-        
-        # Add event
-        cmd.append(event)
-        
-        # Add specific job if requested
-        if job:
-            cmd.extend(["-j", job])
-        
-        return cmd
+        # Build command using command builder
+        return builder.get_act_command(
+            event=event,
+            job=job,
+            use_container=use_container,
+            preferred_method=availability["preferred_method"]
+        )
     
     def list_workflows_and_jobs(self) -> Dict[str, Any]:
         """List all workflows and their jobs."""
-        workflows = self.get_workflows()
-        availability = self.check_act_available()
-        
-        return {
-            "workflows": workflows,
-            "act_available": availability,
-            "total_workflows": len(workflows),
-            "total_jobs": sum(len(w.get("jobs", [])) for w in workflows)
-        }
+        result = self.workflow_manager.list_workflows_and_jobs()
+        result["act_available"] = self.check_act_available()
+        return result
 
 
 @task(name="lint_workflows")

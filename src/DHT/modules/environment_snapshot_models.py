@@ -14,7 +14,7 @@ This module contains the data models used by the environment reproducer.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 
 
 @dataclass
@@ -60,34 +60,23 @@ class EnvironmentSnapshot:
 @dataclass 
 class ReproductionResult:
     """Result of environment reproduction attempt."""
-    
     success: bool
-    snapshot: EnvironmentSnapshot
-    
-    # Steps completed
-    steps_completed: List[str] = field(default_factory=list)
-    steps_failed: List[str] = field(default_factory=list)
+    snapshot_id: str
+    platform: str
     
     # Verification results
-    platform_compatible: bool = True
-    python_version_matched: bool = False
-    tools_matched: Dict[str, bool] = field(default_factory=dict)
-    packages_installed: Dict[str, bool] = field(default_factory=dict)
+    tools_verified: Dict[str, bool] = field(default_factory=dict)
+    versions_verified: Dict[str, bool] = field(default_factory=dict)
     configs_verified: Dict[str, bool] = field(default_factory=dict)
     
-    # Issues encountered
+    # Discrepancies found
+    version_mismatches: Dict[str, Tuple[str, str]] = field(default_factory=dict)  # tool -> (expected, actual)
+    missing_tools: List[str] = field(default_factory=list)
+    config_differences: Dict[str, str] = field(default_factory=dict)  # file -> diff
+    
+    # Reproduction actions taken
+    actions_completed: List[str] = field(default_factory=list)
+    actions_failed: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
-    errors: List[str] = field(default_factory=list)
     
-    # Platform differences
-    platform_differences: List[str] = field(default_factory=list)
-    required_adaptations: List[str] = field(default_factory=list)
-    
-    # Timing
-    start_time: Optional[str] = None
-    end_time: Optional[str] = None
-    duration_seconds: float = 0.0
-    
-    # Artifacts created
-    created_files: List[str] = field(default_factory=list)
-    lock_files_generated: List[str] = field(default_factory=list)
+    execution_time: float = 0.0

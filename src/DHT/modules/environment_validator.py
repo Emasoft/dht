@@ -354,6 +354,60 @@ class EnvironmentValidator:
                 f"expected '{expected}' but got '{actual}'"
             )
             return False, warnings
+    
+    def verify_configurations(
+        self,
+        target_path: Path,
+        expected_configs: Dict[str, str],
+        expected_checksums: Dict[str, str]
+    ) -> Dict[str, Any]:
+        """
+        Verify configuration files match expected content.
+        
+        Returns:
+            Dict with 'verified' and 'differences' keys
+        """
+        verified = {}
+        differences = {}
+        
+        for filename, expected_content in expected_configs.items():
+            config_path = target_path / filename
+            
+            if not config_path.exists():
+                verified[filename] = False
+                differences[filename] = "File missing"
+                continue
+            
+            try:
+                actual_content = config_path.read_text(encoding='utf-8')
+                
+                # Check content match
+                if actual_content == expected_content:
+                    verified[filename] = True
+                else:
+                    verified[filename] = False
+                    
+                    # Check if we have checksums to compare
+                    if filename in expected_checksums:
+                        import hashlib
+                        actual_checksum = hashlib.sha256(actual_content.encode()).hexdigest()
+                        expected_checksum = expected_checksums[filename]
+                        
+                        if actual_checksum == expected_checksum:
+                            differences[filename] = "Content differs but checksum matches (whitespace?)"
+                        else:
+                            differences[filename] = f"Content differs (checksum mismatch)"
+                    else:
+                        differences[filename] = "Content differs"
+                    
+            except Exception as e:
+                verified[filename] = False
+                differences[filename] = f"Read error: {e}"
+        
+        return {
+            "verified": verified,
+            "differences": differences
+        }
 
 
 # Export public API
