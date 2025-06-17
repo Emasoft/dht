@@ -72,16 +72,15 @@ def run_python_script(
     
     result = run_with_guardian(
         command=cmd_args,
-        limits=ResourceLimits(memory_mb=memory_mb),
-        timeout=timeout,
+        limits=ResourceLimits(memory_mb=memory_mb, timeout=timeout),
         cwd=str(project_path)
     )
     
     return {
-        "success": result["return_code"] == 0,
+        "success": result.return_code == 0,
         "script": script,
-        "output": result["stdout"],
-        "error": result["stderr"],
-        "duration": result.get("execution_time", 0),
-        "peak_memory_mb": result.get("peak_memory_mb", 0)
+        "output": result.stdout,
+        "error": result.stderr,
+        "duration": result.execution_time,
+        "peak_memory_mb": result.peak_memory_mb
     }

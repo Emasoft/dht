@@ -61,8 +61,7 @@ def build_project(
     
     result = run_with_guardian(
         command=args,
-        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["build_project"]),
-        timeout=BUILD_TIMEOUT,
+        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["build_project"], timeout=BUILD_TIMEOUT),
         cwd=str(project_path)
     )
     
@@ -70,7 +69,7 @@ def build_project(
     build_dir = output_dir or project_path / "dist"
     
     return {
-        "success": result["return_code"] == 0,
-        "output": result["stdout"] if result["return_code"] == 0 else result["stderr"],
-        "artifacts": [str(f) for f in build_dir.glob("*")] if result["return_code"] == 0 else []
+        "success": result.return_code == 0,
+        "output": result.stdout if result.return_code == 0 else result.stderr,
+        "artifacts": [str(f) for f in build_dir.glob("*")] if result.return_code == 0 else []
     }

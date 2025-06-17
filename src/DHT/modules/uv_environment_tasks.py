@@ -87,13 +87,12 @@ def create_virtual_environment(
         logger.info(f"Creating virtual environment at {venv_path}")
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["create_venv"]),
-            timeout=DEFAULT_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["create_venv"], timeout=DEFAULT_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Failed to create venv: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Failed to create venv: {result.stderr}")
         
         logger.info("Virtual environment created successfully")
         
@@ -101,7 +100,7 @@ def create_virtual_environment(
             "created": True,
             "path": str(venv_path),
             "python_version": python_version,
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:

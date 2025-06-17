@@ -86,20 +86,19 @@ def install_dependencies(
         # Run installation
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=INSTALL_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Dependency installation failed: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Dependency installation failed: {result.stderr}")
         
         logger.info("Dependencies installed successfully")
         
         return {
             "success": True,
             "method": "sync" if pyproject_path.exists() else "pip",
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:
@@ -143,18 +142,17 @@ def sync_dependencies(
         logger.info("Syncing dependencies with UV")
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=INSTALL_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Dependency sync failed: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Dependency sync failed: {result.stderr}")
         
         return {
             "success": True,
             "frozen": frozen,
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:
@@ -191,13 +189,12 @@ def generate_lock_file(project_path: Path) -> Dict[str, Any]:
         logger.info("Generating UV lock file")
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=INSTALL_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Failed to generate lock file: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Failed to generate lock file: {result.stderr}")
         
         lock_file = project_path / "uv.lock"
         logger.info(f"Generated lock file at {lock_file}")
@@ -206,7 +203,7 @@ def generate_lock_file(project_path: Path) -> Dict[str, Any]:
             "success": True,
             "path": str(lock_file),
             "exists": lock_file.exists(),
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:
@@ -264,13 +261,12 @@ def add_dependency(
         logger.info(f"Adding dependency: {package_spec}")
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=INSTALL_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Failed to add dependency: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Failed to add dependency: {result.stderr}")
         
         logger.info(f"Successfully added {package}")
         
@@ -280,7 +276,7 @@ def add_dependency(
             "version": version,
             "dev": dev,
             "optional": optional,
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:
@@ -318,20 +314,19 @@ def remove_dependency(project_path: Path, package: str) -> Dict[str, Any]:
         logger.info(f"Removing dependency: {package}")
         result = run_with_guardian(
             command=cmd,
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=DEFAULT_TIMEOUT,
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=DEFAULT_TIMEOUT),
             cwd=str(project_path)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Failed to remove dependency: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Failed to remove dependency: {result.stderr}")
         
         logger.info(f"Successfully removed {package}")
         
         return {
             "success": True,
             "package": package,
-            "output": result["stdout"]
+            "output": result.stdout
         }
         
     except Exception as e:

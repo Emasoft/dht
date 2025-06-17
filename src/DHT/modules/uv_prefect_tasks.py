@@ -18,6 +18,10 @@ from __future__ import annotations
 
 # Import all tasks from helper modules
 from DHT.modules.uv_task_models import UVTaskError
+from DHT.modules.uv_task_utils import (
+    find_uv_executable,
+    extract_min_python_version,
+)
 from DHT.modules.uv_python_tasks import (
     check_uv_available,
     detect_python_version,
@@ -48,6 +52,9 @@ from DHT.modules.uv_script_tasks import (
 
 # Export all tasks and flows
 __all__ = [
+    # Utilities
+    "find_uv_executable",
+    "extract_min_python_version",
     # Python version management
     "check_uv_available",
     "detect_python_version",

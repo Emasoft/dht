@@ -71,6 +71,10 @@ def extract_min_python_version(constraint: str) -> str:
     """
     constraint = constraint.strip()
     
+    # Handle "python" prefix (e.g., "python>=3.10")
+    if constraint.startswith("python"):
+        constraint = constraint[6:].strip()
+    
     # Handle caret notation (^3.8 means >=3.8,<4.0)
     if constraint.startswith("^"):
         return constraint[1:].split(",")[0].strip()

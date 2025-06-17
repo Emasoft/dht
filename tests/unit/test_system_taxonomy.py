@@ -150,9 +150,8 @@ class TestToolAvailability:
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform('wsl', 'windows') is True
         assert system_taxonomy.is_tool_available_on_platform('wsl', 'macos') is False
-        # TODO: This should be False but currently returns True - wsl needs to be added to Linux exclusions
-        # assert system_taxonomy.is_tool_available_on_platform('wsl', 'linux') is False
-        assert system_taxonomy.is_tool_available_on_platform('wsl', 'linux') is True  # Current behavior
+        # WSL is correctly excluded on Linux since it's Windows-specific
+        assert system_taxonomy.is_tool_available_on_platform('wsl', 'linux') is False
     
     @pytest.mark.unit
     def test_systemctl_not_on_windows(self):
@@ -595,37 +594,35 @@ class TestPerformanceCharacteristics:
         
         # Should have filtered to a reasonable number
         assert total_tools > 50  # Should have many tools
-        assert total_tools < 200  # But not all tools
+        assert total_tools < 300  # But not all tools (taxonomy has grown)
 
 
 class TestImplementationIssues:
     """Test suite documenting current implementation issues that need fixing"""
     
     @pytest.mark.unit
-    def test_language_subcategory_filtering_issue(self):
-        """Document that language subcategory is incorrectly filtered out"""
+    def test_language_subcategory_preserved(self):
+        """Verify that language subcategory is preserved for all platforms"""
         # The language subcategory has a different structure than system subcategory
         # It uses language names as keys instead of platform names
-        # Current implementation filters it out completely
+        # Language package managers are generally cross-platform
         
         categories = system_taxonomy.get_relevant_categories('linux')
         
-        # This is the current broken behavior
-        assert 'language' not in categories['package_managers']['categories']
-        
-        # TODO: Fix implementation to preserve language subcategory since
-        # language package managers are generally cross-platform
+        # Language subcategory should be preserved
+        assert 'language' in categories['package_managers']['categories']
+        assert 'python' in categories['package_managers']['categories']['language']
+        assert 'javascript' in categories['package_managers']['categories']['language']
     
     @pytest.mark.unit
-    def test_wsl_platform_exclusion_issue(self):
-        """Document that WSL is not properly excluded from Linux"""
+    def test_wsl_platform_exclusion_fixed(self):
+        """Verify that WSL is properly excluded from Linux"""
         # WSL (Windows Subsystem for Linux) should only be available on Windows
-        # Current implementation is missing it from Linux exclusions
+        # This has been fixed - WSL is now in Linux exclusions
         
-        # Current broken behavior
-        assert system_taxonomy.is_tool_available_on_platform('wsl', 'linux') is True
-        
-        # TODO: Add 'wsl' to Linux platform exclusions
+        # Fixed behavior - WSL is correctly excluded on Linux
+        assert system_taxonomy.is_tool_available_on_platform('wsl', 'linux') is False
+        assert system_taxonomy.is_tool_available_on_platform('wsl', 'windows') is True
     
     @pytest.mark.unit
     def test_cross_platform_tools_not_comprehensive(self):

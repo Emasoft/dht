@@ -40,10 +40,13 @@ from DHT.modules.uv_prefect_tasks import (
     build_project,
     run_python_script,
     setup_project_environment,
-    extract_min_python_version,
     UVTaskError,
 )
-from DHT.modules.guardian_prefect import GuardianResult, ResourceLimits
+from DHT.modules.uv_task_utils import (
+    extract_min_python_version,
+    find_uv_executable,
+)
+from DHT.modules.guardian_prefect import ResourceLimits, GuardianResult
 
 
 class TestUVPrefectTasks:
@@ -53,7 +56,6 @@ class TestUVPrefectTasks:
     def setup_prefect(self):
         """Setup Prefect test harness."""
         # Clear the LRU cache before each test
-        from DHT.modules.uv_prefect_tasks import find_uv_executable
         find_uv_executable.cache_clear()
         
         with prefect_test_harness():
@@ -68,18 +70,20 @@ class TestUVPrefectTasks:
         assert extract_min_python_version("3.11.6") == "3.11.6"
         assert extract_min_python_version("python>=3.10") == "3.10"
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_check_uv_available_success(self, mock_run, mock_find):
         """Test successful UV availability check."""
         mock_find.return_value = Path("/usr/local/bin/uv")
+        print(f"Mock find_uv_executable configured to return: {mock_find.return_value}")
         mock_run.return_value = GuardianResult(
             stdout="uv 0.4.27",
             stderr="",
             return_code=0,
             execution_time=0.1,
             peak_memory_mb=10.0,
-            was_killed=False
+            was_killed=False,
+            kill_reason=None
         )
         
         result = check_uv_available()
@@ -88,7 +92,7 @@ class TestUVPrefectTasks:
         assert result["version"] == "0.4.27"
         assert result["path"] == "/usr/local/bin/uv"
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
     def test_check_uv_available_not_found(self, mock_find):
         """Test UV not found."""
         mock_find.return_value = None
@@ -130,8 +134,8 @@ requires-python = ">=3.11"
             version = detect_python_version(project_path)
             assert version is None
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_list_python_versions(self, mock_run, mock_find):
         """Test listing Python versions."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -143,7 +147,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=0.5,
-            peak_memory_mb=50.0
+            peak_memory_mb=50.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         versions = list_python_versions()
@@ -154,8 +160,8 @@ pypy-3.9.18""",
         assert versions[1]["version"] == "cpython-3.12.0"
         assert versions[1]["installed"] is False
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_ensure_python_version_already_installed(self, mock_run, mock_find):
         """Test ensuring Python version that's already installed."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -164,7 +170,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=0.1,
-            peak_memory_mb=10.0
+            peak_memory_mb=10.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         python_path = ensure_python_version("3.11")
@@ -173,8 +181,8 @@ pypy-3.9.18""",
         # Only one call for finding
         assert mock_run.call_count == 1
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_ensure_python_version_install_needed(self, mock_run, mock_find):
         """Test ensuring Python version that needs installation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -186,8 +194,10 @@ pypy-3.9.18""",
                 stdout="",
                 stderr="Python 3.11 not found",
                 return_code=1,
-            execution_time=0.1,
-                peak_memory_mb=10.0
+                execution_time=0.1,
+                peak_memory_mb=10.0,
+                was_killed=False,
+                kill_reason=None
             ),
             # Install succeeds
             GuardianResult(
@@ -195,7 +205,9 @@ pypy-3.9.18""",
                 stderr="",
                 return_code=0,
                 execution_time=30.0,
-                peak_memory_mb=200.0
+                peak_memory_mb=200.0,
+                was_killed=False,
+                kill_reason=None
             ),
             # Second find succeeds
             GuardianResult(
@@ -203,7 +215,9 @@ pypy-3.9.18""",
                 stderr="",
                 return_code=0,
                 execution_time=0.1,
-                peak_memory_mb=10.0
+                peak_memory_mb=10.0,
+                was_killed=False,
+                kill_reason=None
             ),
         ]
         
@@ -212,8 +226,8 @@ pypy-3.9.18""",
         assert python_path == Path("/usr/local/bin/python3.11")
         assert mock_run.call_count == 3
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_create_virtual_environment(self, mock_run, mock_find):
         """Test virtual environment creation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -222,7 +236,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=5.0,
-            peak_memory_mb=100.0
+            peak_memory_mb=100.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -235,8 +251,8 @@ pypy-3.9.18""",
             assert "--python" in args
             assert "3.11" in args
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_install_dependencies_with_lock(self, mock_run, mock_find):
         """Test dependency installation with lock file."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -245,7 +261,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=10.0,
-            peak_memory_mb=500.0
+            peak_memory_mb=500.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -262,8 +280,8 @@ pypy-3.9.18""",
             assert "sync" in args
             assert "--dev" in args
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_install_dependencies_with_requirements(self, mock_run, mock_find):
         """Test dependency installation with requirements.txt."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -272,7 +290,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=15.0,
-            peak_memory_mb=600.0
+            peak_memory_mb=600.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -291,8 +311,8 @@ pypy-3.9.18""",
             assert "install" in args
             assert "-r" in args
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_generate_lock_file(self, mock_run, mock_find):
         """Test lock file generation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -301,7 +321,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=20.0,
-            peak_memory_mb=800.0
+            peak_memory_mb=800.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -314,8 +336,8 @@ pypy-3.9.18""",
             args = mock_run.call_args[0][0]
             assert "lock" in args
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_add_dependency(self, mock_run, mock_find):
         """Test adding a dependency."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -326,7 +348,9 @@ pypy-3.9.18""",
                 stderr="",
                 return_code=0,
                 execution_time=5.0,
-                peak_memory_mb=200.0
+                peak_memory_mb=200.0,
+                was_killed=False,
+                kill_reason=None
             ),
             # Lock generation succeeds
             GuardianResult(
@@ -334,7 +358,9 @@ pypy-3.9.18""",
                 stderr="",
                 return_code=0,
                 execution_time=10.0,
-                peak_memory_mb=400.0
+                peak_memory_mb=400.0,
+                was_killed=False,
+                kill_reason=None
             ),
         ]
         
@@ -347,8 +373,8 @@ pypy-3.9.18""",
             assert result["package"] == "requests>=2.28"
             assert result["dev"] is True
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_build_project(self, mock_run, mock_find):
         """Test project building."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -357,7 +383,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=30.0,
-            peak_memory_mb=1000.0
+            peak_memory_mb=1000.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -373,8 +401,8 @@ pypy-3.9.18""",
             assert result["success"] is True
             assert len(result["artifacts"]) == 2
     
-    @mock.patch('DHT.modules.uv_prefect_tasks.find_uv_executable')
-    @mock.patch('DHT.modules.uv_prefect_tasks.run_with_guardian')
+    @mock.patch('DHT.modules.uv_task_utils.find_uv_executable')
+    @mock.patch('DHT.modules.guardian_prefect.run_with_guardian')
     def test_run_python_script(self, mock_run, mock_find):
         """Test running Python scripts."""
         mock_find.return_value = Path("/usr/local/bin/uv")
@@ -383,7 +411,9 @@ pypy-3.9.18""",
             stderr="",
             return_code=0,
             execution_time=1.5,
-            peak_memory_mb=50.0
+            peak_memory_mb=50.0,
+            was_killed=False,
+            kill_reason=None
         )
         
         with tempfile.TemporaryDirectory() as tmpdir:

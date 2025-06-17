@@ -57,16 +57,15 @@ def pip_install_requirements(
     
     result = run_with_guardian(
         command=args,
-        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-        timeout=INSTALL_TIMEOUT,
+        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
         cwd=str(project_path)
     )
     
     return {
-        "success": result["return_code"] == 0,
+        "success": result.return_code == 0,
         "method": "uv pip install -r",
         "requirements_file": str(requirements_file),
-        "message": result["stdout"] if result["return_code"] == 0 else result["stderr"]
+        "message": result.stdout if result.return_code == 0 else result.stderr
     }
 
 
@@ -109,16 +108,15 @@ def pip_install_project(
     
     result = run_with_guardian(
         command=args,
-        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-        timeout=INSTALL_TIMEOUT,
+        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
         cwd=str(project_path)
     )
     
-    if result["return_code"] != 0:
+    if result.return_code != 0:
         return {
             "success": False,
             "method": "uv pip install -e",
-            "message": result["stderr"]
+            "message": result.stderr
         }
     
     # Install dev dependencies if requested
@@ -147,19 +145,17 @@ def pip_install_project(
                     # Try installing as extra first
                     dev_result = run_with_guardian(
                         command=[str(uv_path), "pip", "install", "-e", ".[dev]"],
-                        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-                        timeout=INSTALL_TIMEOUT,
+                        limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
                         cwd=str(project_path)
                     )
                     
-                    if dev_result["return_code"] != 0:
+                    if dev_result.return_code != 0:
                         # Try installing individually
                         logger.warning("Failed to install dev extras, trying individual packages")
                         for dep in dev_deps:
                             run_with_guardian(
                                 command=[str(uv_path), "pip", "install", dep],
-                                limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-                                timeout=300,
+                                limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=300),
                                 cwd=str(project_path)
                             )
         except Exception as e:

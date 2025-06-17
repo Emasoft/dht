@@ -56,12 +56,11 @@ def check_uv_available() -> Dict[str, Any]:
         # Get UV version
         result = run_with_guardian(
             command=[str(uv_path), "--version"],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"]),
-            timeout=30
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
         )
         
-        if result["return_code"] == 0:
-            version_output = result["stdout"].strip()
+        if result.return_code == 0:
+            version_output = result.stdout.strip()
             # Parse version from output like "uv 0.1.24"
             version_match = re.search(r"uv\s+(\d+\.\d+\.\d+)", version_output)
             version = version_match.group(1) if version_match else "unknown"
@@ -75,7 +74,7 @@ def check_uv_available() -> Dict[str, Any]:
         else:
             return {
                 "available": False,
-                "error": f"UV check failed: {result['stderr']}"
+                "error": f"UV check failed: {result.stderr}"
             }
             
     except Exception as e:
@@ -180,15 +179,14 @@ def list_python_versions() -> List[Dict[str, Any]]:
         # Run uv python list
         result = run_with_guardian(
             command=[str(uv_path), "python", "list", "--all-versions"],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["list_versions"]),
-            timeout=60
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["list_versions"], timeout=60)
         )
         
-        if result["return_code"] != 0:
-            raise UVTaskError(f"Failed to list Python versions: {result['stderr']}")
+        if result.return_code != 0:
+            raise UVTaskError(f"Failed to list Python versions: {result.stderr}")
         
         versions = []
-        for line in result["stdout"].strip().split("\n"):
+        for line in result.stdout.strip().split("\n"):
             if not line.strip():
                 continue
             
@@ -240,12 +238,11 @@ def ensure_python_version(version: str) -> Path:
         # Try to find the Python version
         find_result = run_with_guardian(
             command=[str(uv_path), "python", "find", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"]),
-            timeout=30
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
         )
         
-        if find_result["return_code"] == 0:
-            python_path = find_result["stdout"].strip()
+        if find_result.return_code == 0:
+            python_path = find_result.stdout.strip()
             if python_path and Path(python_path).exists():
                 logger.info(f"Python {version} already available at {python_path}")
                 return Path(python_path)
@@ -254,22 +251,20 @@ def ensure_python_version(version: str) -> Path:
         logger.info(f"Installing Python {version}...")
         install_result = run_with_guardian(
             command=[str(uv_path), "python", "install", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"]),
-            timeout=300
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=300)
         )
         
-        if install_result["return_code"] != 0:
-            raise UVTaskError(f"Failed to install Python {version}: {install_result['stderr']}")
+        if install_result.return_code != 0:
+            raise UVTaskError(f"Failed to install Python {version}: {install_result.stderr}")
         
         # Find the installed Python
         find_result = run_with_guardian(
             command=[str(uv_path), "python", "find", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"]),
-            timeout=30
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
         )
         
-        if find_result["return_code"] == 0:
-            python_path = find_result["stdout"].strip()
+        if find_result.return_code == 0:
+            python_path = find_result.stdout.strip()
             if python_path and Path(python_path).exists():
                 logger.info(f"Python {version} installed at {python_path}")
                 return Path(python_path)
