@@ -37,8 +37,8 @@ class TestUVManager:
     @pytest.fixture
     def uv_manager(self):
         """Create a UV manager instance with mocked executable."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value='/usr/bin/uv'):
-            with patch.object(UVManager, '_verify_uv_version'):
+        with patch('DHT.modules.uv_manager.find_uv_executable', return_value=Path('/usr/bin/uv')):
+            with patch('DHT.modules.uv_manager.verify_uv_version'):
                 return UVManager()
     
     @pytest.fixture
@@ -123,15 +123,15 @@ dependencies = ["requests"]
     
     def test_find_uv_executable_in_path(self):
         """Test finding UV executable in PATH."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value='/usr/bin/uv'):
-            with patch.object(UVManager, '_verify_uv_version'):
+        with patch('DHT.modules.uv_manager.find_uv_executable', return_value=Path('/usr/bin/uv')):
+            with patch('DHT.modules.uv_manager.verify_uv_version'):
                 manager = UVManager()
                 assert manager.uv_path == Path('/usr/bin/uv')
                 assert manager.is_available
     
     def test_find_uv_executable_common_locations(self):
         """Test finding UV in common locations when not in PATH."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value=None):
+        with patch('DHT.modules.uv_manager_utils.shutil.which', return_value=None):
             # Create a mock path that exists
             mock_path = MagicMock()
             mock_path.exists.return_value = True
@@ -146,14 +146,15 @@ dependencies = ["requests"]
                         mock_exists.side_effect = [True, False, False, False]
                         mock_is_file.side_effect = [True]
                         
-                        with patch.object(UVManager, '_verify_uv_version'):
+                        # Patch verify_uv_version where it's imported in uv_manager
+                        with patch('DHT.modules.uv_manager.verify_uv_version'):
                             manager = UVManager()
                             assert manager.uv_path is not None
                             assert ".local/bin/uv" in str(manager.uv_path)
     
     def test_uv_not_found(self):
         """Test when UV is not found anywhere."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value=None):
+        with patch('DHT.modules.uv_manager_utils.shutil.which', return_value=None):
             with patch('pathlib.Path.exists', return_value=False):
                 manager = UVManager()
                 assert manager.uv_path is None
@@ -161,50 +162,50 @@ dependencies = ["requests"]
     
     def test_verify_uv_version_success(self):
         """Test successful UV version verification."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value='/usr/bin/uv'):
-            with patch.object(UVManager, '_verify_uv_version'):
-                manager = UVManager()
-            
-            # Now test verification manually
-            with patch.object(manager, 'run_command') as mock_run:
-                mock_run.return_value = {
-                    "stdout": "uv 0.4.27",
-                    "stderr": "",
-                    "returncode": 0,
-                    "success": True
-                }
-                
-                # Should not raise
-                manager._verify_uv_version()
-                mock_run.assert_called_once_with(["--version"])
+        # Test the verify_uv_version function directly from utils
+        from DHT.modules.uv_manager_utils import verify_uv_version
+        
+        mock_run_command = Mock()
+        mock_run_command.return_value = {
+            "stdout": "uv 0.4.27",
+            "stderr": "",
+            "returncode": 0,
+            "success": True
+        }
+        
+        # Should not raise
+        verify_uv_version(Path('/usr/bin/uv'), "0.4.0", mock_run_command)
+        mock_run_command.assert_called_once_with(["--version"])
     
     def test_verify_uv_version_too_old(self):
         """Test UV version that's too old."""
-        with patch('DHT.modules.uv_manager.shutil.which', return_value='/usr/bin/uv'):
-            with patch.object(UVManager, '_verify_uv_version'):
-                manager = UVManager()
-            
-            with patch.object(manager, 'run_command') as mock_run:
-                mock_run.return_value = {
-                    "stdout": "uv 0.3.0",
-                    "stderr": "",
-                    "returncode": 0,
-                    "success": True
-                }
-                
-                with pytest.raises(UVError, match="below minimum required"):
-                    manager._verify_uv_version()
+        # Test the verify_uv_version function directly from utils
+        from DHT.modules.uv_manager_utils import verify_uv_version
+        
+        mock_run_command = Mock()
+        mock_run_command.return_value = {
+            "stdout": "uv 0.3.0",
+            "stderr": "",
+            "returncode": 0,
+            "success": True
+        }
+        
+        with pytest.raises(UVError, match="below minimum required"):
+            verify_uv_version(Path('/usr/bin/uv'), "0.4.0", mock_run_command)
     
     def test_run_command_success(self, uv_manager):
         """Test successful command execution."""
-        with patch('subprocess.run') as mock_run:
+        # Mock the subprocess.run in the utils module where it's used
+        with patch('DHT.modules.uv_manager_utils.subprocess.run') as mock_run:
             mock_process = Mock()
             mock_process.stdout = "Success output"
             mock_process.stderr = ""
             mock_process.returncode = 0
             mock_run.return_value = mock_process
             
-            result = uv_manager.run_command(["python", "list"])
+            # Mock path existence check
+            with patch.object(Path, 'exists', return_value=True):
+                result = uv_manager.run_command(["python", "list"])
             
             assert result["success"] is True
             assert result["stdout"] == "Success output"
@@ -217,7 +218,7 @@ dependencies = ["requests"]
     
     def test_run_command_failure(self, uv_manager):
         """Test command execution failure."""
-        with patch('subprocess.run') as mock_run:
+        with patch('DHT.modules.uv_manager_utils.subprocess.run') as mock_run:
             mock_run.side_effect = subprocess.CalledProcessError(
                 1, 
                 ['uv', 'invalid'],
@@ -225,10 +226,12 @@ dependencies = ["requests"]
                 stderr="Invalid command"
             )
             
-            result = uv_manager.run_command(["invalid"], check=False)
+            # Mock path existence check
+            with patch.object(Path, 'exists', return_value=True):
+                result = uv_manager.run_command(["invalid"], check=False)
             
             assert result["success"] is False
-            assert "error" in result
+            assert result["stderr"] == "Invalid command"
     
     def test_run_command_no_uv(self):
         """Test running command when UV is not available."""
@@ -261,8 +264,11 @@ dependencies = ["requests"]
         version = uv_manager.detect_python_version(empty_project)
         assert version is None
     
-    def test_extract_min_version(self, uv_manager):
+    def test_extract_min_version(self):
         """Test extracting minimum version from various constraints."""
+        # Test the extract_min_version function directly from utils
+        from DHT.modules.uv_manager_utils import extract_min_version
+        
         test_cases = [
             (">=3.8", "3.8"),
             (">=3.8,<3.12", "3.8"),
@@ -273,22 +279,19 @@ dependencies = ["requests"]
         ]
         
         for constraint, expected in test_cases:
-            result = uv_manager._extract_min_version(constraint)
+            result = extract_min_version(constraint)
             assert result == expected or result.startswith(expected.split('.')[0])
     
     def test_list_python_versions(self, uv_manager):
         """Test listing available Python versions."""
-        with patch.object(uv_manager, 'run_command') as mock_run:
-            mock_run.return_value = {
-                "stdout": """
-cpython-3.11.6+20231002-x86_64-apple-darwin (installed)
-cpython-3.12.1+20231211-x86_64-apple-darwin
-cpython-3.10.13+20230826-x86_64-apple-darwin (installed)
-""",
-                "stderr": "",
-                "success": True
-            }
-            
+        # Mock the python_manager's method directly to avoid Prefect task execution
+        mock_versions = [
+            {"version": "cpython-3.11.6+20231002-x86_64-apple-darwin", "installed": True},
+            {"version": "cpython-3.12.1+20231211-x86_64-apple-darwin", "installed": False},
+            {"version": "cpython-3.10.13+20230826-x86_64-apple-darwin", "installed": True}
+        ]
+        
+        with patch.object(uv_manager.python_manager, 'list_python_versions', return_value=mock_versions):
             versions = uv_manager.list_python_versions()
             
             assert len(versions) == 3
@@ -298,17 +301,14 @@ cpython-3.10.13+20230826-x86_64-apple-darwin (installed)
     
     def test_ensure_python_version_already_installed(self, uv_manager):
         """Test ensuring Python version that's already installed."""
-        with patch.object(uv_manager, 'run_command') as mock_run:
-            mock_run.return_value = {
-                "stdout": "/usr/bin/python3.11",
-                "stderr": "",
-                "success": True
-            }
-            
+        # Mock the python_manager's method directly to avoid Prefect task execution
+        expected_path = Path("/usr/bin/python3.11")
+        
+        with patch.object(uv_manager.python_manager, 'ensure_python_version', return_value=expected_path):
             python_path = uv_manager.ensure_python_version("3.11")
             
-            assert python_path == Path("/usr/bin/python3.11")
-            mock_run.assert_called_once_with(["python", "find", "3.11"])
+            assert python_path == expected_path
+            uv_manager.python_manager.ensure_python_version.assert_called_once_with("3.11")
     
     def test_ensure_python_version_install_needed(self, uv_manager):
         """Test ensuring Python version that needs installation."""

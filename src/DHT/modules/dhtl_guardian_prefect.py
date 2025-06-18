@@ -38,7 +38,7 @@ def cli():
 @click.option('--cron', help='Cron schedule')
 def start(name: str, interval: Optional[int], cron: Optional[str]):
     """Start the Prefect guardian server"""
-    click.echo(f"Starting Prefect guardian server...")
+    click.echo("Starting Prefect guardian server...")
     
     # Create deployments
     deployments = []
@@ -330,9 +330,11 @@ def main():
     
     # Output results
     if result.stdout:
-        print(result.stdout, end='')
+        sys.stdout.write(result.stdout)
+        sys.stdout.flush()
     if result.stderr:
-        print(result.stderr, file=sys.stderr, end='')
+        sys.stderr.write(result.stderr)
+        sys.stderr.flush()
     
     return result.return_code
 

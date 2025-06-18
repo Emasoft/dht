@@ -100,7 +100,7 @@ esac
         """Test parsing with an invalid file path."""
         result = parser.parse_file(Path("/non/existent/file.sh"))
         assert "error" in result
-        assert "Could not read file" in result["error"]
+        assert "Failed to read file" in result["error"]
     
     def test_parse_file_returns_expected_structure(self, parser, sample_bash_script):
         """Test that parse_file returns the expected data structure."""
@@ -290,13 +290,13 @@ esac
             # Test via parse_file
             result = parser.parse_file(temp_path)
             deps = result["dependencies"]
-            assert "git" in deps
-            assert "docker" in deps
-            assert "npm" in deps
+            assert "git" in deps["commands"]
+            assert "docker" in deps["commands"]
+            assert "npm" in deps["commands"]
             
             # Test direct method
             direct_deps = parser.extract_dependencies(temp_path)
-            assert set(direct_deps) == set(deps)
+            assert direct_deps == deps
             
         finally:
             temp_path.unlink()

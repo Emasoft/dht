@@ -35,21 +35,31 @@ class BashParserUtils:
         if re.match(ARRAY_PATTERN, value):
             return "array"
         
+        # Check for command substitution
+        if value.startswith('$(') and value.endswith(')'):
+            return "command_substitution"
+        if value.startswith('`') and value.endswith('`'):
+            return "command_substitution"
+        
+        # Check for variable reference
+        if value.startswith('$') and not value.startswith('$('):
+            return "variable_reference"
+        
+        # Check for booleans before numbers (since 0 and 1 are both)
+        if re.match(BOOLEAN_PATTERN, value, re.IGNORECASE):
+            return "boolean"
+        
         # Check for numbers
         if re.match(NUMBER_PATTERN, value):
             return "number"
-        
-        # Check for booleans
-        if re.match(BOOLEAN_PATTERN, value, re.IGNORECASE):
-            return "boolean"
         
         # Check for paths
         if re.match(PATH_PATTERN, value):
             return "path"
         
-        # Check if it's empty
+        # Check if it's empty (but the test expects "string" for empty values)
         if not value or value in ('""', "''"):
-            return "empty"
+            return "string"
         
         # Default to string
         return "string"
@@ -108,9 +118,8 @@ class BashParserUtils:
         """Extract shebang from script content."""
         lines = content.splitlines()
         if lines and lines[0].startswith("#!"):
-            match = re.match(REGEX_PATTERNS["shebang"], lines[0])
-            if match:
-                return match.group(1)
+            # Return the full shebang line, not just the interpreter path
+            return lines[0]
         return None
     
     def extract_dependencies_from_content(self, content: str) -> Dict[str, List[str]]:

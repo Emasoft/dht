@@ -69,7 +69,7 @@ class BashParser(BaseParser):
             self.logger.error(f"Failed to read file {file_path}: {e}")
             return None
     
-    def parse(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> Dict[str, Any]:
         """
         Parse a Bash script and extract all information.
         
@@ -132,7 +132,7 @@ class BashParser(BaseParser):
     def _empty_result(self, file_path: Path) -> Dict[str, Any]:
         """Return empty result structure."""
         return {
-            "file_metadata": self.get_file_metadata(file_path),
+            "file_metadata": self.get_file_metadata(file_path) if file_path.exists() else {"error": "file not found"},
             "functions": [],
             "variables": [],
             "exports": [],
@@ -162,7 +162,7 @@ class BashParser(BaseParser):
         Returns:
             List of sourced file paths
         """
-        result = self.parse(file_path)
+        result = self.parse_file(file_path)
         return [source["path"] for source in result.get("sourced_files", [])]
     
     def extract_exports(self, file_path: Path) -> Dict[str, Any]:
@@ -175,7 +175,7 @@ class BashParser(BaseParser):
         Returns:
             Dictionary of exported variables
         """
-        result = self.parse(file_path)
+        result = self.parse_file(file_path)
         exports = {}
         
         for export in result.get("exports", []):
@@ -193,7 +193,7 @@ class BashParser(BaseParser):
         Returns:
             List of function definitions
         """
-        result = self.parse(file_path)
+        result = self.parse_file(file_path)
         return result.get("functions", [])
     
     def extract_dependencies(self, file_path: Path) -> Dict[str, List[str]]:
@@ -206,7 +206,7 @@ class BashParser(BaseParser):
         Returns:
             Dictionary of dependencies
         """
-        result = self.parse(file_path)
+        result = self.parse_file(file_path)
         return result.get("dependencies", {"commands": [], "packages": [], "files": []})
 
 

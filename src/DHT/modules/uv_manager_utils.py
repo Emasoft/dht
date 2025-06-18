@@ -62,8 +62,10 @@ def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None
     try:
         result = run_command_func(["--version"])
         version_output = result["stdout"].strip()
-        # Parse version from output like "uv 0.4.27"
-        version = version_output.split()[-1]
+        # Parse version from output like "uv 0.4.27" or "uv 0.7.12 (dc3fd4647 2025-06-06)"
+        parts = version_output.split()
+        # Version is the second part (after "uv")
+        version = parts[1] if len(parts) >= 2 else "unknown"
         
         if not version_meets_minimum(version, min_version):
             raise UVError(

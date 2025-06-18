@@ -116,7 +116,7 @@ REGEX_PATTERNS = {
     "export_statement": r"^\s*export\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(.*))?",
     "source_statement": r"^\s*(?:source|\.)\s+([^\s;|&]+)",
     "shebang": r"^#!\s*(\S+)",
-    "local_var": r"^\s*local\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(.*))?",
+    "local_var": r"^\s*local\s+(?:-[a-zA-Z]+\s+)?([A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(.*))?",
     "command_call": r"^\s*(\w+)(?:\s+(.*))?$"
 }
 

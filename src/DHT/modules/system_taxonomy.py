@@ -157,8 +157,10 @@ def get_category_for_platform(category_name: str, platform_name: str = None) -> 
                 subcat_data['tools'] = filter_tools_for_platform(
                     subcat_data['tools'], platform_name
                 )
-            # Handle language-specific package managers
-            elif isinstance(subcat_data, dict):
+            # Handle language-specific package managers (different structure)
+            elif subcat_name == 'language' and isinstance(subcat_data, dict):
+                # The language subcategory has a different structure:
+                # It has language names as keys instead of 'tools'
                 for lang_name, lang_tools in subcat_data.items():
                     if lang_name != 'description' and isinstance(lang_tools, list):
                         # Filter list of tools
@@ -186,32 +188,56 @@ def get_tool_fields(category_name: str, tool_name: str) -> List[str]:
     Returns:
         List[str]: List of field names available for the tool
     """
-    # Handle nested category paths
-    category_parts = category_name.split('.')
-    current_data = PRACTICAL_TAXONOMY
-    
-    # Navigate to the correct category
-    for part in category_parts:
-        if part in current_data:
-            current_data = current_data[part]
-            if 'categories' in current_data and len(category_parts) > 1:
-                current_data = current_data['categories']
-        else:
-            return []
-    
-    # Look for the tool
-    if 'tools' in current_data and tool_name in current_data['tools']:
-        return current_data['tools'][tool_name]
-    
-    # Handle language-specific package managers
-    if isinstance(current_data, dict):
-        for lang_name, lang_data in current_data.items():
-            if lang_name != 'description':
-                if isinstance(lang_data, dict) and 'tools' in lang_data and tool_name in lang_data['tools']:
-                    return lang_data['tools'][tool_name]
-                elif isinstance(lang_data, list) and tool_name in lang_data:
-                    # For simple lists, return standard fields
-                    return ['version']
+    # For single category names, search directly
+    if '.' not in category_name:
+        if category_name in PRACTICAL_TAXONOMY:
+            category_data = PRACTICAL_TAXONOMY[category_name]
+            
+            # Check direct tools
+            if 'tools' in category_data and tool_name in category_data['tools']:
+                return category_data['tools'][tool_name]
+            
+            # Check nested categories
+            if 'categories' in category_data:
+                for subcat_name, subcat_data in category_data['categories'].items():
+                    # Check standard subcategory with tools
+                    if isinstance(subcat_data, dict) and 'tools' in subcat_data:
+                        if tool_name in subcat_data['tools']:
+                            return subcat_data['tools'][tool_name]
+                    # Check language subcategory structure  
+                    elif subcat_name == 'language' and isinstance(subcat_data, dict):
+                        for lang_name, lang_tools in subcat_data.items():
+                            if lang_name != 'description' and isinstance(lang_tools, list):
+                                if tool_name in lang_tools:
+                                    # For tools in language lists, return standard version field
+                                    return ['version']
+    else:
+        # Handle nested category paths
+        category_parts = category_name.split('.')
+        current_data = PRACTICAL_TAXONOMY
+        
+        # Navigate to the correct category
+        for i, part in enumerate(category_parts):
+            if part in current_data:
+                current_data = current_data[part]
+                if 'categories' in current_data and i < len(category_parts) - 1:
+                    current_data = current_data['categories']
+            else:
+                return []
+        
+        # Look for the tool
+        if 'tools' in current_data and tool_name in current_data['tools']:
+            return current_data['tools'][tool_name]
+        
+        # Handle language-specific package managers
+        if isinstance(current_data, dict):
+            for lang_name, lang_data in current_data.items():
+                if lang_name != 'description':
+                    if isinstance(lang_data, dict) and 'tools' in lang_data and tool_name in lang_data['tools']:
+                        return lang_data['tools'][tool_name]
+                    elif isinstance(lang_data, list) and tool_name in lang_data:
+                        # For simple lists, return standard fields
+                        return ['version']
     
     return []
 

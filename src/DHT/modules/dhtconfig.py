@@ -67,6 +67,10 @@ class DHTConfig:
         self.schema = SchemaLoader.load_schema()
         self.project_analyzer = project_analyzer.ProjectAnalyzer()
         
+        # Add constants as attributes for backward compatibility
+        self.SCHEMA_VERSION = DHTConfigConstants.SCHEMA_VERSION
+        self.CONFIG_FILENAME = DHTConfigConstants.CONFIG_FILENAME
+        
         # Initialize helper modules
         self.dependency_extractor = DependencyExtractor()
         self.tool_extractor = ToolRequirementsExtractor()
@@ -75,6 +79,34 @@ class DHTConfig:
         self.platform_utils = PlatformUtils()
         self.validation_utils = ValidationUtils()
         self.io_utils = ConfigIOUtils()
+    
+    def _extract_version(self, version_output: str) -> str:
+        """Extract version from command output (backward compatibility)."""
+        return self.validation_utils._extract_version(version_output)
+    
+    def _generate_validation_info(self, project_path: Path, config: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate validation info for config (backward compatibility)."""
+        return self.validation_utils.generate_validation_info(project_path, config)
+    
+    def _extract_dependencies(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract dependencies from project info (backward compatibility)."""
+        return self.dependency_extractor.extract_dependencies(project_info)
+    
+    def _extract_tool_requirements(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract tool requirements from project info (backward compatibility)."""
+        return self.tool_extractor.extract_tool_requirements(project_info)
+    
+    def _extract_build_config(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract build config from project info (backward compatibility)."""
+        return self.build_extractor.extract_build_config(project_info)
+    
+    def _extract_environment_vars(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract environment variables from project info (backward compatibility)."""
+        return self.env_extractor.extract_environment_vars(project_info)
+    
+    def _deep_merge(self, base: Dict[str, Any], overlay: Dict[str, Any]) -> Dict[str, Any]:
+        """Deep merge dictionaries (backward compatibility)."""
+        return self.platform_utils._deep_merge(base, overlay)
     
     def generate_from_project(
         self,

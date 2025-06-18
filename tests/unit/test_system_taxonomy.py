@@ -277,18 +277,12 @@ class TestToolFields:
     @pytest.mark.unit
     def test_get_tool_fields_nested_categories(self):
         """Test retrieving fields for tools in nested categories"""
-        # Note: The current implementation doesn't handle nested categories in get_tool_fields
-        # This test documents the expected behavior that needs to be implemented
-        
         # Act
         pip_fields = system_taxonomy.get_tool_fields('package_managers', 'pip')
         
-        # Assert - Currently returns empty, but should return fields
-        # This is a failing test that drives the implementation
-        assert pip_fields == []  # Current behavior
-        # Expected behavior would be:
-        # assert 'version' in pip_fields
-        # assert 'packages' in pip_fields
+        # Assert - Now returns fields correctly!
+        assert 'version' in pip_fields
+        # Language subcategory tools only have 'version' field in the taxonomy
     
     @pytest.mark.unit
     def test_get_tool_fields_nonexistent_tool(self):
@@ -531,11 +525,11 @@ class TestEdgeCases:
     @pytest.mark.unit
     def test_tool_fields_for_nested_tools(self):
         """Test that get_tool_fields handles tools in nested categories correctly"""
-        # Currently doesn't work for nested tools - document this
+        # Now works correctly for nested tools!
         fields = system_taxonomy.get_tool_fields('package_managers', 'pip')
-        assert fields == []  # Current behavior
+        assert 'version' in fields
         
-        # But direct tools work
+        # Direct tools also work
         fields = system_taxonomy.get_tool_fields('network_tools', 'curl')
         assert 'version' in fields
         assert 'protocols' in fields

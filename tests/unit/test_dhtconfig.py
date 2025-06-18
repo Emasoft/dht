@@ -32,7 +32,7 @@ class TestDHTConfig:
         assert config._extract_version("pytest 7.4.3") == "7.4.3"
         assert config._extract_version("unknown format") == "unknown"
     
-    @patch('DHT.modules.dhtconfig.subprocess.run')
+    @patch('DHT.modules.dhtconfig_validation_utils.subprocess.run')
     def test_generate_validation_info(self, mock_run):
         """Test validation info generation."""
         config = DHTConfig()

@@ -18,6 +18,7 @@ import subprocess
 import shutil
 import json
 import os
+import logging
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -36,6 +37,7 @@ class ActSetupManager:
         self.project_path = Path(project_path).resolve()
         self.venv_path = self.project_path / ".venv"
         self.act_config_path = self.venv_path / "dht-act"
+        self.logger = logging.getLogger(__name__)
     
     def check_act_available(self) -> ActCheckResult:
         """Check if act is available via various methods.
@@ -67,8 +69,8 @@ class ActSetupManager:
                 # Parse version from "gh version X.Y.Z (YYYY-MM-DD)"
                 version_line = version_output.stdout.strip().split('\n')[0]
                 result.gh_cli_version = version_line.split()[2]
-            except:
-                pass
+            except (subprocess.CalledProcessError, FileNotFoundError, OSError, IndexError) as e:
+                self.logger.debug(f"Failed to get gh version: {e}")
             
             # Check if act extension is installed
             try:
@@ -89,10 +91,10 @@ class ActSetupManager:
                         )
                         if act_version.returncode == 0:
                             result.act_extension_version = act_version.stdout.strip()
-                    except:
-                        pass
-            except:
-                pass
+                    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+                        self.logger.debug(f"Failed to get act extension version: {e}")
+            except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+                self.logger.debug(f"Failed to check act extension: {e}")
         
         # Check standalone act
         if shutil.which("act"):
@@ -105,8 +107,8 @@ class ActSetupManager:
                     check=True
                 )
                 result.standalone_act_version = version_output.stdout.strip()
-            except:
-                pass
+            except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+                self.logger.debug(f"Failed to get standalone act version: {e}")
         
         # Determine availability and preferred method
         if result.act_extension_installed:
