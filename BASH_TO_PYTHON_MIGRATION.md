@@ -62,7 +62,7 @@ This document tracks the complete migration of DHT from a hybrid bash/Python arc
 - [ ] `/Users/emanuelesabetta/Code/DHT/dht/src/DHT/modules/dhtl_github.sh`
 - [ ] `/Users/emanuelesabetta/Code/DHT/dht/src/DHT/modules/dhtl_regenerate_poc.sh`
 
-## Phase 3: Helper Scripts (5 files)
+## Phase 3: Helper Scripts (3 files)
 - [ ] `/Users/emanuelesabetta/Code/DHT/dht/src/DHT/ensure_env.sh`
 - [ ] `/Users/emanuelesabetta/Code/DHT/dht/src/DHT/hooks/bump_version.sh`
 - [ ] `/Users/emanuelesabetta/Code/DHT/dht/src/DHT/hooks/check_dhtl_alias.sh`

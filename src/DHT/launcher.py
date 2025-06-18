@@ -274,159 +274,27 @@ class DHTLauncher:
     
     def run_command(self, command: str, args: List[str]) -> int:
         """Run a DHT command."""
-        # Set up environment
-        env = self._setup_environment()
-        
-        # Special handling for built-in commands
-        if command in ["help", "--help", "-h"]:
-            self.display_help()
-            return 0
-        
-        if command in ["version", "--version", "-v"]:
-            print(f"Development Helper Toolkit Launcher (DHTL) v{self.version}")
-            return 0
-        
-        # Check if command is implemented in Python
-        python_commands = self._get_python_commands()
-        if command in python_commands:
-            return self._run_python_command(command, args)
-        
-        # For all other commands, delegate to shell orchestrator
-        wrapper_content = f"""#!/bin/bash
-set -e
-
-# Export environment variables
-{chr(10).join(f'export {k}="{v}"' for k, v in env.items())}
-
-# Source the orchestrator
-source "{self.modules_dir}/orchestrator.sh"
-
-# Check if function exists
-declare -f -F dhtl_execute_command > /dev/null
-if [ $? -eq 0 ]; then
-    # Execute the command
-    dhtl_execute_command "{command}" {' '.join(f'"{arg}"' for arg in args)}
-else
-    echo "❌ Error: Command dispatcher not available"
-    exit 1
-fi
-"""
-        
-        # Write wrapper to a temporary file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
-            f.write(wrapper_content)
-            wrapper_path = f.name
-        
+        # Try Python command dispatcher first
         try:
-            # Make wrapper executable
-            os.chmod(wrapper_path, 0o755)
+            from .modules.command_dispatcher import CommandDispatcher
+            dispatcher = CommandDispatcher()
             
-            # Execute the wrapper
-            return self.execute_shell_command(wrapper_path, [], env)
+            # Let dispatcher handle all commands including help/version
+            return dispatcher.dispatch(command, args)
             
-        finally:
-            # Clean up
-            try:
-                os.unlink(wrapper_path)
-            except (OSError, FileNotFoundError):
-                pass  # Ignore errors during cleanup
-    
-    def _get_python_commands(self) -> List[str]:
-        """Get list of commands implemented in Python."""
-        return ["init", "setup", "build", "sync"]
-    
-    def _run_python_command(self, command: str, args: List[str]) -> int:
-        """Run a Python-implemented command."""
-        try:
-            # Import the Python commands module
-            from .modules.dhtl_commands import DHTLCommands
-            
-            # Create commands instance
-            commands = DHTLCommands()
-            
-            # Get the command method
-            command_method = getattr(commands, command, None)
-            if not command_method:
-                print(f"{Colors.RED}❌ Error: Unknown Python command: {command}{Colors.ENDC}")
-                return 1
-            
-            # Parse arguments for the command
-            parsed_args = self._parse_command_args(command, args)
-            
-            # Run the command
-            result = command_method(**parsed_args)
-            
-            # Handle result
-            if isinstance(result, dict):
-                if result.get("success", False):
-                    return 0
-                else:
-                    error_msg = result.get("error", "Command failed")
-                    print(f"{Colors.RED}❌ Error: {error_msg}{Colors.ENDC}")
-                    return 1
-            else:
-                # Assume non-dict results mean success
-                return 0
-                
         except ImportError as e:
-            print(f"{Colors.RED}❌ Error: Failed to import Python commands: {e}{Colors.ENDC}")
-            return 1
-        except Exception as e:
-            print(f"{Colors.RED}❌ Error running Python command: {e}{Colors.ENDC}")
-            if self.debug_mode:
-                import traceback
-                traceback.print_exc()
+            # Fallback if command dispatcher not available
+            self.logger.warning(f"Command dispatcher not available: {e}")
+            
+            # Handle basic commands locally
+            if command in ["help", "--help", "-h"]:
+                self.display_help()
+                return 0
+            
+            if command in ["version", "--version", "-v"]:
+                print(f"Development Helper Toolkit Launcher (DHTL) v{self.version}")
+                return 0
+            
+            print(f"{Colors.RED}❌ Error: Command system not available{Colors.ENDC}")
             return 1
     
-    def _parse_command_args(self, command: str, args: List[str]) -> Dict[str, any]:
-        """Parse command line arguments for Python commands."""
-        import argparse
-        
-        # Command-specific argument parsers
-        if command == "init":
-            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("path", nargs="?", default=".", help="Project path")
-            parser.add_argument("--name", help="Project name")
-            parser.add_argument("--python", default="3.11", help="Python version")
-            parser.add_argument("--package", action="store_true", help="Create package structure")
-            parser.add_argument("--no-package", action="store_true", help="Skip package structure")
-            parser.add_argument("--lib", action="store_true", help="Create library project")
-            parser.add_argument("--app", action="store_true", help="Create application project")
-            parser.add_argument("--ci", action="store_true", help="Add CI/CD workflows")
-            parser.add_argument("--pre-commit", action="store_true", help="Add pre-commit hooks")
-            
-        elif command == "setup":
-            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("path", nargs="?", default=".", help="Project path")
-            parser.add_argument("--python", help="Python version")
-            parser.add_argument("--dev", action="store_true", help="Install dev dependencies")
-            parser.add_argument("--no-dev", action="store_true", help="Skip dev dependencies")
-            parser.add_argument("--editable", action="store_true", help="Install in editable mode")
-            parser.add_argument("--upgrade", action="store_true", help="Upgrade dependencies")
-            parser.add_argument("--force", action="store_true", help="Force reinstall")
-            
-        elif command == "build":
-            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("path", nargs="?", default=".", help="Project path")
-            parser.add_argument("--wheel", action="store_true", help="Build wheel only")
-            parser.add_argument("--sdist", action="store_true", help="Build source distribution only")
-            parser.add_argument("--no-checks", action="store_true", help="Skip pre-build checks")
-            parser.add_argument("--out-dir", help="Output directory")
-            
-        elif command == "sync":
-            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("path", nargs="?", default=".", help="Project path")
-            parser.add_argument("--locked", action="store_true", help="Use locked dependencies")
-            parser.add_argument("--dev", action="store_true", help="Include dev dependencies")
-            parser.add_argument("--no-dev", action="store_true", help="Exclude dev dependencies")
-            parser.add_argument("--extras", nargs="*", help="Extra dependency groups")
-            parser.add_argument("--upgrade", action="store_true", help="Upgrade dependencies")
-            
-        else:
-            # Default parser
-            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("path", nargs="?", default=".", help="Project path")
-        
-        # Parse arguments
-        parsed = parser.parse_args(args)
-        return vars(parsed)

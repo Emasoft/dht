@@ -8,21 +8,22 @@
 # 
 
 """
-DHT Guardian Utils Module (Stub).
+DHT Guardian Utils Module.
 
-Temporary stub module that will be replaced when converting guardian modules.
+Provides guardian functionality using the converted guardian modules.
 """
 
 import subprocess
 from typing import List, Union
 
+# Import from the converted guardian modules
+from .dhtl_guardian_1 import run_with_guardian as _run_with_guardian_v1
+from .dhtl_guardian_2 import ensure_process_guardian_running
+
 
 def run_with_guardian(command: str, name: str, mem_limit: int, *args: str) -> int:
     """
-    Run a command with memory limits (stub implementation).
-    
-    This is a stub that directly runs the command without guardian features.
-    Will be replaced when guardian modules are converted.
+    Run a command with memory limits.
     
     Args:
         command: The command to run

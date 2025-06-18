@@ -8,9 +8,9 @@
 # 
 
 """
-DHT Environment Utils Module (Stub).
+DHT Environment Utils Module.
 
-Temporary stub module that will be replaced when converting environment modules.
+Consolidated environment utilities from converted shell modules.
 """
 
 import os

@@ -19,11 +19,8 @@ import logging
 from typing import Dict, Callable, List, Optional, Any
 from pathlib import Path
 
-# Import command modules as we convert them
-from .dhtl_commands import DHTLCommands
-# from .dhtl_lint_commands import DHTLLintCommands  # To be created
-# from .dhtl_test_commands import DHTLTestCommands  # To be created
-# etc...
+# Import the command registry
+from .command_registry import CommandRegistry
 
 logger = logging.getLogger(__name__)
 
@@ -33,60 +30,17 @@ class CommandDispatcher:
     
     def __init__(self):
         """Initialize the command dispatcher."""
-        self.commands: Dict[str, Callable] = {}
-        self.command_help: Dict[str, str] = {}
+        # Use the command registry
+        self.registry = CommandRegistry()
         
-        # Initialize command modules
-        self.dhtl_commands = DHTLCommands()
+        # For backward compatibility
+        self.commands = {}
+        self.command_help = {}
         
-        # Register all commands
-        self._register_commands()
-    
-    def _register_commands(self):
-        """Register all available commands."""
-        # Python-implemented commands from dhtl_commands.py
-        self.register_command("init", self.dhtl_commands.init, 
-                            "Initialize a new Python project")
-        self.register_command("setup", self.dhtl_commands.setup,
-                            "Setup project environment")
-        self.register_command("build", self.dhtl_commands.build,
-                            "Build Python package")
-        self.register_command("sync", self.dhtl_commands.sync,
-                            "Sync project dependencies")
-        
-        # Commands to be migrated from shell
-        # self.register_command("lint", self.lint_command, "Lint code")
-        # self.register_command("format", self.format_command, "Format code")
-        # self.register_command("test", self.test_command, "Run tests")
-        # self.register_command("coverage", self.coverage_command, "Run coverage")
-        # self.register_command("commit", self.commit_command, "Create git commit")
-        # self.register_command("publish", self.publish_command, "Publish package")
-        # self.register_command("clean", self.clean_command, "Clean project")
-        # self.register_command("env", self.env_command, "Show environment")
-        # self.register_command("diagnostics", self.diagnostics_command, "Run diagnostics")
-        # self.register_command("restore", self.restore_command, "Restore dependencies")
-        # self.register_command("tag", self.tag_command, "Create git tag")
-        # self.register_command("bump", self.bump_command, "Bump version")
-        # self.register_command("clone", self.clone_command, "Clone repository")
-        # self.register_command("fork", self.fork_command, "Fork repository")
-        # self.register_command("guardian", self.guardian_command, "Manage process guardian")
-        # self.register_command("workflows", self.workflows_command, "Manage workflows")
-        # self.register_command("act", self.act_command, "Run GitHub Actions locally")
-        # self.register_command("node", self.node_command, "Run node command")
-        # self.register_command("python", self.python_command, "Run python command")
-        # self.register_command("run", self.run_command, "Run command")
-        # self.register_command("script", self.script_command, "Run script")
-        # self.register_command("test_dht", self.test_dht_command, "Test DHT itself")
-        # self.register_command("verify_dht", self.verify_dht_command, "Verify DHT")
-        
-        # Built-in commands
-        self.register_command("help", self.show_help, "Show help")
-        self.register_command("version", self.show_version, "Show version")
-    
-    def register_command(self, name: str, handler: Callable, help_text: str = ""):
-        """Register a command with its handler."""
-        self.commands[name] = handler
-        self.command_help[name] = help_text
+        # Populate from registry
+        for name, cmd in self.registry.commands.items():
+            self.commands[name] = cmd["handler"]
+            self.command_help[name] = cmd["help"]
     
     def dispatch(self, command: str, args: List[str]) -> int:
         """Dispatch a command with arguments."""
