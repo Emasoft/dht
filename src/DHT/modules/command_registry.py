@@ -190,25 +190,25 @@ class CommandRegistry:
         from .dhtl_commands_act import act_command
         return act_command(*args, **kwargs)
     
-    def _node_command(self, *args, **kwargs) -> int:
+    def _node_command(self, args=None, **kwargs) -> int:
         """Run node."""
         from .dhtl_commands_standalone import node_command
-        return node_command(*args, **kwargs)
+        return node_command(args, **kwargs)
     
-    def _python_command(self, *args, **kwargs) -> int:
+    def _python_command(self, args=None, **kwargs) -> int:
         """Run python."""
         from .dhtl_commands_standalone import python_command
-        return python_command(*args, **kwargs)
+        return python_command(args, **kwargs)
     
-    def _run_command(self, *args, **kwargs) -> int:
+    def _run_command(self, args=None, **kwargs) -> int:
         """Run command."""
         from .dhtl_commands_standalone import run_command
-        return run_command(*args, **kwargs)
+        return run_command(args, **kwargs)
     
-    def _script_command(self, *args, **kwargs) -> int:
+    def _script_command(self, args=None, **kwargs) -> int:
         """Run script."""
         from .dhtl_commands_standalone import script_command
-        return script_command(*args, **kwargs)
+        return script_command(args, **kwargs)
     
     def _test_dht_command(self, *args, **kwargs) -> int:
         """Test DHT."""

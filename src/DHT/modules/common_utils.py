@@ -16,6 +16,7 @@ Consolidated utilities to avoid duplication across modules.
 import os
 import sys
 import platform
+import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -101,6 +102,39 @@ def find_virtual_env(project_root: Optional[Path] = None) -> Optional[Path]:
         return Path(os.environ["VIRTUAL_ENV"])
     
     return None
+
+
+def get_venv_executable(name: str, project_root: Optional[Path] = None) -> Optional[str]:
+    """
+    Get the path to an executable in the virtual environment.
+    
+    Args:
+        name: Name of the executable (e.g., "python", "pytest")
+        project_root: Project root directory (default: auto-detect)
+        
+    Returns:
+        Path to the executable or None if not found
+    """
+    venv = find_virtual_env(project_root)
+    if not venv:
+        # Try system executable as fallback
+        return shutil.which(name)
+    
+    # Check different locations based on platform
+    if sys.platform == "win32":
+        bin_dir = venv / "Scripts"
+        exe_suffix = ".exe" if not name.endswith(".exe") else ""
+    else:
+        bin_dir = venv / "bin"
+        exe_suffix = ""
+    
+    # Try to find the executable
+    exe_path = bin_dir / f"{name}{exe_suffix}"
+    if exe_path.exists() and exe_path.is_file():
+        return str(exe_path)
+    
+    # Try system executable as fallback
+    return shutil.which(name)
 
 
 def setup_environment() -> dict:
