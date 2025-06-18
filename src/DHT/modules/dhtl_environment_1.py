@@ -5,6 +5,7 @@
 # - Python replacement for dhtl_environment_1.sh
 # - Provides environment detection and setup
 # - Cross-platform compatible
+# - Removed duplicate find_project_root and detect_platform functions, now imported from common_utils
 # 
 
 """
@@ -19,39 +20,8 @@ import platform
 from pathlib import Path
 from typing import Optional, Dict, Any
 
+from .common_utils import find_project_root, detect_platform
 from .dhtl_error_handling import log_error, log_warning, log_info, log_success
-
-
-def detect_platform() -> str:
-    """Detect the current platform."""
-    system = platform.system().lower()
-    if system == "darwin":
-        return "macos"
-    elif system == "linux":
-        return "linux"
-    elif system == "windows":
-        return "windows"
-    else:
-        return "unknown"
-
-
-def find_project_root(start_dir: Optional[Path] = None) -> Path:
-    """Find the project root directory."""
-    if start_dir is None:
-        start_dir = Path.cwd()
-    
-    current = Path(start_dir).resolve()
-    
-    # Project markers
-    markers = [".git", "pyproject.toml", "package.json", ".dhtconfig"]
-    
-    while current != current.parent:
-        for marker in markers:
-            if (current / marker).exists():
-                return current
-        current = current.parent
-    
-    return Path.cwd()
 
 
 def setup_environment() -> Dict[str, str]:

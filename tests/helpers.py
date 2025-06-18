@@ -32,6 +32,11 @@ def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=Tru
     if env:
         run_env.update(env)
     
+    # Add the DHT project directory to PYTHONPATH so the module can be found
+    dht_project_root = Path(__file__).parent.parent  # tests -> dht
+    python_path = run_env.get("PYTHONPATH", "")
+    run_env["PYTHONPATH"] = f"{dht_project_root}:{python_path}" if python_path else str(dht_project_root)
+    
     # Set working directory
     if cwd is None:
         cwd = Path.cwd()

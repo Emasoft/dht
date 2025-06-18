@@ -23,6 +23,12 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
     # Ensure PROJECT_ROOT is set correctly for the script execution if not already mocked
     run_env["PROJECT_ROOT"] = str(cwd)
     run_env["DHT_DIR"] = str(cwd / "DHT") # Ensure DHT_DIR points inside mock project
+    
+    # Add the DHT project directory to PYTHONPATH so the module can be found
+    dht_project_root = Path(__file__).parent.parent.parent  # tests/integration -> tests -> dht
+    python_path = run_env.get("PYTHONPATH", "")
+    run_env["PYTHONPATH"] = f"{dht_project_root}:{python_path}" if python_path else str(dht_project_root)
+    
     # Ensure PATH includes uv if installed globally, otherwise setup might fail early
     uv_path = shutil.which("uv")
     if uv_path:

@@ -5,6 +5,7 @@
 # - Initial implementation of restore_dependencies as a Prefect flow
 # - Converted from dhtl_commands_1.sh shell script
 # - Added proper error handling and resource management
+# - Updated find_project_root to use common_utils implementation
 #
 
 """
@@ -23,6 +24,7 @@ from typing import Optional, Dict, Any, Tuple
 
 from prefect import flow, task, get_run_logger
 
+from ..common_utils import find_project_root as find_project_root_util
 from ..uv_manager import UVManager
 from ..guardian_prefect import GuardianConfig, run_with_guardian
 from .utils import (
@@ -51,18 +53,13 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
         ValueError: If no project root can be found
     """
     logger = get_run_logger()
-    current = Path(start_path or os.getcwd()).resolve()
-    
-    markers = ["pyproject.toml", "setup.py", "requirements.txt", ".git"]
-    
-    while current != current.parent:
-        for marker in markers:
-            if (current / marker).exists():
-                logger.info(f"Found project root at {current} (marker: {marker})")
-                return current
-        current = current.parent
-    
-    raise ValueError(f"Could not find project root from {start_path or os.getcwd()}")
+    try:
+        # Use the common utility function
+        project_root = find_project_root_util(start_path)
+        logger.info(f"Found project root at {project_root}")
+        return project_root
+    except Exception as e:
+        raise ValueError(f"Could not find project root from {start_path or os.getcwd()}: {e}")
 
 
 @task(name="detect-virtual-environment", retries=2)
@@ -413,7 +410,9 @@ def restore_dependencies_flow(
 restore_dependencies = restore_dependencies_flow
 analyze_project = find_project_root
 detect_project_type = find_project_root  # Simplified alias
-check_lock_files = lambda root: (root / "uv.lock").exists()
+def check_lock_files(root: Path) -> bool:
+    """Check if uv.lock file exists."""
+    return (root / "uv.lock").exists()
 check_uv_lock = check_lock_files
 restore_from_lock_files = install_dependencies
 restore_python_dependencies = install_dependencies
