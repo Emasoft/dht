@@ -1,0 +1,6 @@
+[project]
+name = "modules"
+version = "0.1.0"
+description = "Python project"
+requires-python = ">=3.11"
+dependencies = []

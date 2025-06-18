@@ -205,17 +205,17 @@ class ActContainerRunner:
     def ensure_image(self) -> bool:
         """Ensure act container image is available."""
         if check_act_image(self.runtime, self.image_name):
-            console.print(f"[green]✅ Act container image available[/green]")
+            console.print("[green]✅ Act container image available[/green]")
             return True
         
-        console.print(f"[yellow]🔨 Building act container image...[/yellow]")
+        console.print("[yellow]🔨 Building act container image...[/yellow]")
         result = build_act_container(self.runtime)
         
         if result["success"]:
-            console.print(f"[green]✅ Act container image built[/green]")
+            console.print("[green]✅ Act container image built[/green]")
             return True
         else:
-            console.print(f"[red]❌ Failed to build act image[/red]")
+            console.print("[red]❌ Failed to build act image[/red]")
             return False
     
     def run_act(
@@ -280,7 +280,7 @@ class ActContainerRunner:
         # Combine container and act commands
         cmd.extend(act_cmd)
         
-        console.print(f"[cyan]🐳 Running act in container...[/cyan]")
+        console.print("[cyan]🐳 Running act in container...[/cyan]")
         console.print(f"[dim]Command: {' '.join(cmd)}[/dim]")
         
         # Run the command
@@ -328,7 +328,7 @@ def act_container_workflow(
     logger = get_run_logger()
     project_path = Path(project_path).resolve()
     
-    console.print(f"[bold blue]🐳 DHT Act Container Mode[/bold blue]")
+    console.print("[bold blue]🐳 DHT Act Container Mode[/bold blue]")
     console.print(f"Project: {project_path.name}")
     console.print(f"Runtime: {runtime}")
     console.print(f"Event: {event}")

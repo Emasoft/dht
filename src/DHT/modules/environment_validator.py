@@ -17,7 +17,7 @@ from __future__ import annotations
 import subprocess
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from packaging import version
 
 from prefect import task, get_run_logger
@@ -396,7 +396,7 @@ class EnvironmentValidator:
                         if actual_checksum == expected_checksum:
                             differences[filename] = "Content differs but checksum matches (whitespace?)"
                         else:
-                            differences[filename] = f"Content differs (checksum mismatch)"
+                            differences[filename] = "Content differs (checksum mismatch)"
                     else:
                         differences[filename] = "Content differs"
                     

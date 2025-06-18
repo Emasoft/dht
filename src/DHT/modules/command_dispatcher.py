@@ -53,8 +53,42 @@ class CommandDispatcher:
         try:
             handler = self.commands[command]
             
+            # Debug logging
+            logger.debug(f"Handler type for {command}: {type(handler)}")
+            logger.debug(f"Has fn: {hasattr(handler, 'fn')}, Has run: {hasattr(handler, 'run')}")
+            
+            # Check if this is a Prefect Task
+            if hasattr(handler, 'fn') and hasattr(handler, 'run'):
+                # It's a Prefect Task - we need to check the wrapped function
+                wrapped_fn = handler.fn
+                # Check if the wrapped function is from DHTLCommands
+                logger.debug(f"Wrapped function: {wrapped_fn}")
+                logger.debug(f"Has __qualname__: {hasattr(wrapped_fn, '__qualname__')}")
+                if hasattr(wrapped_fn, '__qualname__'):
+                    logger.debug(f"__qualname__: {wrapped_fn.__qualname__}")
+                
+                if hasattr(wrapped_fn, '__qualname__') and 'DHTLCommands' in wrapped_fn.__qualname__:
+                    # Parse arguments for DHTLCommands methods
+                    logger.debug(f"Handling as DHTLCommands Prefect task")
+                    parsed_args = self._parse_command_args(command, args)
+                    result = handler(**parsed_args)
+                    
+                    # Handle result
+                    if isinstance(result, dict):
+                        if result.get("success", False):
+                            return 0
+                        else:
+                            error_msg = result.get("error", "Command failed")
+                            print(f"❌ Error: {error_msg}")
+                            return 1
+                    else:
+                        return 0 if result else 1
+                else:
+                    # Other Prefect tasks
+                    result = handler(args) if args else handler()
+                    return 0 if result else 1
             # Check if this is a method that needs parsed arguments
-            if hasattr(handler, '__self__'):
+            elif hasattr(handler, '__self__'):
                 # This is a bound method
                 if isinstance(handler.__self__, DHTLCommands):
                     # Parse arguments for DHTLCommands methods

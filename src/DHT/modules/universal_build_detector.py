@@ -427,14 +427,14 @@ def main():
     print("=" * 60)
     
     if summary["can_build"]:
-        print(f"✅ Build possible!")
+        print("✅ Build possible!")
         print(f"Project Type: {summary['project_type']}")
         print(f"Build Tool: {summary['build_tool']}")
         print(f"Commands: {summary['build_commands']}")
         if summary.get("artifacts_path"):
             print(f"Artifacts: {summary['artifacts_path']}")
     else:
-        print(f"❌ No build needed")
+        print("❌ No build needed")
         print(f"Reason: {summary['reason']}")
         if summary.get("suggestions"):
             print("\nSuggestions:")

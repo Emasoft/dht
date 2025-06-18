@@ -80,7 +80,7 @@ def diagnostics_command(*args, **kwargs) -> int:
     
     # Project checks
     project_root = find_project_root()
-    log_info(f"\n📁 Project Information:")
+    log_info("\n📁 Project Information:")
     log_info(f"  Root: {project_root}")
     
     # Check for project files

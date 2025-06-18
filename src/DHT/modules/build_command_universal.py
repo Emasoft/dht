@@ -194,7 +194,7 @@ def universal_build_flow(
         }
     
     # 2. Display build plan
-    console.print(f"\n[green]✅ Build configuration detected![/green]")
+    console.print("\n[green]✅ Build configuration detected![/green]")
     
     table = Table(title="Build Configuration", show_header=True)
     table.add_column("Property", style="cyan")
@@ -245,7 +245,7 @@ def universal_build_flow(
         artifacts = check_artifacts(config["artifacts_path"], project_path)
         
         if artifacts:
-            console.print(f"\n[green]✅ Build artifacts created:[/green]")
+            console.print("\n[green]✅ Build artifacts created:[/green]")
             for artifact in artifacts:
                 console.print(f"  📦 {artifact}")
         else:

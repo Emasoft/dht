@@ -24,5 +24,5 @@ from .dhtl_error_handling import log_error, log_warning, log_info, log_success
 # TODO: Implement actual functionality from shell script
 def placeholder_function():
     """Placeholder function."""
-    log_warning(f"dhtl_uv module not yet fully implemented")
+    log_warning("dhtl_uv module not yet fully implemented")
     return True

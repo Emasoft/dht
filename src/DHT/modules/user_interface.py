@@ -24,5 +24,5 @@ from .dhtl_error_handling import log_error, log_warning, log_info, log_success
 # TODO: Implement actual functionality from shell script
 def placeholder_function():
     """Placeholder function."""
-    log_warning(f"user_interface module not yet fully implemented")
+    log_warning("user_interface module not yet fully implemented")
     return True

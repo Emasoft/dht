@@ -102,7 +102,7 @@ class ReproductionArtifactCreator:
     
     def _add_verification_results(self, verification: Dict[str, Any]) -> str:
         """Add verification results to the guide."""
-        section = f"\n## Verification Results\n"
+        section = "\n## Verification Results\n"
         section += f"**Status**: {'✅ Passed' if verification['success'] else '❌ Failed'}\n\n"
         
         if verification.get("version_mismatches"):

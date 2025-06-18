@@ -371,20 +371,20 @@ def act_workflow_flow(
     console.print(f"  container act: {'✅' if availability['container_act'] else '❌'}")
     
     if use_container:
-        console.print(f"\n[cyan]🐳 Container mode requested[/cyan]")
+        console.print("\n[cyan]🐳 Container mode requested[/cyan]")
         if not availability['container_act']:
             console.print("[red]❌ No container runtime available![/red]")
             console.print("   Install Podman or Docker to use container mode")
             return {"success": False, "error": "Container runtime not available"}
     
     # Lint workflows with actionlint (static analysis - doesn't execute workflows)
-    console.print(f"\n[yellow]🔍 Linting workflows with actionlint (static analysis)...[/yellow]")
+    console.print("\n[yellow]🔍 Linting workflows with actionlint (static analysis)...[/yellow]")
     console.print("[dim]Note: This validates syntax but doesn't run workflows. Use 'dhtl act' to execute them.[/dim]")
     lint_results = lint_workflows_task(project_path)
     
     if lint_results["has_actionlint"]:
         if lint_results["total_issues"] > 0:
-            console.print(f"\n[red]❌ Workflow validation failed![/red]")
+            console.print("\n[red]❌ Workflow validation failed![/red]")
             console.print(f"Found {lint_results['total_issues']} issue(s):\n")
             
             for workflow, issues in lint_results["workflows"].items():
@@ -415,7 +415,7 @@ def act_workflow_flow(
     
     
     # Setup environment
-    console.print(f"\n[yellow]📋 Setting up act environment...[/yellow]")
+    console.print("\n[yellow]📋 Setting up act environment...[/yellow]")
     config_path = setup_act_environment(project_path)
     console.print(f"✅ Configuration created at: {config_path}")
     

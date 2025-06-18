@@ -29,16 +29,29 @@ from .common_utils import find_project_root, get_venv_executable
 from .guardian_prefect import GuardianConfig, ResourceLimits, guardian_sequential_flow
 
 
+def _normalize_args(args, kwargs):
+    """Normalize arguments to handle both list and *args calling conventions.
+    
+    Args:
+        args: Arguments passed to the command function
+        kwargs: Keyword arguments passed to the command function
+        
+    Returns:
+        list: Normalized list of arguments
+    """
+    if args is None:
+        return []
+    elif not isinstance(args, list):
+        # If called with *args, convert to list
+        return [args] + list(kwargs.get('args', []))
+    return args
+
+
 def python_command(args=None, **kwargs) -> int:
     """Run a Python script with resource management."""
     log_info("🐍 Running Python script with guardian protection...")
     
-    # Handle both list and *args calling conventions
-    if args is None:
-        args = []
-    elif not isinstance(args, list):
-        # If called with *args, convert to list
-        args = [args] + list(kwargs.get('args', []))
+    args = _normalize_args(args, kwargs)
     
     if not args:
         log_error("No script provided")
@@ -91,12 +104,7 @@ def node_command(args=None, **kwargs) -> int:
     """Run a Node.js script with resource management."""
     log_info("📦 Running Node.js script with guardian protection...")
     
-    # Handle both list and *args calling conventions
-    if args is None:
-        args = []
-    elif not isinstance(args, list):
-        # If called with *args, convert to list
-        args = [args] + list(kwargs.get('args', []))
+    args = _normalize_args(args, kwargs)
     
     if not args:
         log_error("No script provided")
@@ -149,12 +157,7 @@ def run_command(args=None, **kwargs) -> int:
     """Run any command with resource management."""
     log_info("🚀 Running command with guardian protection...")
     
-    # Handle both list and *args calling conventions
-    if args is None:
-        args = []
-    elif not isinstance(args, list):
-        # If called with *args, convert to list
-        args = [args] + list(kwargs.get('args', []))
+    args = _normalize_args(args, kwargs)
     
     if not args:
         log_error("No command provided")
@@ -188,12 +191,7 @@ def script_command(args=None, **kwargs) -> int:
     """Run a shell script with resource management."""
     log_info("📜 Running shell script with guardian protection...")
     
-    # Handle both list and *args calling conventions
-    if args is None:
-        args = []
-    elif not isinstance(args, list):
-        # If called with *args, convert to list
-        args = [args] + list(kwargs.get('args', []))
+    args = _normalize_args(args, kwargs)
     
     if not args:
         log_error("No script provided")

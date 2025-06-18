@@ -40,7 +40,7 @@ class ReproductionStepsGenerator:
         if "uv" in snapshot.tool_versions:
             steps.append("uv venv")
         else:
-            steps.append(f"python -m venv .venv")
+            steps.append("python -m venv .venv")
         
         # 3. Install packages
         if snapshot.lock_files:
