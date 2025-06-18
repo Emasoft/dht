@@ -750,3 +750,121 @@ uv.lock
                 "success": False,
                 "error": str(e)
             }
+    
+    @task(name="dhtl_sync")
+    def sync(
+        self,
+        path: str = ".",
+        locked: bool = False,
+        dev: bool = True,
+        no_dev: bool = False,
+        extras: Optional[List[str]] = None,
+        upgrade: bool = False,
+        all_extras: bool = False,
+        package: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Sync project dependencies using UV.
+        
+        Args:
+            path: Project path
+            locked: Use locked dependencies (uv.lock)
+            dev: Include development dependencies
+            no_dev: Exclude development dependencies
+            extras: List of extra dependency groups to include
+            upgrade: Upgrade dependencies
+            all_extras: Include all extras
+            package: Specific package to sync (workspace projects)
+            
+        Returns:
+            Result dictionary with success status and message
+        """
+        project_path = Path(path).resolve()
+        
+        # Check if project exists
+        if not project_path.exists():
+            return {
+                "success": False,
+                "message": f"Project path does not exist: {project_path}",
+                "error": "Path not found"
+            }
+        
+        # Check for pyproject.toml
+        if not (project_path / "pyproject.toml").exists():
+            return {
+                "success": False,
+                "message": "No pyproject.toml found",
+                "error": "Not a Python project"
+            }
+        
+        try:
+            # Build sync command
+            sync_args = ["sync"]
+            
+            if locked:
+                sync_args.append("--locked")
+            
+            if no_dev:
+                sync_args.append("--no-dev")
+            elif dev and not all_extras:
+                # Default behavior includes dev dependencies
+                pass
+            
+            if all_extras:
+                sync_args.append("--all-extras")
+            elif extras:
+                for extra in extras:
+                    sync_args.extend(["--extra", extra])
+            
+            if upgrade:
+                sync_args.append("--upgrade")
+            
+            if package:
+                sync_args.extend(["--package", package])
+            
+            # Run UV sync
+            self.logger.info(f"Syncing dependencies in {project_path}...")
+            result = self.uv_manager.run_command(
+                sync_args,
+                cwd=str(project_path)
+            )
+            
+            if not result["success"]:
+                return {
+                    "success": False,
+                    "error": f"Sync failed: {result.get('error', 'Unknown error')}"
+                }
+            
+            # Check what was installed
+            venv_path = project_path / ".venv"
+            if venv_path.exists():
+                # Count installed packages
+                site_packages = venv_path / "lib"
+                package_count = 0
+                if site_packages.exists():
+                    for python_dir in site_packages.iterdir():
+                        if python_dir.name.startswith("python"):
+                            sp_dir = python_dir / "site-packages"
+                            if sp_dir.exists():
+                                # Count .dist-info directories
+                                package_count = len(list(sp_dir.glob("*.dist-info")))
+                                break
+                
+                return {
+                    "success": True,
+                    "message": f"Successfully synced dependencies",
+                    "packages_installed": package_count,
+                    "venv_path": str(venv_path)
+                }
+            else:
+                return {
+                    "success": True,
+                    "message": "Dependencies synced (no venv found to count packages)"
+                }
+            
+        except Exception as e:
+            self.logger.error(f"Sync error: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }

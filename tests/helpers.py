@@ -19,6 +19,44 @@ def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=Tru
     Returns:
         subprocess.CompletedProcess: The completed process
     """
+    import sys
+    
+    # Build command for Python implementation
+    if isinstance(command, str):
+        command = shlex.split(command)
+    
+    cmd = [sys.executable, "-m", "src.DHT.dhtl"] + command
+    
+    # Set up environment
+    run_env = os.environ.copy()
+    if env:
+        run_env.update(env)
+    
+    # Set working directory
+    if cwd is None:
+        cwd = Path.cwd()
+    else:
+        cwd = Path(cwd)
+    
+    # Run the command
+    result = subprocess.run(
+        cmd,
+        cwd=str(cwd),
+        env=run_env,
+        check=check,
+        capture_output=capture_output,
+        text=True
+    )
+    
+    return result
+
+
+# Keep the old function for compatibility but mark it as deprecated
+def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_output=True):
+    """
+    DEPRECATED: Run a DHTL command using shell script.
+    Use run_dhtl_command() instead for Python implementation.
+    """
     # Determine the source DHT directory (where the original dhtl.sh and modules are)
     # This assumes tests are run from the project root or DHT_SOURCE_DIR is set.
     source_dht_dir = Path(os.environ.get("DHT_SOURCE_DIR", Path(__file__).parent.parent.parent)) # Assumes helpers.py is in DHT/tests/

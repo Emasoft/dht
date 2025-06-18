@@ -1,11 +1,11 @@
 {
   "file_metadata": {
     "size": 933,
-    "modified": 1749888575.2278516,
-    "created": 1749888575.2278516,
+    "modified": 1750260331.6867876,
+    "created": 1750260331.6867876,
     "permissions": "0o100600",
-    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmp3nyl1bgd.sh",
-    "name": "tmp3nyl1bgd.sh",
+    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpej31uy43.sh",
+    "name": "tmpej31uy43.sh",
     "extension": ".sh"
   },
   "functions": [
@@ -76,21 +76,30 @@
     {
       "path": "/etc/profile",
       "line": 32,
-      "resolved": "/etc/profile"
+      "resolved": "/private/etc/profile"
     }
   ],
   "commands": [
     {
-      "name": "docker",
-      "found": true
+      "name": "git",
+      "line": 35,
+      "args": [
+        "status"
+      ]
     },
     {
-      "name": "git",
-      "found": true
+      "name": "docker",
+      "line": 36,
+      "args": [
+        "ps"
+      ]
     },
     {
       "name": "npm",
-      "found": true
+      "line": 37,
+      "args": [
+        "install"
+      ]
     }
   ],
   "shebang": "#!/bin/bash",
@@ -136,10 +145,21 @@
       "is_shebang": false
     }
   ],
-  "dependencies": [
-    "docker",
-    "git",
-    "npm"
-  ],
+  "control_structures": {
+    "if_statements": 2,
+    "for_loops": 2,
+    "while_loops": 1,
+    "case_statements": 1,
+    "functions": 2
+  },
+  "dependencies": {
+    "commands": [
+      "docker",
+      "git",
+      "npm"
+    ],
+    "packages": [],
+    "files": []
+  },
   "parser_type": "regex"
 }

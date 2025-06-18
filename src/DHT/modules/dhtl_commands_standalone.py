@@ -3,19 +3,21 @@
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for dhtl_commands_standalone.sh
-# - Provides command functionality
+# - Implements node, python, run, and script commands
+# - Uses guardian for resource management
 # - Integrated with DHT command dispatcher
 # 
 
 """
-DHT Dhtl Commands Standalone Module.
+DHT Standalone Commands Module.
 
-Converted from shell to Python for the pure Python DHT implementation.
+Provides commands to run scripts and programs with resource management.
 """
 
 import os
 import sys
 import subprocess
+import shutil
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
@@ -23,17 +25,200 @@ from .dhtl_error_handling import (
     log_error, log_warning, log_info, log_success, log_debug,
     check_command, check_file, check_directory
 )
+from .common_utils import find_project_root, get_venv_executable
+from .guardian_prefect import GuardianConfig, ResourceLimits, guardian_sequential_flow
 
 
+def python_command(*args, **kwargs) -> int:
+    """Run a Python script with resource management."""
+    log_info("🐍 Running Python script with guardian protection...")
+    
+    if not args:
+        log_error("No script provided")
+        log_info("Usage: dhtl python <script> [args...]")
+        return 1
+    
+    script = args[0]
+    script_args = list(args[1:]) if len(args) > 1 else []
+    
+    # Check if script exists
+    script_path = Path(script)
+    if not script_path.exists():
+        log_error(f"Script not found: {script}")
+        return 1
+    
+    # Get Python executable
+    python_exe = get_venv_executable("python")
+    if not python_exe:
+        log_error("Python not found")
+        return 1
+    
+    # Build command
+    command = f"{python_exe} {script}"
+    if script_args:
+        command += " " + " ".join(script_args)
+    
+    log_info(f"Script: {script}")
+    if script_args:
+        log_info(f"Arguments: {' '.join(script_args)}")
+    
+    # Run with guardian (default limits)
+    limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
+    results = guardian_sequential_flow(
+        commands=[command],
+        stop_on_failure=True,
+        default_limits=limits
+    )
+    
+    if results and results[0]["returncode"] == 0:
+        if results[0].get("stdout"):
+            print(results[0]["stdout"])
+        return 0
+    else:
+        if results and results[0].get("stderr"):
+            print(results[0]["stderr"], file=sys.stderr)
+        return 1
+
+
+def node_command(*args, **kwargs) -> int:
+    """Run a Node.js script with resource management."""
+    log_info("📦 Running Node.js script with guardian protection...")
+    
+    if not args:
+        log_error("No script provided")
+        log_info("Usage: dhtl node <script> [args...]")
+        return 1
+    
+    script = args[0]
+    script_args = list(args[1:]) if len(args) > 1 else []
+    
+    # Check if script exists
+    script_path = Path(script)
+    if not script_path.exists():
+        log_error(f"Script not found: {script}")
+        return 1
+    
+    # Check if node is available
+    if not shutil.which("node"):
+        log_error("Node.js is not installed")
+        log_info("Install Node.js from https://nodejs.org/")
+        return 1
+    
+    # Build command
+    command = f"node {script}"
+    if script_args:
+        command += " " + " ".join(script_args)
+    
+    log_info(f"Script: {script}")
+    if script_args:
+        log_info(f"Arguments: {' '.join(script_args)}")
+    
+    # Run with guardian (default limits)
+    limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
+    results = guardian_sequential_flow(
+        commands=[command],
+        stop_on_failure=True,
+        default_limits=limits
+    )
+    
+    if results and results[0]["returncode"] == 0:
+        if results[0].get("stdout"):
+            print(results[0]["stdout"])
+        return 0
+    else:
+        if results and results[0].get("stderr"):
+            print(results[0]["stderr"], file=sys.stderr)
+        return 1
+
+
+def run_command(*args, **kwargs) -> int:
+    """Run any command with resource management."""
+    log_info("🚀 Running command with guardian protection...")
+    
+    if not args:
+        log_error("No command provided")
+        log_info("Usage: dhtl run <command> [args...]")
+        return 1
+    
+    # Join all arguments as a single command
+    command = " ".join(args)
+    
+    log_info(f"Command: {command}")
+    
+    # Run with guardian (default limits)
+    limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
+    results = guardian_sequential_flow(
+        commands=[command],
+        stop_on_failure=True,
+        default_limits=limits
+    )
+    
+    if results and results[0]["returncode"] == 0:
+        if results[0].get("stdout"):
+            print(results[0]["stdout"])
+        return 0
+    else:
+        if results and results[0].get("stderr"):
+            print(results[0]["stderr"], file=sys.stderr)
+        return 1
+
+
+def script_command(*args, **kwargs) -> int:
+    """Run a shell script with resource management."""
+    log_info("📜 Running shell script with guardian protection...")
+    
+    if not args:
+        log_error("No script provided")
+        log_info("Usage: dhtl script <script> [args...]")
+        return 1
+    
+    script = args[0]
+    script_args = list(args[1:]) if len(args) > 1 else []
+    
+    # Check if script exists
+    script_path = Path(script)
+    if not script_path.exists():
+        log_error(f"Script not found: {script}")
+        return 1
+    
+    # Make script executable if it isn't
+    if not os.access(script_path, os.X_OK):
+        log_info(f"Making script executable: {script}")
+        script_path.chmod(script_path.stat().st_mode | 0o111)
+    
+    # Build command
+    command = str(script_path.absolute())
+    if script_args:
+        command += " " + " ".join(script_args)
+    
+    log_info(f"Script: {script}")
+    if script_args:
+        log_info(f"Arguments: {' '.join(script_args)}")
+    
+    # Run with guardian (default limits)
+    limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
+    results = guardian_sequential_flow(
+        commands=[command],
+        stop_on_failure=True,
+        default_limits=limits
+    )
+    
+    if results and results[0]["returncode"] == 0:
+        if results[0].get("stdout"):
+            print(results[0]["stdout"])
+        return 0
+    else:
+        if results and results[0].get("stderr"):
+            print(results[0]["stderr"], file=sys.stderr)
+        return 1
+
+
+# For backward compatibility
 def placeholder_command(*args, **kwargs) -> int:
     """Placeholder command implementation."""
-    log_info(f"Running dhtl_commands_standalone command...")
-    
-    # TODO: Implement actual functionality
-    log_warning(f"dhtl_commands_standalone is not yet fully implemented")
-    
+    log_warning("This is a placeholder command")
     return 0
 
 
 # Export command functions
-__all__ = ['placeholder_command']
+__all__ = ['python_command', 'node_command', 'run_command', 'script_command', 'placeholder_command']

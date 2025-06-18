@@ -61,10 +61,6 @@ def main(argv=None):
     # Display banner
     launcher.display_banner()
     
-    # Check bash availability
-    if not launcher.check_shell_available():
-        return 1
-    
     # Extract command and its arguments
     if not remaining:
         launcher.display_help()

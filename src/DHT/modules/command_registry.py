@@ -117,121 +117,133 @@ class CommandRegistry:
     
     def _test_command(self, *args, **kwargs) -> int:
         """Run tests."""
-        from .dhtl_commands_2 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_2 import test_command
+        return test_command(*args, **kwargs)
     
     def _coverage_command(self, *args, **kwargs) -> int:
         """Run coverage."""
-        from .dhtl_commands_5 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_5 import coverage_command
+        return coverage_command(*args, **kwargs)
     
     def _commit_command(self, *args, **kwargs) -> int:
         """Create commit."""
-        from .dhtl_commands_6 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_6 import commit_command
+        return commit_command(*args, **kwargs)
     
     def _publish_command(self, *args, **kwargs) -> int:
         """Publish package."""
-        from .dhtl_commands_7 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_7 import publish_command
+        return publish_command(*args, **kwargs)
     
     def _clean_command(self, *args, **kwargs) -> int:
         """Clean project."""
-        from .dhtl_commands_8 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_8 import clean_command
+        return clean_command(*args, **kwargs)
     
     def _env_command(self, *args, **kwargs) -> int:
         """Show environment."""
-        from .dhtl_environment_2 import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_environment_2 import env_command
+        return env_command(*args, **kwargs)
     
     def _diagnostics_command(self, *args, **kwargs) -> int:
         """Run diagnostics."""
-        from .dhtl_diagnostics import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_diagnostics import diagnostics_command
+        return diagnostics_command(*args, **kwargs)
     
     def _restore_command(self, *args, **kwargs) -> int:
         """Restore dependencies."""
-        from .dhtl_commands_1 import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_1 import restore_command
+        return restore_command(*args, **kwargs)
     
     def _tag_command(self, *args, **kwargs) -> int:
         """Create tag."""
-        from .dhtl_version import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_version import tag_command
+        return tag_command(*args, **kwargs)
     
     def _bump_command(self, *args, **kwargs) -> int:
         """Bump version."""
-        from .dhtl_version import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_version import bump_command
+        return bump_command(*args, **kwargs)
     
     def _clone_command(self, *args, **kwargs) -> int:
         """Clone repository."""
-        from .dhtl_github import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_github import clone_command
+        return clone_command(*args, **kwargs)
     
     def _fork_command(self, *args, **kwargs) -> int:
         """Fork repository."""
-        from .dhtl_github import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_github import fork_command
+        return fork_command(*args, **kwargs)
     
     def _guardian_command(self, *args, **kwargs) -> int:
         """Manage guardian."""
-        from .dhtl_guardian_command import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_guardian_command import guardian_command
+        return guardian_command(*args, **kwargs)
     
     def _workflows_command(self, *args, **kwargs) -> int:
         """Manage workflows."""
-        from .dhtl_commands_workflows import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_workflows import workflows_command
+        return workflows_command(*args, **kwargs)
     
     def _act_command(self, *args, **kwargs) -> int:
         """Run GitHub Actions locally."""
-        from .dhtl_commands_act import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_act import act_command
+        return act_command(*args, **kwargs)
     
     def _node_command(self, *args, **kwargs) -> int:
         """Run node."""
-        from .dhtl_commands_standalone import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_standalone import node_command
+        return node_command(*args, **kwargs)
     
     def _python_command(self, *args, **kwargs) -> int:
         """Run python."""
-        from .dhtl_commands_standalone import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_standalone import python_command
+        return python_command(*args, **kwargs)
     
     def _run_command(self, *args, **kwargs) -> int:
         """Run command."""
-        from .dhtl_commands_standalone import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_standalone import run_command
+        return run_command(*args, **kwargs)
     
     def _script_command(self, *args, **kwargs) -> int:
         """Run script."""
-        from .dhtl_commands_standalone import placeholder_command
-        return placeholder_command(*args, **kwargs)
+        from .dhtl_commands_standalone import script_command
+        return script_command(*args, **kwargs)
     
     def _test_dht_command(self, *args, **kwargs) -> int:
         """Test DHT."""
-        from .dhtl_test import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_test import test_dht_command
+        return test_dht_command(*args, **kwargs)
     
     def _verify_dht_command(self, *args, **kwargs) -> int:
         """Verify DHT."""
-        from .dhtl_test import placeholder_function
-        placeholder_function()
-        return 0
+        from .dhtl_test import verify_dht_command
+        return verify_dht_command(*args, **kwargs)
     
     def _help_command(self, *args, **kwargs) -> int:
         """Show help."""
-        from .user_interface import placeholder_function
-        placeholder_function()
+        print("Development Helper Toolkit (DHT)")
+        print("================================")
+        print("\nUsage: dhtl <command> [options]")
+        print("\nAvailable commands:")
+        
+        # Group commands by category
+        categories = {
+            "Project Management": ["init", "setup", "clean"],
+            "Development": ["build", "sync", "test", "lint", "format", "coverage"],
+            "Version Control": ["commit", "tag", "bump", "clone", "fork"],
+            "Deployment": ["publish", "workflows"],
+            "Utilities": ["env", "diagnostics", "restore", "guardian"],
+            "Help": ["help", "version"]
+        }
+        
+        for category, cmds in categories.items():
+            print(f"\n{category}:")
+            for cmd in cmds:
+                if cmd in self.commands:
+                    print(f"  {cmd:<15} {self.commands[cmd]['help']}")
+        
+        print("\nFor command-specific help: dhtl <command> --help")
         return 0
     
     def _version_command(self, *args, **kwargs) -> int:

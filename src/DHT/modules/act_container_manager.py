@@ -90,8 +90,8 @@ class ActContainerManager:
                     subprocess.run(["podman", "system", "service", "--time=0"], 
                                  capture_output=True, 
                                  background=True)
-                except:
-                    result.error = f"Podman socket not found at {socket_path}"
+                except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
+                    result.error = f"Podman socket not found at {socket_path}: {str(e)}"
                     return result
             else:
                 result.error = f"Docker socket not found at {socket_path}"

@@ -21,6 +21,7 @@ from pathlib import Path
 
 # Import the command registry
 from .command_registry import CommandRegistry
+from .dhtl_commands import DHTLCommands
 
 logger = logging.getLogger(__name__)
 
@@ -52,25 +53,38 @@ class CommandDispatcher:
         try:
             handler = self.commands[command]
             
-            # For DHTLCommands methods, we need to parse args
-            if hasattr(handler, '__self__') and isinstance(handler.__self__, DHTLCommands):
-                # Parse arguments based on command
-                parsed_args = self._parse_command_args(command, args)
-                result = handler(**parsed_args)
-                
-                # Handle result
-                if isinstance(result, dict):
-                    if result.get("success", False):
-                        return 0
+            # Check if this is a method that needs parsed arguments
+            if hasattr(handler, '__self__'):
+                # This is a bound method
+                if isinstance(handler.__self__, DHTLCommands):
+                    # Parse arguments for DHTLCommands methods
+                    parsed_args = self._parse_command_args(command, args)
+                    result = handler(**parsed_args)
+                    
+                    # Handle result
+                    if isinstance(result, dict):
+                        if result.get("success", False):
+                            return 0
+                        else:
+                            error_msg = result.get("error", "Command failed")
+                            print(f"❌ Error: {error_msg}")
+                            return 1
                     else:
-                        error_msg = result.get("error", "Command failed")
-                        print(f"❌ Error: {error_msg}")
-                        return 1
+                        return 0 if result else 1
                 else:
-                    return 0 if result else 1
+                    # Other bound methods - call with args list
+                    return handler(args) if args else handler()
             else:
-                # For other commands, pass args directly
-                return handler(args)
+                # Regular functions
+                # Check if function expects no arguments
+                import inspect
+                sig = inspect.signature(handler)
+                if not sig.parameters:
+                    # Function takes no arguments
+                    return handler()
+                else:
+                    # Function takes arguments
+                    return handler(args) if args else handler()
                 
         except KeyboardInterrupt:
             print("\n⚠️  Interrupted by user")

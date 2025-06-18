@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 import subprocess
 
-from DHT.modules.dhtl_commands import DhtlCommands
+from DHT.modules.dhtl_commands import DHTLCommands
 
 
 def test_simple_init():
@@ -17,7 +17,7 @@ def test_simple_init():
     with tempfile.TemporaryDirectory() as tmpdir:
         project_path = Path(tmpdir) / "test-project"
         
-        commands = DhtlCommands()
+        commands = DHTLCommands()
         result = commands.init(
             path=str(project_path),
             name="test-project",

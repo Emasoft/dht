@@ -10,36 +10,10 @@ from unittest.mock import patch
 
 def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 300):
     """Helper to run dhtl commands via subprocess."""
-    dhtl_script = cwd / "DHT" / "dhtl.sh" # Assumes DHT is directly under cwd
-    if not dhtl_script.exists():
-         # Try finding the real DHT script relative to this test file for copying
-         real_dht_dir = Path(__file__).parent.parent.parent
-         if (real_dht_dir / "dhtl.sh").exists():
-              (cwd / "DHT").mkdir(parents=True, exist_ok=True)
-              shutil.copy(real_dht_dir / "dhtl.sh", dhtl_script)
-              # Copy essential modules needed for the command being tested
-              # This list might need adjustment depending on the command
-              modules_to_copy = [
-                  "orchestrator.sh", "dhtl_init.sh", "dhtl_uv.sh",
-                  "dhtl_diagnostics.sh", "dhtl_secrets.sh", "environment.sh",
-                  "dhtl_environment_1.sh", "dhtl_environment_2.sh", "dhtl_environment_3.sh",
-                  "dhtl_utils.sh", "user_interface.sh", "dhtl_guardian_1.sh",
-                  "dhtl_guardian_2.sh", "dhtl_guardian_command.sh",
-                  "dhtl_commands_1.sh", "dhtl_commands_2.sh", "dhtl_commands_3.sh",
-                  "dhtl_commands_4.sh", "dhtl_commands_5.sh", "dhtl_commands_6.sh",
-                  "dhtl_commands_7.sh", "dhtl_commands_8.sh"
-              ]
-              (cwd / "DHT" / "modules").mkdir(exist_ok=True)
-              for module in modules_to_copy:
-                   module_path = real_dht_dir / "modules" / module
-                   if module_path.exists():
-                       shutil.copy(module_path, cwd / "DHT" / "modules" / module)
-                   else:
-                       print(f"Warning: Could not find module {module} at {module_path} to copy for test setup.")
-         else:
-              pytest.fail(f"Cannot find dhtl.sh in mock project {cwd} or real location {real_dht_dir}")
-
-    cmd_list = ["bash", str(dhtl_script)] + command
+    # Use Python implementation instead of shell script
+    import sys
+    
+    cmd_list = [sys.executable, "-m", "src.DHT.dhtl"] + command
     print(f"\nRunning command: {' '.join(cmd_list)} in {cwd}")
 
     # Use a fresh environment or merge with provided

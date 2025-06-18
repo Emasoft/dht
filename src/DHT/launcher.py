@@ -120,47 +120,17 @@ class DHTLauncher:
         # If no project root found, use current directory
         return Path.cwd()
     
-    def _setup_environment(self) -> Dict[str, str]:
-        """Set up environment variables for shell modules."""
-        env = os.environ.copy()
-        
-        # Core paths
-        env["DHTL_DIR"] = str(self.dhtl_dir)
-        env["DHT_DIR"] = str(self.dht_dir)
-        env["MODULES_DIR"] = str(self.modules_dir)
-        env["CACHE_DIR"] = str(self.cache_dir)
-        env["PROJECT_ROOT"] = str(self.project_root)
-        env["DEFAULT_VENV_DIR"] = str(self.default_venv_dir)
-        
-        # Version and session
-        env["DHTL_VERSION"] = self.version
-        env["DHTL_SESSION_ID"] = self.session_id
-        
-        # Platform and Python
-        env["PLATFORM"] = self.platform
-        env["PYTHON_CMD"] = self.python_cmd
-        
-        # Resource limits
-        env["DEFAULT_MEM_LIMIT"] = str(self.default_mem_limit)
-        env["NODE_MEM_LIMIT"] = str(self.node_mem_limit)
-        env["PYTHON_MEM_LIMIT"] = str(self.python_mem_limit)
-        env["TIMEOUT"] = str(self.timeout)
-        
-        # Guardian and mode settings
-        env["USE_GUARDIAN"] = "true" if self.use_guardian else "false"
-        env["QUIET_MODE"] = "1" if self.quiet_mode else "0"
-        env["DEBUG_MODE"] = "true" if self.debug_mode else "false"
-        
-        # Critical flags for modules
-        env["DHTL_SKIP_ENV_SETUP"] = "1"
-        env["SKIP_ENV_CHECK"] = "1"
-        env["IN_DHTL"] = "1"
-        
-        # Disable guardian if requested
-        if not self.use_guardian:
-            env["DISABLE_GUARDIAN"] = "1"
-        
-        return env
+    def setup_python_environment(self) -> None:
+        """Set up environment variables for Python modules."""
+        # Set environment variables that Python modules might need
+        os.environ["PROJECT_ROOT"] = str(self.project_root)
+        os.environ["DEFAULT_VENV_DIR"] = str(self.default_venv_dir)
+        os.environ["PLATFORM"] = self.platform
+        os.environ["PYTHON_CMD"] = self.python_cmd
+        os.environ["DEFAULT_MEM_LIMIT"] = str(self.default_mem_limit)
+        os.environ["PYTHON_MEM_LIMIT"] = str(self.python_mem_limit)
+        os.environ["QUIET_MODE"] = "1" if self.quiet_mode else "0"
+        os.environ["DEBUG_MODE"] = "true" if self.debug_mode else "false"
     
     def display_banner(self) -> None:
         """Display the DHT banner."""
@@ -206,75 +176,12 @@ class DHTLauncher:
         print("  --debug          Enable debug mode")
         print()
     
-    def check_shell_available(self) -> bool:
-        """Check if bash is available for running shell scripts."""
-        bash_path = shutil.which("bash")
-        if not bash_path:
-            print(f"{Colors.RED}❌ Error: bash not found!{Colors.ENDC}")
-            print("\nDHT requires bash to run its shell modules.")
-            
-            if self.platform == "windows":
-                print("\nOn Windows, you can install bash via:")
-                print("  • Git for Windows: https://git-scm.com/download/win")
-                print("  • WSL (Windows Subsystem for Linux)")
-                print("  • MSYS2: https://www.msys2.org/")
-            elif self.platform == "macos":
-                print("\nBash should be available on macOS by default.")
-                print("Please check your PATH environment variable.")
-            else:
-                print("\nPlease install bash using your system's package manager.")
-            
-            return False
-        
-        if self.debug_mode:
-            self.logger.debug(f"Found bash at: {bash_path}")
-        
-        return True
-    
-    def execute_shell_command(self, script: str, args: List[str], env: Dict[str, str]) -> int:
-        """Execute a shell script with arguments."""
-        # Construct the command
-        if self.platform == "windows" and not self.platform == "windows_unix":
-            # Pure Windows - need to explicitly call bash
-            cmd = ["bash", str(script)] + args
-        else:
-            # Unix-like systems
-            cmd = [str(script)] + args
-        
-        if self.debug_mode:
-            self.logger.debug(f"Executing: {' '.join(cmd)}")
-        
-        try:
-            # Run the command
-            process = subprocess.Popen(
-                cmd, env=env, stdout=None, stderr=None, cwd=str(self.project_root)
-            )
-            
-            # Wait for completion
-            return_code = process.wait()
-            
-            if self.debug_mode:
-                self.logger.debug(f"Command exited with code: {return_code}")
-            
-            return return_code
-            
-        except FileNotFoundError:
-            print(f"{Colors.RED}❌ Error: Script not found: {script}{Colors.ENDC}")
-            return 1
-        except PermissionError:
-            print(f"{Colors.RED}❌ Error: Permission denied executing: {script}{Colors.ENDC}")
-            print("Try: chmod +x " + str(script))
-            return 1
-        except KeyboardInterrupt:
-            print(f"\n{Colors.YELLOW}Interrupted by user{Colors.ENDC}")
-            return 130
-        except Exception as e:
-            print(f"{Colors.RED}❌ Error executing command: {e}{Colors.ENDC}")
-            return 1
-    
     def run_command(self, command: str, args: List[str]) -> int:
         """Run a DHT command."""
-        # Try Python command dispatcher first
+        # Set up Python environment
+        self.setup_python_environment()
+        
+        # Try Python command dispatcher
         try:
             from .modules.command_dispatcher import CommandDispatcher
             dispatcher = CommandDispatcher()
