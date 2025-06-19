@@ -1,9 +1,10 @@
-import pytest
-import subprocess
 import os
-from pathlib import Path
 import shutil
+import subprocess
+from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 # Assuming conftest.py provides mock_project_dir fixture
 # Assuming run_dhtl_command helper from test_dhtl_setup_init
@@ -12,7 +13,7 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
     """Helper to run dhtl commands via subprocess."""
     # Use Python implementation instead of shell script
     import sys
-    
+
     cmd_list = [sys.executable, "-m", "src.DHT.dhtl"] + command
     print(f"\nRunning command: {' '.join(cmd_list)} in {cwd}")
 
@@ -23,12 +24,12 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
     # Ensure PROJECT_ROOT is set correctly for the script execution if not already mocked
     run_env["PROJECT_ROOT"] = str(cwd)
     run_env["DHT_DIR"] = str(cwd / "DHT") # Ensure DHT_DIR points inside mock project
-    
+
     # Add the DHT project directory to PYTHONPATH so the module can be found
     dht_project_root = Path(__file__).parent.parent.parent  # tests/integration -> tests -> dht
     python_path = run_env.get("PYTHONPATH", "")
     run_env["PYTHONPATH"] = f"{dht_project_root}:{python_path}" if python_path else str(dht_project_root)
-    
+
     # Ensure PATH includes uv if installed globally, otherwise setup might fail early
     uv_path = shutil.which("uv")
     if uv_path:

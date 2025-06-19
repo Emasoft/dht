@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for dhtl_init.sh
 # - Provides dhtl init functionality
 # - Maintains compatibility with shell version
-# 
+#
 
 """
 DHT Dhtl Init Module.

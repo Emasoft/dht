@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 environment_config_helpers.py - Helper functions for environment configuration
 
@@ -14,13 +13,12 @@ This module contains helper functions and constants used by the environment conf
 from __future__ import annotations
 
 import json
-from typing import Dict, List, Any
 from datetime import datetime
+from typing import Any
 
 from prefect.artifacts import create_markdown_artifact
 
-from DHT.modules.environment_config_models import EnvironmentConfig, ConfigurationResult
-
+from DHT.modules.environment_config_models import ConfigurationResult, EnvironmentConfig
 
 # Platform-specific package mappings
 SYSTEM_PACKAGE_MAPPINGS = {
@@ -81,7 +79,7 @@ TOOL_CONFIGS = {
 }
 
 
-def generate_container_config(config: EnvironmentConfig) -> Dict[str, Any]:
+def generate_container_config(config: EnvironmentConfig) -> dict[str, Any]:
     """Generate container configuration."""
     container_config = {
         "base_image": "python:3.11-slim" if config.project_type == "python" else "ubuntu:22.04",
@@ -92,20 +90,20 @@ def generate_container_config(config: EnvironmentConfig) -> Dict[str, Any]:
         "volumes": [],
         "environment": config.environment_variables
     }
-    
+
     # Add common development ports
     if config.project_type == "python":
         container_config["exposed_ports"] = [8000, 5000]
     elif config.project_type == "nodejs":
         container_config["exposed_ports"] = [3000, 8080]
-    
+
     return container_config
 
 
 def generate_ci_config(
-    config: EnvironmentConfig, 
-    ci_setup: Dict[str, Any]
-) -> Dict[str, Any]:
+    config: EnvironmentConfig,
+    ci_setup: dict[str, Any]
+) -> dict[str, Any]:
     """Generate CI/CD configuration."""
     ci_config = {
         "platforms": ci_setup.get("platforms", []),
@@ -115,88 +113,88 @@ def generate_ci_config(
         "os_matrix": ["ubuntu-latest", "macos-latest", "windows-latest"] if ci_setup.get("matrix_testing") else ["ubuntu-latest"],
         "steps": []
     }
-    
+
     # Define workflow steps
     if "test" in ci_config["workflows"]:
         ci_config["steps"].extend([
             "checkout",
             "setup-python",
-            "install-dependencies", 
+            "install-dependencies",
             "run-tests"
         ])
-    
+
     if "lint" in ci_config["workflows"]:
         ci_config["steps"].extend([
             "run-linting",
             "run-formatting-check"
         ])
-    
+
     if "build" in ci_config["workflows"]:
         ci_config["steps"].extend([
             "build-package",
             "upload-artifacts"
         ])
-    
+
     return ci_config
 
 
 def apply_custom_requirements(
-    config: EnvironmentConfig, 
-    custom: Dict[str, Any]
+    config: EnvironmentConfig,
+    custom: dict[str, Any]
 ) -> EnvironmentConfig:
     """Apply custom requirements to override defaults."""
     # Override Python version
     if "python_version" in custom:
         config.python_version = custom["python_version"]
-    
+
     # Add custom packages
     if "python_packages" in custom:
         config.python_packages.extend(custom["python_packages"])
-    
+
     if "dev_packages" in custom:
         config.dev_packages.extend(custom["dev_packages"])
-    
+
     if "system_packages" in custom:
         config.system_packages.extend(custom["system_packages"])
-    
+
     # Override environment variables
     if "environment_variables" in custom:
         config.environment_variables.update(custom["environment_variables"])
-    
+
     return config
 
 
-def resolve_system_packages(requirements: List[str]) -> List[str]:
+def resolve_system_packages(requirements: list[str]) -> list[str]:
     """Resolve system package names for current platform."""
     import platform
     system = platform.system().lower()
-    
+
     # Map system names
     platform_map = {
         "darwin": "darwin",
-        "linux": "linux", 
+        "linux": "linux",
         "windows": "windows"
     }
     platform_key = platform_map.get(system, "linux")
-    
+
     resolved = []
     for req in requirements:
         if req in SYSTEM_PACKAGE_MAPPINGS:
             resolved.extend(SYSTEM_PACKAGE_MAPPINGS[req][platform_key])
         else:
             resolved.append(req)
-    
+
     return resolved
 
 
 def create_configuration_artifacts(
-    result: ConfigurationResult, 
-    analysis: Dict[str, Any]
+    result: ConfigurationResult,
+    analysis: dict[str, Any]
 ) -> None:
     """Create Prefect artifacts with configuration details."""
     # Generate environment report
     config = result.config
-    
+
     report = f"""# Environment Configuration Report
 
 **Project**: {config.project_path.name}
@@ -221,29 +219,29 @@ def create_configuration_artifacts(
 
 ## Steps Completed
 """
-    
+
     for step in result.steps_completed:
         report += f"- ✅ {step}\n"
-    
+
     if result.steps_failed:
         report += "\n## Steps Failed\n"
         for step in result.steps_failed:
             report += f"- ❌ {step}\n"
-    
+
     if result.warnings:
         report += "\n## Warnings\n"
         for warning in result.warnings:
             report += f"- ⚠️ {warning}\n"
-    
+
     report += f"\n## Execution Time\n{result.execution_time:.2f} seconds"
-    
+
     # Create configuration artifact
     create_markdown_artifact(
         key="environment-configuration-report",
         markdown=report,
         description="Environment configuration report"
     )
-    
+
     # Create detailed configuration as JSON artifact
     config_data = {
         "project_path": str(config.project_path),
@@ -259,10 +257,10 @@ def create_configuration_artifacts(
         "container_config": config.container_config,
         "ci_config": config.ci_config
     }
-    
+
     # Save detailed configuration
     config_file = config.project_path / ".dht" / "environment_config.json"
     config_file.parent.mkdir(exist_ok=True)
-    
+
     with open(config_file, "w") as f:
         json.dump(config_data, f, indent=2, default=str)

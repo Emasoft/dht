@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 uv_task_models.py - Data models and constants for UV Prefect tasks
 
@@ -15,9 +14,7 @@ UV Prefect tasks.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
 from pathlib import Path
-
 
 # Task configuration defaults
 DEFAULT_TIMEOUT = 300  # 5 minutes
@@ -48,17 +45,17 @@ class UVVersionInfo:
     version: str
     path: str
     is_available: bool
-    error: Optional[str] = None
+    error: str | None = None
 
 
 @dataclass
 class PythonVersionInfo:
     """Python version information."""
     version: str
-    path: Optional[str] = None
+    path: str | None = None
     is_default: bool = False
     is_managed: bool = False
-    source: Optional[str] = None
+    source: str | None = None
 
 
 @dataclass
@@ -66,21 +63,21 @@ class DependencyResult:
     """Result from dependency operations."""
     success: bool
     package: str
-    version: Optional[str] = None
-    error: Optional[str] = None
-    stdout: Optional[str] = None
-    stderr: Optional[str] = None
+    version: str | None = None
+    error: str | None = None
+    stdout: str | None = None
+    stderr: str | None = None
 
 
 @dataclass
 class BuildResult:
     """Result from build operations."""
     success: bool
-    output_dir: Optional[Path] = None
-    artifacts: List[str] = None
-    error: Optional[str] = None
-    stdout: Optional[str] = None
-    stderr: Optional[str] = None
+    output_dir: Path | None = None
+    artifacts: list[str] = None
+    error: str | None = None
+    stdout: str | None = None
+    stderr: str | None = None
 
     def __post_init__(self):
         if self.artifacts is None:
@@ -94,5 +91,5 @@ class ScriptResult:
     return_code: int
     stdout: str
     stderr: str
-    error: Optional[str] = None
-    execution_time: Optional[float] = None
+    error: str | None = None
+    execution_time: float | None = None

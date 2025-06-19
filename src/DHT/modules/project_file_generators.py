@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 project_file_generators.py - Project file generators
 
@@ -14,6 +13,7 @@ This module generates project files like gitignore, Dockerfile, and CI workflows
 from __future__ import annotations
 
 from pathlib import Path
+
 import yaml
 
 from DHT.modules.environment_config_models import EnvironmentConfig
@@ -164,7 +164,7 @@ Thumbs.db
 # UV
 uv.lock
 """
-    
+
     if project_type == "nodejs":
         gitignore_content += """
 # Node.js
@@ -175,7 +175,7 @@ yarn-error.log*
 .npm
 .eslintcache
 """
-    
+
     gitignore_file = project_path / ".gitignore"
     gitignore_file.write_text(gitignore_content)
 
@@ -184,9 +184,9 @@ def generate_dockerfile(config: EnvironmentConfig) -> None:
     """Generate Dockerfile from container configuration."""
     if not config.container_config:
         return
-        
+
     container_config = config.container_config
-    
+
     dockerfile_content = f'''FROM {container_config["base_image"]}
 
 # Set working directory
@@ -194,7 +194,7 @@ WORKDIR {container_config["working_dir"]}
 
 # Install system dependencies
 '''
-    
+
     if container_config["system_packages"]:
         if "ubuntu" in container_config["base_image"] or "debian" in container_config["base_image"]:
             dockerfile_content += f'''RUN apt-get update && apt-get install -y \\
@@ -202,7 +202,7 @@ WORKDIR {container_config["working_dir"]}
     && rm -rf /var/lib/apt/lists/*
 
 '''
-    
+
     if config.project_type == "python":
         dockerfile_content += '''# Copy requirements first for better caching
 COPY requirements.txt* pyproject.toml* uv.lock* ./
@@ -216,16 +216,16 @@ RUN pip install --no-cache-dir -r requirements.txt || \\
 COPY . .
 
 '''
-    
+
     if container_config.get("exposed_ports"):
         for port in container_config["exposed_ports"]:
             dockerfile_content += f'EXPOSE {port}\n'
-    
+
     dockerfile_content += '''
 # Default command
 CMD ["python", "-m", "your_module"]
 '''
-    
+
     dockerfile_path = config.project_path / "Dockerfile"
     dockerfile_path.write_text(dockerfile_content)
 
@@ -271,7 +271,7 @@ Thumbs.db
 .env
 *.log
 """
-    
+
     dockerignore_file = project_path / ".dockerignore"
     dockerignore_file.write_text(dockerignore_content)
 
@@ -280,9 +280,9 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
     """Generate GitHub Actions workflow."""
     if not config.ci_config:
         return
-        
+
     ci_config = config.ci_config
-    
+
     workflow = {
         "name": "CI",
         "on": {
@@ -321,14 +321,14 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
             }
         }
     }
-    
+
     # Add workflow-specific steps
     if "test" in ci_config.get("workflows", []):
         workflow["jobs"]["test"]["steps"].append({
             "name": "Run tests",
             "run": "pytest"
         })
-    
+
     if "lint" in ci_config.get("workflows", []):
         workflow["jobs"]["test"]["steps"].extend([
             {
@@ -344,17 +344,17 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
                 "run": "mypy ."
             }
         ])
-    
+
     if "build" in ci_config.get("workflows", []):
         workflow["jobs"]["test"]["steps"].append({
             "name": "Build package",
             "run": "uv build"
         })
-    
+
     # Ensure .github/workflows directory exists
     workflows_dir = config.project_path / ".github" / "workflows"
     workflows_dir.mkdir(parents=True, exist_ok=True)
-    
+
     workflow_file = workflows_dir / "ci.yml"
     with open(workflow_file, "w") as f:
         yaml.dump(workflow, f, default_flow_style=False, sort_keys=False)
@@ -364,7 +364,7 @@ def generate_gitlab_ci(config: EnvironmentConfig) -> None:
     """Generate GitLab CI configuration."""
     if not config.ci_config:
         return
-        
+
     gitlab_ci = {
         "stages": ["test", "build", "deploy"],
         "variables": {
@@ -390,7 +390,7 @@ def generate_gitlab_ci(config: EnvironmentConfig) -> None:
             ]
         }
     }
-    
+
     gitlab_ci_file = config.project_path / ".gitlab-ci.yml"
     with open(gitlab_ci_file, "w") as f:
         yaml.dump(gitlab_ci, f, default_flow_style=False, sort_keys=False)
@@ -400,7 +400,7 @@ def generate_env_file(config: EnvironmentConfig) -> None:
     """Generate .env.example file."""
     env_content = "# Environment Variables\n"
     env_content += "# Copy this file to .env and fill in the values\n\n"
-    
+
     # Default environment variables
     default_vars = {
         "DEBUG": "false",
@@ -409,13 +409,13 @@ def generate_env_file(config: EnvironmentConfig) -> None:
         "SECRET_KEY": "your-secret-key-here",
         "REDIS_URL": "redis://localhost:6379/0"
     }
-    
+
     # Merge with config environment variables
     all_vars = {**default_vars, **config.environment_variables}
-    
+
     for key, value in all_vars.items():
         env_content += f"{key}={value}\n"
-    
+
     env_file = config.project_path / ".env.example"
     env_file.write_text(env_content)
 
@@ -461,6 +461,6 @@ docker-build:  ## Build Docker image
 docker-run:  ## Run Docker container
 \tdocker run -it --rm -p 8000:8000 $(PROJECT_NAME)
 '''
-    
+
     makefile = config.project_path / "Makefile"
     makefile.write_text(makefile_content)

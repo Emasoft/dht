@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 requirements_parser.py - Parser for Python requirements files
 
@@ -10,10 +9,10 @@ Handles parsing of:
 - Various pip options and formats
 """
 
+import logging
 import re
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-import logging
+from typing import Any
 
 from .base_parser import BaseParser
 
@@ -36,7 +35,7 @@ class RequirementsParser(BaseParser):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a requirements file and extract all information.
 
@@ -90,7 +89,7 @@ class RequirementsParser(BaseParser):
         return result
 
     def _parse_option_line(
-        self, line: str, options: Dict[str, Any], line_num: int
+        self, line: str, options: dict[str, Any], line_num: int
     ) -> bool:
         """
         Parse pip option lines.
@@ -143,7 +142,7 @@ class RequirementsParser(BaseParser):
 
     def _parse_dependency_line(
         self, line: str, line_num: int
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Parse a dependency specification line."""
         # Handle editable installs
         editable = False
@@ -183,7 +182,7 @@ class RequirementsParser(BaseParser):
 
     def _parse_url_dependency(
         self, line: str, line_num: int, editable: bool
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Parse URL-based dependency."""
         dep = {"line": line_num, "type": "url", "editable": editable}
 
@@ -208,7 +207,7 @@ class RequirementsParser(BaseParser):
 
         return dep
 
-    def _parse_package_dependency(self, line: str, line_num: int) -> Dict[str, Any]:
+    def _parse_package_dependency(self, line: str, line_num: int) -> dict[str, Any]:
         """Parse a regular package dependency line."""
         # Handle environment markers (e.g., ; python_version >= "3.6")
         marker = None
@@ -269,14 +268,14 @@ class RequirementsParser(BaseParser):
         else:
             return "unknown"
 
-    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> Optional[str]:
+    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:
         """Safely read file contents."""
         try:
-            with open(file_path, "r", encoding=encoding) as f:
+            with open(file_path, encoding=encoding) as f:
                 return f.read()
         except UnicodeDecodeError:
             try:
-                with open(file_path, "r", encoding="latin-1") as f:
+                with open(file_path, encoding="latin-1") as f:
                     return f.read()
             except Exception as e:
                 self.logger.error(f"Failed to read {file_path}: {e}")
@@ -285,7 +284,7 @@ class RequirementsParser(BaseParser):
             self.logger.error(f"Failed to read {file_path}: {e}")
             return None
 
-    def get_file_metadata(self, file_path: Path) -> Dict[str, Any]:
+    def get_file_metadata(self, file_path: Path) -> dict[str, Any]:
         """Get file metadata."""
         try:
             stat = file_path.stat()
@@ -299,7 +298,7 @@ class RequirementsParser(BaseParser):
             self.logger.error(f"Failed to get metadata for {file_path}: {e}")
             return {"name": file_path.name, "error": str(e)}
 
-    def extract_dependencies(self, file_path: Path) -> List[str]:
+    def extract_dependencies(self, file_path: Path) -> list[str]:
         """Extract just the dependency names for quick access."""
         result = self.parse_file(file_path)
         if "error" in result:

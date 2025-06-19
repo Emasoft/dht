@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 system_taxonomy_data2.py - Additional taxonomy data structures (part 2)
 """
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
-# - Extracted from system_taxonomy.py to reduce file size  
+# - Extracted from system_taxonomy.py to reduce file size
 # - Contains additional PRACTICAL_TAXONOMY categories
 #
 
@@ -29,7 +28,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'spinnaker': ['version', 'gate_endpoint'],
         }
     },
-    
+
     'testing_tools': {
         'description': 'Testing frameworks and test runners',
         'tools': {
@@ -57,7 +56,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'robot': ['version', 'python_version'],
         }
     },
-    
+
     'database_tools': {
         'description': 'Database clients and management tools',
         'tools': {
@@ -72,7 +71,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'mssql': ['tools_version', 'server_version'],
         }
     },
-    
+
     'monitoring_tools': {
         'description': 'System and application monitoring tools',
         'tools': {
@@ -90,7 +89,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'newrelic': ['version', 'apps'],
         }
     },
-    
+
     'network_tools': {
         'description': 'Network connectivity and debugging tools',
         'tools': {
@@ -112,7 +111,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'rsync': ['version', 'capabilities'],
         }
     },
-    
+
     'security_tools': {
         'description': 'Security scanning and analysis tools',
         'tools': {
@@ -131,7 +130,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'suricata': ['version', 'rules_version'],
         }
     },
-    
+
     'text_processing': {
         'description': 'Text manipulation and processing utilities',
         'tools': {
@@ -147,7 +146,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'pandoc': ['version', 'input_formats', 'output_formats'],
         }
     },
-    
+
     'documentation_tools': {
         'description': 'Documentation generation and processing tools',
         'tools': {
@@ -166,7 +165,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'mermaid': ['version'],
         }
     },
-    
+
     'ide_editors': {
         'description': 'Integrated Development Environments and text editors',
         'tools': {
@@ -184,7 +183,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'android-studio': ['version', 'sdk_version'],
         }
     },
-    
+
     'archive_managers': {
         'description': 'File compression and archive management tools',
         'tools': {
@@ -201,7 +200,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'zstd': ['version', 'strategies'],
         }
     },
-    
+
     'system_tools': {
         'description': 'System administration and management utilities',
         'tools': {
@@ -226,7 +225,7 @@ PRACTICAL_TAXONOMY_PART2 = {
             'perf': ['version', 'events'],
         }
     },
-    
+
     'hardware_info': {
         'description': 'Hardware information and diagnostics tools',
         'tools': {

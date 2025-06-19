@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 environment_config_models.py - Data models for environment configuration
 
@@ -13,9 +12,9 @@ This module contains the data models used by the environment configurator.
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -23,19 +22,19 @@ class EnvironmentConfig:
     """Configuration for a development environment."""
     project_path: Path
     project_type: str
-    python_version: Optional[str] = None
-    node_version: Optional[str] = None
-    system_packages: List[str] = field(default_factory=list)
-    python_packages: List[str] = field(default_factory=list)
-    dev_packages: List[str] = field(default_factory=list)
-    environment_variables: Dict[str, str] = field(default_factory=dict)
-    pre_install_commands: List[str] = field(default_factory=list)
-    post_install_commands: List[str] = field(default_factory=list)
-    quality_tools: List[str] = field(default_factory=list)
-    test_frameworks: List[str] = field(default_factory=list)
-    build_tools: List[str] = field(default_factory=list)
-    container_config: Optional[Dict[str, Any]] = None
-    ci_config: Optional[Dict[str, Any]] = None
+    python_version: str | None = None
+    node_version: str | None = None
+    system_packages: list[str] = field(default_factory=list)
+    python_packages: list[str] = field(default_factory=list)
+    dev_packages: list[str] = field(default_factory=list)
+    environment_variables: dict[str, str] = field(default_factory=dict)
+    pre_install_commands: list[str] = field(default_factory=list)
+    post_install_commands: list[str] = field(default_factory=list)
+    quality_tools: list[str] = field(default_factory=list)
+    test_frameworks: list[str] = field(default_factory=list)
+    build_tools: list[str] = field(default_factory=list)
+    container_config: dict[str, Any] | None = None
+    ci_config: dict[str, Any] | None = None
 
 
 @dataclass
@@ -43,8 +42,8 @@ class ConfigurationResult:
     """Result of environment configuration."""
     success: bool
     config: EnvironmentConfig
-    steps_completed: List[str] = field(default_factory=list)
-    steps_failed: List[str] = field(default_factory=list)
-    warnings: List[str] = field(default_factory=list)
-    info_tree: Optional[Dict[str, Any]] = None
+    steps_completed: list[str] = field(default_factory=list)
+    steps_failed: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    info_tree: dict[str, Any] | None = None
     execution_time: float = 0.0

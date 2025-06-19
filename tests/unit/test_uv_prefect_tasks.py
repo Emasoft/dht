@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial implementation of UV Prefect tasks unit tests
@@ -9,58 +8,51 @@
 # - Tests for dependency installation
 # - Tests for lock file generation
 # - Tests for project setup flow
-# 
+#
 
 """
 Unit tests for the UV Prefect tasks module.
 """
 
-import json
 import tempfile
 from pathlib import Path
 from unittest import mock
 
 import pytest
-from prefect import flow
 from prefect.testing.utilities import prefect_test_harness
 
+from DHT.modules.guardian_prefect import GuardianResult
 from DHT.modules.uv_prefect_tasks import (
-    check_uv_available,
-    detect_python_version,
-    list_python_versions,
-    ensure_python_version,
-    create_virtual_environment,
-    install_dependencies,
-    sync_dependencies,
-    pip_install_requirements,
-    pip_install_project,
-    generate_lock_file,
     add_dependency,
-    remove_dependency,
     build_project,
+    check_uv_available,
+    create_virtual_environment,
+    detect_python_version,
+    ensure_python_version,
+    generate_lock_file,
+    install_dependencies,
+    list_python_versions,
     run_python_script,
     setup_project_environment,
-    UVTaskError,
 )
 from DHT.modules.uv_task_utils import (
     extract_min_python_version,
     find_uv_executable,
 )
-from DHT.modules.guardian_prefect import ResourceLimits, GuardianResult
 
 
 class TestUVPrefectTasks:
     """Test cases for UV Prefect tasks."""
-    
+
     @pytest.fixture(autouse=True)
     def setup_prefect(self):
         """Setup Prefect test harness."""
         # Clear the LRU cache before each test
         find_uv_executable.cache_clear()
-        
+
         with prefect_test_harness():
             yield
-    
+
     def test_extract_min_python_version(self):
         """Test Python version extraction from constraints."""
         assert extract_min_python_version(">=3.8") == "3.8"
@@ -69,7 +61,7 @@ class TestUVPrefectTasks:
         assert extract_min_python_version("~3.8") == "3.8"
         assert extract_min_python_version("3.11.6") == "3.11.6"
         assert extract_min_python_version("python>=3.10") == "3.10"
-    
+
     @mock.patch('DHT.modules.uv_python_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_python_tasks.run_with_guardian')
     def test_check_uv_available_success(self, mock_run, mock_find):
@@ -85,33 +77,33 @@ class TestUVPrefectTasks:
             was_killed=False,
             kill_reason=None
         )
-        
+
         result = check_uv_available()
-        
+
         assert result["available"] is True
         assert result["version"] == "0.4.27"
         assert result["path"] == "/usr/local/bin/uv"
-    
+
     @mock.patch('DHT.modules.uv_python_tasks.find_uv_executable')
     def test_check_uv_available_not_found(self, mock_find):
         """Test UV not found."""
         mock_find.return_value = None
-        
+
         result = check_uv_available()
-        
+
         assert result["available"] is False
         assert "not found" in result["error"]
-    
+
     def test_detect_python_version_from_file(self):
         """Test Python version detection from .python-version file."""
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             version_file = project_path / ".python-version"
             version_file.write_text("3.11.6\n")
-            
+
             version = detect_python_version(project_path)
             assert version == "3.11.6"
-    
+
     def test_detect_python_version_from_pyproject(self):
         """Test Python version detection from pyproject.toml."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -122,18 +114,18 @@ class TestUVPrefectTasks:
 name = "test"
 requires-python = ">=3.11"
 """)
-            
+
             version = detect_python_version(project_path)
             assert version == "3.11"
-    
+
     def test_detect_python_version_none(self):
         """Test Python version detection when no config found."""
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
-            
+
             version = detect_python_version(project_path)
             assert version is None
-    
+
     @mock.patch('DHT.modules.uv_python_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_python_tasks.run_with_guardian')
     def test_list_python_versions(self, mock_run, mock_find):
@@ -151,15 +143,15 @@ pypy-3.9.18-macos-aarch64     <download available>""",
             was_killed=False,
             kill_reason=None
         )
-        
+
         versions = list_python_versions()
-        
+
         assert len(versions) == 4
         assert versions[0]["version"] == "cpython-3.11.6-macos-aarch64-none"
         assert versions[0]["installed"] is True
         assert versions[1]["version"] == "cpython-3.12.0-macos-aarch64-none"
         assert versions[1]["installed"] is False
-    
+
     @mock.patch('pathlib.Path.exists')
     @mock.patch('DHT.modules.uv_python_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_python_tasks.run_with_guardian')
@@ -176,13 +168,13 @@ pypy-3.9.18-macos-aarch64     <download available>""",
             was_killed=False,
             kill_reason=None
         )
-        
+
         python_path = ensure_python_version("3.11")
-        
+
         assert python_path == Path("/usr/local/bin/python3.11")
         # Only one call for finding
         assert mock_run.call_count == 1
-    
+
     @mock.patch('pathlib.Path.exists')
     @mock.patch('DHT.modules.uv_python_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_python_tasks.run_with_guardian')
@@ -191,7 +183,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
         mock_find.return_value = Path("/usr/local/bin/uv")
         # Path doesn't exist initially, then exists after installation
         mock_exists.side_effect = [False, True]
-        
+
         # Setup mock responses
         mock_run.side_effect = [
             # First find fails
@@ -225,12 +217,12 @@ pypy-3.9.18-macos-aarch64     <download available>""",
                 kill_reason=None
             ),
         ]
-        
+
         python_path = ensure_python_version("3.11")
-        
+
         assert python_path == Path("/usr/local/bin/python3.11")
         assert mock_run.call_count == 3
-    
+
     @mock.patch('DHT.modules.uv_environment_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_environment_tasks.run_with_guardian')
     def test_create_virtual_environment(self, mock_run, mock_find):
@@ -245,11 +237,11 @@ pypy-3.9.18-macos-aarch64     <download available>""",
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             result = create_virtual_environment(project_path, python_version="3.11")
-            
+
             assert result["created"] is True
             assert result["path"] == str(project_path / ".venv")
             assert result["python_version"] == "3.11"
@@ -259,7 +251,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
             command = call_kwargs.get('command', [])
             assert "--python" in command
             assert "3.11" in command
-    
+
     @mock.patch('DHT.modules.uv_dependency_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_dependency_tasks.run_with_guardian')
     def test_install_dependencies_with_lock(self, mock_run, mock_find):
@@ -274,7 +266,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             # Create pyproject.toml to trigger sync method
@@ -284,9 +276,9 @@ version = "0.1.0"
 """)
             # Create lock file
             (project_path / "uv.lock").touch()
-            
+
             result = install_dependencies(project_path, dev=True)
-            
+
             assert result["success"] is True
             assert result["method"] == "sync"
             mock_run.assert_called_once()
@@ -295,7 +287,7 @@ version = "0.1.0"
             command = call_kwargs.get('command', [])
             assert "sync" in command
             assert "--dev" in command
-    
+
     @mock.patch('DHT.modules.uv_dependency_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_dependency_tasks.run_with_guardian')
     def test_install_dependencies_with_requirements(self, mock_run, mock_find):
@@ -310,15 +302,15 @@ version = "0.1.0"
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             # Create requirements file
             req_file = project_path / "requirements.txt"
             req_file.write_text("requests>=2.28\npytest>=7.0\n")
-            
+
             result = install_dependencies(project_path)
-            
+
             assert result["success"] is True
             assert result["method"] == "pip"
             mock_run.assert_called_once()
@@ -328,7 +320,7 @@ version = "0.1.0"
             assert "pip" in command
             assert "install" in command
             assert "-r" in command
-    
+
     @mock.patch('DHT.modules.uv_dependency_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_dependency_tasks.run_with_guardian')
     def test_generate_lock_file(self, mock_run, mock_find):
@@ -343,12 +335,12 @@ version = "0.1.0"
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
-            
+
             result = generate_lock_file(project_path)
-            
+
             assert result["success"] is True
             assert result["path"] == str(project_path / "uv.lock")
             mock_run.assert_called_once()
@@ -356,7 +348,7 @@ version = "0.1.0"
             call_kwargs = mock_run.call_args.kwargs
             command = call_kwargs.get('command', [])
             assert "lock" in command
-    
+
     @mock.patch('DHT.modules.uv_dependency_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_dependency_tasks.run_with_guardian')
     def test_add_dependency(self, mock_run, mock_find):
@@ -384,16 +376,16 @@ version = "0.1.0"
                 kill_reason=None
             ),
         ]
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
-            
+
             result = add_dependency(project_path, "requests>=2.28", dev=True)
-            
+
             assert result["success"] is True
             assert result["package"] == "requests>=2.28"
             assert result["dev"] is True
-    
+
     @mock.patch('DHT.modules.uv_build_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_build_tasks.run_with_guardian')
     def test_build_project(self, mock_run, mock_find):
@@ -408,7 +400,7 @@ version = "0.1.0"
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             dist_dir = project_path / "dist"
@@ -416,12 +408,12 @@ version = "0.1.0"
             # Create fake artifacts
             (dist_dir / "project-1.0.0-py3-none-any.whl").touch()
             (dist_dir / "project-1.0.0.tar.gz").touch()
-            
+
             result = build_project(project_path)
-            
+
             assert result["success"] is True
             assert len(result["artifacts"]) == 2
-    
+
     @mock.patch('DHT.modules.uv_script_tasks.find_uv_executable')
     @mock.patch('DHT.modules.uv_script_tasks.run_with_guardian')
     def test_run_python_script(self, mock_run, mock_find):
@@ -436,21 +428,21 @@ version = "0.1.0"
             was_killed=False,
             kill_reason=None
         )
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
-            
+
             result = run_python_script(
                 project_path,
                 "hello.py",
                 args=["--name", "World"]
             )
-            
+
             assert result["success"] is True
             assert result["output"] == "Hello, World!"
             assert result["duration"] == 1.5
             assert result["peak_memory_mb"] == 50.0
-    
+
     @mock.patch('DHT.modules.uv_prefect_tasks.check_uv_available')
     @mock.patch('DHT.modules.uv_prefect_tasks.detect_python_version')
     @mock.patch('DHT.modules.uv_prefect_tasks.ensure_python_version')
@@ -492,7 +484,7 @@ version = "0.1.0"
             "exists": True,
             "output": "Generated lock file"
         }
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
             # Create pyproject.toml to trigger lock generation
@@ -500,19 +492,19 @@ version = "0.1.0"
 name = "test"
 version = "0.1.0"
 """)
-            
+
             result = setup_project_environment(
                 project_path,
                 install_deps=True
             )
-            
+
             assert result["success"] is True
             assert result["steps"]["python_version"] == "3.11"
             assert "python" in result["steps"]["python_path"].lower()
             assert result["steps"]["venv_creation"]["path"] == str(project_path / ".venv")
             assert "dependencies" in result["steps"]
             assert result["steps"]["dependencies"]["success"] is True
-    
+
     @mock.patch('DHT.modules.uv_environment_tasks.check_uv_available')
     def test_setup_project_environment_no_uv(self, mock_check_uv):
         """Test project setup when UV is not available."""
@@ -520,14 +512,14 @@ version = "0.1.0"
             "available": False,
             "error": "UV not found"
         }
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
-            
+
             result = setup_project_environment(
                 project_path
             )
-            
+
             assert result["success"] is False
             assert "UV not available" in result["errors"][0]
 

@@ -1,9 +1,8 @@
 import os
 import sys
-import pytest
-import tempfile
-import shutil
 from pathlib import Path
+
+import pytest
 
 # Add the DHT directory to sys.path to allow imports from DHT modules if needed
 # This assumes conftest.py is in DHT/tests/
@@ -72,26 +71,26 @@ def mock_project_with_venv(mock_project_dir):
     # Create venv directory structure
     venv_dir = mock_project_dir / ".venv"
     venv_dir.mkdir(exist_ok=True)
-    
+
     # Create basic venv structure
     (venv_dir / "bin").mkdir(exist_ok=True)
     (venv_dir / "lib").mkdir(exist_ok=True)
     (venv_dir / "include").mkdir(exist_ok=True)
-    
+
     # Create activate script
     activate_script = venv_dir / "bin" / "activate"
     activate_script.write_text("#!/bin/bash\n# Mock activate script\n")
     activate_script.chmod(0o755)
-    
+
     # Create python executable
     python_exe = venv_dir / "bin" / "python"
     python_exe.write_text("#!/bin/bash\n# Mock python\n")
     python_exe.chmod(0o755)
-    
+
     # Create pyvenv.cfg
     pyvenv_cfg = venv_dir / "pyvenv.cfg"
     pyvenv_cfg.write_text("home = /usr/local/bin\nversion = 3.11.0\n")
-    
+
     return mock_project_dir
 
 def pytest_sessionfinish(session, exitstatus):

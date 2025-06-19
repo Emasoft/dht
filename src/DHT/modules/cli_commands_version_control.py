@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_version_control.py - Version control CLI commands
 
@@ -11,10 +10,9 @@ This module contains CLI command definitions for version control tools.
 # - Contains version control tool commands (git, hg, svn)
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-VERSION_CONTROL_COMMANDS: Dict[str, Dict[str, Any]] = {
+VERSION_CONTROL_COMMANDS: dict[str, dict[str, Any]] = {
     'git': {
         'commands': {
             'version': 'git --version',
@@ -27,7 +25,7 @@ VERSION_CONTROL_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'version_control',
         'format': 'auto'
     },
-    
+
     'hg': {
         'commands': {
             'version': 'hg --version',
@@ -37,7 +35,7 @@ VERSION_CONTROL_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'version_control',
         'format': 'auto'
     },
-    
+
     'svn': {
         'commands': {
             'version': 'svn --version --quiet',

@@ -21,6 +21,7 @@ from unittest.mock import MagicMock, patch
 
 import docker
 import pytest
+
 try:
     import tomllib  # Python 3.11+
 except ImportError:

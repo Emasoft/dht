@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 platform_normalizer.py - Platform normalization and abstraction utilities
 
-This module handles platform-specific differences and provides normalized 
+This module handles platform-specific differences and provides normalized
 interfaces for cross-platform compatibility.
 """
 
@@ -14,13 +13,11 @@ interfaces for cross-platform compatibility.
 
 from __future__ import annotations
 
-import platform
 import os
+import platform
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
 
 from prefect import task
-
 
 # Platform-specific tool mappings
 TOOL_COMMAND_MAPPINGS = {
@@ -84,7 +81,7 @@ PATH_CONVENTIONS = {
 }
 
 
-def get_platform_info() -> Dict[str, str]:
+def get_platform_info() -> dict[str, str]:
     """Get normalized platform information."""
     return {
         "system": platform.system().lower(),
@@ -112,7 +109,7 @@ def normalize_platform_name(platform_name: str) -> str:
     return platform_map.get(platform_name.lower(), platform_name.lower())
 
 
-def get_platform_conventions() -> Dict[str, str]:
+def get_platform_conventions() -> dict[str, str]:
     """Get platform-specific conventions."""
     current_platform = normalize_platform_name(platform.system())
     return PATH_CONVENTIONS.get(current_platform, PATH_CONVENTIONS["linux"])
@@ -121,22 +118,22 @@ def get_platform_conventions() -> Dict[str, str]:
 def normalize_path(path: str) -> str:
     """Normalize path for current platform."""
     path_obj = Path(path)
-    
+
     # Convert to absolute path
     if not path_obj.is_absolute():
         path_obj = path_obj.resolve()
-    
+
     # Use forward slashes on all platforms for consistency
     return str(path_obj).replace('\\', '/')
 
 
-def get_tool_command(tool: str, platform_name: Optional[str] = None) -> Optional[List[str]]:
+def get_tool_command(tool: str, platform_name: str | None = None) -> list[str] | None:
     """Get platform-specific command for a tool."""
     if platform_name is None:
         platform_name = normalize_platform_name(platform.system())
     else:
         platform_name = normalize_platform_name(platform_name)
-    
+
     tool_commands = TOOL_COMMAND_MAPPINGS.get(tool, {})
     return tool_commands.get(platform_name)
 
@@ -144,39 +141,39 @@ def get_tool_command(tool: str, platform_name: Optional[str] = None) -> Optional
 @task(name="verify_platform_compatibility")
 def verify_platform_compatibility(
     snapshot_platform: str,
-    current_platform: Optional[str] = None
-) -> Tuple[bool, List[str]]:
+    current_platform: str | None = None
+) -> tuple[bool, list[str]]:
     """
     Verify platform compatibility between snapshot and current system.
-    
+
     Returns:
         Tuple of (is_compatible, list_of_warnings)
     """
     if current_platform is None:
         current_platform = platform.system().lower()
-    
+
     snapshot_platform = normalize_platform_name(snapshot_platform)
     current_platform = normalize_platform_name(current_platform)
-    
+
     warnings = []
-    
+
     # Same platform = fully compatible
     if snapshot_platform == current_platform:
         return True, []
-    
+
     # Check cross-platform compatibility
     compatible_pairs = [
         ("darwin", "linux"),  # macOS <-> Linux usually compatible
         ("linux", "darwin"),
     ]
-    
+
     if (snapshot_platform, current_platform) in compatible_pairs:
         warnings.append(
             f"Platform differs ({snapshot_platform} -> {current_platform}), "
             "but environments are generally compatible"
         )
         return True, warnings
-    
+
     # Windows has more compatibility issues
     if "windows" in [snapshot_platform, current_platform]:
         warnings.append(
@@ -185,21 +182,21 @@ def verify_platform_compatibility(
         )
         warnings.append("Consider using WSL2 on Windows for better compatibility")
         return True, warnings  # Still allow, but with warnings
-    
+
     return True, warnings
 
 
-def normalize_environment_variables(env_vars: Dict[str, str]) -> Dict[str, str]:
+def normalize_environment_variables(env_vars: dict[str, str]) -> dict[str, str]:
     """Normalize environment variables for current platform."""
     current_platform = normalize_platform_name(platform.system())
     normalized = {}
-    
+
     for key, value in env_vars.items():
         # Skip platform-specific variables
         if any(skip in key for skip in ["WINDIR", "SYSTEMROOT", "PROGRAMFILES"]):
             if current_platform != "windows":
                 continue
-        
+
         # Normalize paths in values
         if any(path_indicator in value for path_indicator in ["/", "\\", os.pathsep]):
             if os.pathsep in value:
@@ -210,9 +207,9 @@ def normalize_environment_variables(env_vars: Dict[str, str]) -> Dict[str, str]:
             else:
                 # Single path
                 value = normalize_path(value)
-        
+
         normalized[key] = value
-    
+
     return normalized
 
 

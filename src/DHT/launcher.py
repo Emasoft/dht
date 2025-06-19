@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted DHTLauncher class from dhtl.py for modularity
 # - Reduced size of main entry point file
 # - Follows CLAUDE.md modularity guidelines
-# 
+#
 
 """
 DHT Launcher Class.
@@ -13,13 +12,12 @@ DHT Launcher Class.
 Main launcher class that coordinates between shell modules and Python.
 """
 
+import logging
 import os
 import platform
-import time
 import shutil
-import logging
+import time
 from pathlib import Path
-from typing import Optional, List
 
 try:
     from .colors import Colors
@@ -29,45 +27,45 @@ except ImportError:
 
 class DHTLauncher:
     """Main launcher class for DHT."""
-    
+
     def __init__(self) -> None:
         """Initialize the DHT launcher."""
         # Set up logging
         self.logger = logging.getLogger(__name__)
-        
+
         # Basic configuration
         self.version = "1.0.0"
         self.session_id = f"{int(time.time())}_{os.getpid()}"
-        
+
         # Detect environment - we're now inside the DHT package
         self.dht_dir = Path(__file__).parent.resolve()  # DHT package directory
         self.dhtl_dir = self.dht_dir.parent.parent  # Go up to project root
         self.modules_dir = self.dht_dir / "modules"
         self.cache_dir = self.dht_dir / ".dht_cache"
-        
+
         # Platform detection
         self.platform = self._detect_platform()
         self.python_cmd = self._detect_python()
-        
+
         # Project detection
         self.project_root = self._find_project_root()
         self.default_venv_dir = self.project_root / ".venv"
-        
+
         # Resource limits
         self.default_mem_limit = 2048  # MB
         self.node_mem_limit = 2048     # MB
         self.python_mem_limit = 2048   # MB
         self.timeout = 900             # 15 minutes
-        
+
         # Command options
         self.use_guardian = True
         self.quiet_mode = False
         self.debug_mode = False
-        
+
         # Color support detection
         if not Colors.supports_color():
             Colors.disable()
-    
+
     def _detect_platform(self) -> str:
         """Detect the current platform."""
         system = platform.system().lower()
@@ -84,7 +82,7 @@ class DHTLauncher:
             return "bsd"
         else:
             return "unknown"
-    
+
     def _detect_python(self) -> str:
         """Detect the Python command to use."""
         # Try python3 first, then python
@@ -92,31 +90,31 @@ class DHTLauncher:
             if shutil.which(cmd):
                 return cmd
         return "python3"  # Fallback
-    
-    def _find_project_root(self, start_dir: Optional[Path] = None) -> Path:
+
+    def _find_project_root(self, start_dir: Path | None = None) -> Path:
         """Find the project root directory."""
         if start_dir is None:
             start_dir = Path.cwd()
-        
+
         current = start_dir.resolve()
-        
+
         # Project markers to look for
         markers = [
             ".git", "package.json", "pyproject.toml", "setup.py",
             "Cargo.toml", "go.mod", "pom.xml", "build.gradle",
             "Gemfile", "composer.json", ".dhtconfig"
         ]
-        
+
         # Traverse up looking for markers
         while current != current.parent:
             for marker in markers:
                 if (current / marker).exists():
                     return current
             current = current.parent
-        
+
         # If no project root found, use current directory
         return Path.cwd()
-    
+
     def setup_python_environment(self) -> None:
         """Set up environment variables for Python modules."""
         # Set environment variables that Python modules might need
@@ -128,17 +126,17 @@ class DHTLauncher:
         os.environ["PYTHON_MEM_LIMIT"] = str(self.python_mem_limit)
         os.environ["QUIET_MODE"] = "1" if self.quiet_mode else "0"
         os.environ["DEBUG_MODE"] = "true" if self.debug_mode else "false"
-    
+
     def display_banner(self) -> None:
         """Display the DHT banner."""
         if self.quiet_mode:
             return
-        
+
         print(f"{Colors.CYAN}╔═════════════════════════════════════════════════════════╗{Colors.ENDC}")
         print(f"{Colors.CYAN}║           Development Helper Toolkit Launcher           ║{Colors.ENDC}")
         print(f"{Colors.CYAN}╚═════════════════════════════════════════════════════════╝{Colors.ENDC}")
         print()
-    
+
     def display_help(self) -> None:
         """Display help message."""
         print(f"{Colors.CYAN}╔════════════════════════════════════════════════════════════════════════════╗{Colors.ENDC}")
@@ -172,12 +170,12 @@ class DHTLauncher:
         print("  --quiet          Reduce output verbosity")
         print("  --debug          Enable debug mode")
         print()
-    
-    def run_command(self, command: str, args: List[str]) -> int:
+
+    def run_command(self, command: str, args: list[str]) -> int:
         """Run a DHT command."""
         # Set up Python environment
         self.setup_python_environment()
-        
+
         # Try Python command dispatcher
         try:
             from .modules.command_dispatcher import CommandDispatcher
@@ -190,8 +188,8 @@ class DHTLauncher:
                 self.logger.warning(f"Command dispatcher not available: {e}")
                 print("❌ Error: Command system not available")
                 return 1
-        
+
         dispatcher = CommandDispatcher()
         # Let dispatcher handle all commands including help/version
         return dispatcher.dispatch(command, args)
-    
+

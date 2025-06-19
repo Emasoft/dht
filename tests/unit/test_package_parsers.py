@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Test suite for package file parsers.
 
@@ -15,16 +14,14 @@ Tests various package file formats including:
 - build.gradle
 """
 
-import pytest
-from pathlib import Path
-import tempfile
 import json
-from typing import Dict, Any
+
+from DHT.modules.parsers.package_json_parser import PackageJsonParser
+from DHT.modules.parsers.pyproject_parser import PyProjectParser
 
 # Import implemented parsers
 from DHT.modules.parsers.requirements_parser import RequirementsParser
-from DHT.modules.parsers.pyproject_parser import PyProjectParser
-from DHT.modules.parsers.package_json_parser import PackageJsonParser
+
 # TODO: Implement these parsers
 # from DHT.modules.parsers.setup_parser import SetupParser
 # from DHT.modules.parsers.cargo_parser import CargoParser
@@ -36,7 +33,7 @@ from DHT.modules.parsers.package_json_parser import PackageJsonParser
 
 class TestRequirementsParser:
     """Test parsing of requirements.txt and requirements.in files."""
-    
+
     def test_parse_simple_requirements(self, tmp_path):
         """Test parsing a simple requirements.txt file."""
         content = """
@@ -49,10 +46,10 @@ pandas
 """
         req_file = tmp_path / "requirements.txt"
         req_file.write_text(content)
-        
+
         parser = RequirementsParser()
         result = parser.parse_file(req_file)
-        
+
         # Expected result structure
         expected = {
             "dependencies": [
@@ -70,14 +67,14 @@ pandas
                 "format": "requirements"
             }
         }
-        
+
         assert len(result["dependencies"]) == len(expected["dependencies"])
         for i, dep in enumerate(result["dependencies"]):
             assert dep["name"] == expected["dependencies"][i]["name"]
             assert dep["version"] == expected["dependencies"][i]["version"]
             assert dep["line"] == expected["dependencies"][i]["line"]
         assert result["comments"] == expected["comments"]
-    
+
     def test_parse_requirements_with_extras(self, tmp_path):
         """Test parsing requirements with extras."""
         content = """
@@ -86,10 +83,10 @@ celery[redis]>=5.0
 """
         req_file = tmp_path / "requirements.txt"
         req_file.write_text(content)
-        
+
         # parser = RequirementsParser()
         # result = parser.parse_file(req_file)
-        
+
         expected_deps = [
             {
                 "name": "requests",
@@ -104,9 +101,9 @@ celery[redis]>=5.0
                 "line": 3
             }
         ]
-        
+
         # assert result["dependencies"][0]["extras"] == expected_deps[0]["extras"]
-    
+
     def test_parse_requirements_with_urls(self, tmp_path):
         """Test parsing requirements with direct URLs."""
         content = """
@@ -116,10 +113,10 @@ https://files.pythonhosted.org/packages/source/p/package/package-1.0.tar.gz
 """
         req_file = tmp_path / "requirements.txt"
         req_file.write_text(content)
-        
+
         # parser = RequirementsParser()
         # result = parser.parse_file(req_file)
-        
+
         expected_deps = [
             {
                 "name": "mypackage",
@@ -137,9 +134,9 @@ https://files.pythonhosted.org/packages/source/p/package/package-1.0.tar.gz
                 "line": 4
             }
         ]
-        
+
         # assert len(result["dependencies"]) == 3
-    
+
     def test_parse_requirements_with_options(self, tmp_path):
         """Test parsing requirements with pip options."""
         content = """
@@ -152,24 +149,24 @@ numpy==1.21.0
 """
         req_file = tmp_path / "requirements.txt"
         req_file.write_text(content)
-        
+
         # parser = RequirementsParser()
         # result = parser.parse_file(req_file)
-        
+
         expected_options = {
             "index_url": "https://pypi.org/simple",
             "extra_index_urls": ["https://test.pypi.org/simple"],
             "includes": ["other-requirements.txt"],
             "trusted_hosts": ["pypi.org"]
         }
-        
+
         # assert result["options"] == expected_options
         # assert len(result["dependencies"]) == 1
 
 
 class TestPyProjectParser:
     """Test parsing of pyproject.toml files."""
-    
+
     def test_parse_basic_pyproject(self, tmp_path):
         """Test parsing a basic pyproject.toml."""
         content = """
@@ -196,10 +193,10 @@ build-backend = "setuptools.build_meta"
 """
         pyproject_file = tmp_path / "pyproject.toml"
         pyproject_file.write_text(content)
-        
+
         parser = PyProjectParser()
         result = parser.parse_file(pyproject_file)
-        
+
         expected = {
             "project": {
                 "name": "myproject",
@@ -220,7 +217,7 @@ build-backend = "setuptools.build_meta"
                 "backend": "setuptools.build_meta"
             }
         }
-        
+
         assert result["project"]["name"] == expected["project"]["name"]
         assert result["project"]["version"] == expected["project"]["version"]
         assert result["project"]["requires_python"] == expected["project"]["requires_python"]
@@ -228,7 +225,7 @@ build-backend = "setuptools.build_meta"
         assert len(result["project"]["dependencies"]) == 2
         assert result["project"]["dependencies"][0]["name"] == "requests"
         assert result["project"]["dependencies"][1]["name"] == "click"
-    
+
     def test_parse_poetry_pyproject(self, tmp_path):
         """Test parsing Poetry-style pyproject.toml."""
         content = """
@@ -251,14 +248,14 @@ web = ["flask"]
 """
         pyproject_file = tmp_path / "pyproject.toml"
         pyproject_file.write_text(content)
-        
+
         # parser = PyProjectParser()
         # result = parser.parse_file(pyproject_file)
-        
+
         # assert result["tool"]["poetry"]["name"] == "poetry-project"
         # assert "flask" in result["tool"]["poetry"]["dependencies"]
         # assert result["tool"]["poetry"]["extras"]["web"] == ["flask"]
-    
+
     def test_parse_uv_pyproject(self, tmp_path):
         """Test parsing UV-style pyproject.toml."""
         content = """
@@ -280,17 +277,17 @@ my-package = { git = "https://github.com/user/repo", branch = "main" }
 """
         pyproject_file = tmp_path / "pyproject.toml"
         pyproject_file.write_text(content)
-        
+
         # parser = PyProjectParser()
         # result = parser.parse_file(pyproject_file)
-        
+
         # assert result["tool"]["uv"]["dev-dependencies"] == ["pytest>=7.0.0", "mypy>=1.0.0"]
         # assert "my-package" in result["tool"]["uv"]["sources"]
 
 
 class TestSetupParser:
     """Test parsing of setup.py and setup.cfg files."""
-    
+
     def test_parse_setup_py(self, tmp_path):
         """Test parsing a setup.py file."""
         content = '''
@@ -331,10 +328,10 @@ setup(
 '''
         setup_file = tmp_path / "setup.py"
         setup_file.write_text(content)
-        
+
         # parser = SetupParser()
         # result = parser.parse_file(setup_file)
-        
+
         expected = {
             "name": "mypackage",
             "version": "0.1.0",
@@ -350,10 +347,10 @@ setup(
                 "console_scripts": ["mycommand=mypackage.cli:main"]
             }
         }
-        
+
         # assert result["name"] == expected["name"]
         # assert result["install_requires"] == expected["install_requires"]
-    
+
     def test_parse_setup_cfg(self, tmp_path):
         """Test parsing a setup.cfg file."""
         content = """
@@ -387,17 +384,17 @@ console_scripts =
 """
         setup_cfg = tmp_path / "setup.cfg"
         setup_cfg.write_text(content)
-        
+
         # parser = SetupParser()
         # result = parser.parse_file(setup_cfg)
-        
+
         # assert result["metadata"]["name"] == "mypackage"
         # assert result["options"]["python_requires"] == ">=3.7"
 
 
 class TestPackageJsonParser:
     """Test parsing of package.json files."""
-    
+
     def test_parse_basic_package_json(self, tmp_path):
         """Test parsing a basic package.json."""
         content = {
@@ -423,20 +420,20 @@ class TestPackageJsonParser:
                 "npm": ">=6.0.0"
             }
         }
-        
+
         package_file = tmp_path / "package.json"
         package_file.write_text(json.dumps(content, indent=2))
-        
+
         parser = PackageJsonParser()
         result = parser.parse_file(package_file)
-        
+
         assert result["name"] == "my-app"
         assert len(result["dependencies"]) == 2
         assert result["dependencies"][0]["name"] == "express"
         assert result["dependencies"][0]["version"] == "^4.18.0"
         assert len(result["devDependencies"]) == 2
         assert result["engines"]["node"] == ">=14.0.0"
-    
+
     def test_parse_workspaces_package_json(self, tmp_path):
         """Test parsing package.json with workspaces."""
         content = {
@@ -450,20 +447,20 @@ class TestPackageJsonParser:
                 "lerna": "^6.0.0"
             }
         }
-        
+
         package_file = tmp_path / "package.json"
         package_file.write_text(json.dumps(content, indent=2))
-        
+
         # parser = PackageJsonParser()
         # result = parser.parse_file(package_file)
-        
+
         # assert result["workspaces"] == ["packages/*", "apps/*"]
         # assert result["private"] is True
 
 
 class TestCargoParser:
     """Test parsing of Cargo.toml files."""
-    
+
     def test_parse_cargo_toml(self, tmp_path):
         """Test parsing a Cargo.toml file."""
         content = """
@@ -494,10 +491,10 @@ json = ["serde/json"]
 """
         cargo_file = tmp_path / "Cargo.toml"
         cargo_file.write_text(content)
-        
+
         # parser = CargoParser()
         # result = parser.parse_file(cargo_file)
-        
+
         expected = {
             "package": {
                 "name": "my-rust-app",
@@ -517,14 +514,14 @@ json = ["serde/json"]
                 "json": ["serde/json"]
             }
         }
-        
+
         # assert result["package"]["name"] == "my-rust-app"
         # assert result["dependencies"]["serde"]["features"] == ["derive"]
 
 
 class TestGoModParser:
     """Test parsing of go.mod files."""
-    
+
     def test_parse_go_mod(self, tmp_path):
         """Test parsing a go.mod file."""
         content = """
@@ -549,10 +546,10 @@ exclude github.com/bad/package v1.0.0
 """
         go_mod = tmp_path / "go.mod"
         go_mod.write_text(content)
-        
+
         # parser = GoModParser()
         # result = parser.parse_file(go_mod)
-        
+
         expected = {
             "module": "github.com/user/myapp",
             "go_version": "1.19",
@@ -573,14 +570,14 @@ exclude github.com/bad/package v1.0.0
                 }
             ]
         }
-        
+
         # assert result["module"] == expected["module"]
         # assert result["go_version"] == expected["go_version"]
 
 
 class TestGemfileParser:
     """Test parsing of Gemfile."""
-    
+
     def test_parse_gemfile(self, tmp_path):
         """Test parsing a Gemfile."""
         content = """
@@ -607,10 +604,10 @@ gem 'bootsnap', '>= 1.4.4', require: false
 """
         gemfile = tmp_path / "Gemfile"
         gemfile.write_text(content)
-        
+
         # parser = GemfileParser()
         # result = parser.parse_file(gemfile)
-        
+
         expected = {
             "source": "https://rubygems.org",
             "ruby_version": "3.1.0",
@@ -625,34 +622,34 @@ gem 'bootsnap', '>= 1.4.4', require: false
                 "development,test": ["byebug", "rspec-rails"]
             }
         }
-        
+
         # assert result["ruby_version"] == "3.1.0"
         # assert len(result["gems"]) >= 3
 
 
 class TestMavenParser:
     """Test parsing of pom.xml files."""
-    
+
     def test_parse_pom_xml(self, tmp_path):
         """Test parsing a pom.xml file."""
         content = """<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>com.example</groupId>
     <artifactId>my-app</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <spring.version>5.3.23</spring.version>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -666,7 +663,7 @@ class TestMavenParser:
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -680,10 +677,10 @@ class TestMavenParser:
 """
         pom_file = tmp_path / "pom.xml"
         pom_file.write_text(content)
-        
+
         # parser = MavenParser()
         # result = parser.parse_file(pom_file)
-        
+
         expected = {
             "groupId": "com.example",
             "artifactId": "my-app",
@@ -707,14 +704,14 @@ class TestMavenParser:
                 }
             ]
         }
-        
+
         # assert result["artifactId"] == "my-app"
         # assert len(result["dependencies"]) == 2
 
 
 class TestGradleParser:
     """Test parsing of build.gradle files."""
-    
+
     def test_parse_build_gradle(self, tmp_path):
         """Test parsing a build.gradle file."""
         content = """
@@ -745,10 +742,10 @@ test {
 """
         gradle_file = tmp_path / "build.gradle"
         gradle_file.write_text(content)
-        
+
         # parser = GradleParser()
         # result = parser.parse_file(gradle_file)
-        
+
         expected = {
             "plugins": [
                 {"id": "java"},
@@ -768,10 +765,10 @@ test {
                 "testImplementation": ["org.springframework.boot:spring-boot-starter-test"]
             }
         }
-        
+
         # assert result["group"] == "com.example"
         # assert "implementation" in result["dependencies"]
-    
+
     def test_parse_build_gradle_kts(self, tmp_path):
         """Test parsing a build.gradle.kts (Kotlin DSL) file."""
         content = """
@@ -809,10 +806,10 @@ tasks.withType<KotlinCompile> {
 """
         gradle_kts = tmp_path / "build.gradle.kts"
         gradle_kts.write_text(content)
-        
+
         # parser = GradleParser()
         # result = parser.parse_file(gradle_kts)
-        
+
         # assert result["group"] == "com.example"
         # assert "kotlin" in str(result["dependencies"]["implementation"])
 
@@ -820,23 +817,23 @@ tasks.withType<KotlinCompile> {
 # Test utility functions that parsers might share
 class TestParserUtilities:
     """Test common utility functions used by parsers."""
-    
+
     def test_version_parsing(self):
         """Test parsing various version specifier formats."""
         test_cases = [
             ("==1.2.3", {"operator": "==", "version": "1.2.3"}),
             (">=2.0", {"operator": ">=", "version": "2.0"}),
             ("~=1.4.0", {"operator": "~=", "version": "1.4.0"}),
-            ("<3.0,>=2.0", {"constraints": [{"operator": "<", "version": "3.0"}, 
+            ("<3.0,>=2.0", {"constraints": [{"operator": "<", "version": "3.0"},
                                            {"operator": ">=", "version": "2.0"}]}),
             ("^1.2.3", {"operator": "^", "version": "1.2.3"}),  # npm style
             ("~1.2.3", {"operator": "~", "version": "1.2.3"}),  # npm style
         ]
-        
+
         # for spec, expected in test_cases:
         #     result = parse_version_spec(spec)
         #     assert result == expected
-    
+
     def test_dependency_normalization(self):
         """Test normalizing dependency names across ecosystems."""
         test_cases = [
@@ -844,15 +841,15 @@ class TestParserUtilities:
             ("Django", "python", "django"),
             ("Flask-RESTful", "python", "flask-restful"),
             ("typing_extensions", "python", "typing-extensions"),
-            
+
             # npm packages are case-sensitive
             ("@angular/core", "npm", "@angular/core"),
             ("lodash.debounce", "npm", "lodash.debounce"),
-            
+
             # Maven uses groupId:artifactId
             ("org.springframework:spring-core", "maven", "org.springframework:spring-core"),
         ]
-        
+
         # for name, ecosystem, expected in test_cases:
         #     result = normalize_dependency_name(name, ecosystem)
         #     assert result == expected

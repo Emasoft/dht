@@ -7,9 +7,9 @@ It extracts imports, functions, classes, and dependencies from Python source fil
 """
 
 import ast
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 import logging
+from pathlib import Path
+from typing import Any
 
 from .base_parser import BaseParser
 
@@ -30,7 +30,7 @@ class PythonParser(BaseParser):
         super().__init__()
         self.logger = logging.getLogger(__name__)
 
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a Python file and extract comprehensive information.
 
@@ -69,7 +69,7 @@ class PythonParser(BaseParser):
         except Exception as e:
             return {"error": f"Failed to parse {file_path}: {e}"}
 
-    def extract_dependencies(self, file_path: Path) -> List[str]:
+    def extract_dependencies(self, file_path: Path) -> list[str]:
         """Extract unique dependencies from imports"""
         content = self.read_file_safe(file_path)
         if content is None:
@@ -81,7 +81,7 @@ class PythonParser(BaseParser):
         except Exception:
             return []
 
-    def _extract_imports(self, tree: ast.AST) -> List[Dict[str, Any]]:
+    def _extract_imports(self, tree: ast.AST) -> list[dict[str, Any]]:
         """Extract all import statements"""
         imports = []
 
@@ -112,7 +112,7 @@ class PythonParser(BaseParser):
 
         return imports
 
-    def _extract_dependencies(self, tree: ast.AST) -> List[str]:
+    def _extract_dependencies(self, tree: ast.AST) -> list[str]:
         """Extract unique package dependencies from imports"""
         dependencies = set()
 
@@ -165,7 +165,7 @@ class PythonParser(BaseParser):
 
         return sorted(list(dependencies - stdlib_modules))
 
-    def _extract_functions(self, tree: ast.AST) -> List[Dict[str, Any]]:
+    def _extract_functions(self, tree: ast.AST) -> list[dict[str, Any]]:
         """Extract function definitions"""
         functions = []
 
@@ -192,7 +192,7 @@ class PythonParser(BaseParser):
 
         return functions
 
-    def _extract_classes(self, tree: ast.AST) -> List[Dict[str, Any]]:
+    def _extract_classes(self, tree: ast.AST) -> list[dict[str, Any]]:
         """Extract class definitions"""
         classes = []
 
@@ -215,7 +215,7 @@ class PythonParser(BaseParser):
 
         return classes
 
-    def _extract_arguments(self, args: ast.arguments) -> Dict[str, Any]:
+    def _extract_arguments(self, args: ast.arguments) -> dict[str, Any]:
         """Extract function arguments"""
         arg_info = {
             "args": [],
@@ -277,12 +277,12 @@ class PythonParser(BaseParser):
 
         return arg_info
 
-    def _extract_class_methods(self, class_node: ast.ClassDef) -> List[Dict[str, Any]]:
+    def _extract_class_methods(self, class_node: ast.ClassDef) -> list[dict[str, Any]]:
         """Extract methods from a class"""
         methods = []
 
         for node in class_node.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                 method_info = {
                     "name": node.name,
                     "line": node.lineno,
@@ -304,7 +304,7 @@ class PythonParser(BaseParser):
 
     def _extract_class_attributes(
         self, class_node: ast.ClassDef
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Extract class attributes"""
         attributes = []
 
@@ -332,7 +332,7 @@ class PythonParser(BaseParser):
 
         return attributes
 
-    def _extract_module_variables(self, tree: ast.AST) -> List[Dict[str, Any]]:
+    def _extract_module_variables(self, tree: ast.AST) -> list[dict[str, Any]]:
         """Extract module-level variables"""
         variables = []
 
@@ -361,7 +361,7 @@ class PythonParser(BaseParser):
 
         return variables
 
-    def _extract_decorators(self, tree: ast.AST) -> List[str]:
+    def _extract_decorators(self, tree: ast.AST) -> list[str]:
         """Extract all unique decorators used in the file"""
         decorators = set()
 
@@ -372,7 +372,7 @@ class PythonParser(BaseParser):
 
         return sorted(list(decorators))
 
-    def _extract_async_functions(self, tree: ast.AST) -> List[str]:
+    def _extract_async_functions(self, tree: ast.AST) -> list[str]:
         """Extract names of async functions"""
         async_funcs = []
 
@@ -382,7 +382,7 @@ class PythonParser(BaseParser):
 
         return async_funcs
 
-    def _extract_type_hints(self, tree: ast.AST) -> Dict[str, int]:
+    def _extract_type_hints(self, tree: ast.AST) -> dict[str, int]:
         """Extract statistics about type hints usage"""
         stats = {
             "annotated_args": 0,
@@ -393,7 +393,7 @@ class PythonParser(BaseParser):
         }
 
         for node in ast.walk(tree):
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                 stats["total_functions"] += 1
                 if node.returns:
                     stats["annotated_returns"] += 1
@@ -408,7 +408,7 @@ class PythonParser(BaseParser):
 
         return stats
 
-    def _extract_annotation(self, annotation: Optional[ast.AST]) -> Optional[str]:
+    def _extract_annotation(self, annotation: ast.AST | None) -> str | None:
         """Extract type annotation as string"""
         if annotation is None:
             return None
@@ -446,7 +446,7 @@ class PythonParser(BaseParser):
             except Exception:
                 return str(node)
 
-    def _get_value(self, node: Optional[ast.AST]) -> Any:
+    def _get_value(self, node: ast.AST | None) -> Any:
         """Extract value from AST node"""
         if node is None:
             return None
@@ -458,7 +458,7 @@ class PythonParser(BaseParser):
         elif isinstance(node, ast.Dict):
             return {
                 self._get_value(k): self._get_value(v)
-                for k, v in zip(node.keys, node.values)
+                for k, v in zip(node.keys, node.values, strict=False)
             }
         elif isinstance(node, ast.Set):
             return {self._get_value(elt) for elt in node.elts}
@@ -493,7 +493,7 @@ class PythonParser(BaseParser):
             node, "dataclasses.dataclass"
         )
 
-    def _get_metaclass(self, node: ast.ClassDef) -> Optional[str]:
+    def _get_metaclass(self, node: ast.ClassDef) -> str | None:
         """Extract metaclass if specified"""
         for keyword in node.keywords:
             if keyword.arg == "metaclass":
@@ -526,7 +526,7 @@ class PythonParser(BaseParser):
         complexity = 1  # Base complexity
 
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For)):
+            if isinstance(child, ast.If | ast.While | ast.For):
                 complexity += 1
             elif isinstance(child, ast.ExceptHandler):
                 complexity += 1

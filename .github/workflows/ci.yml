@@ -5,9 +5,17 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      run-super-linter:
+        description: 'Run Super Linter in addition to regular checks'
+        required: false
+        type: boolean
+        default: false
 
 env:
   UV_CACHE_DIR: /tmp/.uv-cache
+  RUN_SUPER_LINTER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run-super-linter == 'true' || 'false' }}
 
 jobs:
   pre-commit:
@@ -128,3 +136,37 @@ jobs:
           echo "❌ Lock file is out of date! Run 'uv lock' locally and commit the changes."
           exit 1
         fi
+
+  super-linter:
+    name: Super Linter (Optional)
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run-super-linter == 'true' }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Run Super Linter
+      uses: super-linter/super-linter@v7.2.0
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BRANCH: main
+        
+        # Use our Python tools config
+        PYTHON_BLACK_CONFIG_FILE: pyproject.toml
+        PYTHON_RUFF_CONFIG_FILE: pyproject.toml
+        PYTHON_MYPY_CONFIG_FILE: pyproject.toml
+        
+        # Quick mode - only essential linters
+        VALIDATE_PYTHON_BLACK: true
+        VALIDATE_PYTHON_RUFF: true
+        VALIDATE_YAML: true
+        VALIDATE_GITHUB_ACTIONS: true
+        VALIDATE_BASH: true
+        
+        # Minimal output
+        SUPPRESS_POSSUM: true
+        LOG_LEVEL: WARN

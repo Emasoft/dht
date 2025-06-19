@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 pyproject_parser.py - Parser for pyproject.toml files
 
@@ -15,9 +14,9 @@ try:
     import tomllib  # Python 3.11+
 except ImportError:
     import tomli as tomllib  # Python 3.10 and below
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 import logging
+from pathlib import Path
+from typing import Any
 
 from .base_parser import BaseParser
 
@@ -37,7 +36,7 @@ class PyProjectParser(BaseParser):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a pyproject.toml file and extract all information.
 
@@ -75,7 +74,7 @@ class PyProjectParser(BaseParser):
 
         return result
 
-    def _parse_project_metadata(self, project: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_project_metadata(self, project: dict[str, Any]) -> dict[str, Any]:
         """Parse PEP 621 project metadata."""
         metadata = {}
 
@@ -126,7 +125,7 @@ class PyProjectParser(BaseParser):
 
         return metadata
 
-    def _parse_build_system(self, build_system: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_build_system(self, build_system: dict[str, Any]) -> dict[str, Any]:
         """Parse PEP 517/518 build system configuration."""
         result = {}
 
@@ -141,7 +140,7 @@ class PyProjectParser(BaseParser):
 
         return result
 
-    def _parse_tools(self, tools: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_tools(self, tools: dict[str, Any]) -> dict[str, Any]:
         """Parse tool-specific configurations."""
         result = {}
 
@@ -184,7 +183,7 @@ class PyProjectParser(BaseParser):
 
         return result
 
-    def _parse_poetry(self, poetry: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_poetry(self, poetry: dict[str, Any]) -> dict[str, Any]:
         """Parse Poetry-specific configuration."""
         result = {}
 
@@ -243,7 +242,7 @@ class PyProjectParser(BaseParser):
 
         return result
 
-    def _parse_uv(self, uv: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_uv(self, uv: dict[str, Any]) -> dict[str, Any]:
         """Parse UV-specific configuration."""
         result = {}
 
@@ -264,7 +263,7 @@ class PyProjectParser(BaseParser):
 
         return result
 
-    def _parse_dependencies(self, deps: List[str]) -> List[Dict[str, Any]]:
+    def _parse_dependencies(self, deps: list[str]) -> list[dict[str, Any]]:
         """Parse a list of dependency specifications."""
         parsed = []
 
@@ -275,7 +274,7 @@ class PyProjectParser(BaseParser):
 
         return parsed
 
-    def _parse_poetry_dependencies(self, deps: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _parse_poetry_dependencies(self, deps: dict[str, Any]) -> list[dict[str, Any]]:
         """Parse Poetry-style dependencies."""
         parsed = []
 
@@ -315,7 +314,7 @@ class PyProjectParser(BaseParser):
 
         return parsed
 
-    def _parse_dependency_spec(self, spec: str) -> Optional[Dict[str, Any]]:
+    def _parse_dependency_spec(self, spec: str) -> dict[str, Any] | None:
         """Parse a single dependency specification string."""
         import re
 
@@ -352,7 +351,7 @@ class PyProjectParser(BaseParser):
 
         return dep
 
-    def _parse_people(self, people: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    def _parse_people(self, people: list[dict[str, str]]) -> list[dict[str, str]]:
         """Parse author/maintainer entries."""
         parsed = []
 
@@ -366,16 +365,16 @@ class PyProjectParser(BaseParser):
 
         return parsed
 
-    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> Optional[str]:
+    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:
         """Safely read file contents."""
         try:
-            with open(file_path, "r", encoding=encoding) as f:
+            with open(file_path, encoding=encoding) as f:
                 return f.read()
         except Exception as e:
             self.logger.error(f"Failed to read {file_path}: {e}")
             return None
 
-    def get_file_metadata(self, file_path: Path) -> Dict[str, Any]:
+    def get_file_metadata(self, file_path: Path) -> dict[str, Any]:
         """Get file metadata."""
         try:
             stat = file_path.stat()
@@ -389,7 +388,7 @@ class PyProjectParser(BaseParser):
             self.logger.error(f"Failed to get metadata for {file_path}: {e}")
             return {"name": file_path.name, "error": str(e)}
 
-    def extract_dependencies(self, file_path: Path) -> List[str]:
+    def extract_dependencies(self, file_path: Path) -> list[str]:
         """Extract just the dependency names for quick access."""
         result = self.parse_file(file_path)
         if "error" in result:

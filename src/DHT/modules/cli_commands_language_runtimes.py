@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_language_runtimes.py - Language runtime CLI commands
 
@@ -11,10 +10,9 @@ This module contains CLI command definitions for language runtimes.
 # - Contains language runtime commands (python, node, java, ruby, go, rust)
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
+LANGUAGE_RUNTIME_COMMANDS: dict[str, dict[str, Any]] = {
     'python': {
         'commands': {
             'version': 'python --version',
@@ -25,7 +23,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'python3': {
         'commands': {
             'version': 'python3 --version',
@@ -36,7 +34,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'node': {
         'commands': {
             'version': 'node --version',
@@ -47,7 +45,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'java': {
         'commands': {
             'version': 'java -version 2>&1',
@@ -57,7 +55,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'ruby': {
         'commands': {
             'version': 'ruby --version',
@@ -67,7 +65,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'go': {
         'commands': {
             'version': 'go version',
@@ -78,7 +76,7 @@ LANGUAGE_RUNTIME_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'language_runtimes',
         'format': 'auto'
     },
-    
+
     'rust': {
         'commands': {
             'version': 'rustc --version',

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 framework_configs.py - Framework-specific configuration templates
 
@@ -13,14 +12,14 @@ Python frameworks supported by DHT.
 # - Provides centralized framework configuration access
 #
 
-from typing import Dict, Any
+from typing import Any
 
 from DHT.modules.project_type_enums import ProjectType
 
 
 class FrameworkConfig:
     """Framework-specific configuration templates."""
-    
+
     _configs = {
         ProjectType.DJANGO: {
             "name": "Django",
@@ -118,25 +117,25 @@ class FrameworkConfig:
             "entry_point": "console_scripts",
         },
     }
-    
+
     @classmethod
-    def get_config(cls, project_type: ProjectType) -> Dict[str, Any]:
+    def get_config(cls, project_type: ProjectType) -> dict[str, Any]:
         """Get configuration for a project type."""
         base_config = cls._configs.get(project_type, {})
-        
+
         # Handle inheritance (e.g., DRF inherits from Django)
         if project_type == ProjectType.DJANGO_REST:
             django_config = cls._configs[ProjectType.DJANGO].copy()
             django_config.update(base_config)
             # Merge dependencies
             django_config["core_dependencies"] = list(set(
-                django_config.get("core_dependencies", []) + 
+                django_config.get("core_dependencies", []) +
                 base_config.get("core_dependencies", [])
             ))
             django_config["test_dependencies"] = list(set(
-                django_config.get("test_dependencies", []) + 
+                django_config.get("test_dependencies", []) +
                 base_config.get("test_dependencies", [])
             ))
             return type('FrameworkConfig', (), django_config)()
-        
+
         return type('FrameworkConfig', (), base_config)()

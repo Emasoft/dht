@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 config_generators.py - Configuration file generators for different project types
 
@@ -13,15 +12,14 @@ Python frameworks and project types.
 # - Organized by project type for clarity
 #
 
-from typing import Dict
 
 from DHT.modules.project_analysis_models import ProjectAnalysis
 
 
-def generate_django_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_django_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate Django-specific configurations."""
     configs = {}
-    
+
     # pyproject.toml
     configs["pyproject.toml"] = """[tool.django]
 settings_module = "mysite.settings"
@@ -46,7 +44,7 @@ plugins = ["mypy_django_plugin.main"]
 [tool.djlint]
 profile = "django"
 """
-    
+
     # .env.example
     configs[".env.example"] = """# Django settings
 SECRET_KEY=your-secret-key-here
@@ -66,7 +64,7 @@ CELERY_RESULT_BACKEND=redis://localhost:6379/2
 # Email
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 """
-    
+
     # .pre-commit-config.yaml
     configs[".pre-commit-config.yaml"] = """repos:
   - repo: https://github.com/adamchainz/django-upgrade
@@ -74,7 +72,7 @@ EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
     hooks:
       - id: django-upgrade
         args: [--target-version, "4.2"]
-  
+
   - repo: https://github.com/rtts/djhtml
     rev: 3.0.6
     hooks:
@@ -82,14 +80,14 @@ EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
       - id: djcss
       - id: djjs
 """
-    
+
     return configs
 
 
-def generate_fastapi_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_fastapi_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate FastAPI-specific configurations."""
     configs = {}
-    
+
     # Dockerfile
     configs["Dockerfile"] = """FROM python:3.11-slim
 
@@ -110,7 +108,7 @@ COPY . .
 # Run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 """
-    
+
     # docker-compose.yml
     configs["docker-compose.yml"] = """version: "3.9"
 
@@ -146,7 +144,7 @@ services:
 volumes:
   postgres_data:
 """
-    
+
     # alembic.ini
     configs["alembic.ini"] = """[alembic]
 script_location = alembic
@@ -163,14 +161,14 @@ keys = console
 [formatters]
 keys = generic
 """
-    
+
     return configs
 
 
-def generate_ml_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_ml_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate ML/Data Science configurations."""
     configs = {}
-    
+
     # DVC config
     configs[".dvc/config"] = """[core]
     remote = storage
@@ -179,28 +177,28 @@ def generate_ml_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
 ['remote "storage"']
     url = s3://my-bucket/dvc-storage
 """
-    
+
     # MLflow config
     configs["mlflow.yaml"] = """# MLflow configuration
 artifact_location: ./mlruns
 backend_store_uri: sqlite:///mlflow.db
 default_artifact_root: ./mlruns
 """
-    
+
     # Jupyter config
     configs[".jupyter/jupyter_notebook_config.py"] = """c.NotebookApp.token = ''
 c.NotebookApp.password = ''
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 8888
 """
-    
+
     return configs
 
 
-def generate_library_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_library_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate library project configurations."""
     configs = {}
-    
+
     # setup.cfg
     configs["setup.cfg"] = """[metadata]
 name = my-library
@@ -213,7 +211,7 @@ python_requires = >=3.8
 [options.packages.find]
 where = src
 """
-    
+
     # pyproject.toml for library
     configs["pyproject.toml"] = """[build-system]
 requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
@@ -252,14 +250,14 @@ dev = [
 [tool.setuptools_scm]
 write_to = "src/my_library/_version.py"
 """
-    
+
     return configs
 
 
-def generate_cli_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_cli_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate CLI project configurations."""
     configs = {}
-    
+
     # Add CLI-specific configs
     if "click" in analysis.cli_frameworks:
         configs["setup.py"] = """from setuptools import setup, find_packages
@@ -274,7 +272,7 @@ setup(
     },
 )
 """
-    
+
     # pyproject.toml for CLI
     configs["pyproject.toml"] = """[build-system]
 requires = ["setuptools>=45", "wheel"]
@@ -295,14 +293,14 @@ mycli = "my_cli.main:cli"
 testpaths = ["tests"]
 python_files = "test_*.py"
 """
-    
+
     return configs
 
 
-def generate_common_configs(analysis: ProjectAnalysis) -> Dict[str, str]:
+def generate_common_configs(analysis: ProjectAnalysis) -> dict[str, str]:
     """Generate common configuration files."""
     configs = {}
-    
+
     # Common .gitignore
     if analysis.category.is_data_related():
         configs[".gitignore"] = """# Data files
@@ -371,7 +369,7 @@ htmlcov/
 # Documentation
 docs/_build/
 """
-    
+
     # Common GitHub Actions workflow
     configs[".github/workflows/tests.yml"] = """name: Tests
 
@@ -394,19 +392,19 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
-    
+
     - name: Run tests
       run: |
         pytest --cov=. --cov-report=xml
-    
+
     - name: Upload coverage
       uses: codecov/codecov-action@v3
 """
-    
+
     return configs

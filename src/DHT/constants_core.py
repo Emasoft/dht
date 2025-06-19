@@ -2,7 +2,7 @@
 """
 Constants and configuration for Process Guardian
 
-This module defines all constants and configuration settings used by the 
+This module defines all constants and configuration settings used by the
 Process Guardian system, including:
 - Default timeout values
 - Memory limits
@@ -14,8 +14,9 @@ Process Guardian system, including:
 
 import os
 import platform
+from typing import Any
+
 import psutil
-from typing import Dict, Any
 
 # Platform detection
 SYSTEM = platform.system().lower()
@@ -50,21 +51,21 @@ MAX_PROCESS_QUEUE_SIZE = 50  # Maximum processes in queue
 def calculate_system_resources() -> None:
     """Calculate system resources and set appropriate limits."""
     global MAX_TOTAL_MEMORY_MB, DEFAULT_MAX_MEMORY_MB, MAX_CONCURRENT_PROCESSES, HAS_PSUTIL
-    
+
     # Default conservative values
     DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
     MAX_TOTAL_MEMORY_MB = 3072    # 3 GB total (3 processes at 1 GB each)
     MAX_CONCURRENT_PROCESSES = 3   # Allow 3 concurrent processes by default
-    
+
     # Only calculate if psutil is available
     if not HAS_PSUTIL:
         return
-    
+
     try:
         # Get system memory
         mem = psutil.virtual_memory()
         total_memory_mb = mem.total / (1024 * 1024)
-        
+
         # Calculate values based on system memory
         if total_memory_mb >= 16384:  # >= 16 GB
             MAX_TOTAL_MEMORY_MB = 8192  # 8 GB
@@ -82,19 +83,19 @@ def calculate_system_resources() -> None:
             MAX_TOTAL_MEMORY_MB = 1024  # 1 GB
             DEFAULT_MAX_MEMORY_MB = 512  # 512 MB per process
             MAX_CONCURRENT_PROCESSES = 2
-            
+
         # Further restrict concurrent processes on limited systems
         cpu_count = os.cpu_count() or 2
         if cpu_count <= 2:
             MAX_CONCURRENT_PROCESSES = 1  # Single process only on limited CPU
             MAX_TOTAL_MEMORY_MB = min(MAX_TOTAL_MEMORY_MB, 1536)  # 1.5 GB max
-            
+
         # Platform-specific adjustments
         if IS_WINDOWS:
             # Windows has more overhead, restrict more aggressively
             MAX_CONCURRENT_PROCESSES = max(1, MAX_CONCURRENT_PROCESSES - 1)
             MAX_TOTAL_MEMORY_MB = int(MAX_TOTAL_MEMORY_MB * 0.85)  # 85% of calculated value
-            
+
     except Exception:
         # Fall back to conservative defaults if calculation fails
         DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
@@ -126,7 +127,7 @@ PROCESS_TYPES = {
     },
     # Python processes - typically well-behaved
     "python": {
-        "max_memory_mb": DEFAULT_MAX_MEMORY_MB, 
+        "max_memory_mb": DEFAULT_MAX_MEMORY_MB,
         "max_concurrent": MAX_CONCURRENT_PROCESSES,
         "priority": 5  # Medium priority
     },
@@ -141,7 +142,7 @@ PROCESS_TYPES = {
 # Critical processes that require special monitoring
 CRITICAL_PROCESSES = [
     # Build tools
-    "bump-my-version", 
+    "bump-my-version",
     "pre-commit",
     # Test tools
     "pytest",
@@ -177,7 +178,7 @@ ERROR_MESSAGES = {
 }
 
 # Detection functions
-def detect_environment() -> Dict[str, Any]:
+def detect_environment() -> dict[str, Any]:
     """Detect and return environment information"""
     env_info = {
         "system": SYSTEM,
@@ -192,7 +193,7 @@ def detect_environment() -> Dict[str, Any]:
         "strict_sequential": STRICT_SEQUENTIAL_EXECUTION,
         "resource_limited": RESOURCE_LIMITED_SYSTEM
     }
-    
+
     # Add CPU and memory info if psutil is available
     if HAS_PSUTIL:
         try:
@@ -202,7 +203,7 @@ def detect_environment() -> Dict[str, Any]:
             env_info["available_memory_mb"] = mem.available / (1024 * 1024)
         except Exception:
             pass
-            
+
     return env_info
 
 # Usage examples for documentation
@@ -211,11 +212,11 @@ Usage examples:
 
 Direct usage:
     python -m helpers.shell.process_guardian --monitor "bump-my-version" --timeout 900 --max-memory 2048 -- command [args]
-    
+
 As a context manager in Python scripts:
     with ProcessGuardian(process_name="bump-my-version", timeout=900, max_memory_mb=2048):
         subprocess.run(["command", "arg1", "arg2"])
-        
+
 As a CLI tool:
     python -m helpers.shell.process_guardian --list  # List monitored processes
     python -m helpers.shell.process_guardian --kill-all  # Kill all monitored processes

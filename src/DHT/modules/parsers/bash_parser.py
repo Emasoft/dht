@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 bash_parser.py - Bash script parser using tree-sitter
 
@@ -16,11 +15,11 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any
 
 from .base_parser import BaseParser
-from .bash_parser_tree_sitter import TreeSitterBashParser
 from .bash_parser_regex import RegexBashParser
+from .bash_parser_tree_sitter import TreeSitterBashParser
 from .bash_parser_utils import BashParserUtils
 
 
@@ -41,26 +40,26 @@ class BashParser(BaseParser):
         """Initialize the Bash parser."""
         self.logger = logging.getLogger(__name__)
         self.utils = BashParserUtils()
-        
+
         # Initialize parsers
         self.tree_sitter_parser = TreeSitterBashParser()
         self.regex_parser = RegexBashParser()
-        
+
         # Log parser availability
         if self.tree_sitter_parser.is_available():
             self.logger.info("Using tree-sitter parser for Bash scripts")
         else:
             self.logger.info("Using regex-based parser for Bash scripts")
-    
-    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> Optional[str]:
+
+    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:
         """Safely read file contents with error handling."""
         try:
-            with open(file_path, "r", encoding=encoding) as f:
+            with open(file_path, encoding=encoding) as f:
                 return f.read()
         except UnicodeDecodeError:
             # Try with different encoding
             try:
-                with open(file_path, "r", encoding="latin-1") as f:
+                with open(file_path, encoding="latin-1") as f:
                     return f.read()
             except Exception as e:
                 self.logger.error(f"Failed to read file {file_path}: {e}")
@@ -68,36 +67,36 @@ class BashParser(BaseParser):
         except Exception as e:
             self.logger.error(f"Failed to read file {file_path}: {e}")
             return None
-    
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a Bash script and extract all information.
-        
+
         Args:
             file_path: Path to the Bash script
-            
+
         Returns:
             Dictionary containing parsed information
         """
         self.logger.debug(f"Parsing Bash script: {file_path}")
-        
+
         # Read file content
         content = self.read_file_safe(file_path)
         if content is None:
             return self._empty_result(file_path)
-        
+
         # Try tree-sitter parsing first
         if self.tree_sitter_parser.is_available():
             tree = self.tree_sitter_parser.parse_tree(content)
             if tree:
                 return self._parse_with_tree_sitter(tree, content, file_path)
-        
+
         # Fall back to regex parsing
         return self._parse_with_regex(content, file_path)
-    
+
     def _parse_with_tree_sitter(
         self, tree: Any, content: str, file_path: Path
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Parse using tree-sitter."""
         return {
             "file_metadata": self.get_file_metadata(file_path),
@@ -112,8 +111,8 @@ class BashParser(BaseParser):
             "dependencies": self.utils.extract_dependencies_from_content(content),
             "parser_type": "tree-sitter",
         }
-    
-    def _parse_with_regex(self, content: str, file_path: Path) -> Dict[str, Any]:
+
+    def _parse_with_regex(self, content: str, file_path: Path) -> dict[str, Any]:
         """Fallback regex-based parsing when tree-sitter is not available."""
         return {
             "file_metadata": self.get_file_metadata(file_path),
@@ -128,8 +127,8 @@ class BashParser(BaseParser):
             "dependencies": self.utils.extract_dependencies_from_content(content),
             "parser_type": "regex",
         }
-    
-    def _empty_result(self, file_path: Path) -> Dict[str, Any]:
+
+    def _empty_result(self, file_path: Path) -> dict[str, Any]:
         """Return empty result structure."""
         return {
             "file_metadata": self.get_file_metadata(file_path) if file_path.exists() else {"error": "file not found"},
@@ -151,58 +150,58 @@ class BashParser(BaseParser):
             "parser_type": "none",
             "error": "Failed to read file",
         }
-    
-    def extract_imports(self, file_path: Path) -> List[str]:
+
+    def extract_imports(self, file_path: Path) -> list[str]:
         """
         Extract imports/sources from a Bash script.
-        
+
         Args:
             file_path: Path to the Bash script
-            
+
         Returns:
             List of sourced file paths
         """
         result = self.parse_file(file_path)
         return [source["path"] for source in result.get("sourced_files", [])]
-    
-    def extract_exports(self, file_path: Path) -> Dict[str, Any]:
+
+    def extract_exports(self, file_path: Path) -> dict[str, Any]:
         """
         Extract exported variables from a Bash script.
-        
+
         Args:
             file_path: Path to the Bash script
-            
+
         Returns:
             Dictionary of exported variables
         """
         result = self.parse_file(file_path)
         exports = {}
-        
+
         for export in result.get("exports", []):
             exports[export["name"]] = export.get("value")
-        
+
         return exports
-    
-    def extract_functions(self, file_path: Path) -> List[Dict[str, Any]]:
+
+    def extract_functions(self, file_path: Path) -> list[dict[str, Any]]:
         """
         Extract function definitions from a Bash script.
-        
+
         Args:
             file_path: Path to the Bash script
-            
+
         Returns:
             List of function definitions
         """
         result = self.parse_file(file_path)
         return result.get("functions", [])
-    
-    def extract_dependencies(self, file_path: Path) -> Dict[str, List[str]]:
+
+    def extract_dependencies(self, file_path: Path) -> dict[str, list[str]]:
         """
         Extract dependencies from a Bash script.
-        
+
         Args:
             file_path: Path to the Bash script
-            
+
         Returns:
             Dictionary of dependencies
         """

@@ -7,18 +7,18 @@ that provides better resource management, error handling, and task orchestration
 """
 
 import os
-import sys
-import subprocess
-import psutil
-import time
 import shlex
-from pathlib import Path
-from typing import List, Dict, Optional, Union, Any
-from datetime import datetime
-
-from prefect import flow, task, get_run_logger
-import yaml
+import subprocess
+import sys
+import time
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+import psutil
+import yaml
+from prefect import flow, get_run_logger, task
 
 
 @dataclass
@@ -27,7 +27,7 @@ class GuardianConfig:
     memory_limit_mb: int = 2048
     timeout_seconds: int = 900
     check_interval: float = 1.0
-    cpu_limit_percent: Optional[int] = None
+    cpu_limit_percent: int | None = None
 
 
 @dataclass
@@ -37,15 +37,15 @@ class GuardianResult:
     stdout: str
     stderr: str
     execution_time: float
-    peak_memory_mb: Optional[float] = None
+    peak_memory_mb: float | None = None
     was_killed: bool = False
-    kill_reason: Optional[str] = None
-    
+    kill_reason: str | None = None
+
     @property
     def success(self) -> bool:
         """Check if command executed successfully."""
         return self.return_code == 0
-    
+
     @property
     def duration(self) -> float:
         """Alias for execution_time for compatibility."""
@@ -66,20 +66,20 @@ class ResourceLimits:
     retry_delay_seconds=5,
     description="Check available system resources"
 )
-def check_system_resources() -> Dict[str, float]:
+def check_system_resources() -> dict[str, float]:
     """Check current system resource usage"""
     logger = get_run_logger()
-    
+
     memory = psutil.virtual_memory()
     cpu_percent = psutil.cpu_percent(interval=1)
-    
+
     resources = {
         "memory_available_mb": memory.available / (1024 * 1024),
         "memory_percent": memory.percent,
         "cpu_percent": cpu_percent,
         "disk_percent": psutil.disk_usage('/').percent
     }
-    
+
     logger.info(f"System resources: {resources}")
     return resources
 
@@ -88,29 +88,29 @@ def check_system_resources() -> Dict[str, float]:
     name="validate-command",
     description="Validate command before execution"
 )
-def validate_command(cmd: Union[str, List[str]], limits: Any) -> bool:
+def validate_command(cmd: str | list[str], limits: Any) -> bool:
     """Validate command and check if resources are available"""
     logger = get_run_logger()
-    
+
     # Convert string command to list if needed
     if isinstance(cmd, str):
         cmd = cmd.split()
-    
+
     # Check if command exists
     if not cmd:
         logger.error("Empty command provided")
         return False
-    
+
     # Check available resources
     resources = check_system_resources()
-    
+
     if resources["memory_available_mb"] < limits.memory_mb:
         logger.warning(f"Insufficient memory: {resources['memory_available_mb']:.2f}MB available, {limits.memory_mb}MB required")
         return False
-    
+
     if resources["cpu_percent"] > limits.cpu_percent:
         logger.warning(f"High CPU usage: {resources['cpu_percent']:.1f}%")
-    
+
     return True
 
 
@@ -121,14 +121,14 @@ def validate_command(cmd: Union[str, List[str]], limits: Any) -> bool:
     description="Execute command with resource limits"
 )
 def run_command_with_limits(
-    cmd: Union[str, List[str]], 
-    limits: Optional[Any] = None,
-    working_dir: Optional[Path] = None,
-    env: Optional[Dict[str, str]] = None
-) -> Dict[str, Union[int, str, float]]:
+    cmd: str | list[str],
+    limits: Any | None = None,
+    working_dir: Path | None = None,
+    env: dict[str, str] | None = None
+) -> dict[str, int | str | float]:
     """Run command with memory and timeout limits"""
     logger = get_run_logger()
-    
+
     if limits is None:
         # Create default limits
         class DefaultLimits:
@@ -136,28 +136,28 @@ def run_command_with_limits(
             cpu_percent = 80
             timeout = 900
         limits = DefaultLimits()
-    
+
     # Validate command
     if not validate_command(cmd, limits):
         raise ValueError(f"Command validation failed: {cmd}")
-    
+
     # Convert string command to list if needed
     if isinstance(cmd, str):
         cmd_list = cmd.split()
     else:
         cmd_list = cmd
-    
+
     logger.info(f"Executing command: {' '.join(cmd_list)}")
     logger.info(f"Limits: memory={limits.memory_mb}MB, timeout={limits.timeout}s")
-    
+
     # Prepare environment
     cmd_env = os.environ.copy()
     if env:
         cmd_env.update(env)
-    
+
     # Start time tracking
     start_time = time.time()
-    
+
     try:
         # Run the command
         process = subprocess.Popen(
@@ -169,38 +169,38 @@ def run_command_with_limits(
             env=cmd_env,
             preexec_fn=os.setsid if sys.platform != "win32" else None
         )
-        
+
         # Monitor process
         result = monitor_process(process, limits)
-        
+
         end_time = time.time()
         duration = end_time - start_time
-        
+
         result["duration"] = duration
         result["command"] = " ".join(cmd_list)
-        
+
         if result["returncode"] != 0:
             logger.warning(f"Command failed with return code {result['returncode']}")
         else:
             logger.info(f"Command completed successfully in {duration:.2f}s")
-        
+
         return result
-        
+
     except Exception as e:
         logger.error(f"Error executing command: {e}")
         raise
 
 
-def monitor_process(process: subprocess.Popen, limits: Any) -> Dict[str, Union[int, str, float]]:
+def monitor_process(process: subprocess.Popen, limits: Any) -> dict[str, int | str | float]:
     """Monitor a running process for resource usage and timeout"""
     logger = get_run_logger()
     start_time = time.time()
     peak_memory_mb = 0.0
-    
+
     try:
         # Create a Process object for monitoring
         psutil_process = psutil.Process(process.pid)
-        
+
         while process.poll() is None:
             # Check timeout
             elapsed = time.time() - start_time
@@ -216,13 +216,13 @@ def monitor_process(process: subprocess.Popen, limits: Any) -> Dict[str, Union[i
                     "reason": "timeout",
                     "peak_memory_mb": peak_memory_mb
                 }
-            
+
             # Check memory usage
             try:
                 memory_info = psutil_process.memory_info()
                 memory_mb = memory_info.rss / (1024 * 1024)
                 peak_memory_mb = max(peak_memory_mb, memory_mb)
-                
+
                 if memory_mb > limits.memory_mb:
                     logger.error(f"Process exceeded memory limit: {memory_mb:.2f}MB > {limits.memory_mb}MB")
                     kill_process_tree(process.pid)
@@ -238,12 +238,12 @@ def monitor_process(process: subprocess.Popen, limits: Any) -> Dict[str, Union[i
             except psutil.NoSuchProcess:
                 # Process might have ended
                 break
-            
+
             time.sleep(0.1)
-        
+
         # Get final output
         stdout, stderr = process.communicate()
-        
+
         return {
             "returncode": process.returncode,
             "stdout": stdout,
@@ -252,7 +252,7 @@ def monitor_process(process: subprocess.Popen, limits: Any) -> Dict[str, Union[i
             "reason": None,
             "peak_memory_mb": peak_memory_mb
         }
-        
+
     except Exception as e:
         logger.error(f"Error monitoring process: {e}")
         # Try to clean up
@@ -268,57 +268,57 @@ def kill_process_tree(pid: int):
     try:
         parent = psutil.Process(pid)
         children = parent.children(recursive=True)
-        
+
         # Kill children first
         for child in children:
             try:
                 child.kill()
             except psutil.NoSuchProcess:
                 pass
-        
+
         # Kill parent
         parent.kill()
-        
+
         # Wait for processes to die
         gone, alive = psutil.wait_procs([parent] + children, timeout=5)
-        
+
         # Force kill any remaining
         for p in alive:
             try:
                 p.kill()
             except psutil.NoSuchProcess:
                 pass
-                
+
     except psutil.NoSuchProcess:
         pass
 
 
 def run_with_guardian(
-    command: List[str],
-    limits: Optional[Any] = None,  # 'ResourceLimits' type for compatibility
-    config: Optional[GuardianConfig] = None,
-    cwd: Optional[str] = None,
-    env: Optional[Dict[str, str]] = None
+    command: list[str],
+    limits: Any | None = None,  # 'ResourceLimits' type for compatibility
+    config: GuardianConfig | None = None,
+    cwd: str | None = None,
+    env: dict[str, str] | None = None
 ) -> GuardianResult:
     """
     Run a command with guardian resource limits.
-    
+
     This is a simplified synchronous interface to the guardian system
     that's compatible with the existing DHT flows.
-    
+
     Args:
         command: Command to run as list of strings
         config: Guardian configuration
         cwd: Working directory
         env: Environment variables
-        
+
     Returns:
         GuardianResult with execution details
     """
     # Handle both old ResourceLimits and new GuardianConfig for compatibility
     if limits is None and config is None:
         config = GuardianConfig()
-    
+
     if config is not None:
         # Convert GuardianConfig to internal format
         memory_mb = config.memory_limit_mb
@@ -329,16 +329,16 @@ def run_with_guardian(
         memory_mb = limits.memory_mb
         cpu_percent = limits.cpu_percent
         timeout = limits.timeout
-    
+
     # Join command for shell execution with proper escaping
     if isinstance(command, list):
         cmd_str = " ".join(shlex.quote(part) for part in command)
     else:
         cmd_str = command
-    
+
     # Create a ResourceLimits object for the task
     task_limits = ResourceLimits(memory_mb, cpu_percent, timeout)
-    
+
     # Use existing task function
     result = run_command_with_limits(
         cmd=cmd_str,
@@ -346,7 +346,7 @@ def run_with_guardian(
         working_dir=cwd,
         env=env
     )
-    
+
     # Convert to GuardianResult
     return GuardianResult(
         return_code=result["returncode"],
@@ -364,14 +364,14 @@ def run_with_guardian(
     description="Run commands sequentially with resource management"
 )
 def guardian_sequential_flow(
-    commands: List[Union[str, Dict[str, any]]],
+    commands: list[str | dict[str, any]],
     stop_on_failure: bool = True,
-    default_limits: Optional[Any] = None
-) -> List[Dict[str, Union[int, str, float]]]:
+    default_limits: Any | None = None
+) -> list[dict[str, int | str | float]]:
     """Process commands sequentially with resource management"""
     logger = get_run_logger()
     logger.info(f"Starting sequential execution of {len(commands)} commands")
-    
+
     if default_limits is None:
         # Create default limits
         class DefaultLimits:
@@ -379,12 +379,12 @@ def guardian_sequential_flow(
             cpu_percent = 80
             timeout = 900
         default_limits = DefaultLimits()
-    
+
     results = []
-    
+
     for i, cmd in enumerate(commands):
         logger.info(f"Processing command {i+1}/{len(commands)}")
-        
+
         # Parse command configuration
         if isinstance(cmd, dict):
             command = cmd.get("command")
@@ -400,20 +400,20 @@ def guardian_sequential_flow(
             limits = default_limits
             working_dir = None
             env = None
-        
+
         try:
             result = run_command_with_limits(
-                command, 
+                command,
                 limits=limits,
                 working_dir=working_dir,
                 env=env
             )
             results.append(result)
-            
+
             if stop_on_failure and result["returncode"] != 0:
                 logger.error("Command failed, stopping execution")
                 break
-                
+
         except Exception as e:
             logger.error(f"Error executing command: {e}")
             error_result = {
@@ -424,10 +424,10 @@ def guardian_sequential_flow(
                 "error": True
             }
             results.append(error_result)
-            
+
             if stop_on_failure:
                 break
-    
+
     logger.info(f"Completed {len(results)}/{len(commands)} commands")
     return results
 
@@ -437,14 +437,14 @@ def guardian_sequential_flow(
     description="Run commands in parallel batches"
 )
 def guardian_batch_flow(
-    commands: List[Union[str, Dict[str, any]]],
+    commands: list[str | dict[str, any]],
     batch_size: int = 5,
-    default_limits: Optional[Any] = None
-) -> List[Dict[str, Union[int, str, float]]]:
+    default_limits: Any | None = None
+) -> list[dict[str, int | str | float]]:
     """Process commands in parallel batches"""
     logger = get_run_logger()
     logger.info(f"Starting batch execution of {len(commands)} commands (batch_size={batch_size})")
-    
+
     if default_limits is None:
         # Create default limits
         class DefaultLimits:
@@ -452,14 +452,14 @@ def guardian_batch_flow(
             cpu_percent = 80
             timeout = 900
         default_limits = DefaultLimits()
-    
+
     results = []
-    
+
     # Process commands in batches
     for i in range(0, len(commands), batch_size):
         batch = commands[i:i + batch_size]
         logger.info(f"Processing batch {i//batch_size + 1} ({len(batch)} commands)")
-        
+
         # Submit batch tasks
         batch_futures = []
         for cmd in batch:
@@ -471,7 +471,7 @@ def guardian_batch_flow(
                         self.memory_mb = memory_mb
                         self.cpu_percent = cpu_percent
                         self.timeout = timeout
-                
+
                 limits = CustomLimits(
                     memory_mb=cmd.get("memory_mb", default_limits.memory_mb),
                     cpu_percent=cmd.get("cpu_percent", default_limits.cpu_percent),
@@ -484,7 +484,7 @@ def guardian_batch_flow(
                 limits = default_limits
                 working_dir = None
                 env = None
-            
+
             future = run_command_with_limits.submit(
                 command,
                 limits=limits,
@@ -492,7 +492,7 @@ def guardian_batch_flow(
                 env=env
             )
             batch_futures.append(future)
-        
+
         # Wait for batch to complete
         for future in batch_futures:
             try:
@@ -508,7 +508,7 @@ def guardian_batch_flow(
                     "error": True
                 }
                 results.append(error_result)
-    
+
     logger.info(f"Completed batch execution: {len(results)} results")
     return results
 
@@ -517,10 +517,10 @@ def guardian_batch_flow(
     name="save-results",
     description="Save execution results to file"
 )
-def save_results(results: List[Dict], output_path: Path):
+def save_results(results: list[dict], output_path: Path):
     """Save execution results to YAML file"""
     logger = get_run_logger()
-    
+
     # Prepare results for YAML
     output_data = {
         "execution_time": datetime.now().isoformat(),
@@ -529,24 +529,24 @@ def save_results(results: List[Dict], output_path: Path):
         "failed": sum(1 for r in results if r.get("returncode") != 0),
         "results": results
     }
-    
+
     # Ensure output directory exists
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Save to YAML
     with open(output_path, 'w') as f:
         yaml.dump(output_data, f, default_flow_style=False, sort_keys=False)
-    
+
     logger.info(f"Results saved to {output_path}")
 
 
-def load_command_file(file_path: Path) -> List[Union[str, Dict]]:
+def load_command_file(file_path: Path) -> list[str | dict]:
     """Load commands from a YAML or text file"""
     if not file_path.exists():
         raise FileNotFoundError(f"Command file not found: {file_path}")
-    
+
     if file_path.suffix in ['.yaml', '.yml']:
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             data = yaml.safe_load(f)
             if isinstance(data, dict) and 'commands' in data:
                 return data['commands']
@@ -556,7 +556,7 @@ def load_command_file(file_path: Path) -> List[Union[str, Dict]]:
                 raise ValueError("Invalid YAML format: expected 'commands' key or list")
     else:
         # Plain text file with one command per line
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 
@@ -585,10 +585,10 @@ if __name__ == "__main__":
         {"command": "python -c 'print(\"Python test\")'", "memory_mb": 512},
         "date"
     ]
-    
+
     # Run sequential flow
     results = guardian_sequential_flow(example_commands)
-    
+
     # Save results
     output_path = Path(".dht") / "guardian_results.yaml"
     save_results(results, output_path)

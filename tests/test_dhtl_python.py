@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Tests for the Python implementation of dhtl."""
 
 import subprocess
 import sys
 from pathlib import Path
-import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DHTL_PY = PROJECT_ROOT / "dhtl_entry.py"
@@ -56,7 +54,7 @@ def test_dhtl_init_help():
     assert "--python" in result.stdout
 
 def test_dhtl_setup_help():
-    """Test that setup command help works."""  
+    """Test that setup command help works."""
     result = subprocess.run(
         [sys.executable, str(DHTL_PY), "setup", "--help"],
         capture_output=True,

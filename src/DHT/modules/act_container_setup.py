@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Created act container setup module
 # - Provides container images with act pre-installed
 # - Supports both Docker and Podman
 # - Enables complete CI/CD isolation
-# 
+#
 
 """
 Act container setup for DHT.
 Creates and manages container images with act pre-installed.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional
+import os
 import subprocess
 import tempfile
-import os
+from pathlib import Path
+from typing import Any
 
-from prefect import flow, task, get_run_logger
+from prefect import flow, get_run_logger, task
 from rich.console import Console
 
 console = Console()
@@ -122,35 +121,35 @@ def build_act_container(
     runtime: str,
     image_name: str = "dht-act",
     tag: str = "latest"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build container image with act pre-installed."""
     logger = get_run_logger()
-    
+
     # Choose appropriate Dockerfile
     if runtime == "podman":
         dockerfile_content = PODMAN_ACT_DOCKERFILE
     else:
         dockerfile_content = ACT_DOCKERFILE
-    
+
     # Create temporary directory for build
     with tempfile.TemporaryDirectory() as tmpdir:
         dockerfile_path = Path(tmpdir) / "Dockerfile"
-        
+
         # Write Dockerfile
         with open(dockerfile_path, "w") as f:
             f.write(dockerfile_content)
-        
+
         # Build image
         full_image_name = f"{image_name}:{tag}"
         logger.info(f"Building act container image: {full_image_name}")
-        
+
         build_cmd = [
             runtime, "build",
             "-t", full_image_name,
             "-f", str(dockerfile_path),
             tmpdir
         ]
-        
+
         try:
             result = subprocess.run(
                 build_cmd,
@@ -158,7 +157,7 @@ def build_act_container(
                 text=True,
                 timeout=600  # 10 minutes
             )
-            
+
             if result.returncode == 0:
                 logger.info(f"✅ Successfully built {full_image_name}")
                 return {
@@ -172,7 +171,7 @@ def build_act_container(
                     "success": False,
                     "error": result.stderr
                 }
-                
+
         except subprocess.TimeoutExpired:
             logger.error("Build timed out after 10 minutes")
             return {
@@ -196,46 +195,46 @@ def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
 
 class ActContainerRunner:
     """Runs act inside containers for complete isolation."""
-    
+
     def __init__(self, project_path: Path, runtime: str = "podman"):
         self.project_path = Path(project_path).resolve()
         self.runtime = runtime
         self.image_name = "dht-act:latest"
-        
+
     def ensure_image(self) -> bool:
         """Ensure act container image is available."""
         if check_act_image(self.runtime, self.image_name):
             console.print("[green]✅ Act container image available[/green]")
             return True
-        
+
         console.print("[yellow]🔨 Building act container image...[/yellow]")
         result = build_act_container(self.runtime)
-        
+
         if result["success"]:
             console.print("[green]✅ Act container image built[/green]")
             return True
         else:
             console.print("[red]❌ Failed to build act image[/red]")
             return False
-    
+
     def run_act(
         self,
         event: str = "push",
-        job: Optional[str] = None,
-        secrets_file: Optional[Path] = None,
-        env_file: Optional[Path] = None,
+        job: str | None = None,
+        secrets_file: Path | None = None,
+        env_file: Path | None = None,
         verbose: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Run act inside a container."""
         if not self.ensure_image():
             return {"success": False, "error": "Act container image not available"}
-        
+
         # Build container command
         cmd = [self.runtime, "run", "--rm", "-it"]
-        
+
         # Mount project directory
         cmd.extend(["-v", f"{self.project_path}:/workspace:z"])
-        
+
         # Mount Docker/Podman socket for nested containers
         if self.runtime == "docker":
             cmd.extend(["-v", "/var/run/docker.sock:/var/run/docker.sock"])
@@ -245,44 +244,44 @@ class ActContainerRunner:
             podman_sock = f"{xdg_runtime}/podman/podman.sock"
             if os.path.exists(podman_sock):
                 cmd.extend(["-v", f"{podman_sock}:/var/run/docker.sock"])
-        
+
         # Set working directory
         cmd.extend(["-w", "/workspace"])
-        
+
         # Enable TTY and interactive mode
         cmd.extend(["--tty", "--interactive"])
-        
+
         # Add privileged mode for Docker-in-Docker
         cmd.append("--privileged")
-        
+
         # Use the act container image
         cmd.append(self.image_name)
-        
+
         # Build act command
         act_cmd = ["act", event]
-        
+
         if job:
             act_cmd.extend(["-j", job])
-        
+
         if secrets_file and secrets_file.exists():
             # Copy secrets file into container
             cmd.extend(["-v", f"{secrets_file}:/tmp/.secrets:z"])
             act_cmd.extend(["--secret-file", "/tmp/.secrets"])
-        
+
         if env_file and env_file.exists():
             # Copy env file into container
             cmd.extend(["-v", f"{env_file}:/tmp/.env:z"])
             act_cmd.extend(["--env-file", "/tmp/.env"])
-        
+
         if verbose:
             act_cmd.append("-v")
-        
+
         # Combine container and act commands
         cmd.extend(act_cmd)
-        
+
         console.print("[cyan]🐳 Running act in container...[/cyan]")
         console.print(f"[dim]Command: {' '.join(cmd)}[/dim]")
-        
+
         # Run the command
         try:
             result = subprocess.run(
@@ -292,14 +291,14 @@ class ActContainerRunner:
                 text=True,
                 timeout=1800  # 30 minutes
             )
-            
+
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout if not verbose else "",
                 "stderr": result.stderr if not verbose else "",
                 "command": " ".join(cmd)
             }
-            
+
         except subprocess.TimeoutExpired:
             return {
                 "success": False,
@@ -316,31 +315,31 @@ class ActContainerRunner:
 def act_container_workflow(
     project_path: str,
     event: str = "push",
-    job: Optional[str] = None,
+    job: str | None = None,
     runtime: str = "podman"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Run GitHub Actions in a fully isolated container.
-    
+
     This provides the most accurate simulation of GitHub's
     CI/CD environment by running act inside a container.
     """
     logger = get_run_logger()
     project_path = Path(project_path).resolve()
-    
+
     console.print("[bold blue]🐳 DHT Act Container Mode[/bold blue]")
     console.print(f"Project: {project_path.name}")
     console.print(f"Runtime: {runtime}")
     console.print(f"Event: {event}")
-    
+
     # Create runner
     runner = ActContainerRunner(project_path, runtime)
-    
+
     # Check for secrets and env files
     act_config_path = project_path / ".venv" / "dht-act"
     secrets_file = act_config_path / ".secrets"
     env_file = act_config_path / ".env"
-    
+
     # Run act in container
     result = runner.run_act(
         event=event,
@@ -349,34 +348,34 @@ def act_container_workflow(
         env_file=env_file if env_file.exists() else None,
         verbose=True
     )
-    
+
     if result["success"]:
         console.print("\n[green]✅ Workflow completed successfully![/green]")
     else:
         console.print("\n[red]❌ Workflow failed![/red]")
         if result.get("error"):
             console.print(f"Error: {result['error']}")
-    
+
     return result
 
 
 if __name__ == "__main__":
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="DHT Act Container Runner")
     parser.add_argument("path", nargs="?", default=".", help="Project path")
     parser.add_argument("-e", "--event", default="push", help="GitHub event")
     parser.add_argument("-j", "--job", help="Specific job to run")
     parser.add_argument("--runtime", default="podman", choices=["docker", "podman"])
-    
+
     args = parser.parse_args()
-    
+
     result = act_container_workflow(
         project_path=args.path,
         event=args.event,
         job=args.job,
         runtime=args.runtime
     )
-    
+
     import sys
     sys.exit(0 if result["success"] else 1)

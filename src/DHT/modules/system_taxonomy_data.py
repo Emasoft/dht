@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 system_taxonomy_data.py - Taxonomy data structures for DHT
 """
@@ -21,7 +20,7 @@ PRACTICAL_TAXONOMY = {
             'svn': ['version', 'info.url', 'info.revision'],
         }
     },
-    
+
     'language_runtimes': {
         'description': 'Programming language interpreters and runtimes',
         'tools': {
@@ -37,7 +36,7 @@ PRACTICAL_TAXONOMY = {
             'dotnet': ['version', 'sdks', 'runtimes'],
         }
     },
-    
+
     'package_managers': {
         'description': 'Tools for managing software packages and dependencies',
         'categories': {
@@ -71,7 +70,7 @@ PRACTICAL_TAXONOMY = {
             }
         }
     },
-    
+
     'build_tools': {
         'description': 'Project building and compilation orchestration tools',
         'tools': {
@@ -90,7 +89,7 @@ PRACTICAL_TAXONOMY = {
             'waf': ['version'],
         }
     },
-    
+
     'compilers': {
         'description': 'Code compilation tools for various languages',
         'tools': {
@@ -106,7 +105,7 @@ PRACTICAL_TAXONOMY = {
             'swiftc': ['version', 'target'],
         }
     },
-    
+
     'containers_virtualization': {
         'description': 'Container and virtualization technologies',
         'tools': {
@@ -131,7 +130,7 @@ PRACTICAL_TAXONOMY = {
             'runc': ['version', 'spec_version'],
         }
     },
-    
+
     'cloud_tools': {
         'description': 'Cloud platform CLIs and infrastructure tools',
         'tools': {

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 act_setup_manager.py - Act installation and setup management
 
@@ -14,22 +13,21 @@ for act and related tools.
 
 from __future__ import annotations
 
-import subprocess
-import shutil
 import json
 import logging
+import shutil
+import subprocess
 from pathlib import Path
-from typing import Optional
 
-from DHT.modules.act_integration_models import ActConfig, ActCheckResult
+from DHT.modules.act_integration_models import ActCheckResult, ActConfig
 
 
 class ActSetupManager:
     """Manages act installation and setup."""
-    
+
     def __init__(self, project_path: Path):
         """Initialize setup manager.
-        
+
         Args:
             project_path: Path to project root
         """
@@ -37,10 +35,10 @@ class ActSetupManager:
         self.venv_path = self.project_path / ".venv"
         self.act_config_path = self.venv_path / "dht-act"
         self.logger = logging.getLogger(__name__)
-    
+
     def check_act_available(self) -> ActCheckResult:
         """Check if act is available via various methods.
-        
+
         Returns:
             ActCheckResult with availability information
         """
@@ -54,7 +52,7 @@ class ActSetupManager:
             act_available=False,
             preferred_method=None
         )
-        
+
         # Check gh CLI
         if shutil.which("gh"):
             result.gh_cli_available = True
@@ -70,7 +68,7 @@ class ActSetupManager:
                 result.gh_cli_version = version_line.split()[2]
             except (subprocess.CalledProcessError, FileNotFoundError, OSError, IndexError) as e:
                 self.logger.debug(f"Failed to get gh version: {e}")
-            
+
             # Check if act extension is installed
             try:
                 ext_list = subprocess.run(
@@ -94,7 +92,7 @@ class ActSetupManager:
                         self.logger.debug(f"Failed to get act extension version: {e}")
             except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
                 self.logger.debug(f"Failed to check act extension: {e}")
-        
+
         # Check standalone act
         if shutil.which("act"):
             result.standalone_act_available = True
@@ -108,7 +106,7 @@ class ActSetupManager:
                 result.standalone_act_version = version_output.stdout.strip()
             except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
                 self.logger.debug(f"Failed to get standalone act version: {e}")
-        
+
         # Determine availability and preferred method
         if result.act_extension_installed:
             result.act_available = True
@@ -116,12 +114,12 @@ class ActSetupManager:
         elif result.standalone_act_available:
             result.act_available = True
             result.preferred_method = "standalone"
-        
+
         return result
-    
+
     def install_gh_act_extension(self) -> bool:
         """Install gh-act extension.
-        
+
         Returns:
             True if installation successful
         """
@@ -133,46 +131,46 @@ class ActSetupManager:
             return True
         except subprocess.CalledProcessError:
             return False
-    
-    def setup_act_config(self, config: Optional[ActConfig] = None) -> Path:
+
+    def setup_act_config(self, config: ActConfig | None = None) -> Path:
         """Setup act configuration.
-        
+
         Args:
             config: ActConfig instance or None for defaults
-            
+
         Returns:
             Path to config directory
         """
         if config is None:
             config = ActConfig()
-        
+
         # Create config directory
         self.act_config_path.mkdir(parents=True, exist_ok=True)
-        
+
         # Write act config
         act_json = {
             "-P": f"{config.platform}={config.runner_image}",
             "--container-architecture": "linux/amd64",
             "--container-daemon-socket": "-",  # Will be set dynamically
         }
-        
+
         if config.artifact_server_path:
             act_json["--artifact-server-path"] = config.artifact_server_path
-        
+
         if config.cache_server_path:
             act_json["--cache-server-path"] = config.cache_server_path
-        
+
         if config.bind_workdir:
             act_json["--bind"] = ""
-        
+
         if config.reuse_containers:
             act_json["--reuse"] = ""
-        
+
         # Write config
         config_file = self.act_config_path / "act.json"
         with open(config_file, 'w') as f:
             json.dump(act_json, f, indent=2)
-        
+
         # Create secrets file template
         secrets_file = self.act_config_path / "secrets"
         if not secrets_file.exists():
@@ -180,7 +178,7 @@ class ActSetupManager:
                 "# Add secrets here in KEY=value format\n"
                 "# GITHUB_TOKEN=your_token_here\n"
             )
-        
+
         # Create env file template
         env_file = self.act_config_path / "env"
         if not env_file.exists():
@@ -188,5 +186,5 @@ class ActSetupManager:
                 "# Add environment variables here in KEY=value format\n"
                 "# CI=true\n"
             )
-        
+
         return self.act_config_path

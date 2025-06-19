@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_devops.py - DevOps tool CLI commands
 
@@ -13,10 +12,9 @@ and cloud tools.
 # - Contains cloud tools (aws, gcloud, terraform, ansible)
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
+DEVOPS_COMMANDS: dict[str, dict[str, Any]] = {
     # Containers and Virtualization
     'docker': {
         'commands': {
@@ -29,7 +27,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'json'
     },
-    
+
     'podman': {
         'commands': {
             'version': 'podman --version',
@@ -39,7 +37,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'json'
     },
-    
+
     'kubectl': {
         'commands': {
             'version': 'kubectl version --client --output=json',
@@ -49,7 +47,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'json'
     },
-    
+
     'helm': {
         'commands': {
             'version': 'helm version --short',
@@ -59,7 +57,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'json'
     },
-    
+
     'minikube': {
         'commands': {
             'version': 'minikube version',
@@ -69,7 +67,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'json'
     },
-    
+
     'kind': {
         'commands': {
             'version': 'kind --version',
@@ -78,7 +76,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'auto'
     },
-    
+
     'vagrant': {
         'commands': {
             'version': 'vagrant --version',
@@ -88,7 +86,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'containers_virtualization',
         'format': 'auto'
     },
-    
+
     # Cloud Tools
     'aws': {
         'commands': {
@@ -99,7 +97,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'json'
     },
-    
+
     'gcloud': {
         'commands': {
             'version': 'gcloud --version',
@@ -109,7 +107,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'json'
     },
-    
+
     'az': {
         'commands': {
             'version': 'az --version',
@@ -119,7 +117,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'json'
     },
-    
+
     'terraform': {
         'commands': {
             'version': 'terraform version -json',
@@ -128,7 +126,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'json'
     },
-    
+
     'ansible': {
         'commands': {
             'version': 'ansible --version',
@@ -138,7 +136,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'auto'
     },
-    
+
     'puppet': {
         'commands': {
             'version': 'puppet --version',
@@ -148,7 +146,7 @@ DEVOPS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cloud_tools',
         'format': 'auto'
     },
-    
+
     'chef': {
         'commands': {
             'version': 'chef --version',

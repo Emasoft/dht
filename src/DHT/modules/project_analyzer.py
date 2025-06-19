@@ -109,10 +109,10 @@ class ProjectAnalyzer:
     def analyze_project(self, project_path: Path) -> dict[str, Any]:
         """
         Analyze a project directory and return structured information.
-        
+
         Args:
             project_path: Path to the project root directory
-            
+
         Returns:
             Dictionary containing project analysis results
         """

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for dhtl_commands_8.sh
 # - Implements clean command functionality
 # - Integrated with DHT command dispatcher
 # - Cleans build artifacts and temporary files
-# 
+#
 
 """
 DHT Clean Commands Module.
@@ -18,19 +17,17 @@ import os
 import shutil
 from pathlib import Path
 
-from .dhtl_error_handling import (
-    log_warning, log_info, log_success, log_debug
-)
 from .common_utils import find_project_root
+from .dhtl_error_handling import log_debug, log_info, log_success, log_warning
 
 
 def clean_command(*args, **kwargs) -> int:
     """Clean project by removing build artifacts and temporary files."""
     log_info("🧹 Cleaning project...")
-    
+
     # Find project root
     project_root = find_project_root()
-    
+
     # Patterns to clean
     patterns_to_clean = [
         # Python
@@ -55,13 +52,13 @@ def clean_command(*args, **kwargs) -> int:
         ".hypothesis",
         ".mypy_cache",
         ".ruff_cache",
-        
+
         # Node.js
         "node_modules",
         "npm-debug.log*",
         "yarn-debug.log*",
         "yarn-error.log*",
-        
+
         # IDE
         ".idea",
         ".vscode",
@@ -70,37 +67,37 @@ def clean_command(*args, **kwargs) -> int:
         "*~",
         ".DS_Store",
         "Thumbs.db",
-        
+
         # Other
         "*.log",
         "*.tmp",
         "*.temp",
         ".cache",
     ]
-    
+
     # Keep these directories if --all is not specified
     keep_dirs = {".venv", ".git", ".github", ".env"}
-    
+
     if "--all" in args:
         log_warning("Cleaning ALL artifacts (including virtual environment)")
         keep_dirs = {".git", ".github"}  # Never delete git
-    
+
     # Count items cleaned
     cleaned_count = 0
-    
+
     # Clean patterns
     for pattern in patterns_to_clean:
         # Skip if in keep list
         if pattern in keep_dirs:
             continue
-            
+
         # Use glob to find matches
         if "*" in pattern:
             # It's a glob pattern
             for item in project_root.rglob(pattern):
                 if any(keep in item.parts for keep in keep_dirs):
                     continue
-                    
+
                 try:
                     if item.is_dir():
                         shutil.rmtree(item)
@@ -116,7 +113,7 @@ def clean_command(*args, **kwargs) -> int:
             for item in project_root.rglob(pattern):
                 if any(keep in item.parts for keep in keep_dirs):
                     continue
-                    
+
                 try:
                     if item.is_dir():
                         shutil.rmtree(item)
@@ -127,16 +124,16 @@ def clean_command(*args, **kwargs) -> int:
                     cleaned_count += 1
                 except Exception as e:
                     log_warning(f"Could not remove {item}: {e}")
-    
+
     # Clean empty directories
     if "--empty-dirs" in args:
         log_info("Removing empty directories...")
-        for root, dirs, files in os.walk(project_root, topdown=False):
+        for root, dirs, _files in os.walk(project_root, topdown=False):
             for dirname in dirs:
                 dirpath = Path(root) / dirname
                 if dirpath.name in keep_dirs:
                     continue
-                    
+
                 try:
                     if not any(dirpath.iterdir()):
                         dirpath.rmdir()
@@ -144,12 +141,12 @@ def clean_command(*args, **kwargs) -> int:
                         cleaned_count += 1
                 except Exception:
                     pass  # Directory not empty or permission denied
-    
+
     if cleaned_count > 0:
         log_success(f"Cleaned {cleaned_count} items")
     else:
         log_info("Nothing to clean")
-    
+
     return 0
 
 

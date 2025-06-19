@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for bump_version.sh
 # - Provides bump version functionality
 # - Maintains compatibility with shell version
-# 
+#
 
 """
 DHT Bump Version Module.

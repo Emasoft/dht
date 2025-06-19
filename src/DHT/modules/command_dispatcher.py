@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial Python command dispatcher to replace shell orchestrator
 # - Provides command registry and dispatch functionality
 # - Will replace dhtl_execute_command from shell scripts
-# 
+#
 
 """
 DHT Command Dispatcher - Pure Python implementation.
@@ -15,7 +14,7 @@ It provides a registry for all DHT commands and dispatches them appropriately.
 """
 
 import logging
-from typing import Dict, List, Any
+from typing import Any
 
 # Import the command registry
 from .command_registry import CommandRegistry
@@ -26,35 +25,35 @@ logger = logging.getLogger(__name__)
 
 class CommandDispatcher:
     """Central command dispatcher for DHT."""
-    
+
     def __init__(self):
         """Initialize the command dispatcher."""
         # Use the command registry
         self.registry = CommandRegistry()
-        
+
         # For backward compatibility
         self.commands = {}
         self.command_help = {}
-        
+
         # Populate from registry
         for name, cmd in self.registry.commands.items():
             self.commands[name] = cmd["handler"]
             self.command_help[name] = cmd["help"]
-    
-    def dispatch(self, command: str, args: List[str]) -> int:
+
+    def dispatch(self, command: str, args: list[str]) -> int:
         """Dispatch a command with arguments."""
         if command not in self.commands:
             print(f"❌ Error: Unknown command: {command}")
             self.show_help()
             return 1
-        
+
         try:
             handler = self.commands[command]
-            
+
             # Debug logging
             logger.debug(f"Handler type for {command}: {type(handler)}")
             logger.debug(f"Has fn: {hasattr(handler, 'fn')}")
-            
+
             # Check if this is a Prefect Task
             if hasattr(handler, 'fn'):
                 # It's a Prefect Task - we need to check the wrapped function
@@ -64,13 +63,13 @@ class CommandDispatcher:
                 logger.debug(f"Has __qualname__: {hasattr(wrapped_fn, '__qualname__')}")
                 if hasattr(wrapped_fn, '__qualname__'):
                     logger.debug(f"__qualname__: {wrapped_fn.__qualname__}")
-                
+
                 if hasattr(wrapped_fn, '__qualname__') and 'DHTLCommands' in wrapped_fn.__qualname__:
                     # Parse arguments for DHTLCommands methods
                     logger.debug("Handling as DHTLCommands Prefect task")
                     parsed_args = self._parse_command_args(command, args)
                     result = handler(**parsed_args)
-                    
+
                     # Handle result
                     if isinstance(result, dict):
                         if result.get("success", False):
@@ -92,7 +91,7 @@ class CommandDispatcher:
                     # Parse arguments for DHTLCommands methods
                     parsed_args = self._parse_command_args(command, args)
                     result = handler(**parsed_args)
-                    
+
                     # Handle result
                     if isinstance(result, dict):
                         if result.get("success", False):
@@ -117,7 +116,7 @@ class CommandDispatcher:
                 else:
                     # Function takes arguments
                     return handler(args) if args else handler()
-                
+
         except KeyboardInterrupt:
             print("\n⚠️  Interrupted by user")
             return 130
@@ -125,11 +124,11 @@ class CommandDispatcher:
             logger.error(f"Command '{command}' failed: {e}", exc_info=True)
             print(f"❌ Error: {e}")
             return 1
-    
-    def _parse_command_args(self, command: str, args: List[str]) -> Dict[str, Any]:
+
+    def _parse_command_args(self, command: str, args: list[str]) -> dict[str, Any]:
         """Parse command line arguments for a command."""
         import argparse
-        
+
         # Command-specific argument parsers
         if command == "init":
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
@@ -142,7 +141,7 @@ class CommandDispatcher:
             parser.add_argument("--app", action="store_true", help="Create application project")
             parser.add_argument("--ci", action="store_true", help="Add CI/CD workflows")
             parser.add_argument("--pre-commit", action="store_true", help="Add pre-commit hooks")
-            
+
         elif command == "setup":
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
             parser.add_argument("path", nargs="?", default=".", help="Project path")
@@ -154,7 +153,7 @@ class CommandDispatcher:
             parser.add_argument("--editable", action="store_true", help="Install in editable mode")
             parser.add_argument("--index-url", help="Custom package index URL")
             parser.add_argument("--install-pre-commit", action="store_true", help="Install pre-commit hooks")
-            
+
         elif command == "build":
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
             parser.add_argument("path", nargs="?", default=".", help="Project path")
@@ -162,7 +161,7 @@ class CommandDispatcher:
             parser.add_argument("--sdist", action="store_true", help="Build source distribution only")
             parser.add_argument("--no-checks", action="store_true", help="Skip pre-build checks")
             parser.add_argument("--out-dir", help="Output directory")
-            
+
         elif command == "sync":
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
             parser.add_argument("path", nargs="?", default=".", help="Project path")
@@ -171,23 +170,23 @@ class CommandDispatcher:
             parser.add_argument("--no-dev", action="store_true", help="Exclude dev dependencies")
             parser.add_argument("--extras", nargs="*", help="Extra dependency groups")
             parser.add_argument("--upgrade", action="store_true", help="Upgrade dependencies")
-            
+
         else:
             # Default parser
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
             parser.add_argument("args", nargs="*", help="Command arguments")
-        
+
         # Parse arguments
         parsed = parser.parse_args(args)
         return vars(parsed)
-    
-    def show_help(self, args: List[str] = None) -> int:
+
+    def show_help(self, args: list[str] = None) -> int:
         """Show help message."""
         print("Development Helper Toolkit (DHT)")
         print("================================")
         print("\nUsage: dhtl <command> [options]")
         print("\nAvailable commands:")
-        
+
         # Group commands by category
         categories = {
             "Project Management": ["init", "setup", "clean"],
@@ -197,17 +196,17 @@ class CommandDispatcher:
             "Utilities": ["env", "diagnostics", "restore", "guardian"],
             "Help": ["help", "version"]
         }
-        
+
         for category, cmds in categories.items():
             print(f"\n{category}:")
             for cmd in cmds:
                 if cmd in self.command_help:
                     print(f"  {cmd:<15} {self.command_help[cmd]}")
-        
+
         print("\nFor command-specific help: dhtl <command> --help")
         return 0
-    
-    def show_version(self, args: List[str] = None) -> int:
+
+    def show_version(self, args: list[str] = None) -> int:
         """Show version information."""
         from .. import __version__
         print(f"Development Helper Toolkit (DHT) v{__version__}")

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial creation of test_helpers.py with comprehensive fixture generators
@@ -19,15 +18,15 @@ This module provides:
 4. Utilities for creating complete project structures
 """
 
-import os
 import json
-import tempfile
+import os
 import shutil
 import subprocess
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any, Union
+import tempfile
 from collections import namedtuple
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock
 
 # Platform uname mock that matches the actual structure
@@ -118,7 +117,7 @@ def create_project_structure(
     include_tests: bool = True,
     include_docs: bool = True,
     include_ci: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Create a complete project structure for testing.
 
@@ -179,7 +178,7 @@ def create_project_structure(
 
 
 def create_base_structure(
-    project_dir: Path, project_name: str, python_version: str, metadata: Dict
+    project_dir: Path, project_name: str, python_version: str, metadata: dict
 ):
     """Create base project structure common to all project types."""
     # Create pyproject.toml
@@ -315,7 +314,7 @@ DHT/.dht_environment_report.json
     metadata["files"].extend(["src/__init__.py"])
 
 
-def create_simple_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_simple_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a simple Python script project."""
     # Main script
     main_content = '''#!/usr/bin/env python3
@@ -334,12 +333,12 @@ def main():
     parser.add_argument("--input", type=Path, help="Input file")
     parser.add_argument("--output", type=Path, help="Output file")
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
-    
+
     args = parser.parse_args()
-    
+
     if args.verbose:
         print(f"Processing {args.input} -> {args.output}")
-    
+
     if args.input and args.input.exists():
         content = args.input.read_text()
         if args.output:
@@ -383,7 +382,7 @@ def validate_input(value: str) -> bool:
     metadata["files"].append("src/utils.py")
 
 
-def create_django_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_django_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a Django project structure."""
     # Django-specific dependencies in pyproject.toml
     pyproject_path = project_dir / "pyproject.toml"
@@ -588,10 +587,10 @@ class Item(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ['-created_at']
-    
+
     def __str__(self):
         return self.name
 '''
@@ -610,7 +609,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 '''
@@ -625,7 +624,7 @@ from .models import Item
 class ItemSerializer(serializers.ModelSerializer):
     """Serializer for Item model."""
     created_by = serializers.ReadOnlyField(source='created_by.username')
-    
+
     class Meta:
         model = Item
         fields = ['id', 'name', 'description', 'created_by', 'created_at', 'updated_at']
@@ -650,7 +649,7 @@ urlpatterns = [
     metadata["files"].append("api/urls.py")
 
 
-def create_fastapi_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_fastapi_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a FastAPI project structure."""
     # Update pyproject.toml with FastAPI dependencies
     pyproject_path = project_dir / "pyproject.toml"
@@ -748,17 +747,17 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "{project_name}"
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api/v1"
-    
+
     # Security
     SECRET_KEY: str = "changethisinproduction"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
-    
+
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost/{project_name}"
-    
+
     # CORS
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
-    
+
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
         if isinstance(v, str) and not v.startswith("["):
@@ -766,7 +765,7 @@ class Settings(BaseSettings):
         elif isinstance(v, (list, str)):
             return v
         raise ValueError(v)
-    
+
     class Config:
         case_sensitive = True
         env_file = ".env"
@@ -920,7 +919,7 @@ async def create_item(item_data: dict, db: AsyncSession = Depends(get_db)):
     metadata["files"].append("app/api/v1/endpoints/items.py")
 
 
-def create_ml_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_ml_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a machine learning project structure."""
     # Update pyproject.toml with ML dependencies
     pyproject_path = project_dir / "pyproject.toml"
@@ -972,10 +971,10 @@ def main(cfg: DictConfig) -> None:
     """Main training function."""
     logger = get_logger(__name__)
     logger.info(f"Config:\\n{OmegaConf.to_yaml(cfg)}")
-    
+
     # Set random seeds
     set_seed(cfg.seed)
-    
+
     # Initialize wandb
     if cfg.use_wandb:
         wandb.init(
@@ -983,11 +982,11 @@ def main(cfg: DictConfig) -> None:
             config=OmegaConf.to_container(cfg, resolve=True),
             name=cfg.run_name,
         )
-    
+
     # Create datasets
     train_dataset = create_dataset(cfg.dataset, split="train")
     val_dataset = create_dataset(cfg.dataset, split="validation")
-    
+
     train_loader = DataLoader(
         train_dataset,
         batch_size=cfg.batch_size,
@@ -1000,10 +999,10 @@ def main(cfg: DictConfig) -> None:
         shuffle=False,
         num_workers=cfg.num_workers,
     )
-    
+
     # Create model
     model = create_model(cfg.model)
-    
+
     # Create trainer
     trainer = Trainer(
         model=model,
@@ -1011,13 +1010,13 @@ def main(cfg: DictConfig) -> None:
         train_loader=train_loader,
         val_loader=val_loader,
     )
-    
+
     # Train model
     trainer.train()
-    
+
     # Save final model
     trainer.save_checkpoint("final")
-    
+
     if cfg.use_wandb:
         wandb.finish()
 
@@ -1075,12 +1074,12 @@ import torchvision.models as models
 
 class ResNet(nn.Module):
     """ResNet model wrapper."""
-    
+
     def __init__(self, num_classes: int, pretrained: bool = True):
         super().__init__()
         self.backbone = models.resnet50(pretrained=pretrained)
         self.backbone.fc = nn.Linear(self.backbone.fc.in_features, num_classes)
-    
+
     def forward(self, x):
         return self.backbone(x)
 '''
@@ -1095,7 +1094,7 @@ import math
 
 class TransformerModel(nn.Module):
     """Simple transformer model."""
-    
+
     def __init__(
         self,
         vocab_size: int,
@@ -1108,7 +1107,7 @@ class TransformerModel(nn.Module):
         self.d_model = d_model
         self.embedding = nn.Embedding(vocab_size, d_model)
         self.pos_encoding = PositionalEncoding(d_model, max_seq_length)
-        
+
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=d_model,
             nhead=num_heads,
@@ -1117,7 +1116,7 @@ class TransformerModel(nn.Module):
         )
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers)
         self.output_projection = nn.Linear(d_model, vocab_size)
-    
+
     def forward(self, x):
         x = self.embedding(x) * math.sqrt(self.d_model)
         x = self.pos_encoding(x)
@@ -1127,7 +1126,7 @@ class TransformerModel(nn.Module):
 
 class PositionalEncoding(nn.Module):
     """Positional encoding for transformer."""
-    
+
     def __init__(self, d_model: int, max_len: int = 5000):
         super().__init__()
         pe = torch.zeros(max_len, d_model)
@@ -1138,7 +1137,7 @@ class PositionalEncoding(nn.Module):
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
         self.register_buffer('pe', pe.unsqueeze(0))
-    
+
     def forward(self, x):
         return x + self.pe[:, :x.size(1)]
 '''
@@ -1180,20 +1179,20 @@ from torch.utils.data import Dataset
 
 class DummyDataset(Dataset):
     """Dummy dataset for testing."""
-    
+
     def __init__(self, size: int = 1000, num_classes: int = 10, split: str = "train"):
         self.size = size
         self.num_classes = num_classes
         self.split = split
-        
+
         # Generate dummy data
         torch.manual_seed(42 if split == "train" else 123)
         self.data = torch.randn(size, 3, 224, 224)
         self.labels = torch.randint(0, num_classes, (size,))
-    
+
     def __len__(self):
         return self.size
-    
+
     def __getitem__(self, idx):
         return self.data[idx], self.labels[idx]
 '''
@@ -1220,7 +1219,7 @@ from tqdm import tqdm
 
 class Trainer:
     """Basic trainer class."""
-    
+
     def __init__(
         self,
         model: nn.Module,
@@ -1232,48 +1231,48 @@ class Trainer:
         self.cfg = cfg
         self.train_loader = train_loader
         self.val_loader = val_loader
-        
+
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
-        
+
         self.optimizer = torch.optim.Adam(model.parameters(), lr=cfg.learning_rate)
         self.criterion = nn.CrossEntropyLoss()
-        
+
         self.checkpoint_dir = Path("checkpoints")
         self.checkpoint_dir.mkdir(exist_ok=True)
-    
+
     def train(self):
         """Main training loop."""
         for epoch in range(self.cfg.num_epochs):
             self.model.train()
             train_loss = 0.0
-            
+
             with tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.cfg.num_epochs}") as pbar:
                 for batch_idx, (data, target) in enumerate(pbar):
                     data, target = data.to(self.device), target.to(self.device)
-                    
+
                     self.optimizer.zero_grad()
                     output = self.model(data)
                     loss = self.criterion(output, target)
                     loss.backward()
                     self.optimizer.step()
-                    
+
                     train_loss += loss.item()
                     pbar.set_postfix({"loss": loss.item()})
-                    
+
                     if self.cfg.use_wandb:
                         wandb.log({
                             "train_loss": loss.item(),
                             "epoch": epoch,
                             "batch": batch_idx,
                         })
-            
+
             # Validation
             val_loss, val_acc = self.validate()
-            
+
             print(f"Epoch {epoch+1}: Train Loss: {train_loss/len(self.train_loader):.4f}, "
                   f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
-            
+
             if self.cfg.use_wandb:
                 wandb.log({
                     "epoch": epoch,
@@ -1281,33 +1280,33 @@ class Trainer:
                     "val_loss": val_loss,
                     "val_acc": val_acc,
                 })
-            
+
             # Save checkpoint
             if (epoch + 1) % self.cfg.save_every == 0:
                 self.save_checkpoint(f"epoch_{epoch+1}")
-    
+
     def validate(self):
         """Validation loop."""
         self.model.eval()
         val_loss = 0.0
         correct = 0
         total = 0
-        
+
         with torch.no_grad():
             for data, target in self.val_loader:
                 data, target = data.to(self.device), target.to(self.device)
                 output = self.model(data)
                 val_loss += self.criterion(output, target).item()
-                
+
                 _, predicted = output.max(1)
                 total += target.size(0)
                 correct += predicted.eq(target).sum().item()
-        
+
         val_loss /= len(self.val_loader)
         val_acc = correct / total
-        
+
         return val_loss, val_acc
-    
+
     def save_checkpoint(self, name: str):
         """Save model checkpoint."""
         checkpoint = {
@@ -1343,7 +1342,7 @@ def get_logger(name: str) -> logging.Logger:
     """Get logger instance."""
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    
+
     if not logger.handlers:
         handler = logging.StreamHandler()
         formatter = logging.Formatter(
@@ -1351,7 +1350,7 @@ def get_logger(name: str) -> logging.Logger:
         )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-    
+
     return logger
 '''
     (utils_dir / "__init__.py").write_text(utils_content)
@@ -1449,7 +1448,7 @@ save_every: 5
     metadata["files"].append("notebooks/exploration.ipynb")
 
 
-def create_library_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_library_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a library project structure."""
     # Update pyproject.toml for library distribution
     pyproject_path = project_dir / "pyproject.toml"
@@ -1502,17 +1501,17 @@ from pathlib import Path
 def process_data(data: List[Dict[str, Any]], config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """
     Process a list of data items according to configuration.
-    
+
     Args:
         data: List of data items to process
         config: Optional configuration dictionary
-        
+
     Returns:
         Processed data with metadata
     """
     if config is None:
         config = {}
-    
+
     processed_items = []
     for item in data:
         processed_item = {
@@ -1521,7 +1520,7 @@ def process_data(data: List[Dict[str, Any]], config: Optional[Dict[str, Any]] = 
             "timestamp": None,  # Would be datetime.now() in real code
         }
         processed_items.append(processed_item)
-    
+
     return {
         "items": processed_items,
         "count": len(processed_items),
@@ -1533,24 +1532,24 @@ def process_data(data: List[Dict[str, Any]], config: Optional[Dict[str, Any]] = 
 def validate_input(value: Any, expected_type: type = str, min_length: int = 0) -> bool:
     """
     Validate input value against expected criteria.
-    
+
     Args:
         value: Value to validate
         expected_type: Expected type of the value
         min_length: Minimum length for string/list values
-        
+
     Returns:
         True if valid, False otherwise
     """
     if not isinstance(value, expected_type):
         return False
-    
+
     if hasattr(value, "__len__") and len(value) < min_length:
         return False
-    
+
     if expected_type == str and not value.strip():
         return False
-    
+
     return True
 
 
@@ -1558,7 +1557,7 @@ def load_config(config_path: Path) -> Dict[str, Any]:
     """Load configuration from JSON file."""
     if not config_path.exists():
         raise FileNotFoundError(f"Config file not found: {config_path}")
-    
+
     with open(config_path) as f:
         return json.load(f)
 
@@ -1606,30 +1605,30 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Verbose output"
     )
-    
+
     args = parser.parse_args(argv)
-    
+
     try:
         # Load input data
         if args.verbose:
             print(f"Loading data from {{args.input}}")
-        
+
         with open(args.input) as f:
             data = json.load(f)
-        
+
         # Load config if provided
         config = {{}}
         if args.config:
             if args.verbose:
                 print(f"Loading config from {{args.config}}")
             config = load_config(args.config)
-        
+
         # Process data
         if args.verbose:
             print("Processing data...")
-        
+
         results = process_data(data, config)
-        
+
         # Save or print results
         if args.output:
             save_results(results, args.output)
@@ -1637,9 +1636,9 @@ def main(argv: Optional[List[str]] = None) -> int:
                 print(f"Results saved to {{args.output}}")
         else:
             print(json.dumps(results, indent=2))
-        
+
         return 0
-        
+
     except Exception as e:
         print(f"Error: {{e}}", file=sys.stderr)
         return 1
@@ -1656,7 +1655,7 @@ if __name__ == "__main__":
     metadata["files"].append(f"{project_name}/py.typed")
 
 
-def create_fullstack_project(project_dir: Path, project_name: str, metadata: Dict):
+def create_fullstack_project(project_dir: Path, project_name: str, metadata: dict):
     """Create a full-stack project with frontend and backend."""
     # First create a FastAPI backend
     create_fastapi_project(project_dir, project_name, metadata)
@@ -1789,8 +1788,8 @@ export default function Home() {{
         <Typography variant="h5" component="h2" gutterBottom>
           Full-stack application with Next.js and FastAPI
         </Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={{fetchData}}
           disabled={{loading}}
           sx={{ mt: 2 }}
@@ -1841,7 +1840,7 @@ API Docs: http://localhost:8000/docs
     readme_path.write_text(fullstack_readme)
 
 
-def create_test_structure(project_dir: Path, project_type: str, metadata: Dict):
+def create_test_structure(project_dir: Path, project_type: str, metadata: dict):
     """Create test files appropriate for the project type."""
     tests_dir = project_dir / "tests"
     tests_dir.mkdir(exist_ok=True)
@@ -1942,7 +1941,7 @@ def test_model_creation():
     })
     model = create_model(cfg)
     assert model is not None
-    
+
     # Test forward pass
     batch_size = 2
     x = torch.randn(batch_size, 3, 224, 224)
@@ -1959,7 +1958,7 @@ def test_dataset_creation():
     })
     dataset = create_dataset(cfg, split="train")
     assert len(dataset) == 100
-    
+
     # Test data loading
     data, label = dataset[0]
     assert data.shape == (3, 224, 224)
@@ -2012,14 +2011,14 @@ def test_config_operations(tmp_path):
     """Test config loading and saving."""
     config = {{"key": "value", "number": 42}}
     config_path = tmp_path / "config.json"
-    
+
     # Save config
     config_path.write_text(json.dumps(config))
-    
+
     # Load config
     loaded = load_config(config_path)
     assert loaded == config
-    
+
     # Test missing file
     with pytest.raises(FileNotFoundError):
         load_config(tmp_path / "missing.json")
@@ -2029,9 +2028,9 @@ def test_save_results(tmp_path, sample_data):
     """Test saving results."""
     results = process_data(sample_data)
     output_path = tmp_path / "output" / "results.json"
-    
+
     save_results(results, output_path)
-    
+
     assert output_path.exists()
     with open(output_path) as f:
         saved = json.load(f)
@@ -2041,7 +2040,7 @@ def test_save_results(tmp_path, sample_data):
         metadata["files"].append("tests/test_core.py")
 
 
-def create_docs_structure(project_dir: Path, metadata: Dict):
+def create_docs_structure(project_dir: Path, metadata: dict):
     """Create documentation structure."""
     docs_dir = project_dir / "docs"
     docs_dir.mkdir(exist_ok=True)
@@ -2153,7 +2152,7 @@ Validate input value against expected criteria.
     metadata["files"].append("docs/contributing.md")
 
 
-def create_ci_structure(project_dir: Path, metadata: Dict):
+def create_ci_structure(project_dir: Path, metadata: dict):
     """Create CI/CD configuration files."""
     # GitHub Actions
     workflows_dir = project_dir / ".github" / "workflows"
@@ -2178,24 +2177,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
-    
+
     - name: Set up Python ${{{{ matrix.python-version }}}}
       run: uv python install ${{{{ matrix.python-version }}}}
-    
+
     - name: Install dependencies
       run: |
         uv venv
         uv sync --all-extras
-    
+
     - name: Run tests
       run: |
         uv run pytest tests/ -v --cov --cov-report=xml
-    
+
     - name: Upload coverage
       uses: codecov/codecov-action@v3
       with:
@@ -2217,27 +2216,27 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
-    
+
     - name: Set up Python
       run: uv python install
-    
+
     - name: Install dependencies
       run: |
         uv venv
         uv sync --all-extras
-    
+
     - name: Run ruff
       run: uv run ruff check .
-    
+
     - name: Run mypy
       run: uv run mypy .
-    
+
     - name: Check formatting
       run: uv run ruff format --check .
 """
@@ -2275,8 +2274,8 @@ jobs:
 
 
 def create_temporary_project(
-    project_type: str = "simple", project_name: Optional[str] = None, **kwargs
-) -> Tuple[Path, Dict[str, Any]]:
+    project_type: str = "simple", project_name: str | None = None, **kwargs
+) -> tuple[Path, dict[str, Any]]:
     """
     Create a temporary project for testing.
 
@@ -2305,7 +2304,7 @@ def cleanup_temporary_project(project_path: Path) -> None:
 
 
 def run_in_project(
-    project_path: Path, command: Union[str, List[str]], **kwargs
+    project_path: Path, command: str | list[str], **kwargs
 ) -> subprocess.CompletedProcess:
     """Run a command in a project directory."""
     if isinstance(command, str):
@@ -2324,7 +2323,7 @@ def run_in_project(
     )
 
 
-def assert_project_structure(project_path: Path, expected_files: List[str]) -> None:
+def assert_project_structure(project_path: Path, expected_files: list[str]) -> None:
     """Assert that a project has the expected file structure."""
     for file_path in expected_files:
         full_path = project_path / file_path
@@ -2336,8 +2335,8 @@ def create_mock_pyproject_toml(
     name: str = "test-project",
     version: str = "0.1.0",
     python_version: str = "3.10",
-    dependencies: Optional[List[str]] = None,
-    dev_dependencies: Optional[List[str]] = None,
+    dependencies: list[str] | None = None,
+    dev_dependencies: list[str] | None = None,
 ) -> Path:
     """Create a minimal pyproject.toml for testing."""
     if dependencies is None:

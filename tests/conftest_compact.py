@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Pytest configuration to reduce output verbosity.
 """
 
-import os
 import logging
+import os
 import warnings
 
 # Reduce all logging to ERROR level
@@ -34,7 +33,7 @@ def pytest_configure(config):
     config.option.tb = "no"     # No tracebacks
     config.option.showlocals = False
     config.option.showcapture = "no"
-    
+
     # Disable output capturing to reduce memory usage
     config.option.capture = "no"
 

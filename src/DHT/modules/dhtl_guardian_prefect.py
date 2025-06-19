@@ -6,21 +6,21 @@ This provides a command-line interface for the Prefect guardian,
 compatible with the existing dhtl guardian command structure.
 """
 
-import click
+import json
 import sys
 from pathlib import Path
-from typing import Optional
-import yaml
-import json
 
+import click
+import yaml
 from prefect import serve
 from prefect.deployments import run_deployment
+
 from .guardian_prefect import (
-    guardian_sequential_flow,
-    guardian_batch_flow,
     ResourceLimits,
+    guardian_batch_flow,
+    guardian_sequential_flow,
     load_command_file,
-    save_results
+    save_results,
 )
 
 
@@ -34,36 +34,36 @@ def cli():
 @click.option('--name', default='dht-guardian', help='Deployment name')
 @click.option('--interval', type=int, help='Run interval in seconds')
 @click.option('--cron', help='Cron schedule')
-def start(name: str, interval: Optional[int], cron: Optional[str]):
+def start(name: str, interval: int | None, cron: str | None):
     """Start the Prefect guardian server"""
     click.echo("Starting Prefect guardian server...")
-    
+
     # Create deployments
     deployments = []
-    
+
     # Sequential deployment
     seq_deployment = guardian_sequential_flow.to_deployment(
         name=f"{name}-sequential",
         description="Sequential command execution with resource limits",
         tags=["dht", "guardian", "sequential"]
     )
-    
+
     if interval:
         seq_deployment.interval = interval
     elif cron:
         seq_deployment.cron = cron
-    
+
     deployments.append(seq_deployment)
-    
+
     # Batch deployment
     batch_deployment = guardian_batch_flow.to_deployment(
         name=f"{name}-batch",
         description="Batch command execution with parallelism",
         tags=["dht", "guardian", "batch"]
     )
-    
+
     deployments.append(batch_deployment)
-    
+
     # Serve deployments
     click.echo(f"Serving {len(deployments)} deployments...")
     serve(*deployments)
@@ -82,33 +82,34 @@ def stop():
 def status():
     """Check guardian server status"""
     try:
-        from prefect.client import get_client
         import asyncio
-        
+
+        from prefect.client import get_client
+
         async def check_status():
             async with get_client() as client:
                 # Check for deployments
                 deployments = await client.read_deployments()
                 guardian_deployments = [d for d in deployments if 'guardian' in d.tags]
-                
+
                 if guardian_deployments:
                     click.echo(f"Guardian server is running with {len(guardian_deployments)} deployments:")
                     for dep in guardian_deployments:
                         click.echo(f"  - {dep.name}: {dep.schedule}")
                 else:
                     click.echo("No guardian deployments found")
-                
+
                 # Check recent flows
                 flows = await client.read_flows()
                 guardian_flows = [f for f in flows if 'guardian' in f.name]
-                
+
                 if guardian_flows:
                     click.echo(f"\nRegistered guardian flows: {len(guardian_flows)}")
                     for flow in guardian_flows:
                         click.echo(f"  - {flow.name}")
-        
+
         asyncio.run(check_status())
-        
+
     except Exception as e:
         click.echo(f"Error checking status: {e}")
         click.echo("Guardian server may not be running")
@@ -128,22 +129,22 @@ def status():
 @click.option('--deployment', '-d', help='Run via deployment instead of directly')
 def run(
     commands: tuple,
-    file: Optional[str],
+    file: str | None,
     sequential: bool,
-    batch: Optional[int],
+    batch: int | None,
     memory: int,
     timeout: int,
     cpu: int,
-    output: Optional[str],
+    output: str | None,
     output_json: bool,
     stop_on_failure: bool,
-    deployment: Optional[str]
+    deployment: str | None
 ):
     """Run commands through the guardian"""
-    
+
     # Collect commands
     command_list = []
-    
+
     if file:
         try:
             command_list = load_command_file(Path(file))
@@ -156,16 +157,16 @@ def run(
     else:
         click.echo("No commands provided. Use arguments or --file option.", err=True)
         sys.exit(1)
-    
+
     # Create resource limits
     limits = ResourceLimits(
         memory_mb=memory,
         cpu_percent=cpu,
         timeout=timeout
     )
-    
+
     click.echo(f"Running {len(command_list)} commands with limits: memory={memory}MB, timeout={timeout}s")
-    
+
     try:
         if deployment:
             # Run via deployment
@@ -194,13 +195,13 @@ def run(
                     stop_on_failure=stop_on_failure,
                     default_limits=limits
                 )
-            
+
             # Display results
             successful = sum(1 for r in results if r.get("returncode") == 0)
             failed = sum(1 for r in results if r.get("returncode") != 0)
-            
+
             click.echo(f"\nExecution complete: {successful} successful, {failed} failed")
-            
+
             # Show failed commands
             if failed > 0:
                 click.echo("\nFailed commands:")
@@ -209,7 +210,7 @@ def run(
                         click.echo(f"  - {r.get('command')}: exit code {r.get('returncode')}")
                         if r.get("stderr"):
                             click.echo(f"    Error: {r.get('stderr')[:100]}...")
-            
+
             # Save results if requested
             if output:
                 output_path = Path(output)
@@ -219,10 +220,10 @@ def run(
                 else:
                     save_results(results, output_path)
                 click.echo(f"\nResults saved to {output_path}")
-            
+
             # Exit with appropriate code
             sys.exit(0 if failed == 0 else 1)
-            
+
     except Exception as e:
         click.echo(f"Error running commands: {e}", err=True)
         sys.exit(1)
@@ -232,7 +233,7 @@ def run(
 @click.option('--format', type=click.Choice(['yaml', 'json']), default='yaml', help='Output format')
 def example(format: str):
     """Show example command file"""
-    
+
     example_data = {
         "commands": [
             "echo 'Simple command'",
@@ -253,7 +254,7 @@ def example(format: str):
             }
         ]
     }
-    
+
     if format == 'json':
         click.echo(json.dumps(example_data, indent=2))
     else:
@@ -264,31 +265,31 @@ def example(format: str):
 @click.argument('result_file', type=click.Path(exists=True))
 def show_results(result_file: str):
     """Display results from a previous run"""
-    
+
     result_path = Path(result_file)
-    
+
     try:
-        with open(result_path, 'r') as f:
+        with open(result_path) as f:
             if result_path.suffix == '.json':
                 data = json.load(f)
             else:
                 data = yaml.safe_load(f)
-        
+
         click.echo(f"Execution time: {data.get('execution_time', 'Unknown')}")
         click.echo(f"Total commands: {data.get('total_commands', 0)}")
         click.echo(f"Successful: {data.get('successful', 0)}")
         click.echo(f"Failed: {data.get('failed', 0)}")
-        
+
         if 'results' in data:
             click.echo("\nCommand results:")
             for i, result in enumerate(data['results'], 1):
                 status = "✓" if result.get('returncode') == 0 else "✗"
                 duration = result.get('duration', 0)
                 click.echo(f"{i}. {status} {result.get('command', 'Unknown')} ({duration:.2f}s)")
-                
+
                 if result.get('returncode') != 0 and result.get('stderr'):
                     click.echo(f"   Error: {result['stderr'][:100]}...")
-                    
+
     except Exception as e:
         click.echo(f"Error reading result file: {e}", err=True)
         sys.exit(1)
@@ -307,25 +308,25 @@ def parse_args():
 
 def main():
     """Main entry point for shell script compatibility."""
-    from .guardian_prefect import run_with_guardian, ResourceLimits
-    
+    from .guardian_prefect import ResourceLimits, run_with_guardian
+
     # If running as Click app
     if len(sys.argv) > 1 and sys.argv[1] in ['start', 'run', 'example', 'show-results']:
         return cli()
-    
+
     # Otherwise, parse as simple command execution (shell script compatibility)
     args = parse_args()
-    
+
     # Create resource limits
     limits = ResourceLimits(
         memory_mb=args.memory,
         cpu_percent=args.cpu,
         timeout=args.timeout
     )
-    
+
     # Run the command
     result = run_with_guardian(args.command, limits=limits)
-    
+
     # Output results
     if result.stdout:
         sys.stdout.write(result.stdout)
@@ -333,7 +334,7 @@ def main():
     if result.stderr:
         sys.stderr.write(result.stderr)
         sys.stderr.flush()
-    
+
     return result.return_code
 
 

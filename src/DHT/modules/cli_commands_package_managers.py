@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_package_managers.py - Package manager CLI commands
 
@@ -13,10 +12,9 @@ both language-specific and system package managers.
 # - Contains system package managers (brew, apt, yum, etc.)
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
+PACKAGE_MANAGER_COMMANDS: dict[str, dict[str, Any]] = {
     # Package Managers - Language specific
     'pip': {
         'commands': {
@@ -28,7 +26,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.python',
         'format': 'json'
     },
-    
+
     'pip3': {
         'commands': {
             'version': 'pip3 --version',
@@ -39,7 +37,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.python',
         'format': 'json'
     },
-    
+
     'uv': {
         'commands': {
             'version': 'uv --version',
@@ -50,7 +48,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.python',
         'format': 'auto'
     },
-    
+
     'npm': {
         'commands': {
             'version': 'npm --version',
@@ -61,7 +59,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.javascript',
         'format': 'json'
     },
-    
+
     'yarn': {
         'commands': {
             'version': 'yarn --version',
@@ -71,7 +69,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.javascript',
         'format': 'auto'
     },
-    
+
     'pnpm': {
         'commands': {
             'version': 'pnpm --version',
@@ -81,7 +79,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.javascript',
         'format': 'json'
     },
-    
+
     'cargo': {
         'commands': {
             'version': 'cargo --version',
@@ -91,7 +89,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.rust',
         'format': 'auto'
     },
-    
+
     'gem': {
         'commands': {
             'version': 'gem --version',
@@ -101,7 +99,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.ruby',
         'format': 'auto'
     },
-    
+
     'bundler': {
         'commands': {
             'version': 'bundle --version',
@@ -111,7 +109,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.ruby',
         'format': 'auto'
     },
-    
+
     'maven': {
         'commands': {
             'version': 'mvn --version',
@@ -121,7 +119,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.java',
         'format': 'auto'
     },
-    
+
     'gradle': {
         'commands': {
             'version': 'gradle --version',
@@ -131,7 +129,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'package_managers.language.java',
         'format': 'auto'
     },
-    
+
     # Package Managers - System
     'brew': {
         'commands': {
@@ -145,7 +143,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['macos', 'linux'],
         'format': 'auto'
     },
-    
+
     'apt': {
         'commands': {
             'version': 'apt --version',
@@ -157,7 +155,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'apt-get': {
         'commands': {
             'version': 'apt-get --version',
@@ -167,7 +165,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'dpkg': {
         'commands': {
             'version': 'dpkg --version',
@@ -178,7 +176,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'yum': {
         'commands': {
             'version': 'yum --version',
@@ -189,7 +187,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'dnf': {
         'commands': {
             'version': 'dnf --version',
@@ -200,7 +198,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'rpm': {
         'commands': {
             'version': 'rpm --version',
@@ -211,7 +209,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'zypper': {
         'commands': {
             'version': 'zypper --version',
@@ -222,7 +220,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'pacman': {
         'commands': {
             'version': 'pacman --version',
@@ -233,7 +231,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'snap': {
         'commands': {
             'version': 'snap version',
@@ -244,7 +242,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'flatpak': {
         'commands': {
             'version': 'flatpak --version',
@@ -255,7 +253,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'choco': {
         'commands': {
             'version': 'choco --version',
@@ -266,7 +264,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['windows'],
         'format': 'auto'
     },
-    
+
     'scoop': {
         'commands': {
             'version': 'scoop --version',
@@ -277,7 +275,7 @@ PACKAGE_MANAGER_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['windows'],
         'format': 'auto'
     },
-    
+
     'winget': {
         'commands': {
             'version': 'winget --version',

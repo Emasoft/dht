@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_utilities.py - Utility tool CLI commands
 
@@ -14,10 +13,9 @@ network tools, system tools, archive managers, testing tools, and more.
 # - Contains documentation tools and CI/CD tools
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
+UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
     # Network Tools
     'curl': {
         'commands': {
@@ -27,7 +25,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'wget': {
         'commands': {
             'version': 'wget --version',
@@ -36,7 +34,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'openssl': {
         'commands': {
             'version': 'openssl version -a',
@@ -46,7 +44,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'ssh': {
         'commands': {
             'version': 'ssh -V 2>&1',
@@ -55,7 +53,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'rsync': {
         'commands': {
             'version': 'rsync --version',
@@ -64,7 +62,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'netcat': {
         'commands': {
             'version': 'nc -h 2>&1 | head -n 1',
@@ -73,7 +71,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     'telnet': {
         'commands': {
             'version': 'telnet --version 2>&1 || echo "telnet installed"',
@@ -81,7 +79,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'network_tools',
         'format': 'auto'
     },
-    
+
     # System Tools
     'systemctl': {
         'commands': {
@@ -93,7 +91,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['linux'],
         'format': 'auto'
     },
-    
+
     'ps': {
         'commands': {
             'version': 'ps --version 2>&1',
@@ -102,7 +100,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'top': {
         'commands': {
             'version': 'top -v 2>&1 || top -h 2>&1 | head -n 1',
@@ -110,7 +108,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'htop': {
         'commands': {
             'version': 'htop --version',
@@ -119,7 +117,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'df': {
         'commands': {
             'version': 'df --version 2>&1 || df -h',
@@ -128,7 +126,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'du': {
         'commands': {
             'version': 'du --version 2>&1 || du -h .',
@@ -137,7 +135,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'lsof': {
         'commands': {
             'version': 'lsof -v 2>&1 | head -n 1',
@@ -146,7 +144,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'wsl': {
         'commands': {
             'version': 'wsl --version',
@@ -157,7 +155,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'platforms': ['windows'],
         'format': 'auto'
     },
-    
+
     # Archive Managers
     'tar': {
         'commands': {
@@ -167,7 +165,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'gzip': {
         'commands': {
             'version': 'gzip --version',
@@ -176,7 +174,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'zip': {
         'commands': {
             'version': 'zip --version 2>&1 | head -n 2',
@@ -185,7 +183,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'unzip': {
         'commands': {
             'version': 'unzip -v 2>&1 | head -n 1',
@@ -194,7 +192,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     '7z': {
         'commands': {
             'version': '7z | head -n 2',
@@ -203,7 +201,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     'rar': {
         'commands': {
             'version': 'rar | head -n 2',
@@ -212,7 +210,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'system_tools',
         'format': 'auto'
     },
-    
+
     # Testing Tools
     'pytest': {
         'commands': {
@@ -223,7 +221,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'testing_tools',
         'format': 'auto'
     },
-    
+
     'unittest': {
         'commands': {
             'version': 'python -m unittest --version',
@@ -232,7 +230,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'testing_tools',
         'format': 'auto'
     },
-    
+
     'coverage': {
         'commands': {
             'version': 'coverage --version',
@@ -241,7 +239,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'testing_tools',
         'format': 'auto'
     },
-    
+
     # Database Tools
     'mysql': {
         'commands': {
@@ -251,7 +249,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'database_tools',
         'format': 'auto'
     },
-    
+
     'psql': {
         'commands': {
             'version': 'psql --version',
@@ -260,7 +258,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'database_tools',
         'format': 'auto'
     },
-    
+
     'mongod': {
         'commands': {
             'version': 'mongod --version',
@@ -269,7 +267,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'database_tools',
         'format': 'auto'
     },
-    
+
     'redis-cli': {
         'commands': {
             'version': 'redis-cli --version',
@@ -278,7 +276,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'database_tools',
         'format': 'auto'
     },
-    
+
     'sqlite3': {
         'commands': {
             'version': 'sqlite3 --version',
@@ -287,7 +285,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'database_tools',
         'format': 'auto'
     },
-    
+
     # Text Processing
     'jq': {
         'commands': {
@@ -297,7 +295,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'text_processing',
         'format': 'auto'
     },
-    
+
     'yq': {
         'commands': {
             'version': 'yq --version',
@@ -306,7 +304,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'text_processing',
         'format': 'auto'
     },
-    
+
     'xmllint': {
         'commands': {
             'version': 'xmllint --version 2>&1',
@@ -315,7 +313,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'text_processing',
         'format': 'auto'
     },
-    
+
     'pandoc': {
         'commands': {
             'version': 'pandoc --version',
@@ -324,7 +322,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'text_processing',
         'format': 'auto'
     },
-    
+
     'pdflatex': {
         'commands': {
             'version': 'pdflatex --version',
@@ -333,7 +331,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'text_processing',
         'format': 'auto'
     },
-    
+
     # Documentation Tools
     'sphinx-build': {
         'commands': {
@@ -343,7 +341,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'documentation_tools',
         'format': 'auto'
     },
-    
+
     'mkdocs': {
         'commands': {
             'version': 'mkdocs --version',
@@ -352,7 +350,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'documentation_tools',
         'format': 'auto'
     },
-    
+
     'doxygen': {
         'commands': {
             'version': 'doxygen --version',
@@ -361,7 +359,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'documentation_tools',
         'format': 'auto'
     },
-    
+
     'asciidoctor': {
         'commands': {
             'version': 'asciidoctor --version',
@@ -370,7 +368,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'documentation_tools',
         'format': 'auto'
     },
-    
+
     'yard': {
         'commands': {
             'version': 'yard --version',
@@ -379,7 +377,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'documentation_tools',
         'format': 'auto'
     },
-    
+
     # CI/CD Tools
     'jenkins': {
         'commands': {
@@ -389,7 +387,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cicd_tools',
         'format': 'auto'
     },
-    
+
     'travis': {
         'commands': {
             'version': 'travis version',
@@ -398,7 +396,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cicd_tools',
         'format': 'auto'
     },
-    
+
     'circleci': {
         'commands': {
             'version': 'circleci version',
@@ -407,7 +405,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cicd_tools',
         'format': 'auto'
     },
-    
+
     'gitlab-runner': {
         'commands': {
             'version': 'gitlab-runner --version',
@@ -416,7 +414,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cicd_tools',
         'format': 'auto'
     },
-    
+
     'gh': {
         'commands': {
             'version': 'gh --version',
@@ -426,7 +424,7 @@ UTILITY_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'cicd_tools',
         'format': 'auto'
     },
-    
+
     'act': {
         'commands': {
             'version': 'act --version',

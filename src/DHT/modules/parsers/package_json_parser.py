@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 package_json_parser.py - Parser for Node.js package.json files
 
@@ -11,9 +10,9 @@ Handles parsing of:
 """
 
 import json
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 import logging
+from pathlib import Path
+from typing import Any
 
 from .base_parser import BaseParser
 
@@ -34,7 +33,7 @@ class PackageJsonParser(BaseParser):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a package.json file and extract all information.
 
@@ -135,7 +134,7 @@ class PackageJsonParser(BaseParser):
 
         return result
 
-    def _parse_person(self, person: Any) -> Dict[str, str]:
+    def _parse_person(self, person: Any) -> dict[str, str]:
         """Parse author/contributor information."""
         if isinstance(person, str):
             # Parse "Name <email> (url)" format
@@ -157,7 +156,7 @@ class PackageJsonParser(BaseParser):
             return person
         return {}
 
-    def _parse_dependencies(self, deps: Any) -> List[Dict[str, Any]]:
+    def _parse_dependencies(self, deps: Any) -> list[dict[str, Any]]:
         """Parse dependencies section."""
         if not isinstance(deps, dict):
             return []
@@ -213,7 +212,7 @@ class PackageJsonParser(BaseParser):
         else:
             return "registry"
 
-    def _parse_workspaces(self, workspaces: Any) -> List[str]:
+    def _parse_workspaces(self, workspaces: Any) -> list[str]:
         """Parse workspaces configuration."""
         if isinstance(workspaces, list):
             return workspaces
@@ -221,16 +220,16 @@ class PackageJsonParser(BaseParser):
             return workspaces["packages"]
         return []
 
-    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> Optional[str]:
+    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:
         """Safely read file contents."""
         try:
-            with open(file_path, "r", encoding=encoding) as f:
+            with open(file_path, encoding=encoding) as f:
                 return f.read()
         except Exception as e:
             self.logger.error(f"Failed to read {file_path}: {e}")
             return None
 
-    def get_file_metadata(self, file_path: Path) -> Dict[str, Any]:
+    def get_file_metadata(self, file_path: Path) -> dict[str, Any]:
         """Get file metadata."""
         try:
             stat = file_path.stat()
@@ -244,7 +243,7 @@ class PackageJsonParser(BaseParser):
             self.logger.error(f"Failed to get metadata for {file_path}: {e}")
             return {"name": file_path.name, "error": str(e)}
 
-    def extract_dependencies(self, file_path: Path) -> List[str]:
+    def extract_dependencies(self, file_path: Path) -> list[str]:
         """Extract just the dependency names for quick access."""
         result = self.parse_file(file_path)
         if "error" in result:

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 bash_parser_models.py - Data models and constants for Bash parser
 
@@ -13,10 +12,8 @@ This module contains data models, constants, and common patterns used by the Bas
 
 from __future__ import annotations
 
-from typing import Set
-
 # Common commands to look for in scripts
-COMMON_COMMANDS: Set[str] = {
+COMMON_COMMANDS: set[str] = {
     "git", "docker", "npm", "pip", "python", "node", "make", "gcc",
     "curl", "wget", "apt-get", "yum", "brew", "cargo", "go", "mvn",
     "gradle", "rake", "bundle", "composer", "yarn", "pnpm", "uv",
@@ -28,7 +25,7 @@ COMMON_COMMANDS: Set[str] = {
 }
 
 # Shell keywords to skip when extracting commands
-SHELL_KEYWORDS: Set[str] = {
+SHELL_KEYWORDS: set[str] = {
     "if", "then", "else", "elif", "fi", "for", "while", "do", "done",
     "case", "esac", "function", "return", "break", "continue",
     "export", "source", ".", "eval", "exec", "exit", "set", "unset",
@@ -39,12 +36,12 @@ SHELL_KEYWORDS: Set[str] = {
 }
 
 # File extensions for shell scripts
-SHELL_EXTENSIONS: Set[str] = {
+SHELL_EXTENSIONS: set[str] = {
     ".sh", ".bash", ".zsh", ".ksh", ".fish", ".ash", ".dash"
 }
 
 # Common shell script names without extensions
-SHELL_SCRIPT_NAMES: Set[str] = {
+SHELL_SCRIPT_NAMES: set[str] = {
     "bashrc", "bash_profile", "zshrc", "profile", "bash_aliases",
     "bash_functions", "bash_logout", "inputrc", "dircolors"
 }
@@ -62,7 +59,7 @@ TREE_SITTER_QUERIES = {
             name: (word) @name
             body: (compound_statement) @body) @function
     """,
-    
+
     "alt_functions": """
         (command
             name: (command_name (word) @keyword)
@@ -70,37 +67,37 @@ TREE_SITTER_QUERIES = {
             . (word) @name
             . (compound_statement) @body) @function
     """,
-    
+
     "variables": """
         (variable_assignment
             name: (variable_name) @name
             value: (_) @value) @assignment
     """,
-    
+
     "exports": """
         (command
             name: (command_name (word) @cmd)
             (#eq? @cmd "export")
             argument: (_) @arg) @export
     """,
-    
+
     "sources": """
         (command
             name: (command_name (word) @cmd)
             (#match? @cmd "^(source|\\.)$")
             argument: (_) @file) @source
     """,
-    
+
     "commands": """
         (command
             name: (command_name) @name
             argument: (_)* @args) @command
     """,
-    
+
     "comments": """
         (comment) @comment
     """,
-    
+
     "if_statements": "(if_statement) @item",
     "for_loops": "(for_statement) @item",
     "while_loops": "(while_statement) @item",

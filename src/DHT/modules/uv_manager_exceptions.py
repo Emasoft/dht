@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 uv_manager_exceptions.py - Exception classes for UV Manager
 

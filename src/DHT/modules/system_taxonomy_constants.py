@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted from system_taxonomy.py to reduce file size
@@ -36,41 +35,41 @@ PLATFORM_EXCLUSIONS = {
 CROSS_PLATFORM_TOOLS = {
     # Version control
     'git', 'hg', 'svn',
-    
+
     # Language runtimes
     'python', 'python3', 'node', 'java', 'ruby', 'go', 'rust', 'dotnet',
-    
+
     # Language package managers
     'pip', 'pip3', 'npm', 'yarn', 'pnpm', 'cargo', 'maven', 'gradle', 'bundler', 'gem',
     'poetry', 'pipenv', 'pdm', 'hatch', 'setuptools', 'twine',
-    
+
     # Build tools
     'make', 'cmake', 'ninja', 'scons', 'bazel', 'buck', 'pants',
-    
+
     # Compilers
     'gcc', 'g++', 'clang', 'clang++', 'rustc', 'javac',
-    
+
     # Containers and virtualization
     'docker', 'podman', 'kubectl', 'helm', 'minikube', 'kind',
-    
+
     # Cloud tools
     'aws', 'gcloud', 'az', 'terraform', 'ansible', 'puppet', 'chef',
-    
+
     # Archive managers
     'tar', 'gzip', 'zip', '7z', 'rar',
-    
+
     # Network tools
     'curl', 'wget', 'openssl', 'ssh', 'rsync', 'netcat', 'telnet',
-    
+
     # Database clients
     'mysql', 'psql', 'redis-cli', 'mongo', 'sqlite3',
-    
+
     # Testing tools
     'pytest', 'unittest', 'jest', 'mocha', 'jasmine', 'karma', 'selenium',
-    
+
     # CI/CD tools
     'jenkins', 'travis', 'circleci', 'gitlab-runner', 'github', 'drone', 'tekton', 'argocd',
-    
+
     # Other development tools
     'jq', 'yq', 'xmllint', 'pandoc', 'graphviz', 'plantuml',
 }

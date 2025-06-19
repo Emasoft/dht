@@ -1,9 +1,9 @@
-import pytest
-import subprocess
 import os
-import sys
-from pathlib import Path
 import shutil
+import subprocess
+from pathlib import Path
+
+import pytest
 
 # Assuming conftest.py provides mock_project_dir fixture
 

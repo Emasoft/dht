@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for dhtl_environment_2.sh
 # - Provides environment detection and setup
 # - Cross-platform compatible
-# 
+#
 
 """
 DHT Dhtl Environment 2 Module.
@@ -14,23 +13,22 @@ Provides environment detection and setup functionality.
 """
 
 import os
-import sys
 import platform
-from typing import Dict
+import sys
 
+from .common_utils import detect_platform, find_project_root
 from .dhtl_error_handling import log_info
-from .common_utils import find_project_root, detect_platform
 
 
-def setup_environment() -> Dict[str, str]:
+def setup_environment() -> dict[str, str]:
     """Set up environment variables."""
     env = os.environ.copy()
-    
+
     # Add DHT-specific variables
     project_root = find_project_root()
     env["PROJECT_ROOT"] = str(project_root)
     env["PLATFORM"] = detect_platform()
-    
+
     return env
 
 
@@ -38,16 +36,16 @@ def env_command(*args, **kwargs) -> int:
     """Show environment information."""
     log_info("🌍 Environment Information")
     log_info("=" * 50)
-    
+
     # Platform info
     log_info(f"Platform: {platform.system()} {platform.release()}")
     log_info(f"Architecture: {platform.machine()}")
     log_info(f"Python: {sys.version.split()[0]} ({sys.executable})")
-    
+
     # Project info
     project_root = find_project_root()
     log_info(f"Project root: {project_root}")
-    
+
     # Virtual environment
     venv = os.environ.get("VIRTUAL_ENV")
     if venv:
@@ -59,13 +57,13 @@ def env_command(*args, **kwargs) -> int:
             log_info(f"Virtual env: {venv_dir} (not activated)")
         else:
             log_info("Virtual env: None")
-    
+
     # DHT environment variables
     log_info("\nDHT Environment Variables:")
     for key, value in os.environ.items():
         if key.startswith(("DHT_", "PROJECT_", "PYTHON_")):
             log_info(f"  {key}={value}")
-    
+
     # Git info
     git_dir = project_root / ".git"
     if git_dir.exists():
@@ -81,7 +79,7 @@ def env_command(*args, **kwargs) -> int:
                 log_info(f"\nGit branch: {result.stdout.strip()}")
         except Exception:
             pass
-    
+
     return 0
 
 

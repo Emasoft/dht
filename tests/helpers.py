@@ -1,48 +1,49 @@
 import os
-import subprocess
 import shlex
-from pathlib import Path
-import tempfile
 import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+
 
 def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=True):
     """
     Run a DHTL command and return the result.
-    
+
     Args:
         command (str): The command to run (e.g., "test", "lint")
         cwd (str, optional): The working directory to run the command in
         env (dict, optional): Environment variables to use
         check (bool, optional): Whether to check the return code
         capture_output (bool, optional): Whether to capture stdout/stderr
-        
+
     Returns:
         subprocess.CompletedProcess: The completed process
     """
     import sys
-    
+
     # Build command for Python implementation
     if isinstance(command, str):
         command = shlex.split(command)
-    
+
     cmd = [sys.executable, "-m", "src.DHT.dhtl"] + command
-    
+
     # Set up environment
     run_env = os.environ.copy()
     if env:
         run_env.update(env)
-    
+
     # Add the DHT project directory to PYTHONPATH so the module can be found
     dht_project_root = Path(__file__).parent.parent  # tests -> dht
     python_path = run_env.get("PYTHONPATH", "")
     run_env["PYTHONPATH"] = f"{dht_project_root}:{python_path}" if python_path else str(dht_project_root)
-    
+
     # Set working directory
     if cwd is None:
         cwd = Path.cwd()
     else:
         cwd = Path(cwd)
-    
+
     # Run the command
     result = subprocess.run(
         cmd,
@@ -52,7 +53,7 @@ def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=Tru
         capture_output=capture_output,
         text=True
     )
-    
+
     return result
 
 
@@ -76,7 +77,7 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
         # Create a mock DHT structure within the temporary project root
         temp_dht_dir = temp_project_root / "DHT"
         temp_dht_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Copy dhtl.sh
         source_dhtl_script = source_dht_dir / "dhtl.sh"
         if source_dhtl_script.exists():
@@ -96,13 +97,13 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
         # Prepare the command to run the copied dhtl.sh
         dhtl_executable = temp_dht_dir / "dhtl.sh"
         full_command = [str(dhtl_executable)]
-        
+
         if command:
             if isinstance(command, list):
                 full_command.extend(command)
             else:
                 full_command.extend(shlex.split(command))
-        
+
         # Determine effective CWD: if cwd is provided, it's relative to temp_project_root or absolute
         effective_cwd = Path(cwd) if cwd else temp_project_root
         if not effective_cwd.is_absolute():
@@ -129,12 +130,12 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
 def run_bash_command(command, cwd=None, env=None):
     """
     Run a bash command and return the output.
-    
+
     Args:
         command (str): The bash command to run
         cwd (str, optional): The working directory to run the command in
         env (dict, optional): Environment variables to use
-        
+
     Returns:
         str: The command output (both stdout and stderr combined)
     """
@@ -162,29 +163,29 @@ def create_mock_file(directory, filename, content=""):
 def mock_bash_script(script_content):
     """
     Create a temporary bash script with the given content and return its path.
-    
+
     Args:
         script_content (str): The content of the script
-        
+
     Returns:
         str: The path to the temporary script
     """
     fd, script_path = tempfile.mkstemp(suffix=".sh")
     os.close(fd)
-    
+
     with open(script_path, "w") as f:
         f.write(script_content)
-    
+
     os.chmod(script_path, 0o755)
     return script_path
 
 def verify_dhtl_components(project_dir):
     """
     Verify that the essential DHT components are present in the project.
-    
+
     Args:
         project_dir (str): The project directory
-        
+
     Returns:
         bool: True if all components are present, False otherwise
     """
@@ -195,9 +196,9 @@ def verify_dhtl_components(project_dir):
         "DHT/modules/environment.sh",
         "DHT/modules/commands.sh"
     ]
-    
+
     for file_path in required_files:
         if not (Path(project_dir) / file_path).exists():
             return False
-    
+
     return True

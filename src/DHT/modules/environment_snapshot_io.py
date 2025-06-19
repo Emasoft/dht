@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 environment_snapshot_io.py - Environment snapshot I/O operations
 
@@ -15,18 +14,18 @@ various formats (JSON, YAML).
 from __future__ import annotations
 
 import json
-import yaml
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
-from prefect import task, get_run_logger
+import yaml
+from prefect import get_run_logger, task
 
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
 
 
 class EnvironmentSnapshotIO:
     """Handles environment snapshot I/O operations."""
-    
+
     @task(
         name="save_environment_snapshot",
         description="Save environment snapshot to file"
@@ -39,23 +38,23 @@ class EnvironmentSnapshotIO:
     ) -> Path:
         """
         Save environment snapshot to file.
-        
+
         Args:
             snapshot: Environment snapshot to save
             output_path: Path to save the snapshot
             format: Output format ('json' or 'yaml')
-            
+
         Returns:
             Path to saved snapshot file
         """
         logger = get_run_logger()
-        
+
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Convert snapshot to dictionary
         snapshot_dict = self._snapshot_to_dict(snapshot)
-        
+
         # Save in requested format
         if format.lower() == "yaml":
             with open(output_path, 'w') as f:
@@ -63,10 +62,10 @@ class EnvironmentSnapshotIO:
         else:
             with open(output_path, 'w') as f:
                 json.dump(snapshot_dict, f, indent=2, sort_keys=True)
-        
+
         logger.info(f"Environment snapshot saved to {output_path}")
         return output_path
-    
+
     @task(
         name="load_environment_snapshot",
         description="Load environment snapshot from file"
@@ -74,18 +73,18 @@ class EnvironmentSnapshotIO:
     def load_snapshot(self, snapshot_path: Path) -> EnvironmentSnapshot:
         """
         Load environment snapshot from file.
-        
+
         Args:
             snapshot_path: Path to snapshot file
-            
+
         Returns:
             EnvironmentSnapshot object
         """
         snapshot_path = Path(snapshot_path)
-        
+
         if not snapshot_path.exists():
             raise FileNotFoundError(f"Snapshot file not found: {snapshot_path}")
-        
+
         # Determine format by extension
         if snapshot_path.suffix.lower() in ['.yaml', '.yml']:
             with open(snapshot_path) as f:
@@ -93,11 +92,11 @@ class EnvironmentSnapshotIO:
         else:
             with open(snapshot_path) as f:
                 data = json.load(f)
-        
+
         # Reconstruct snapshot object
         return self._dict_to_snapshot(data)
-    
-    def _snapshot_to_dict(self, snapshot: EnvironmentSnapshot) -> Dict[str, Any]:
+
+    def _snapshot_to_dict(self, snapshot: EnvironmentSnapshot) -> dict[str, Any]:
         """Convert snapshot object to dictionary."""
         return {
             "metadata": {
@@ -129,14 +128,14 @@ class EnvironmentSnapshotIO:
                 "platform_notes": snapshot.platform_notes
             }
         }
-    
-    def _dict_to_snapshot(self, data: Dict[str, Any]) -> EnvironmentSnapshot:
+
+    def _dict_to_snapshot(self, data: dict[str, Any]) -> EnvironmentSnapshot:
         """Convert dictionary to snapshot object."""
         metadata = data["metadata"]
         environment = data["environment"]
         project = data["project"]
         reproduction = data["reproduction"]
-        
+
         return EnvironmentSnapshot(
             timestamp=metadata["timestamp"],
             platform=metadata["platform"],

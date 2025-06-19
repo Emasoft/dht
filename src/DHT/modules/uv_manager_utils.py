@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 uv_manager_utils.py - Utility functions for UV Manager
 
@@ -13,14 +12,13 @@ This module contains utility functions used by the UV Manager.
 
 from __future__ import annotations
 
+import logging
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
-import logging
+from typing import Any
 
 from DHT.modules.uv_manager_exceptions import UVError, UVNotFoundError
-
 
 # Development dependency patterns for intelligent classification
 DEV_DEPENDENCY_PATTERNS = {
@@ -33,13 +31,13 @@ DEV_DEPENDENCY_PATTERNS = {
 }
 
 
-def find_uv_executable(logger: logging.Logger) -> Optional[Path]:
+def find_uv_executable(logger: logging.Logger) -> Path | None:
     """Find UV executable in PATH or common locations."""
     # First check if UV is in PATH
     uv_in_path = shutil.which("uv")
     if uv_in_path:
         return Path(uv_in_path)
-    
+
     # Check common installation locations
     common_paths = [
         Path.home() / ".local" / "bin" / "uv",
@@ -47,11 +45,11 @@ def find_uv_executable(logger: logging.Logger) -> Optional[Path]:
         Path("/usr/local/bin/uv"),
         Path("/opt/homebrew/bin/uv"),
     ]
-    
+
     for path in common_paths:
         if path.exists() and path.is_file():
             return path
-    
+
     logger.warning("UV executable not found in PATH or common locations")
     return None
 
@@ -66,12 +64,12 @@ def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None
         parts = version_output.split()
         # Version is the second part (after "uv")
         version = parts[1] if len(parts) >= 2 else "unknown"
-        
+
         if not version_meets_minimum(version, min_version):
             raise UVError(
                 f"UV version {version} is below minimum required {min_version}"
             )
-        
+
         logger.info(f"UV version {version} verified")
     except Exception as e:
         logger.error(f"Failed to verify UV version: {e}")
@@ -80,9 +78,9 @@ def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None
 
 def version_meets_minimum(version: str, minimum: str) -> bool:
     """Check if version meets minimum requirement."""
-    def parse_version(v: str) -> Tuple[int, ...]:
+    def parse_version(v: str) -> tuple[int, ...]:
         return tuple(int(x) for x in v.split('.'))
-    
+
     try:
         return parse_version(version) >= parse_version(minimum)
     except ValueError:
@@ -91,16 +89,16 @@ def version_meets_minimum(version: str, minimum: str) -> bool:
         return True  # Assume it's okay if we can't parse
 
 
-def load_toml(file_path: Path) -> Dict[str, Any]:
+def load_toml(file_path: Path) -> dict[str, Any]:
     """
     Load TOML file with Python version compatibility.
-    
+
     Args:
         file_path: Path to TOML file
-        
+
     Returns:
         Parsed TOML data
-        
+
     Raises:
         FileNotFoundError: If file doesn't exist
         Exception: If parsing fails
@@ -109,7 +107,7 @@ def load_toml(file_path: Path) -> Dict[str, Any]:
         import tomllib
     except ImportError:
         import tomli as tomllib
-        
+
     with open(file_path, "rb") as f:
         return tomllib.load(f)
 
@@ -117,41 +115,41 @@ def load_toml(file_path: Path) -> Dict[str, Any]:
 def is_dev_dependency(package_name: str) -> bool:
     """
     Check if a package is likely a development dependency.
-    
+
     Args:
         package_name: Name of the package
-        
+
     Returns:
         True if package is likely a dev dependency
     """
     package_lower = package_name.lower()
-    
+
     # Check against known patterns
-    for category, patterns in DEV_DEPENDENCY_PATTERNS.items():
+    for _category, patterns in DEV_DEPENDENCY_PATTERNS.items():
         for pattern in patterns:
             if pattern in package_lower:
                 return True
-    
+
     # Check for common dev dependency prefixes
     dev_prefixes = ["pytest-", "flake8-", "mypy-", "sphinx-"]
     for prefix in dev_prefixes:
         if package_lower.startswith(prefix):
             return True
-    
+
     return False
 
 
 def run_uv_command(
     uv_path: Path,
-    args: List[str], 
-    cwd: Optional[Path] = None,
+    args: list[str],
+    cwd: Path | None = None,
     capture_output: bool = True,
     check: bool = True,
     timeout: int = 300  # 5 minutes default
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Run UV command and return structured output.
-    
+
     Args:
         uv_path: Path to UV executable
         args: Command arguments (without 'uv' prefix)
@@ -159,22 +157,22 @@ def run_uv_command(
         capture_output: Whether to capture stdout/stderr
         check: Whether to raise on non-zero exit code
         timeout: Command timeout in seconds
-        
+
     Returns:
         Dict with 'stdout', 'stderr', 'returncode', and 'success' keys
-        
+
     Raises:
         UVNotFoundError: If UV is not available
     """
     logger = logging.getLogger(__name__)
-    
+
     if not uv_path or not uv_path.exists():
         raise UVNotFoundError("UV is not available. Please install UV first.")
-    
+
     cmd = [str(uv_path)] + args
-    
+
     logger.debug(f"Running UV command: {' '.join(cmd)}")
-    
+
     try:
         result = subprocess.run(
             cmd,
@@ -184,14 +182,14 @@ def run_uv_command(
             check=check,
             timeout=timeout
         )
-        
+
         return {
             "stdout": result.stdout if capture_output else "",
             "stderr": result.stderr if capture_output else "",
             "returncode": result.returncode,
             "success": result.returncode == 0
         }
-        
+
     except subprocess.CalledProcessError as e:
         return {
             "stdout": e.stdout if capture_output else "",
@@ -220,17 +218,17 @@ def run_uv_command(
 def extract_min_version(constraint: str) -> str:
     """
     Extract minimum version from constraint string.
-    
+
     Args:
         constraint: Version constraint (e.g., ">=3.8,<4.0")
-        
+
     Returns:
         Minimum version string (e.g., "3.8")
     """
     import re
-    
+
     constraint = constraint.strip()
-    
+
     # Handle common patterns
     if constraint.startswith(">="):
         version = constraint[2:].split(",")[0].strip()
@@ -246,6 +244,6 @@ def extract_min_version(constraint: str) -> str:
         match = re.search(r'\d+\.\d+(?:\.\d+)?', constraint)
         if match:
             return match.group()
-    
+
     # Default to 3.8
     return "3.8"

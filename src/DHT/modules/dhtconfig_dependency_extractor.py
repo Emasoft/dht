@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 dhtconfig_dependency_extractor.py - Dependency extraction for DHT configuration
 
@@ -14,26 +13,26 @@ This module handles extraction of dependencies from project analysis.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from DHT.modules.dhtconfig_models import DHTConfigConstants
 
 
 class DependencyExtractor:
     """Extracts dependencies from project analysis."""
-    
-    def extract_dependencies(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+
+    def extract_dependencies(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract dependencies from project analysis."""
         deps = {
             "python_packages": [],
             "lock_files": {},
             "system_packages": []
         }
-        
+
         # Extract Python dependencies
         if "dependencies" in project_info:
             project_deps = project_info["dependencies"]
-            
+
             # Python packages
             if "python" in project_deps:
                 python_deps = project_deps["python"]
@@ -61,15 +60,15 @@ class DependencyExtractor:
                                 "version": "*",
                                 "extras": [],
                             })
-        
+
         # Check for lock files in the project directory
         project_path = Path(project_info.get("root_path", "."))
-        
+
         for lock_type, filename in DHTConfigConstants.LOCK_FILE_PATTERNS.items():
             lock_path = project_path / filename
             if lock_path.exists():
                 deps["lock_files"][lock_type] = filename
-        
+
         # Extract system packages based on project type
         if project_info.get("project_type") == "python":
             # Common Python development system packages
@@ -78,7 +77,7 @@ class DependencyExtractor:
                 {"name": "build-essential", "platform": "linux"},
                 {"name": "xcode-select", "platform": "macos"},
             ])
-        
+
         return deps
 
 

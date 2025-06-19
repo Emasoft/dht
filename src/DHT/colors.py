@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted Colors class from dhtl.py for modularity
 # - Reduced size of main launcher file
 # - Follows CLAUDE.md modularity guidelines
-# 
+#
 
 """
 Terminal Colors Utility.
@@ -28,7 +27,7 @@ class Colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    
+
     @staticmethod
     def disable():
         """Disable colors for environments that don't support them."""
@@ -41,18 +40,18 @@ class Colors:
         Colors.ENDC = ''
         Colors.BOLD = ''
         Colors.UNDERLINE = ''
-    
+
     @staticmethod
     def supports_color() -> bool:
         """Check if the terminal supports color output."""
         # Disable color for non-interactive or dumb terminals
         if not sys.stdout.isatty():
             return False
-        
+
         term = os.environ.get('TERM', '')
         if term == 'dumb':
             return False
-        
+
         # Windows console might not support ANSI colors
         if sys.platform == "win32" and not os.environ.get("ANSICON"):
             try:
@@ -61,5 +60,5 @@ class Colors:
                 return True
             except ImportError:
                 return False
-        
+
         return True

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 act_integration_models.py - Data models for act integration
 
@@ -14,7 +13,7 @@ This module contains data models and structures used by the act integration syst
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Any
+from typing import Any
 
 
 @dataclass
@@ -24,8 +23,8 @@ class ActConfig:
     platform: str = "ubuntu-latest"
     container_runtime: str = "podman"  # Prefer podman for rootless
     use_gh_extension: bool = True
-    artifact_server_path: Optional[str] = None
-    cache_server_path: Optional[str] = None
+    artifact_server_path: str | None = None
+    cache_server_path: str | None = None
     reuse_containers: bool = False
     bind_workdir: bool = True
 
@@ -36,40 +35,40 @@ class WorkflowInfo:
     file: str
     name: str
     path: str
-    on: Dict[str, Any]
-    jobs: List[str]
-    error: Optional[str] = None
+    on: dict[str, Any]
+    jobs: list[str]
+    error: str | None = None
 
 
 @dataclass
 class LintResult:
     """Result from linting a workflow."""
     success: bool
-    errors: List[Dict[str, Any]]
-    warnings: List[Dict[str, Any]]
-    raw_output: Optional[str] = None
+    errors: list[dict[str, Any]]
+    warnings: list[dict[str, Any]]
+    raw_output: str | None = None
 
 
 @dataclass
 class ActCheckResult:
     """Result from checking act availability."""
     gh_cli_available: bool
-    gh_cli_version: Optional[str]
+    gh_cli_version: str | None
     act_extension_installed: bool
-    act_extension_version: Optional[str]
+    act_extension_version: str | None
     standalone_act_available: bool
-    standalone_act_version: Optional[str]
+    standalone_act_version: str | None
     act_available: bool
-    preferred_method: Optional[str]
+    preferred_method: str | None
 
 
-@dataclass 
+@dataclass
 class ContainerSetupResult:
     """Result from container environment setup."""
     success: bool
     runtime_available: bool
-    runtime: Optional[str]
-    socket_path: Optional[str]
-    volumes: List[str]
-    environment: Dict[str, str]
-    error: Optional[str] = None
+    runtime: str | None
+    socket_path: str | None
+    volumes: list[str]
+    environment: dict[str, str]
+    error: str | None = None

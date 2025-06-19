@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Test for DHT guardian functionality - updated for Python/Prefect migration."""
 
-import pytest
-import os
 import sys
-import time
-import psutil
 from pathlib import Path
-from unittest.mock import patch, Mock, MagicMock
-import subprocess
+from unittest.mock import patch
+
+import pytest
+
 
 def test_guardian_prefect_module():
     """Test that guardian_prefect module can be imported."""
@@ -29,16 +26,15 @@ def test_guardian_prefect_module():
 @pytest.mark.unit
 def test_resource_limits_class():
     """Test ResourceLimits class."""
-    import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
     from DHT.modules.guardian_prefect import ResourceLimits
-    
+
     # Test default values
     limits = ResourceLimits()
     assert limits.memory_mb == 2048
     assert limits.cpu_percent == 80
     assert limits.timeout == 900
-    
+
     # Test custom values
     custom_limits = ResourceLimits(
         memory_mb=4096,
@@ -52,10 +48,9 @@ def test_resource_limits_class():
 @pytest.mark.unit
 def test_guardian_result_dataclass():
     """Test GuardianResult dataclass."""
-    import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
     from DHT.modules.guardian_prefect import GuardianResult
-    
+
     # Test successful result
     result = GuardianResult(
         return_code=0,
@@ -71,7 +66,7 @@ def test_guardian_result_dataclass():
     assert result.stdout == "test output"
     assert result.was_killed is False
     assert result.duration == 1.5  # Test alias property
-    
+
     # Test terminated result
     terminated_result = GuardianResult(
         return_code=-15,
@@ -89,28 +84,27 @@ def test_guardian_result_dataclass():
 @pytest.mark.unit
 def test_check_system_resources():
     """Test check_system_resources function exists and has correct structure."""
-    import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
     from DHT.modules.guardian_prefect import check_system_resources
-    
+
     # Check that it's a Prefect task
     assert hasattr(check_system_resources, '__wrapped__'), "check_system_resources should be a Prefect task"
-    
+
     # Check the task has the right attributes
     assert hasattr(check_system_resources, 'name')
     assert check_system_resources.name == 'check-resources'
-    
+
     # We can't test the actual function execution without a Prefect context
     # but we can verify it exists and is properly decorated
 
 @pytest.mark.unit
 def test_run_with_guardian_success():
     """Test run_with_guardian with successful execution."""
-    import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-    from DHT.modules.guardian_prefect import run_with_guardian, GuardianResult, ResourceLimits
     from unittest.mock import patch
-    
+
+    from DHT.modules.guardian_prefect import GuardianResult, ResourceLimits, run_with_guardian
+
     with patch('DHT.modules.guardian_prefect.run_command_with_limits') as mock_run_command:
         # Mock successful command result
         mock_run_command.return_value = {
@@ -122,13 +116,13 @@ def test_run_with_guardian_success():
             "killed": False,
             "reason": None
         }
-        
+
         # Run command
         result = run_with_guardian(
             ["echo", "test"],
             limits=ResourceLimits(memory_mb=1024)
         )
-        
+
         assert isinstance(result, GuardianResult)
         assert result.success is True
         assert result.return_code == 0
@@ -152,12 +146,12 @@ def test_dhtl_guardian_prefect_module():
 @patch('sys.argv', ['guardian', 'echo', 'test'])
 def test_guardian_cli_interface():
     """Test the guardian CLI interface."""
-    import sys
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    from unittest.mock import patch
+
     from DHT.modules.dhtl_guardian_prefect import main
     from DHT.modules.guardian_prefect import GuardianResult
-    from unittest.mock import patch
-    
+
     with patch('DHT.modules.guardian_prefect.run_with_guardian') as mock_run_with_guardian:
         # Mock successful result
         mock_result = GuardianResult(
@@ -170,13 +164,13 @@ def test_guardian_cli_interface():
             kill_reason=None
         )
         mock_run_with_guardian.return_value = mock_result
-        
+
         # Run CLI
         exit_code = main()
-        
+
         assert exit_code == 0
         mock_run_with_guardian.assert_called_once()
-        
+
         # Check command was parsed correctly
         call_args = mock_run_with_guardian.call_args
         assert call_args[0][0] == ['echo', 'test']

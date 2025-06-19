@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 cli_commands_build_tools.py - Build tools and compiler CLI commands
 
@@ -12,10 +11,9 @@ This module contains CLI command definitions for build tools and compilers.
 # - Contains compilers (gcc, clang, rustc, javac, msvc)
 #
 
-from typing import Dict, Any
+from typing import Any
 
-
-BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
+BUILD_TOOLS_COMMANDS: dict[str, dict[str, Any]] = {
     # Build Tools
     'make': {
         'commands': {
@@ -25,7 +23,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'build_tools',
         'format': 'auto'
     },
-    
+
     'cmake': {
         'commands': {
             'version': 'cmake --version',
@@ -35,7 +33,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'build_tools',
         'format': 'auto'
     },
-    
+
     'ninja': {
         'commands': {
             'version': 'ninja --version',
@@ -43,7 +41,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'build_tools',
         'format': 'auto'
     },
-    
+
     'bazel': {
         'commands': {
             'version': 'bazel --version',
@@ -52,7 +50,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'build_tools',
         'format': 'auto'
     },
-    
+
     # Compilers
     'gcc': {
         'commands': {
@@ -63,7 +61,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'g++': {
         'commands': {
             'version': 'g++ --version',
@@ -73,7 +71,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'clang': {
         'commands': {
             'version': 'clang --version',
@@ -83,7 +81,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'clang++': {
         'commands': {
             'version': 'clang++ --version',
@@ -93,7 +91,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'rustc': {
         'commands': {
             'version': 'rustc --version',
@@ -103,7 +101,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'javac': {
         'commands': {
             'version': 'javac -version 2>&1',
@@ -112,7 +110,7 @@ BUILD_TOOLS_COMMANDS: Dict[str, Dict[str, Any]] = {
         'category': 'compilers',
         'format': 'auto'
     },
-    
+
     'msvc': {
         'commands': {
             'version': 'cl.exe 2>&1 | head -n 1',

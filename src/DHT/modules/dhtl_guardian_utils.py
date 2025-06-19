@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Guardian utilities module
 # - Re-exports functionality from guardian modules
 # - Provides single import point for guardian functionality
-# 
+#
 
 """
 DHT Guardian Utils Module.

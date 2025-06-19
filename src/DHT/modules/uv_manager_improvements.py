@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Improvements and refactoring suggestions for uv_manager.py
 
 This file contains improved code snippets that address the issues found.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 import subprocess
+from pathlib import Path
+from typing import Any
 
 
 class UVNotFoundError(Exception):
@@ -18,17 +17,17 @@ class UVNotFoundError(Exception):
 
 class UVManagerImproved:
     """Improved version with fixes for identified issues."""
-    
-    def _load_toml(self, file_path: Path) -> Dict[str, Any]:
+
+    def _load_toml(self, file_path: Path) -> dict[str, Any]:
         """
         Load TOML file with Python version compatibility.
-        
+
         Args:
             file_path: Path to TOML file
-            
+
         Returns:
             Parsed TOML data
-            
+
         Raises:
             FileNotFoundError: If file doesn't exist
             Exception: If parsing fails
@@ -37,36 +36,36 @@ class UVManagerImproved:
             import tomllib
         except ImportError:
             import tomli as tomllib
-            
+
         with open(file_path, "rb") as f:
             return tomllib.load(f)
-    
+
     def run_command_with_timeout(
         self,
-        args: List[str],
-        cwd: Optional[Path] = None,
+        args: list[str],
+        cwd: Path | None = None,
         timeout: int = 300,  # 5 minutes default
         capture_output: bool = True,
         check: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Run UV command with proper timeout handling.
-        
+
         Args:
             args: Command arguments
             cwd: Working directory
             timeout: Command timeout in seconds
             capture_output: Whether to capture output
             check: Whether to raise on non-zero exit
-            
+
         Returns:
             Command result dictionary
         """
         if not self.is_available:
             raise UVNotFoundError("UV is not available")
-            
+
         cmd = [str(self.uv_path)] + args
-        
+
         try:
             result = subprocess.run(
                 cmd,
@@ -76,14 +75,14 @@ class UVManagerImproved:
                 check=check,
                 timeout=timeout
             )
-            
+
             return {
                 "stdout": result.stdout if capture_output else "",
                 "stderr": result.stderr if capture_output else "",
                 "returncode": result.returncode,
                 "success": result.returncode == 0
             }
-            
+
         except subprocess.TimeoutExpired as e:
             return {
                 "stdout": e.stdout if e.stdout else "",
@@ -100,30 +99,30 @@ class UVManagerImproved:
                 "success": False,
                 "error": str(e)
             }
-    
+
     def _setup_python_environment(
         self,
         project_path: Path,
-        python_version: Optional[str] = None
-    ) -> Dict[str, Any]:
+        python_version: str | None = None
+    ) -> dict[str, Any]:
         """
         Setup Python environment (extracted from setup_project).
-        
+
         Args:
             project_path: Project directory
             python_version: Python version to use
-            
+
         Returns:
             Setup result with python_path
         """
         result = {"success": True, "steps": []}
-        
+
         # Detect Python version if not specified
         if not python_version:
             python_version = self.detect_python_version(project_path)
             if python_version:
                 result["detected_python_version"] = python_version
-        
+
         # Ensure Python version is available
         if python_version:
             try:
@@ -141,26 +140,26 @@ class UVManagerImproved:
                     "error": str(e)
                 })
                 result["success"] = False
-        
+
         return result
-    
+
     def _create_project_venv(
         self,
         project_path: Path,
-        python_version: Optional[str] = None
-    ) -> Dict[str, Any]:
+        python_version: str | None = None
+    ) -> dict[str, Any]:
         """
         Create virtual environment (extracted from setup_project).
-        
+
         Args:
             project_path: Project directory
             python_version: Python version to use
-            
+
         Returns:
             Creation result with venv_path
         """
         result = {"success": True, "steps": []}
-        
+
         try:
             venv_path = self.create_venv(project_path, python_version)
             result["venv_path"] = str(venv_path)
@@ -176,7 +175,7 @@ class UVManagerImproved:
                 "error": str(e)
             })
             result["success"] = False
-        
+
         return result
 
 
@@ -194,24 +193,24 @@ DEV_DEPENDENCY_PATTERNS = {
 def is_dev_dependency(package_name: str) -> bool:
     """
     Check if a package is likely a development dependency.
-    
+
     Args:
         package_name: Name of the package
-        
+
     Returns:
         True if package is likely a dev dependency
     """
     package_lower = package_name.lower()
-    
-    for category, patterns in DEV_DEPENDENCY_PATTERNS.items():
+
+    for _category, patterns in DEV_DEPENDENCY_PATTERNS.items():
         for pattern in patterns:
             if pattern in package_lower:
                 return True
-    
+
     # Check for common dev dependency prefixes
     dev_prefixes = ["pytest-", "flake8-", "mypy-", "sphinx-"]
     for prefix in dev_prefixes:
         if package_lower.startswith(prefix):
             return True
-    
+
     return False

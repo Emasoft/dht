@@ -1,12 +1,13 @@
 import os
-import sys
-import pytest
 import subprocess
-from pathlib import Path
+import sys
+
+import pytest
 
 # Import helper functions
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from helpers import run_dhtl_command, create_mock_file
+from helpers import create_mock_file
+
 
 @pytest.mark.integration
 def test_test_command_with_pytest_script(mock_project_with_venv):
@@ -20,7 +21,7 @@ def test_example():
     assert True
 """
     )
-    
+
     # Create a mock pytest script that just prints the command arguments
     pytest_path = mock_project_with_venv / ".venv/bin/pytest"
     pytest_path.write_text("""#!/bin/sh
@@ -28,15 +29,15 @@ echo "Running pytest with args: $@"
 exit 0
 """)
     pytest_path.chmod(0o755)
-    
+
     # Set up the DHT directory structure within the mock project
     dht_dir = mock_project_with_venv / "DHT"
     dht_dir.mkdir(exist_ok=True)
-    
+
     # Create mock modules directory
     modules_dir = dht_dir / "modules"
     modules_dir.mkdir(exist_ok=True)
-    
+
     # Create mock commands.sh with test_command function
     commands_path = modules_dir / "commands.sh"
     commands_path.write_text("""
@@ -45,7 +46,7 @@ test_command() {
     PROJECT_ROOT="$1"
     VENV_DIR="$PROJECT_ROOT/.venv"
     PYTEST_CMD="$VENV_DIR/bin/pytest"
-    
+
     if [ -f "$PYTEST_CMD" ]; then
         echo "🔄 Running pytest..."
         "$PYTEST_CMD" -xvs "$PROJECT_ROOT/tests"
@@ -56,7 +57,7 @@ test_command() {
     fi
 }
 """)
-    
+
     # Create mock dhtl.sh script
     dhtl_path = mock_project_with_venv / "dhtl.sh"
     dhtl_path.write_text("""#!/bin/bash
@@ -71,7 +72,7 @@ else
 fi
 """)
     dhtl_path.chmod(0o755)
-    
+
     # Run the test command
     result = subprocess.run(
         ["./dhtl.sh", "test"],
@@ -79,7 +80,7 @@ fi
         capture_output=True,
         text=True
     )
-    
+
     # Check the output
     assert result.returncode == 0
     assert "Running pytest" in result.stdout
@@ -97,7 +98,7 @@ def test_example():
     assert True
 """
     )
-    
+
     # Create a mock pytest script that just prints the command arguments
     pytest_path = mock_project_with_venv / ".venv/bin/pytest"
     pytest_path.write_text("""#!/bin/sh
@@ -105,15 +106,15 @@ echo "Running pytest with args: $@"
 exit 0
 """)
     pytest_path.chmod(0o755)
-    
+
     # Set up the DHT directory structure within the mock project
     dht_dir = mock_project_with_venv / "DHT"
     dht_dir.mkdir(exist_ok=True)
-    
+
     # Create mock modules directory
     modules_dir = dht_dir / "modules"
     modules_dir.mkdir(exist_ok=True)
-    
+
     # Create mock commands.sh with test_command function
     commands_path = modules_dir / "commands.sh"
     commands_path.write_text("""
@@ -121,7 +122,7 @@ test_command() {
     echo "🧪 Running tests on project..."
     PROJECT_ROOT="$1"
     FAST_MODE=false
-    
+
     # Process arguments
     for arg in "$@"; do
         if [ "$arg" == "--fast" ]; then
@@ -129,10 +130,10 @@ test_command() {
             break
         fi
     done
-    
+
     VENV_DIR="$PROJECT_ROOT/.venv"
     PYTEST_CMD="$VENV_DIR/bin/pytest"
-    
+
     if [ -f "$PYTEST_CMD" ]; then
         echo "🔄 Running pytest..."
         if [ "$FAST_MODE" = true ]; then
@@ -148,7 +149,7 @@ test_command() {
     fi
 }
 """)
-    
+
     # Create mock dhtl.sh script
     dhtl_path = mock_project_with_venv / "dhtl.sh"
     dhtl_path.write_text("""#!/bin/bash
@@ -164,7 +165,7 @@ else
 fi
 """)
     dhtl_path.chmod(0o755)
-    
+
     # Run the test command with --fast option
     result = subprocess.run(
         ["./dhtl.sh", "test", "--fast"],
@@ -172,7 +173,7 @@ fi
         capture_output=True,
         text=True
     )
-    
+
     # Check the output
     assert result.returncode == 0
     assert "Running in fast mode" in result.stdout

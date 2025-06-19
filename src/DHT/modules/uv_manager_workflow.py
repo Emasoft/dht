@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 uv_manager_workflow.py - Project setup workflow for UV Manager
 
@@ -13,21 +12,21 @@ This module contains the project setup workflow and related operations.
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, Any, Optional
 import logging
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from prefect import flow
 
 
 class ProjectWorkflowManager:
     """Manages project setup workflows for UV."""
-    
+
     def __init__(self, python_manager, venv_manager, deps_manager):
         """
         Initialize project workflow manager.
-        
+
         Args:
             python_manager: Python version manager instance
             venv_manager: Virtual environment manager instance
@@ -37,13 +36,13 @@ class ProjectWorkflowManager:
         self.python_manager = python_manager
         self.venv_manager = venv_manager
         self.deps_manager = deps_manager
-    
+
     def _setup_python_environment(
         self,
         project_path: Path,
-        python_version: Optional[str],
-        results: Dict[str, Any]
-    ) -> Optional[str]:
+        python_version: str | None,
+        results: dict[str, Any]
+    ) -> str | None:
         """Set up Python environment and return version."""
         # Detect Python version if not specified
         if not python_version:
@@ -51,7 +50,7 @@ class ProjectWorkflowManager:
             if python_version:
                 results["detected_python_version"] = python_version
                 self.logger.info(f"Detected Python version: {python_version}")
-        
+
         # Ensure Python version is available
         if python_version:
             try:
@@ -72,15 +71,15 @@ class ProjectWorkflowManager:
                 })
                 results["success"] = False
                 return None
-        
+
         return python_version
-    
+
     def _setup_virtual_environment(
         self,
         project_path: Path,
-        python_version: Optional[str],
-        results: Dict[str, Any]
-    ) -> Optional[Path]:
+        python_version: str | None,
+        results: dict[str, Any]
+    ) -> Path | None:
         """Set up virtual environment and return path."""
         try:
             venv_path = self.venv_manager.create_venv(project_path, python_version)
@@ -99,12 +98,12 @@ class ProjectWorkflowManager:
             })
             results["success"] = False
             return None
-    
+
     def _setup_dependencies(
         self,
         project_path: Path,
         dev: bool,
-        results: Dict[str, Any]
+        results: dict[str, Any]
     ) -> None:
         """Set up project dependencies."""
         try:
@@ -123,11 +122,11 @@ class ProjectWorkflowManager:
                 "success": False,
                 "error": str(e)
             })
-    
+
     def _generate_lock_if_needed(
         self,
         project_path: Path,
-        results: Dict[str, Any]
+        results: dict[str, Any]
     ) -> None:
         """Generate lock file if needed."""
         lock_file = project_path / "uv.lock"
@@ -145,24 +144,24 @@ class ProjectWorkflowManager:
                     "success": False,
                     "error": str(e)
                 })
-    
+
     @flow(name="setup_project", description="Complete project setup flow")
     def setup_project(
         self,
         project_path: Path,
-        python_version: Optional[str] = None,
+        python_version: str | None = None,
         install_deps: bool = True,
         dev: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Complete project setup flow.
-        
+
         Args:
             project_path: Project root directory
             python_version: Specific Python version to use
             install_deps: Whether to install dependencies
             dev: Whether to install development dependencies
-            
+
         Returns:
             Setup result information
         """
@@ -172,31 +171,31 @@ class ProjectWorkflowManager:
             "timestamp": datetime.now().isoformat(),
             "steps": []
         }
-        
+
         # Setup Python environment
         python_version = self._setup_python_environment(
             project_path, python_version, results
         )
         if results.get("success") is False:
             return results
-        
+
         # Create virtual environment
         venv_path = self._setup_virtual_environment(
             project_path, python_version, results
         )
         if venv_path is None:
             return results
-        
+
         # Install dependencies
         if install_deps:
             self._setup_dependencies(project_path, dev, results)
-        
+
         # Generate lock file if needed
         self._generate_lock_if_needed(project_path, results)
-        
+
         # Set overall success
         results["success"] = all(
             step.get("success", False) for step in results["steps"]
         ) if results["steps"] else True
-        
+
         return results

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 dhtconfig_models.py - Data models for DHT configuration
 
@@ -14,7 +13,7 @@ This module contains data models and constants used by the DHT configuration sys
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 try:
     import yaml
@@ -31,11 +30,11 @@ except ImportError:
 
 class DHTConfigConstants:
     """Constants for DHT configuration."""
-    
+
     SCHEMA_VERSION = "1.0.0"
     CONFIG_FILENAME = ".dhtconfig"
     DHT_VERSION = "0.1.0"
-    
+
     # Lock file patterns
     LOCK_FILE_PATTERNS = {
         "uv": "uv.lock",
@@ -45,7 +44,7 @@ class DHTConfigConstants:
         "yarn": "yarn.lock",
         "pnpm": "pnpm-lock.yaml",
     }
-    
+
     # Key files for checksum generation
     KEY_FILES = [
         "requirements.txt",
@@ -57,29 +56,29 @@ class DHTConfigConstants:
         "Makefile",
         "CMakeLists.txt",
     ]
-    
+
     # Tools to check for behavior validation
     TOOLS_TO_CHECK = ["black", "ruff", "mypy", "pytest"]
-    
+
     # Environment files
     ENV_FILES = [".env", ".env.example", ".env.sample"]
 
 
 class SchemaLoader:
     """Handles loading of DHT configuration schema."""
-    
+
     @staticmethod
-    def load_schema() -> Optional[Dict[str, Any]]:
+    def load_schema() -> dict[str, Any] | None:
         """Load the JSON schema for validation."""
         if not HAS_YAML:
             return None
-        
+
         schema_path = Path(__file__).parent.parent / "schemas" / "dhtconfig_schema.yaml"
         if not schema_path.exists():
             return None
-        
+
         try:
-            with open(schema_path, 'r') as f:
+            with open(schema_path) as f:
                 return yaml.safe_load(f)
         except Exception as e:
             import sys

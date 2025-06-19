@@ -6,12 +6,13 @@ This module provides the abstract base class for all language and file parsers.
 It includes Prefect integration for task-based parallel processing.
 """
 
+import json
+import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Union
-import logging
+from typing import Any
+
 import yaml
-import json
 
 try:
     import tree_sitter
@@ -20,7 +21,7 @@ try:
 except ImportError:
     TREE_SITTER_AVAILABLE = False
 
-from prefect import task, get_run_logger
+from prefect import get_run_logger, task
 
 
 class BaseParser(ABC):
@@ -34,7 +35,7 @@ class BaseParser(ABC):
     - Error handling and logging
     """
 
-    def __init__(self, language: Optional[str] = None):
+    def __init__(self, language: str | None = None):
         """
         Initialize the parser.
 
@@ -81,7 +82,7 @@ class BaseParser(ABC):
         )
 
     @abstractmethod
-    def parse_file(self, file_path: Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Path) -> dict[str, Any]:
         """
         Parse a file and extract structured information.
 
@@ -94,7 +95,7 @@ class BaseParser(ABC):
         pass
 
     @abstractmethod
-    def extract_dependencies(self, file_path: Path) -> List[str]:
+    def extract_dependencies(self, file_path: Path) -> list[str]:
         """
         Extract dependencies from a file.
 
@@ -106,7 +107,7 @@ class BaseParser(ABC):
         """
         pass
 
-    def extract_imports(self, file_path: Path) -> List[str]:
+    def extract_imports(self, file_path: Path) -> list[str]:
         """
         Extract import statements from a file.
         Default implementation returns empty list.
@@ -119,7 +120,7 @@ class BaseParser(ABC):
         """
         return []
 
-    def extract_functions(self, file_path: Path) -> List[Dict[str, Any]]:
+    def extract_functions(self, file_path: Path) -> list[dict[str, Any]]:
         """
         Extract function definitions from a file.
         Default implementation returns empty list.
@@ -132,7 +133,7 @@ class BaseParser(ABC):
         """
         return []
 
-    def extract_classes(self, file_path: Path) -> List[Dict[str, Any]]:
+    def extract_classes(self, file_path: Path) -> list[dict[str, Any]]:
         """
         Extract class definitions from a file.
         Default implementation returns empty list.
@@ -151,7 +152,7 @@ class BaseParser(ABC):
         retries=2,
         retry_delay_seconds=5,
     )
-    def parse_with_prefect(self, file_path: Union[str, Path]) -> Dict[str, Any]:
+    def parse_with_prefect(self, file_path: str | Path) -> dict[str, Any]:
         """
         Prefect task wrapper for parsing files.
 
@@ -178,7 +179,7 @@ class BaseParser(ABC):
                 "parser": self.__class__.__name__,
             }
 
-    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> Optional[str]:
+    def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:
         """
         Safely read file contents with error handling.
 
@@ -190,12 +191,12 @@ class BaseParser(ABC):
             File contents or None if error
         """
         try:
-            with open(file_path, "r", encoding=encoding) as f:
+            with open(file_path, encoding=encoding) as f:
                 return f.read()
         except UnicodeDecodeError:
             # Try with different encoding
             try:
-                with open(file_path, "r", encoding="latin-1") as f:
+                with open(file_path, encoding="latin-1") as f:
                     return f.read()
             except Exception as e:
                 self.logger.error(f"Failed to read {file_path}: {e}")
@@ -204,7 +205,7 @@ class BaseParser(ABC):
             self.logger.error(f"Failed to read {file_path}: {e}")
             return None
 
-    def parse_tree_sitter(self, content: Union[str, bytes]) -> Optional[Any]:
+    def parse_tree_sitter(self, content: str | bytes) -> Any | None:
         """
         Parse content using tree-sitter if available.
 
@@ -226,7 +227,7 @@ class BaseParser(ABC):
             self.logger.error(f"Tree-sitter parsing failed: {e}")
             return None
 
-    def query_tree(self, tree: Any, query_string: str) -> List[Any]:
+    def query_tree(self, tree: Any, query_string: str) -> list[Any]:
         """
         Query a tree-sitter tree.
 
@@ -249,25 +250,25 @@ class BaseParser(ABC):
             return []
 
     @staticmethod
-    def load_json(file_path: Path) -> Dict[str, Any]:
+    def load_json(file_path: Path) -> dict[str, Any]:
         """Load and parse JSON file"""
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 return json.load(f)
         except Exception as e:
             raise ValueError(f"Failed to parse JSON from {file_path}: {e}")
 
     @staticmethod
-    def load_yaml(file_path: Path) -> Dict[str, Any]:
+    def load_yaml(file_path: Path) -> dict[str, Any]:
         """Load and parse YAML file"""
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 return yaml.safe_load(f) or {}
         except Exception as e:
             raise ValueError(f"Failed to parse YAML from {file_path}: {e}")
 
     @staticmethod
-    def load_toml(file_path: Path) -> Dict[str, Any]:
+    def load_toml(file_path: Path) -> dict[str, Any]:
         """Load and parse TOML file"""
         try:
             import toml
@@ -277,12 +278,12 @@ class BaseParser(ABC):
             )
 
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 return toml.load(f)
         except Exception as e:
             raise ValueError(f"Failed to parse TOML from {file_path}: {e}")
 
-    def get_file_metadata(self, file_path: Path) -> Dict[str, Any]:
+    def get_file_metadata(self, file_path: Path) -> dict[str, Any]:
         """
         Get basic file metadata.
 

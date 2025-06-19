@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 act_container_manager.py - Container management for act integration
 
@@ -14,34 +13,33 @@ for running act in containerized environments.
 
 from __future__ import annotations
 
-import subprocess
-import shutil
 import os
+import shutil
+import subprocess
 from pathlib import Path
-from typing import List, Optional
 
-from DHT.modules.act_integration_models import ContainerSetupResult, ActConfig
+from DHT.modules.act_integration_models import ActConfig, ContainerSetupResult
 
 
 class ActContainerManager:
     """Manages container environments for act."""
-    
+
     def __init__(self, project_path: Path):
         """Initialize container manager.
-        
+
         Args:
             project_path: Path to project root
         """
         self.project_path = Path(project_path).resolve()
         self.venv_path = self.project_path / ".venv"
         self.act_config_path = self.venv_path / "dht-act"
-    
+
     def _get_container_socket(self, runtime: str) -> str:
         """Get container runtime socket path.
-        
+
         Args:
             runtime: Container runtime (docker/podman)
-            
+
         Returns:
             Socket path
         """
@@ -51,10 +49,10 @@ class ActContainerManager:
             return f"{xdg_runtime}/podman/podman.sock"
         else:
             return "/var/run/docker.sock"
-    
+
     def setup_container_environment(self) -> ContainerSetupResult:
         """Setup container environment for act.
-        
+
         Returns:
             ContainerSetupResult with setup information
         """
@@ -66,28 +64,28 @@ class ActContainerManager:
             volumes=[],
             environment={}
         )
-        
+
         # Check available container runtimes
         for runtime in ["podman", "docker"]:
             if shutil.which(runtime):
                 result.runtime_available = True
                 result.runtime = runtime
                 break
-        
+
         if not result.runtime_available:
             result.error = "No container runtime found (docker or podman)"
             return result
-        
+
         # Get socket path
         socket_path = self._get_container_socket(result.runtime)
-        
+
         # Verify socket exists and is accessible
         if not Path(socket_path).exists():
             if result.runtime == "podman":
                 # Try to start podman service
                 try:
-                    subprocess.run(["podman", "system", "service", "--time=0"], 
-                                 capture_output=True, 
+                    subprocess.run(["podman", "system", "service", "--time=0"],
+                                 capture_output=True,
                                  background=True)
                 except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
                     result.error = f"Podman socket not found at {socket_path}: {str(e)}"
@@ -95,86 +93,86 @@ class ActContainerManager:
             else:
                 result.error = f"Docker socket not found at {socket_path}"
                 return result
-        
+
         result.socket_path = socket_path
-        
+
         # Setup volumes
         result.volumes = [
             f"{self.project_path}:/workspace",
             f"{socket_path}:/var/run/docker.sock"
         ]
-        
+
         # Add cache volumes if they exist
         cache_dir = self.venv_path / "act-cache"
         if cache_dir.exists():
             result.volumes.append(f"{cache_dir}:/cache")
-        
+
         # Setup environment
         result.environment = {
             "DOCKER_HOST": f"unix://{socket_path}",
             "ACT_CACHE_DIR": "/cache",
             "WORKSPACE": "/workspace"
         }
-        
+
         result.success = True
         return result
-    
-    def _get_container_act_command(self, config: ActConfig) -> List[str]:
+
+    def _get_container_act_command(self, config: ActConfig) -> list[str]:
         """Get act command for container execution.
-        
+
         Args:
             config: Act configuration
-            
+
         Returns:
             List of command arguments
         """
         container_setup = self.setup_container_environment()
         if not container_setup.success:
             raise RuntimeError(f"Container setup failed: {container_setup.error}")
-        
+
         cmd = [container_setup.runtime, "run", "--rm", "-it"]
-        
+
         # Add volumes
         for volume in container_setup.volumes:
             cmd.extend(["-v", volume])
-        
+
         # Add environment
         for key, value in container_setup.environment.items():
             cmd.extend(["-e", f"{key}={value}"])
-        
+
         # Add working directory
         cmd.extend(["-w", "/workspace"])
-        
+
         # Security options for rootless
         if container_setup.runtime == "podman":
             cmd.extend(["--security-opt", "label=disable"])
             cmd.extend(["--userns=keep-id"])
-        
+
         # Add image
         cmd.append("nektos/act:latest")
-        
+
         # Add act-specific arguments
         cmd.extend([
             "-P", f"{config.platform}={config.runner_image}",
             "--container-daemon-socket", container_setup.socket_path
         ])
-        
+
         return cmd
-    
-    def run_in_container(self, act_args: List[str], config: Optional[ActConfig] = None) -> subprocess.CompletedProcess:
+
+    def run_in_container(self, act_args: list[str], config: ActConfig | None = None) -> subprocess.CompletedProcess:
         """Run act command in container.
-        
+
         Args:
             act_args: Arguments to pass to act
             config: Act configuration
-            
+
         Returns:
             Completed process result
         """
         if config is None:
             config = ActConfig()
-        
+
         cmd = self._get_container_act_command(config)
         cmd.extend(act_args)
-        
+
         return subprocess.run(cmd, cwd=self.project_path)

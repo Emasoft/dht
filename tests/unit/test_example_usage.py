@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Example demonstrating test_helpers.py usage in real tests
@@ -11,17 +10,17 @@ Example test module demonstrating test_helpers.py usage.
 This shows how to use the test helpers in actual test scenarios.
 """
 
+from unittest.mock import patch
+
 import pytest
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 # Import helpers from our test_helpers module
 from test_helpers import (
+    cleanup_temporary_project,
     create_platform_uname_mock,
+    create_project_structure,
     create_psutil_virtual_memory_mock,
     create_temporary_project,
-    cleanup_temporary_project,
-    create_project_structure,
 )
 
 
@@ -41,21 +40,22 @@ class TestDHTDiagnosticScenarios:
             machine="arm64",
             processor="arm64",
         )
-        
+
         mock_vm.return_value = create_psutil_virtual_memory_mock(
             total=32 * 1024 * 1024 * 1024,  # 32GB
             available=16 * 1024 * 1024 * 1024,  # 16GB
             percent=50.0,
         )
-        
+
         # Now we can test code that uses platform.uname() and psutil.virtual_memory()
         import platform
+
         import psutil
-        
+
         uname = platform.uname()
         assert uname.system == "Darwin"
         assert uname.machine == "arm64"
-        
+
         vm = psutil.virtual_memory()
         assert vm.total == 32 * 1024 * 1024 * 1024
         assert vm.percent == 50.0
@@ -68,10 +68,10 @@ class TestDHTDiagnosticScenarios:
             ("Linux", "Linux"),
             ("Windows", "Windows"),
         ]
-        
-        for system, expected_name in test_cases:
+
+        for system, _expected_name in test_cases:
             mock_platform.return_value = create_platform_uname_mock(system=system)
-            
+
             import platform
             assert platform.uname().system == system
 
@@ -86,21 +86,21 @@ class TestDHTProjectInitialization:
             project_name="my_simple_app",
             python_version="3.11",
         )
-        
+
         try:
             # Verify project structure
             assert project_path.exists()
             assert (project_path / "pyproject.toml").exists()
             assert (project_path / "main.py").exists()
             assert (project_path / ".python-version").exists()
-            
+
             # Check Python version
             python_version = (project_path / ".python-version").read_text().strip()
             assert python_version == "3.11"
-            
+
             # Simulate DHT operations on the project
             # This is where you'd test actual DHT functionality
-            
+
         finally:
             cleanup_temporary_project(project_path)
 
@@ -114,25 +114,25 @@ class TestDHTProjectInitialization:
             include_docs=True,
             include_ci=True,
         )
-        
+
         try:
             # Verify Django-specific structure
             assert (project_path / "manage.py").exists()
             assert (project_path / "my_django_site" / "settings.py").exists()
             assert (project_path / "api" / "models.py").exists()
-            
+
             # Verify additional features
             assert (project_path / "tests" / "test_api.py").exists()
             assert (project_path / "docs" / "index.md").exists()
             assert (project_path / ".github" / "workflows" / "tests.yml").exists()
-            
+
             # Check Django settings
             settings_path = project_path / "my_django_site" / "settings.py"
             settings_content = settings_path.read_text()
             assert "SECRET_KEY" in settings_content
             assert "DATABASES" in settings_content
             assert "rest_framework" in settings_content
-            
+
         finally:
             cleanup_temporary_project(project_path)
 
@@ -150,21 +150,21 @@ class TestDHTProjectAnalysis:
             python_version="3.10",
             include_tests=True,
         )
-        
+
         project_dir = metadata["root"]
-        
+
         # Simulate DHT's project analysis
         # Count Python files
         py_files = list(project_dir.rglob("*.py"))
         assert len(py_files) > 10  # ML projects have many Python files
-        
+
         # Check for ML-specific patterns
         train_script = project_dir / "train.py"
         assert train_script.exists()
         train_content = train_script.read_text()
         assert "import torch" in train_content
         assert "import wandb" in train_content
-        
+
         # Check configuration
         config_file = project_dir / "configs" / "config.yaml"
         assert config_file.exists()
@@ -179,16 +179,16 @@ class TestDHTProjectAnalysis:
             project_type="fullstack",
             project_name="saas_app",
         )
-        
+
         project_dir = metadata["root"]
-        
+
         # Check backend dependencies
         pyproject = project_dir / "pyproject.toml"
         pyproject_content = pyproject.read_text()
         assert "fastapi" in pyproject_content
         assert "sqlalchemy" in pyproject_content
         assert "pydantic" in pyproject_content
-        
+
         # Check frontend dependencies
         package_json = project_dir / "frontend" / "package.json"
         package_json_content = package_json.read_text()
@@ -207,7 +207,7 @@ class TestDHTEnvironmentSetup:
             project_name="my_awesome_lib",
             python_version="3.9",  # Test with older Python for compatibility
         )
-        
+
         try:
             # Verify library structure
             lib_dir = project_path / "my_awesome_lib"
@@ -216,18 +216,18 @@ class TestDHTEnvironmentSetup:
             assert (lib_dir / "version.py").exists()
             assert (lib_dir / "cli.py").exists()
             assert (lib_dir / "py.typed").exists()  # Type hints marker
-            
+
             # Check package metadata
             pyproject = project_path / "pyproject.toml"
             content = pyproject.read_text()
             assert '[project.scripts]' in content
             assert 'my_awesome_lib = "my_awesome_lib.cli:main"' in content
-            
+
             # Verify version management
             version_file = lib_dir / "version.py"
             version_content = version_file.read_text()
             assert '__version__ = "0.1.0"' in version_content
-            
+
         finally:
             cleanup_temporary_project(project_path)
 

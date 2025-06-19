@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Test suite for the project analyzer.
 
@@ -10,9 +9,10 @@ Tests the comprehensive project analysis functionality that:
 - Integrates with all parsers
 """
 
-import pytest
 import json
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import AsyncMock, Mock, patch
+
+import pytest
 
 from DHT.modules.project_analyzer import ProjectAnalyzer
 
@@ -148,7 +148,7 @@ Base = declarative_base()
 
 class Product(Base):
     __tablename__ = "products"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     price = Column(Float, nullable=False)
@@ -446,7 +446,7 @@ services:
             },
         ]
 
-        for pattern in patterns:
+        for _pattern in patterns:
             # project_type = analyzer.detect_project_type(pattern["files"])
             # assert project_type["primary"] == pattern["expected_type"]
             # assert set(pattern["expected_subtypes"]).issubset(project_type["subtypes"])
@@ -656,7 +656,7 @@ class TestProjectTypeDetection:
         ]
 
         # detector = ProjectTypeDetector()
-        for case in test_cases:
+        for _case in test_cases:
             # result = detector.detect(case["files"], case.get("content_hints", {}))
             # assert result["primary"] == case["expected"]["primary"]
             # if "framework" in case["expected"]:
@@ -689,7 +689,7 @@ class TestProjectTypeDetection:
             },
         ]
 
-        for case in test_cases:
+        for _case in test_cases:
             # result = detector.detect_web_project(case["files"], case.get("package_json"))
             # assert result["framework"] == case["expected"]["framework"]
             pass
@@ -716,7 +716,7 @@ class TestProjectTypeDetection:
             },
         ]
 
-        for case in test_cases:
+        for _case in test_cases:
             # result = detector.detect_mobile_project(case["files"])
             # assert result["primary"] == case["expected"]["primary"]
             pass

@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for ensure_env.sh
 # - Provides ensure env functionality
 # - Maintains compatibility with shell version
-# 
+#
 
 """
 DHT Ensure Env Module.

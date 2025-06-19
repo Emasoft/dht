@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 config_file_generators.py - Configuration file generators for development tools
 
@@ -14,7 +13,7 @@ This module generates configuration files for various development tools.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
+
 import yaml
 
 
@@ -25,7 +24,7 @@ target-version = "py311"
 line-length = 88
 select = [
     "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings  
+    "W",  # pycodestyle warnings
     "F",  # pyflakes
     "I",  # isort
     "B",  # flake8-bugbear
@@ -44,7 +43,7 @@ ignore = [
 [isort]
 known-first-party = ["dht"]
 '''
-    
+
     ruff_config = project_path / "ruff.toml"
     ruff_config.write_text(config_content)
 
@@ -52,7 +51,7 @@ known-first-party = ["dht"]
 def generate_black_config(project_path: Path) -> None:
     """Generate black configuration in pyproject.toml."""
     pyproject = project_path / "pyproject.toml"
-    
+
     # Read existing or create new
     config_dict = {}
     if pyproject.exists():
@@ -60,17 +59,17 @@ def generate_black_config(project_path: Path) -> None:
             import tomllib
         except ImportError:
             import tomli as tomllib
-        
+
         try:
             with open(pyproject, "rb") as f:
                 config_dict = tomllib.load(f)
         except Exception:
             pass
-    
+
     # Add black configuration
     if "tool" not in config_dict:
         config_dict["tool"] = {}
-    
+
     config_dict["tool"]["black"] = {
         "line-length": 88,
         "target-version": ["py311"],
@@ -90,7 +89,7 @@ def generate_black_config(project_path: Path) -> None:
 )/
 """
     }
-    
+
     # Write back
     try:
         import tomli_w
@@ -114,7 +113,7 @@ def generate_black_config(project_path: Path) -> None:
                     lines.append(f'{key} = {value}')
                 else:
                     lines.append(f'{key} = {value}')
-        
+
         with open(pyproject, "w") as f:
             f.write("\n".join(lines) + "\n")
 
@@ -143,7 +142,7 @@ disallow_untyped_defs = False
 [mypy-setup]
 ignore_errors = True
 '''
-    
+
     mypy_config = project_path / "mypy.ini"
     mypy_config.write_text(config_content)
 
@@ -163,15 +162,15 @@ markers =
     unit: marks tests as unit tests
     requires_network: marks tests that require network access
 '''
-    
+
     pytest_config = project_path / "pytest.ini"
     pytest_config.write_text(config_content)
 
 
-def generate_precommit_config(project_path: Path, quality_tools: List[str]) -> None:
+def generate_precommit_config(project_path: Path, quality_tools: list[str]) -> None:
     """Generate pre-commit configuration."""
     repos = []
-    
+
     # Add pre-commit hooks based on configured tools
     if "black" in quality_tools:
         repos.append({
@@ -179,7 +178,7 @@ def generate_precommit_config(project_path: Path, quality_tools: List[str]) -> N
             "rev": "23.7.0",
             "hooks": [{"id": "black"}]
         })
-    
+
     if "ruff" in quality_tools:
         repos.append({
             "repo": "https://github.com/astral-sh/ruff-pre-commit",
@@ -189,14 +188,14 @@ def generate_precommit_config(project_path: Path, quality_tools: List[str]) -> N
                 {"id": "ruff-format"}
             ]
         })
-    
+
     if "mypy" in quality_tools:
         repos.append({
             "repo": "https://github.com/pre-commit/mirrors-mypy",
             "rev": "v1.5.1",
             "hooks": [{"id": "mypy", "additional_dependencies": ["types-all"]}]
         })
-    
+
     # Add common hooks
     repos.append({
         "repo": "https://github.com/pre-commit/pre-commit-hooks",
@@ -215,7 +214,7 @@ def generate_precommit_config(project_path: Path, quality_tools: List[str]) -> N
             {"id": "mixed-line-ending"}
         ]
     })
-    
+
     config = {
         "repos": repos,
         "default_language_version": {
@@ -226,7 +225,7 @@ def generate_precommit_config(project_path: Path, quality_tools: List[str]) -> N
             "skip": ["mypy"]  # Often needs manual dependency updates
         }
     }
-    
+
     precommit_config = project_path / ".pre-commit-config.yaml"
     with open(precommit_config, "w") as f:
         yaml.dump(config, f, default_flow_style=False, sort_keys=False)
@@ -270,51 +269,51 @@ trim_trailing_whitespace = false
 [Makefile]
 indent_style = tab
 '''
-    
+
     editorconfig = project_path / ".editorconfig"
     editorconfig.write_text(config_content)
 
 
 def generate_all_configs(
     project_path: Path,
-    quality_tools: List[str],
+    quality_tools: list[str],
     project_type: str = "python"
-) -> List[str]:
+) -> list[str]:
     """
     Generate all configuration files.
-    
+
     Args:
         project_path: Path to project directory
         quality_tools: List of quality tools to configure
         project_type: Type of project
-        
+
     Returns:
         List of files created
     """
     files_created = []
-    
+
     # Generate tool configs based on what's in quality_tools
     if "ruff" in quality_tools:
         generate_ruff_config(project_path)
         files_created.append("ruff.toml")
-    
+
     if "black" in quality_tools:
         generate_black_config(project_path)
         files_created.append("pyproject.toml [tool.black]")
-    
+
     if "mypy" in quality_tools:
         generate_mypy_config(project_path)
         files_created.append("mypy.ini")
-    
+
     if "pytest" in quality_tools:
         generate_pytest_config(project_path)
         files_created.append("pytest.ini")
-    
+
     # Always generate these
     generate_precommit_config(project_path, quality_tools)
     files_created.append(".pre-commit-config.yaml")
-    
+
     generate_editorconfig(project_path)
     files_created.append(".editorconfig")
-    
+
     return files_created

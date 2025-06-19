@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 test_bash_parser.py - Unit tests for the Bash parser
 
@@ -8,22 +7,22 @@ Tests are written first to define the expected behavior, then the
 implementation will be created to make these tests pass.
 """
 
-import pytest
-from pathlib import Path
 import tempfile
-from typing import Dict, Any
+from pathlib import Path
+
+import pytest
 
 from DHT.modules.parsers.bash_parser import BashParser
 
 
 class TestBashParser:
     """Test suite for BashParser class."""
-    
+
     @pytest.fixture
     def parser(self):
         """Create a BashParser instance for testing."""
         return BashParser()
-    
+
     @pytest.fixture
     def sample_bash_script(self):
         """Create a sample bash script for testing."""
@@ -50,7 +49,7 @@ hello_world() {
 function setup_environment {
     local env_type=$1
     local config_file="config.ini"
-    
+
     if [ "$env_type" = "production" ]; then
         export NODE_ENV="production"
     else
@@ -89,28 +88,28 @@ case "$1" in
         ;;
 esac
 '''
-    
+
     def test_parser_initialization(self, parser):
         """Test that the parser initializes correctly."""
         assert parser is not None
         assert hasattr(parser, 'parse_file')
         assert hasattr(parser, 'extract_dependencies')
-    
+
     def test_parse_file_with_invalid_path(self, parser):
         """Test parsing with an invalid file path."""
         result = parser.parse_file(Path("/non/existent/file.sh"))
         assert "error" in result
         assert "Failed to read file" in result["error"]
-    
+
     def test_parse_file_returns_expected_structure(self, parser, sample_bash_script):
         """Test that parse_file returns the expected data structure."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
-            
+
             # Check basic structure
             assert isinstance(result, dict)
             assert "file_metadata" in result
@@ -122,170 +121,170 @@ esac
             assert "shebang" in result
             assert "comments" in result
             assert "dependencies" in result
-            
+
             # Verify file metadata
             metadata = result["file_metadata"]
             assert metadata["name"] == temp_path.name
             assert metadata["extension"] == ".sh"
             assert metadata["size"] > 0
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_shebang(self, parser, sample_bash_script):
         """Test shebang extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             assert result["shebang"] == "#!/bin/bash"
         finally:
             temp_path.unlink()
-    
+
     def test_extract_functions(self, parser, sample_bash_script):
         """Test function extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             functions = result["functions"]
-            
+
             # Should find 2 functions
             assert len(functions) == 2
-            
+
             # Check hello_world function
             hello_func = next(f for f in functions if f["name"] == "hello_world")
             assert hello_func is not None
             assert "echo \"Hello, World!\"" in hello_func["body"]
             assert hello_func.get("local_vars", []) == []
-            
+
             # Check setup_environment function
             setup_func = next(f for f in functions if f["name"] == "setup_environment")
             assert setup_func is not None
             assert "env_type" in setup_func.get("local_vars", [])
             assert "config_file" in setup_func.get("local_vars", [])
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_variables(self, parser, sample_bash_script):
         """Test variable extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             variables = result["variables"]
-            
+
             # Check for expected variables
             var_names = {v["name"] for v in variables}
             assert "PROJECT_NAME" in var_names
             assert "VERSION" in var_names
             assert "DEBUG" in var_names
             assert "ARRAY" in var_names
-            
+
             # Check variable values and types
             project_var = next(v for v in variables if v["name"] == "PROJECT_NAME")
             assert project_var["value"] == "DHT"
             assert project_var["type"] == "string"
-            
+
             debug_var = next(v for v in variables if v["name"] == "DEBUG")
             assert debug_var["value"] == "false"
             assert debug_var["type"] == "boolean"
-            
+
             array_var = next(v for v in variables if v["name"] == "ARRAY")
             assert array_var["type"] == "array"
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_exports(self, parser, sample_bash_script):
         """Test export statement extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             exports = result["exports"]
-            
+
             # Should find 3 exports
             assert len(exports) >= 3
-            
+
             # Check PATH export
             path_export = next((e for e in exports if e["name"] == "PATH"), None)
             assert path_export is not None
             assert "/usr/local/bin:$PATH" in path_export["value"]
-            
+
             # Check PROJECT_HOME export
             home_export = next((e for e in exports if e["name"] == "PROJECT_HOME"), None)
             assert home_export is not None
             assert home_export["value"] == "/opt/dht"
-            
+
             # Check NODE_ENV export (without value)
             node_export = next((e for e in exports if e["name"] == "NODE_ENV"), None)
             assert node_export is not None
             assert node_export["value"] is None
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_sourced_files(self, parser, sample_bash_script):
         """Test sourced file extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             sources = result["sourced_files"]
-            
+
             # Should find 2 sourced files
             assert len(sources) == 2
-            
+
             # Check sourced paths
             paths = {s["path"] for s in sources}
             assert "./common.sh" in paths
             assert "/etc/profile" in paths
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_commands(self, parser, sample_bash_script):
         """Test command extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             commands = result["commands"]
-            
+
             # Should find at least git, docker, npm
             cmd_names = {c["name"] for c in commands if "name" in c}
             assert "git" in cmd_names
             assert "docker" in cmd_names
             assert "npm" in cmd_names
-            
+
             # Check command with arguments
             npm_cmd = next((c for c in commands if c.get("name") == "npm"), None)
             if npm_cmd and "args" in npm_cmd:
                 assert "install" in npm_cmd["args"]
-                
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_dependencies(self, parser, sample_bash_script):
         """Test dependency extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             # Test via parse_file
             result = parser.parse_file(temp_path)
@@ -293,23 +292,23 @@ esac
             assert "git" in deps["commands"]
             assert "docker" in deps["commands"]
             assert "npm" in deps["commands"]
-            
+
             # Test direct method
             direct_deps = parser.extract_dependencies(temp_path)
             assert direct_deps == deps
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_extract_control_structures(self, parser, sample_bash_script):
         """Test control structure extraction."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
-            
+
             # If control_structures is present, check counts
             if "control_structures" in result:
                 structures = result["control_structures"]
@@ -318,28 +317,28 @@ esac
                 assert structures["while_loops"] >= 1
                 assert structures["case_statements"] >= 1
                 assert structures["functions"] == 2
-                
+
         finally:
             temp_path.unlink()
-    
+
     def test_parse_empty_file(self, parser):
         """Test parsing an empty file."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write("")
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
-            
+
             assert "error" not in result
             assert result["functions"] == []
             assert result["variables"] == []
             assert result["exports"] == []
             assert result["shebang"] is None
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_parse_file_with_syntax_errors(self, parser):
         """Test parsing a file with bash syntax errors."""
         broken_script = '''#!/bin/bash
@@ -358,20 +357,20 @@ fi
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(broken_script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
-            
+
             # Parser should still extract what it can
             assert "error" not in result
             assert result["shebang"] == "#!/bin/bash"
             # Should still find the variable
             var_names = {v["name"] for v in result["variables"]}
             assert "VAR" in var_names
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_variable_type_inference(self, parser):
         """Test variable type inference."""
         script = '''#!/bin/bash
@@ -393,11 +392,11 @@ EMPTY_VAR=
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             variables = {v["name"]: v for v in result["variables"]}
-            
+
             assert variables["STRING_VAR"]["type"] == "string"
             assert variables["NUMBER_VAR"]["type"] == "number"
             assert variables["NEGATIVE_NUM"]["type"] == "number"
@@ -412,10 +411,10 @@ EMPTY_VAR=
             assert variables["BACKTICK_SUB"]["type"] == "command_substitution"
             assert variables["VAR_REF"]["type"] == "variable_reference"
             assert variables["EMPTY_VAR"]["type"] == "string"
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_comments_extraction(self, parser):
         """Test comment extraction."""
         script = '''#!/bin/bash
@@ -435,27 +434,27 @@ do_something() {
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             comments = result["comments"]
-            
+
             # Should find multiple comments
             assert len(comments) > 0
-            
+
             # Check shebang is identified
             shebang_comments = [c for c in comments if c.get("is_shebang", False)]
             assert len(shebang_comments) >= 1
-            
+
             # Check comment text extraction
             comment_texts = [c["text"] for c in comments]
             assert any("header comment" in text for text in comment_texts)
             assert any("TODO" in text for text in comment_texts)
             assert any("FIXME" in text for text in comment_texts)
-            
+
         finally:
             temp_path.unlink()
-    
+
     def test_complex_function_parsing(self, parser):
         """Test parsing of complex function definitions."""
         script = '''#!/bin/bash
@@ -466,19 +465,19 @@ process_files() {
     local output_dir="$2"
     local -a files=()
     local count=0
-    
+
     # Find all files
     while IFS= read -r -d '' file; do
         files+=("$file")
         ((count++))
     done < <(find "$input_dir" -type f -name "*.txt" -print0)
-    
+
     # Process each file
     for file in "${files[@]}"; do
         local basename=$(basename "$file")
         cp "$file" "$output_dir/$basename"
     done
-    
+
     return $count
 }
 
@@ -491,13 +490,13 @@ function validate_args {
         with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
-        
+
         try:
             result = parser.parse_file(temp_path)
             functions = result["functions"]
-            
+
             assert len(functions) == 2
-            
+
             # Check process_files function
             process_func = next(f for f in functions if f["name"] == "process_files")
             local_vars = process_func.get("local_vars", [])
@@ -505,7 +504,7 @@ function validate_args {
             assert "output_dir" in local_vars
             assert "files" in local_vars
             assert "count" in local_vars
-            
+
         finally:
             temp_path.unlink()
 
