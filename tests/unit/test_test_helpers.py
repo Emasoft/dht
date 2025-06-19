@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial creation of test_test_helpers.py to verify helper functions
@@ -16,23 +15,20 @@ This module tests:
 4. Temporary project management
 """
 
-import pytest
 import tempfile
-import platform
-from pathlib import Path
-from unittest.mock import patch
 
+import pytest
 from test_helpers import (
-    create_platform_uname_mock,
-    create_psutil_virtual_memory_mock,
-    create_psutil_process_mock,
-    find_dht_root,
-    find_dht_modules_dir,
-    create_project_structure,
-    create_temporary_project,
-    cleanup_temporary_project,
     assert_project_structure,
+    cleanup_temporary_project,
     create_mock_pyproject_toml,
+    create_platform_uname_mock,
+    create_project_structure,
+    create_psutil_process_mock,
+    create_psutil_virtual_memory_mock,
+    create_temporary_project,
+    find_dht_modules_dir,
+    find_dht_root,
 )
 
 
@@ -49,14 +45,14 @@ class TestMockFactories:
             machine="x86_64",
             processor="x86_64",
         )
-        
+
         assert mock_uname.system == "Linux"
         assert mock_uname.node == "test-linux"
         assert mock_uname.release == "5.15.0"
         assert mock_uname.version == "Linux version 5.15.0"
         assert mock_uname.machine == "x86_64"
         assert mock_uname.processor == "x86_64"
-        
+
         # Test default values
         default_mock = create_platform_uname_mock()
         assert default_mock.system == "Darwin"
@@ -69,11 +65,11 @@ class TestMockFactories:
             available=16 * 1024 * 1024 * 1024,  # 16GB
             percent=50.0,
         )
-        
+
         assert mock_vm.total == 32 * 1024 * 1024 * 1024
         assert mock_vm.available == 16 * 1024 * 1024 * 1024
         assert mock_vm.percent == 50.0
-        
+
         # Test default values
         default_mock = create_psutil_virtual_memory_mock()
         assert default_mock.total == 16 * 1024 * 1024 * 1024
@@ -88,7 +84,7 @@ class TestMockFactories:
             cpu_percent=10.5,
             memory_percent=2.5,
         )
-        
+
         assert mock_process.pid == 5678
         assert mock_process.name() == "test_process"
         assert mock_process.status() == "sleeping"
@@ -103,7 +99,7 @@ class TestPathResolution:
         """Test finding DHT root directory."""
         dht_root = find_dht_root()
         assert dht_root.exists()
-        assert (dht_root / "dhtl.sh").exists()
+        assert (dht_root / "dhtl_entry.py").exists() or (dht_root / "pyproject.toml").exists()
         # Check for either old or new structure
         assert (dht_root / "DHT").is_dir() or (dht_root / "src" / "DHT").is_dir()
 
@@ -113,7 +109,7 @@ class TestPathResolution:
         assert modules_dir.exists()
         assert modules_dir.is_dir()
         assert modules_dir.name == "modules"
-        assert (modules_dir / "orchestrator.sh").exists()
+        assert (modules_dir / "orchestrator.py").exists()
 
 
 class TestProjectStructure:
@@ -127,24 +123,27 @@ class TestProjectStructure:
             project_name="test_simple",
             python_version="3.10",
         )
-        
+
         project_dir = metadata["root"]
         assert project_dir.exists()
         assert metadata["type"] == "simple"
         assert metadata["name"] == "test_simple"
         assert metadata["python_version"] == "3.10"
-        
+
         # Check base files
-        assert_project_structure(project_dir, [
-            "pyproject.toml",
-            "README.md",
-            ".gitignore",
-            ".python-version",
-            "src/__init__.py",
-            "main.py",
-            "src/utils.py",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "pyproject.toml",
+                "README.md",
+                ".gitignore",
+                ".python-version",
+                "src/__init__.py",
+                "main.py",
+                "src/utils.py",
+            ],
+        )
+
         # Check pyproject.toml content
         pyproject_content = (project_dir / "pyproject.toml").read_text()
         assert 'name = "test_simple"' in pyproject_content
@@ -160,18 +159,21 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "manage.py",
-            "test_django/settings.py",
-            "test_django/urls.py",
-            "test_django/wsgi.py",
-            "api/models.py",
-            "api/views.py",
-            "api/serializers.py",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "manage.py",
+                "test_django/settings.py",
+                "test_django/urls.py",
+                "test_django/wsgi.py",
+                "api/models.py",
+                "api/views.py",
+                "api/serializers.py",
+            ],
+        )
+
         # Check Django-specific content
         settings_content = (project_dir / "test_django" / "settings.py").read_text()
         assert "django.contrib.admin" in settings_content
@@ -187,18 +189,21 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "main.py",
-            "app/__init__.py",
-            "app/core/config.py",
-            "app/core/security.py",
-            "app/db/base.py",
-            "app/db/session.py",
-            "app/api/v1/api.py",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "main.py",
+                "app/__init__.py",
+                "app/core/config.py",
+                "app/core/security.py",
+                "app/db/base.py",
+                "app/db/session.py",
+                "app/api/v1/api.py",
+            ],
+        )
+
         # Check FastAPI-specific content
         main_content = (project_dir / "main.py").read_text()
         assert "from fastapi import FastAPI" in main_content
@@ -214,19 +219,22 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "train.py",
-            "src/models/factory.py",
-            "src/models/resnet.py",
-            "src/models/transformer.py",
-            "src/datasets/factory.py",
-            "src/trainers/trainer.py",
-            "configs/config.yaml",
-            "notebooks/exploration.ipynb",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "train.py",
+                "src/models/factory.py",
+                "src/models/resnet.py",
+                "src/models/transformer.py",
+                "src/datasets/factory.py",
+                "src/trainers/trainer.py",
+                "configs/config.yaml",
+                "notebooks/exploration.ipynb",
+            ],
+        )
+
         # Check ML-specific content
         train_content = (project_dir / "train.py").read_text()
         assert "import torch" in train_content
@@ -242,16 +250,19 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "test_lib/__init__.py",
-            "test_lib/version.py",
-            "test_lib/core.py",
-            "test_lib/cli.py",
-            "test_lib/py.typed",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "test_lib/__init__.py",
+                "test_lib/version.py",
+                "test_lib/core.py",
+                "test_lib/cli.py",
+                "test_lib/py.typed",
+            ],
+        )
+
         # Check library-specific content
         init_content = (project_dir / "test_lib" / "__init__.py").read_text()
         assert "__version__" in init_content
@@ -267,22 +278,28 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
         # Check backend (FastAPI)
-        assert_project_structure(project_dir, [
-            "main.py",
-            "app/core/config.py",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "main.py",
+                "app/core/config.py",
+            ],
+        )
+
         # Check frontend
-        assert_project_structure(project_dir, [
-            "frontend/package.json",
-            "frontend/tsconfig.json",
-            "frontend/src/pages/_app.tsx",
-            "frontend/src/pages/index.tsx",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                "frontend/package.json",
+                "frontend/tsconfig.json",
+                "frontend/src/pages/_app.tsx",
+                "frontend/src/pages/index.tsx",
+            ],
+        )
+
         # Check frontend package.json
         package_json = (project_dir / "frontend" / "package.json").read_text()
         assert '"next"' in package_json
@@ -298,13 +315,16 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "tests/__init__.py",
-            "tests/conftest.py",
-            "tests/test_utils.py",
-        ])
+        assert_project_structure(
+            project_dir,
+            [
+                "tests/__init__.py",
+                "tests/conftest.py",
+                "tests/test_utils.py",
+            ],
+        )
 
     def test_project_with_docs(self, tmp_path):
         """Test creating a project with documentation."""
@@ -316,13 +336,16 @@ class TestProjectStructure:
             include_docs=True,
             include_ci=False,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            "docs/index.md",
-            "docs/api.md",
-            "docs/contributing.md",
-        ])
+        assert_project_structure(
+            project_dir,
+            [
+                "docs/index.md",
+                "docs/api.md",
+                "docs/contributing.md",
+            ],
+        )
 
     def test_project_with_ci(self, tmp_path):
         """Test creating a project with CI/CD configuration."""
@@ -335,14 +358,17 @@ class TestProjectStructure:
             include_docs=False,
             include_ci=True,
         )
-        
+
         project_dir = metadata["root"]
-        assert_project_structure(project_dir, [
-            ".github/workflows/tests.yml",
-            ".github/workflows/lint.yml",
-            ".pre-commit-config.yaml",
-        ])
-        
+        assert_project_structure(
+            project_dir,
+            [
+                ".github/workflows/tests.yml",
+                ".github/workflows/lint.yml",
+                ".pre-commit-config.yaml",
+            ],
+        )
+
         # Check CI content includes correct Python version
         tests_workflow = (project_dir / ".github" / "workflows" / "tests.yml").read_text()
         assert '"3.11"' in tests_workflow
@@ -357,27 +383,27 @@ class TestTemporaryProjects:
             project_type="simple",
             project_name="temp_test",
         )
-        
+
         try:
             assert project_path.exists()
             assert project_path.name == "temp_test"
             assert str(project_path).startswith(tempfile.gettempdir())
             assert metadata["type"] == "simple"
             assert metadata["name"] == "temp_test"
-            
+
             # Check files were created
             assert (project_path / "pyproject.toml").exists()
             assert (project_path / "main.py").exists()
         finally:
             cleanup_temporary_project(project_path)
-        
+
         # Verify cleanup
         assert not project_path.exists()
 
     def test_temporary_project_auto_name(self):
         """Test temporary project with auto-generated name."""
         project_path, metadata = create_temporary_project(project_type="django")
-        
+
         try:
             assert project_path.exists()
             assert project_path.name == "test_django_project"
@@ -399,7 +425,7 @@ class TestUtilityFunctions:
             dependencies=["requests>=2.28.0", "click>=8.0.0"],
             dev_dependencies=["pytest>=7.0.0", "mypy>=1.0.0"],
         )
-        
+
         assert pyproject_path.exists()
         content = pyproject_path.read_text()
         assert 'name = "mock-project"' in content
