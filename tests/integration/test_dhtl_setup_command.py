@@ -19,7 +19,10 @@ import subprocess
 import shutil
 from pathlib import Path
 from typing import Generator
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    import tomli as tomllib  # Python 3.10 and below
 import os
 
 from DHT.modules.uv_manager import UVManager

@@ -21,7 +21,10 @@ from unittest.mock import MagicMock, patch
 
 import docker
 import pytest
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    import tomli as tomllib  # Python 3.10 and below
 
 from DHT.modules.container_test_runner import ContainerTestRunner, TestFramework
 from DHT.modules.dhtl_commands import DHTLCommands
