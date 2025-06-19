@@ -30,7 +30,8 @@ except ImportError:
     import tomli as tomllib  # Python 3.10 and below
 from prefect import task
 
-from DHT.modules.uv_manager import UVError, UVManager
+from DHT.modules.uv_manager import UVManager
+from DHT.modules.uv_manager_exceptions import UVError
 
 
 class DHTLCommands:
