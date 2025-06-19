@@ -453,12 +453,17 @@ uv.lock
             # Create virtual environment
             venv_path = project_path / ".venv"
             if not venv_path.exists():
-                venv_path = self.uv_manager.create_venv(project_path)
+                venv_result = self.uv_manager.create_venv(project_path)
+                if isinstance(venv_result, dict) and venv_result.get("success"):
+                    venv_path = project_path / ".venv"
+                elif isinstance(venv_result, Path):
+                    venv_path = venv_result
                 self.logger.info(f"Created virtual environment at {venv_path}")
             
             # Generate lock file
-            lock_path = self.uv_manager.generate_lock_file(project_path)
-            self.logger.info(f"Generated lock file at {lock_path}")
+            lock_result = self.uv_manager.generate_lock_file(project_path)
+            if lock_result:
+                self.logger.info(f"Generated lock file")
             
             # Build sync command
             sync_args = ["sync"]

@@ -184,24 +184,17 @@ class DHTLauncher:
         # Try Python command dispatcher
         try:
             from .modules.command_dispatcher import CommandDispatcher
-            dispatcher = CommandDispatcher()
-            
-            # Let dispatcher handle all commands including help/version
-            return dispatcher.dispatch(command, args)
-            
-        except ImportError as e:
-            # Fallback if command dispatcher not available
-            self.logger.warning(f"Command dispatcher not available: {e}")
-            
-            # Handle basic commands locally
-            if command in ["help", "--help", "-h"]:
-                self.display_help()
-                return 0
-            
-            if command in ["version", "--version", "-v"]:
-                print(f"Development Helper Toolkit Launcher (DHTL) v{self.version}")
-                return 0
-            
-            print(f"{Colors.RED}❌ Error: Command system not available{Colors.ENDC}")
-            return 1
+        except ImportError:
+            # Try absolute import when running as script
+            try:
+                from modules.command_dispatcher import CommandDispatcher
+            except ImportError as e:
+                # Fallback if command dispatcher not available
+                self.logger.warning(f"Command dispatcher not available: {e}")
+                print(f"❌ Error: Command system not available")
+                return 1
+        
+        dispatcher = CommandDispatcher()
+        # Let dispatcher handle all commands including help/version
+        return dispatcher.dispatch(command, args)
     

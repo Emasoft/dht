@@ -32,6 +32,8 @@ def find_python_launcher():
     dev_launcher = dht_root / "src" / "DHT" / "dhtl.py"
     if dev_launcher.exists():
         os.environ["DHTL_DEV_MODE"] = "1"
+        # Add src to Python path for imports
+        sys.path.insert(0, str(dht_root / "src"))
         return str(dev_launcher)
     
     # Check legacy mode - direct structure

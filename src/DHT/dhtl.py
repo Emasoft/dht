@@ -22,7 +22,10 @@ except ImportError:
     # Handle script execution
     import sys
     from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent))
+    # Add parent directory to path for imports
+    parent_dir = Path(__file__).parent
+    if str(parent_dir) not in sys.path:
+        sys.path.insert(0, str(parent_dir))
     from launcher import DHTLauncher
 
 # Version information
