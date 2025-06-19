@@ -7,7 +7,7 @@ name = "dht-toolkit"
 version = "1.0.0"
 description = "Development Helper Toolkit - A universal development automation tool"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "DHT Contributors", email = "dht@example.com"},

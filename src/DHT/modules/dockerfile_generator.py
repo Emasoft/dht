@@ -20,7 +20,10 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    import tomli as tomllib  # Python 3.10 and below
 from prefect import task
 
 

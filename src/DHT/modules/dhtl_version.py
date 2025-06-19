@@ -21,7 +21,10 @@ import shutil
 import re
 from pathlib import Path
 from typing import Optional, List, Dict, Any
-import tomllib
+try:
+    import tomllib  # Python 3.11+
+except ImportError:
+    import tomli as tomllib  # Python 3.10 and below
 import json
 
 from .dhtl_error_handling import log_error, log_warning, log_info, log_success
