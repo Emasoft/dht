@@ -21,7 +21,7 @@ from prefect.tasks import exponential_backoff
 
 from DHT.modules.guardian_prefect import run_with_guardian, ResourceLimits
 from DHT.modules.uv_task_models import (
-    INSTALL_TIMEOUT, RETRY_DELAYS, UV_MEMORY_LIMITS,
+    INSTALL_TIMEOUT, UV_MEMORY_LIMITS,
     UVTaskError
 )
 from DHT.modules.uv_task_utils import get_logger, find_uv_executable

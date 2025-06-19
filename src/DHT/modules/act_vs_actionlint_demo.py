@@ -13,7 +13,6 @@ Demo showing the difference between actionlint and act.
 from pathlib import Path
 import subprocess
 import tempfile
-import os
 
 from rich.console import Console
 from rich.panel import Panel

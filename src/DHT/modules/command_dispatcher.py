@@ -14,10 +14,8 @@ This module replaces the shell-based command orchestration system.
 It provides a registry for all DHT commands and dispatches them appropriately.
 """
 
-import sys
 import logging
-from typing import Dict, Callable, List, Optional, Any
-from pathlib import Path
+from typing import Dict, List, Any
 
 # Import the command registry
 from .command_registry import CommandRegistry
@@ -69,7 +67,7 @@ class CommandDispatcher:
                 
                 if hasattr(wrapped_fn, '__qualname__') and 'DHTLCommands' in wrapped_fn.__qualname__:
                     # Parse arguments for DHTLCommands methods
-                    logger.debug(f"Handling as DHTLCommands Prefect task")
+                    logger.debug("Handling as DHTLCommands Prefect task")
                     parsed_args = self._parse_command_args(command, args)
                     result = handler(**parsed_args)
                     

@@ -16,7 +16,6 @@ Python frameworks and project types.
 from typing import Dict
 
 from DHT.modules.project_analysis_models import ProjectAnalysis
-from DHT.modules.project_type_enums import ProjectType
 
 
 def generate_django_configs(analysis: ProjectAnalysis) -> Dict[str, str]:

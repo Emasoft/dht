@@ -14,8 +14,7 @@ This module contains helper functions and constants used by the environment conf
 from __future__ import annotations
 
 import json
-from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
 
 from prefect.artifacts import create_markdown_artifact

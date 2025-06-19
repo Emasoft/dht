@@ -15,15 +15,13 @@ Provides GitHub repository operations (clone, fork).
 """
 
 import os
-import sys
 import subprocess
 import shutil
 import re
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 
 from .dhtl_error_handling import log_error, log_warning, log_info, log_success
-from .common_utils import find_project_root
 
 
 def clone_command(*args, **kwargs) -> int:

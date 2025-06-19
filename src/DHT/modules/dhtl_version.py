@@ -15,12 +15,11 @@ Provides version tagging and bumping functionality for projects.
 """
 
 import os
-import sys
 import subprocess
 import shutil
 import re
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional
 try:
     import tomllib  # Python 3.11+
 except ImportError:

@@ -17,7 +17,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Any, List
 
-from prefect import get_run_logger
 from prefect.artifacts import create_markdown_artifact, create_table_artifact
 
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot

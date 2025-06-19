@@ -17,9 +17,8 @@ and setup recommendations for various Python frameworks and project types.
 # - Integrated with project analyzer and heuristics
 # - Refactored to reduce file size: extracted enums, models, framework configs, and config generators
 
-import json
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any
 import logging
 from datetime import datetime
 
@@ -29,7 +28,6 @@ from DHT.modules.project_analyzer import ProjectAnalyzer
 from DHT.modules.project_heuristics import ProjectHeuristics
 from DHT.modules.project_type_enums import ProjectType, ProjectCategory
 from DHT.modules.project_analysis_models import ProjectAnalysis, ValidationResult
-from DHT.modules.framework_configs import FrameworkConfig
 from DHT.modules.config_generators import (
     generate_django_configs,
     generate_fastapi_configs,
@@ -40,14 +38,12 @@ from DHT.modules.config_generators import (
 )
 from DHT.modules.setup_recommendations import get_setup_recommendations
 from DHT.modules.project_type_detection_helpers import (
-    get_all_dependencies,
     get_primary_dependencies,
     detect_ml_frameworks,
     detect_cli_frameworks,
     has_notebooks,
     is_publishable_library,
     extract_markers,
-    check_for_react_vue,
     calculate_confidence_boost,
     detect_project_type,
     determine_category,

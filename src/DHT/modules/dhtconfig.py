@@ -24,7 +24,6 @@ regeneration across different platforms.
 from __future__ import annotations
 
 import platform
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -46,7 +45,7 @@ except ImportError:
 
 # Import extracted modules
 from DHT.modules.dhtconfig_models import (
-    DHTConfigConstants, SchemaLoader, HAS_YAML, HAS_JSONSCHEMA
+    DHTConfigConstants, SchemaLoader
 )
 from DHT.modules.dhtconfig_dependency_extractor import DependencyExtractor
 from DHT.modules.dhtconfig_tool_extractor import ToolRequirementsExtractor

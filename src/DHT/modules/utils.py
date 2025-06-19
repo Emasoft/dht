@@ -15,7 +15,6 @@ Contains utility functions for argument parsing and code formatting.
 """
 
 import os
-import sys
 import shutil
 from pathlib import Path
 from typing import List, Tuple, Dict, Any
@@ -216,4 +215,3 @@ def format_command() -> int:
 
 # Note: file_exists_in_tree is already defined in dhtl_utils.py
 # Importing it here for completeness
-from .dhtl_utils import file_exists_in_tree

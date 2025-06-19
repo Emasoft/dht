@@ -8,12 +8,10 @@ compatible with the existing dhtl guardian command structure.
 
 import click
 import sys
-import os
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 import yaml
 import json
-from datetime import datetime
 
 from prefect import serve
 from prefect.deployments import run_deployment
@@ -309,7 +307,7 @@ def parse_args():
 
 def main():
     """Main entry point for shell script compatibility."""
-    from .guardian_prefect import run_with_guardian, ResourceLimits, GuardianResult
+    from .guardian_prefect import run_with_guardian, ResourceLimits
     
     # If running as Click app
     if len(sys.argv) > 1 and sys.argv[1] in ['start', 'run', 'example', 'show-results']:

@@ -18,7 +18,7 @@ import sys
 import subprocess
 import logging as std_logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 from prefect import task, get_run_logger
 

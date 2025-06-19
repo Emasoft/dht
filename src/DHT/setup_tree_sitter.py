@@ -13,7 +13,6 @@ Usage:
 The script is idempotent and can be run multiple times without issues.
 """
 
-import os
 import sys
 import subprocess
 from pathlib import Path

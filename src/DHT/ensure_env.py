@@ -13,16 +13,12 @@ DHT Ensure Env Module.
 Converted from shell to Python for the pure Python DHT implementation.
 """
 
-import os
-import sys
-from pathlib import Path
-from typing import Optional, List, Dict, Any
 
-from .dhtl_error_handling import log_error, log_warning, log_info, log_success
+from .dhtl_error_handling import log_warning
 
 
 # TODO: Implement actual functionality from shell script
 def placeholder_function():
     """Placeholder function."""
-    log_warning(f"ensure_env module not yet fully implemented")
+    log_warning("ensure_env module not yet fully implemented")
     return True

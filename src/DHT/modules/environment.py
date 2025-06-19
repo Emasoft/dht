@@ -15,13 +15,9 @@ Provides environment detection and setup functionality.
 """
 
 import os
-import sys
-import platform
-from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Dict
 
 from .common_utils import find_project_root, detect_platform
-from .dhtl_error_handling import log_error, log_warning, log_info, log_success
 
 
 def setup_environment() -> Dict[str, str]:

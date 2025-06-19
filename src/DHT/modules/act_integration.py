@@ -25,8 +25,7 @@ from rich.panel import Panel
 
 # Import extracted modules
 from DHT.modules.act_integration_models import (
-    ActConfig, WorkflowInfo, LintResult, 
-    ActCheckResult, ContainerSetupResult
+    ActConfig, WorkflowInfo, ActCheckResult
 )
 from DHT.modules.act_workflow_manager import ActWorkflowManager
 from DHT.modules.act_linter import ActLinter

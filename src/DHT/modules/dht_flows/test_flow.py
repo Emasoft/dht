@@ -15,13 +15,12 @@ with a modern Prefect flow that provides better error handling,
 parallel test discovery, and resource management.
 """
 
-import os
 import re
 import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any, List, Tuple
+from typing import Optional, Dict, Any, List
 
 from prefect import flow, task, get_run_logger
 
@@ -29,8 +28,7 @@ from ..guardian_prefect import GuardianConfig, run_with_guardian
 from .restore_flow import find_project_root, detect_virtual_environment
 from .utils import (
     get_venv_python_path,
-    get_default_resource_limits,
-    validate_project_path
+    get_default_resource_limits
 )
 
 
@@ -505,7 +503,7 @@ def test_command_flow(
 
 
 # Aliases for backward compatibility
-run_tests = test_command_flow
+# run_tests = test_command_flow  # Not needed - run_tests is already defined above
 detect_test_framework = prepare_test_command  
 run_pytest = run_tests
 detect_test_command = prepare_test_command

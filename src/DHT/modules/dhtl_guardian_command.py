@@ -14,21 +14,16 @@ DHT Guardian Command Module.
 Provides process management with resource limits using Prefect.
 """
 
-import os
 import sys
-import subprocess
-import json
 import yaml
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import List
 
 from .dhtl_error_handling import (
-    log_error, log_warning, log_info, log_success, log_debug,
-    check_command, check_file, check_directory
+    log_error, log_warning, log_info, log_success
 )
-from .common_utils import find_project_root
 from .guardian_prefect import (
-    GuardianConfig, ResourceLimits, 
+    ResourceLimits, 
     guardian_sequential_flow, guardian_batch_flow,
     save_results, load_command_file
 )
@@ -128,7 +123,7 @@ def guardian_run(args: List[str]) -> int:
                 return 1
         i += 1
     
-    log_info(f"Running command with guardian protection:")
+    log_info("Running command with guardian protection:")
     log_info(f"  Command: {command}")
     log_info(f"  Memory: {memory_mb}MB")
     log_info(f"  Timeout: {timeout}s")
@@ -235,7 +230,7 @@ def guardian_batch(args: List[str]) -> int:
     successful = sum(1 for r in results if r.get("returncode") == 0)
     failed = len(results) - successful
     
-    log_info(f"\nExecution Summary:")
+    log_info("\nExecution Summary:")
     log_info(f"  Total: {len(results)}")
     log_success(f"  Successful: {successful}")
     if failed > 0:
@@ -313,7 +308,7 @@ def guardian_status(args: List[str]) -> int:
         
         # Memory
         memory = psutil.virtual_memory()
-        log_info(f"\n📊 Memory:")
+        log_info("\n📊 Memory:")
         log_info(f"  Total: {memory.total / (1024**3):.1f}GB")
         log_info(f"  Available: {memory.available / (1024**3):.1f}GB ({100 - memory.percent:.1f}%)")
         log_info(f"  Used: {memory.used / (1024**3):.1f}GB ({memory.percent:.1f}%)")
@@ -321,13 +316,13 @@ def guardian_status(args: List[str]) -> int:
         # CPU
         cpu_count = psutil.cpu_count()
         cpu_percent = psutil.cpu_percent(interval=1)
-        log_info(f"\n💻 CPU:")
+        log_info("\n💻 CPU:")
         log_info(f"  Cores: {cpu_count}")
         log_info(f"  Usage: {cpu_percent:.1f}%")
         
         # Disk
         disk = psutil.disk_usage("/")
-        log_info(f"\n💾 Disk:")
+        log_info("\n💾 Disk:")
         log_info(f"  Total: {disk.total / (1024**3):.1f}GB")
         log_info(f"  Free: {disk.free / (1024**3):.1f}GB ({100 - disk.percent:.1f}%)")
         
@@ -342,7 +337,7 @@ def guardian_status(args: List[str]) -> int:
             with open(results_path) as f:
                 data = yaml.safe_load(f)
             
-            log_info(f"\n📄 Last Execution:")
+            log_info("\n📄 Last Execution:")
             log_info(f"  Time: {data.get('execution_time', 'Unknown')}")
             log_info(f"  Commands: {data.get('total_commands', 0)}")
             log_info(f"  Successful: {data.get('successful', 0)}")

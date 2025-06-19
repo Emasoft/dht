@@ -18,9 +18,8 @@ This module provides heuristics for:
 # - Integrated with project analyzer output
 # - Added support for data science and CLI projects
 
-import re
 from pathlib import Path
-from typing import Dict, List, Any, Set, Optional, Tuple
+from typing import Dict, List, Any, Set
 import logging
 
 from prefect import task, flow

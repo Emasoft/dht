@@ -14,15 +14,13 @@ Provides advanced process guardian functionality for resource management.
 """
 
 import os
-import sys
 import psutil
 import subprocess
 import threading
 import time
-from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 
-from .dhtl_error_handling import log_error, log_warning, log_info, log_success
+from .dhtl_error_handling import log_error, log_warning, log_info
 
 
 class AdvancedProcessGuardian:

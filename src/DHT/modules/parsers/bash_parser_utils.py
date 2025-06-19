@@ -13,7 +13,6 @@ This module contains utility functions used by both tree-sitter and regex parser
 
 from __future__ import annotations
 
-import os
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional

@@ -16,7 +16,7 @@ to avoid code duplication and improve maintainability.
 import shlex
 import sys
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import List, Dict, Any
 
 
 def get_venv_executable_path(venv_path: Path, executable: str) -> Path:

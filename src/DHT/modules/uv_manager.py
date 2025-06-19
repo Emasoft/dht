@@ -19,7 +19,7 @@ from typing import Dict, List, Any, Optional
 
 # Import exceptions
 from DHT.modules.uv_manager_exceptions import (
-    UVError, UVNotFoundError, PythonVersionError, DependencyError
+    UVNotFoundError
 )
 
 # Import utilities

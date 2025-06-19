@@ -13,7 +13,7 @@ for analyzing projects and extracting information.
 
 import json
 from pathlib import Path
-from typing import Dict, List, Any, Set, Tuple
+from typing import Any
 
 from DHT.modules.project_type_enums import ProjectType, ProjectCategory
 

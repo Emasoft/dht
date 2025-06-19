@@ -17,9 +17,8 @@ from __future__ import annotations
 import subprocess
 import shutil
 import os
-import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from DHT.modules.act_integration_models import ContainerSetupResult, ActConfig
 

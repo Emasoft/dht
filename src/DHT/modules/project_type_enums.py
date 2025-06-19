@@ -13,7 +13,7 @@ used throughout the DHT project type detection system.
 # - Added helper methods for category classification
 #
 
-from enum import Enum, auto
+from enum import Enum
 
 
 class ProjectType(Enum):

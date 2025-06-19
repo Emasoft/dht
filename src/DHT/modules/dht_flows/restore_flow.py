@@ -30,8 +30,7 @@ from ..guardian_prefect import GuardianConfig, run_with_guardian
 from .utils import (
     get_venv_python_path, 
     get_venv_pip_path, 
-    get_default_resource_limits,
-    validate_project_path
+    get_default_resource_limits
 )
 
 

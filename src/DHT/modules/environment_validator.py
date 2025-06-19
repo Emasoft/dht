@@ -22,8 +22,7 @@ from packaging import version
 
 from prefect import task, get_run_logger
 
-from DHT.modules.platform_normalizer import get_tool_command, normalize_platform_name
-from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
+from DHT.modules.platform_normalizer import get_tool_command
 
 
 class EnvironmentValidator:

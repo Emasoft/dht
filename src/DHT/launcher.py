@@ -14,15 +14,12 @@ Main launcher class that coordinates between shell modules and Python.
 """
 
 import os
-import sys
 import platform
-import subprocess
 import time
 import shutil
-import tempfile
 import logging
 from pathlib import Path
-from typing import Optional, List, Dict
+from typing import Optional, List
 
 try:
     from .colors import Colors
@@ -191,7 +188,7 @@ class DHTLauncher:
             except ImportError as e:
                 # Fallback if command dispatcher not available
                 self.logger.warning(f"Command dispatcher not available: {e}")
-                print(f"❌ Error: Command system not available")
+                print("❌ Error: Command system not available")
                 return 1
         
         dispatcher = CommandDispatcher()

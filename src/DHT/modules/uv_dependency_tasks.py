@@ -21,7 +21,7 @@ from prefect import task
 from DHT.modules.guardian_prefect import run_with_guardian, ResourceLimits
 from DHT.modules.uv_task_models import (
     DEFAULT_TIMEOUT, INSTALL_TIMEOUT, RETRY_DELAYS, UV_MEMORY_LIMITS,
-    UVTaskError, DependencyResult
+    UVTaskError
 )
 from DHT.modules.uv_task_utils import get_logger, find_uv_executable
 

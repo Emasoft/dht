@@ -30,40 +30,23 @@ Key Features:
 from __future__ import annotations
 
 import hashlib
-import json
-import os
 import platform
-import shutil
-import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Set, Union, Tuple
+from typing import Dict, Any, Optional
 import tempfile
 
 from prefect import task, flow, get_run_logger
-from prefect.artifacts import create_markdown_artifact, create_table_artifact
 
-from DHT.diagnostic_reporter_v2 import build_system_report
-from DHT.modules.environment_configurator import EnvironmentConfigurator, EnvironmentConfig
-from DHT.modules.uv_prefect_tasks import (
-    check_uv_available,
-    list_python_versions,
-    generate_lock_file,
-    ensure_python_version
-)
-from DHT.modules.guardian_prefect import run_with_guardian, ResourceLimits
+from DHT.modules.environment_configurator import EnvironmentConfigurator
 
 # Import refactored modules
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot, ReproductionResult
 from DHT.modules.platform_normalizer import (
-    get_platform_info,
-    normalize_platform_name,
-    get_tool_command,
-    verify_platform_compatibility,
-    normalize_environment_variables
+    get_platform_info
 )
-from DHT.modules.lock_file_manager import LockFileManager, LockFileInfo
+from DHT.modules.lock_file_manager import LockFileManager
 from DHT.modules.environment_validator import EnvironmentValidator
 from DHT.modules.tool_version_manager import ToolVersionManager
 from DHT.modules.environment_snapshot_io import EnvironmentSnapshotIO

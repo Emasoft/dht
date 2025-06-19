@@ -15,16 +15,13 @@ Contains utility functions for DHT including file searching and linting.
 """
 
 import os
-import sys
-import subprocess
 import shutil
 from pathlib import Path
-from typing import Optional, List, Tuple
+from typing import List
 
 # Import from our error handling module
 from .dhtl_error_handling import (
-    log_error, log_warning, log_info, log_success, log_debug,
-    check_command, check_file, check_directory
+    log_error, log_warning, log_info, log_success
 )
 
 

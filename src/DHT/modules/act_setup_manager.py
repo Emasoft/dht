@@ -17,10 +17,9 @@ from __future__ import annotations
 import subprocess
 import shutil
 import json
-import os
 import logging
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 from DHT.modules.act_integration_models import ActConfig, ActCheckResult
 

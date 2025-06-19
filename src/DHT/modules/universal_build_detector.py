@@ -13,10 +13,9 @@ Detects project type and returns appropriate build commands.
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from dataclasses import dataclass
 import json
-import yaml
 
 
 @dataclass

@@ -13,12 +13,8 @@ DHT User Interface Module.
 Converted from shell to Python for the pure Python DHT implementation.
 """
 
-import os
-import sys
-from pathlib import Path
-from typing import Optional, List, Dict, Any
 
-from .dhtl_error_handling import log_error, log_warning, log_info, log_success
+from .dhtl_error_handling import log_warning
 
 
 # TODO: Implement actual functionality from shell script

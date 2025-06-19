@@ -14,17 +14,14 @@ DHT Workflows Commands Module.
 Provides GitHub Actions workflow management functionality.
 """
 
-import os
-import sys
 import subprocess
 import shutil
 import yaml
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import List
 
 from .dhtl_error_handling import (
-    log_error, log_warning, log_info, log_success, log_debug,
-    check_command, check_file, check_directory
+    log_error, log_warning, log_info, log_success
 )
 from .common_utils import find_project_root
 

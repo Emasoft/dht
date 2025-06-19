@@ -17,7 +17,6 @@ from typing import Dict, Optional, List
 import subprocess
 import os
 import json
-import yaml
 
 
 class ContainerBuildHandler:
@@ -257,7 +256,7 @@ if __name__ == "__main__":
     print("=" * 60)
     
     if info["can_build"]:
-        print(f"✅ Container build possible!")
+        print("✅ Container build possible!")
         print(f"Builder: {info['builder']}")
         print(f"Rootless: {info['rootless']}")
         print(f"Commands: {info['commands']}")

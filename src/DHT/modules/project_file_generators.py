@@ -14,7 +14,6 @@ This module generates project files like gitignore, Dockerfile, and CI workflows
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List, Any, Optional
 import yaml
 
 from DHT.modules.environment_config_models import EnvironmentConfig

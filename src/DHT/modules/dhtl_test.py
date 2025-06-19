@@ -14,19 +14,15 @@ DHT Test Module.
 Provides commands to test DHT itself and verify its installation.
 """
 
-import os
 import sys
 import subprocess
 import shutil
-from pathlib import Path
-from typing import Optional, List, Dict, Any
 
 from .dhtl_error_handling import (
-    log_error, log_warning, log_info, log_success, log_debug,
-    check_command, check_file, check_directory
+    log_error, log_warning, log_info, log_success
 )
 from .common_utils import find_project_root, get_venv_executable
-from .guardian_prefect import GuardianConfig, ResourceLimits, guardian_sequential_flow
+from .guardian_prefect import ResourceLimits, guardian_sequential_flow
 
 
 def test_dht_command(*args, **kwargs) -> int:
@@ -168,16 +164,16 @@ def verify_dht_command(*args, **kwargs) -> int:
     log_info("\nChecking launcher script...")
     launcher_path = dht_root / "dhtl.py"
     if launcher_path.exists():
-        log_success(f"✓ dhtl.py")
+        log_success("✓ dhtl.py")
     else:
-        log_error(f"✗ dhtl.py - Missing")
+        log_error("✗ dhtl.py - Missing")
         errors += 1
     
     # Check virtual environment
     log_info("\nChecking virtual environment...")
     venv_path = dht_root / ".venv"
     if venv_path.exists():
-        log_success(f"✓ Virtual environment exists")
+        log_success("✓ Virtual environment exists")
         
         # Check Python version
         python_exe = get_venv_executable("python")

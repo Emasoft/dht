@@ -17,15 +17,13 @@ Converted from shell to Python for the pure Python DHT implementation.
 
 import os
 import sys
-import logging
 import subprocess
 import tempfile
 import atexit
 import signal
-import time
 import traceback
 from pathlib import Path
-from typing import Optional, List, Dict, Any, Callable
+from typing import Optional, List, Any
 from datetime import datetime
 from enum import IntEnum
 

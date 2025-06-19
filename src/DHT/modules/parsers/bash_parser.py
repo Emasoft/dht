@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from .base_parser import BaseParser
-from .bash_parser_tree_sitter import TreeSitterBashParser, TREE_SITTER_BASH_AVAILABLE
+from .bash_parser_tree_sitter import TreeSitterBashParser
 from .bash_parser_regex import RegexBashParser
 from .bash_parser_utils import BashParserUtils
 

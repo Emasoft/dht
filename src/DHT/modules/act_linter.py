@@ -18,9 +18,8 @@ import subprocess
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 
-from DHT.modules.act_integration_models import LintResult
 
 
 class ActLinter:

@@ -19,11 +19,9 @@ import sys
 import platform
 import shutil
 import subprocess
-from pathlib import Path
-from typing import Optional, List, Dict, Any
 
 from .dhtl_error_handling import log_error, log_warning, log_info, log_success
-from .common_utils import find_project_root, find_virtual_env, detect_platform
+from .common_utils import find_project_root, find_virtual_env
 
 
 def diagnostics_command(*args, **kwargs) -> int:
@@ -130,7 +128,6 @@ def diagnostics_command(*args, **kwargs) -> int:
     
     # Check disk space
     try:
-        import shutil
         stat = shutil.disk_usage(project_root)
         free_gb = stat.free / (1024**3)
         if free_gb < 1:

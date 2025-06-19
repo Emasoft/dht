@@ -43,9 +43,8 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from itertools import count
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Set
+from typing import Any, Dict, List, Optional, Tuple
 
 # Import our DHT modules
 from DHT.modules import system_taxonomy

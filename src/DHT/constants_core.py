@@ -15,8 +15,7 @@ Process Guardian system, including:
 import os
 import platform
 import psutil
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 
 # Platform detection
 SYSTEM = platform.system().lower()
