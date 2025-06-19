@@ -225,3 +225,8 @@ pyyaml = "yaml"
 tree-sitter-languages = "tree_sitter_languages"
 tree-sitter-bash = "tree_sitter_bash"
 bump-my-version = "bumpversion"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.2.1",
+]
