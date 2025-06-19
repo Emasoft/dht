@@ -12,18 +12,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Never use pip. Use `uv pip <commands>` instead. Consider pip deprecated in favor of uv pip.
 - be extremely meticulous and accurate. always check twice any line of code for errors when you edit it.
 - never output code that is abridged or with parts replaced by placeholder comments like `# ... rest of the code ...`, `# ... rest of the function as before ...`, `# ... rest of the code remains the same ...`, or similar. You are not chatting. The code you output is going to be saved and linted, so omitting parts of it will cause errors and broken files.
-- Be conservative. only change the code that it is strictly necessary to change to implement a feature or fix an issue. Do not change anything else. You must report the user if there is a way to improve certain parts of the code, but do not attempt to do it unless the user explicitly asks you to. 
+- Be conservative. only change the code that it is strictly necessary to change to implement a feature or fix an issue. Do not change anything else. You must report the user if there is a way to improve certain parts of the code, but do not attempt to do it unless the user explicitly asks you to.
 - when fixing the code, if you find that there are multiple possible solutions, do not start immediately but first present the user all the options and ask him to choose the one to try. For trivial bugs you don't need to do this, of course.
 - never remove unused code or variables unless they are wrong, since the program is a WIP and those unused parts are likely going to be developed and used in the future. The only exception is if the user explicitly tells you to do it.
 - don't worry about functions imported from external modules, since those dependencies cannot be always included in the chat for your context limit. Do not remove them or implement them just because you can''t find the module or source file they are imported from. You just assume that the imported modules and imported functions work as expected. If you need to change them, ask the user to include them in the chat.
-- spend a long time thinking deeply to understand completely the code flow and inner working of the program before writing any code or making any change. 
+- Always update the project version after changes. Use semantic version format for updating the project version: `{major - breaking changes or features}.{minor - non breaking changes or features}.{patch - small changes/fixes}`.
+- spend a long time thinking deeply to understand completely the code flow and inner working of the program before writing any code or making any change.
 - if the user asks you to implement a feature or to make a change, always check the source code to ensure that the feature was not already implemented before or it is implemented in another form. Never start a task without checking if that task was already implemented or done somewhere in the codebase.
 - if you must write a function, always check if there are already similar functions that can be extended or parametrized to do what new function need to do. Avoid writing duplicated or similar code by reusing the same flexible helper functions where is possible.
 - keep the source files as small as possible. If you need to create new functions or classes, prefer creating them in new modules in new files and import them instead of putting them in the same source file that will use them. Small reusable modules are always preferable to big functions and spaghetti code.
 - Always check for leaks of secrets in the git repo with `gitleaks git --verbose` and `gitleaks dir --verbose`.
 - commit should be atomic, specific, and focus on WHAT changed in subject line with WHY explained in body when needed.
 - use semantic commit messages following the format in the Git Commit Message Format memory
-- Write only shippable, production ready code. If you wouldn’t ship it, don’t write it. 
+- Write only shippable, production ready code. If you wouldn’t ship it, don’t write it.
 - Don't drastically change existing patterns without explicit instruction
 - before you execute a terminal command, trigger the command line syntax help or use `cheat <command>` to learn the correct syntax and avoid failed commands.
 - if you attempt to run a command and the command is not found, first check the path, and then install it using `brew install`.
@@ -34,8 +35,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - always use type annotations
 - always keep the size of source code files below 10Kb. If writing new code in a source file will make the file size bigger than 10Kb, create a new source file , write the code there, and import it as a module. Refactor big files in multiple smaller modules.
 - always preserve comments and add them when writing new code.
-- always write the docstrings of all functions and improve the existing ones. Use Google-style docstrings with Args/Returns sections, but do not use markdown. 
-- never use markdown in comments. 
+- always write the docstrings of all functions and improve the existing ones. Use Google-style docstrings with Args/Returns sections, but do not use markdown.
+- never use markdown in comments.
 - when using the Bash tool, always set the timeout parameter to 1800000 (30 minutes).
 - always tabulate the tests result in a nice table.
 - do not use mockup tests or mocked behaviours unless it is absolutely impossible to do otherwise. If you need to use a service, local or remote, do not mock it, just ask the user to activate it for the duration of the tests. Results of mocked tests are completely useless. Only real tests can discover issues with the codebase.
@@ -50,12 +51,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Do one comprehensive commit at the end of each operation if the code passes the tests
 - If you make errors while implementing the changes, examine you errors, ultrathink about them and write the lessons learned from them into CLAUDE.md for future references, so you won't repeat the same errors in the future.
 - Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
+- Install `https://github.com/fpgmaas/deptry/` and run it at every commit.
+- Add deptry to the project pre-commit configuration following these instructions: `https://github.com/astral-sh/uv-pre-commit`.
+- Add deptry to both the local and the remote github workflows actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: `https://docs.astral.sh/uv/guides/integration/github/`.
+- Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
+- You can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: `https://github.com/nektos/act`.
+- Since `act` requires Docker, follow these instructions to setup docker containers with uv: https://docs.astral.sh/uv/guides/integration/docker/
 - do not create prototypes or sketched/abridged versions of the features you need to develop. That is only a waste of time. Instead break down the new features in its elemental components and functions, subdivide it in small autonomous modules with a specific function, and develop one module at time. When each module will be completed (passing the test for the module), then you will be able to implement the original feature easily just combining the modules. The modules can be helper functions, data structures, external librries, anything that is focused and reusable. Prefer functions at classes, but you can create small classes as specialized handlers for certain data and tasks, then also classes can be used as pieces for building the final feature.
 - When commit, never mention Claude as the author of the commits or as a Co-author.
 - when refactoring, enter thinking mode first, examine the program flow, be attentive to what you're changing, and how it subsequently affects the rest of the codebase as a matter of its blast radius, the codebase landscape, and possible regressions. Also bear in mind the existing type structures and interfaces that compose the makeup of the specific code you're changing.
 - always use `Emasoft` as the user name, author and committer name for the git repo.
 - always use `713559+Emasoft@users.noreply.github.com` as the user email and git committer email for the git repo.
-- always add the following shebang at the beginning of each python file: 
+- always add the following shebang at the beginning of each python file:
 
 ```python
 #!/usr/bin/env python3
@@ -66,17 +73,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```python
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # <your changelog here…>
-# 
+#
 ```
 
 ### Testing Rules
 - Always use pytest and pytest-cov
 - Always run pytest with uv (`uv run pytest <commands..>`
 - Always convert the xtests in normal tests. Negative tests are confusing. Just make the test explicitly check for the negative outcome instead, and if the outcome is negative, the test is passed.
-- Always show a nicely color formatted table with the list of all tests (the functions, not the file) and the outcome (fail, success, skip, error). 
+- Always show a nicely color formatted table with the list of all tests (the functions, not the file) and the outcome (fail, success, skip, error).
 - The table must use unicode border blocks to delimit the cells, thicker for the header row.
 - The table should report not only the name of the function, but the description of the test function in the docstrings.
-- All tests functions should include a meaningful one-line string that synthetically describes the test and its aim. 
+- All tests functions should include a meaningful one-line string that synthetically describes the test and its aim.
 - If a test function lacks this description, add it to the source files of the tests.
 - All test functions must have docstrings with a short description that will be used by the table to describe the test.
 - Mark the slow tests (those usually skipped when running tests on GitHub, or that need some extra big dependencies installed) with the emoji of a snail 🐌. Be sure to account for the extra character in the table formatting.
@@ -884,13 +891,13 @@ The following Python version request formats are supported:
 	•	<implementation><version> (e.g., cpython3.12 or cp312)
 	•	<implementation><version-specifier> (e.g., cpython>=3.12,<3.13)
 	•	<implementation>-<version>-<os>-<arch>-<libc> (e.g., cpython-3.12.3-macos-aarch64-none)
-	
+
 Additionally, a specific system Python interpreter can be requested with:
 
 	•	<executable-path> (e.g., /opt/homebrew/bin/python3)
 	•	<executable-name> (e.g., mypython3)
 	•	<install-dir> (e.g., /some/environment/)
-	
+
 By default, uv will automatically download Python versions if they cannot be found on the system. This behavior can be disabled with the python-downloads option.
 
 
@@ -1059,8 +1066,8 @@ Installed 3 versions in 3.42s
  + cpython-3.11.9-macos-aarch64-none
 
  + cpython-3.12.4-macos-aarch64-none
- 
- 
+
+
 ## Download Python versions as needed:
 
 
@@ -1191,7 +1198,7 @@ class EnvironmentConfigurator:
         self.env_analyzer = EnvironmentAnalyzer()
         self.env_installer = EnvironmentInstaller()
         # ... other helper instances
-    
+
     def _detect_tools_from_project(self, project_path: Path, project_info: Dict[str, Any]) -> List[str]:
         """Delegate to environment analyzer."""
         return self.env_analyzer._detect_tools_from_project(project_path, project_info)
@@ -1398,14 +1405,14 @@ tools:
       version: "2.43.0"
       config_user_name: "John Doe"
       config_user_email: "john@example.com"
-  
+
   build_tools:
     cmake:
       is_installed: true
       version: "3.28.1"
       system_info_c_compiler: "/usr/bin/clang"
       system_info_cxx_compiler: "/usr/bin/clang++"
-  
+
   package_managers:
     language:
       python:
@@ -1491,6 +1498,3 @@ To add new tools or information sources:
 3. **Extensible**: Easy to add new tools
 4. **Comprehensive**: Captures both tools and their configurations
 5. **Machine-Readable**: Clean YAML/JSON output for automation
-
-
-
