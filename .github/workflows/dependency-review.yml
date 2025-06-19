@@ -1,0 +1,118 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'requirements*.txt'
+      - '.github/workflows/dependency-review.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: moderate
+        deny-licenses: GPL-3.0, AGPL-3.0
+        comment-summary-in-pr: always
+
+  deptry-analysis:
+    name: Deptry Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install dependencies
+      run: uv sync --locked --all-extras --dev
+
+    - name: Run deptry with detailed output
+      run: |
+        echo "## Deptry Dependency Analysis" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Run deptry and capture output
+        if uv run deptry src --config pyproject.toml > deptry_output.txt 2>&1; then
+          echo "✅ No dependency issues found!" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Dependency issues detected:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat deptry_output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          # Still fail the job
+          exit 1
+        fi
+
+    - name: Comment PR with deptry results
+      if: always() && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 📦 Dependency Analysis (deptry)\n\n';
+
+          try {
+            const output = fs.readFileSync('deptry_output.txt', 'utf8');
+            if (output.includes('Success! No dependency issues found.')) {
+              comment += '✅ All dependencies look good!\n';
+            } else {
+              comment += '❌ Found dependency issues:\n\n```\n' + output + '\n```\n';
+              comment += '\n### How to fix:\n';
+              comment += '- **DEP001**: Missing dependencies - Add them to pyproject.toml\n';
+              comment += '- **DEP002**: Unused dependencies - Remove them from pyproject.toml\n';
+              comment += '- **DEP003**: Transitive dependencies - Consider adding them explicitly\n';
+            }
+          } catch (e) {
+            comment += '⚠️ Could not read deptry output\n';
+          }
+
+          // Find existing comment
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+
+          const botComment = comments.find(comment =>
+            comment.user.type === 'Bot' &&
+            comment.body.includes('## 📦 Dependency Analysis (deptry)')
+          );
+
+          if (botComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: comment
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+          }

@@ -43,6 +43,9 @@ jobs:
     - name: Run type checker
       run: uv run mypy src/DHT/
 
+    - name: Check dependencies with deptry
+      run: uv run deptry src --config pyproject.toml
+
     - name: Test shell scripts (Unix only)
       if: matrix.os != 'windows-latest'
       run: |
