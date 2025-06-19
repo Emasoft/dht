@@ -7,6 +7,9 @@ from pathlib import Path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import run_bash_command, mock_bash_script
 
+# Skip all tests in this file since we've migrated from shell to Python
+pytestmark = pytest.mark.skip(reason="Shell scripts have been migrated to Python. Error handling is now tested through Python unit tests.")
+
 def test_log_error():
     """Test the log_error function."""
     # Create a script that sources the module and calls the function

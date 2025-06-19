@@ -26,8 +26,9 @@ from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock, call
 import subprocess
 
-from DHT.modules.uv_manager import (
-    UVManager, UVError, UVNotFoundError, PythonVersionError, DependencyError
+from DHT.modules.uv_manager import UVManager
+from DHT.modules.uv_manager_exceptions import (
+    UVError, UVNotFoundError, PythonVersionError, DependencyError
 )
 
 
