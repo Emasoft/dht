@@ -29,9 +29,7 @@ def test_dht_core_files_exist(project_root):
         "modules/environment_configurator.py",
         "modules/environment_reproducer.py",
         "modules/cli_commands_registry.py",
-        "diagnostic_reporter.py",  # Main diagnostic reporter
-        "diagnostic_reporter_old.py",  # Old version
-        "diagnostic_reporter_v2.py",  # v2 version
+        "diagnostic_reporter_v2.py",  # Current diagnostic reporter
         "modules/dht_flows/__init__.py",
         "modules/dht_flows/restore_flow.py",
         "modules/dht_flows/test_flow.py",

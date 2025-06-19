@@ -1,0 +1,32 @@
+execution_time: '2025-06-19T03:20:38.764155'
+total_commands: 3
+successful: 2
+failed: 1
+results:
+- returncode: 0
+  stdout: '''Hello from Prefect Guardian''
+
+    '
+  stderr: ''
+  killed: false
+  reason: null
+  peak_memory_mb: 0.03125
+  duration: 0.11027288436889648
+  command: echo 'Hello from Prefect Guardian'
+- returncode: 0
+  stdout: ''
+  stderr: ''
+  killed: false
+  reason: null
+  peak_memory_mb: 1.515625
+  duration: 2.0831947326660156
+  command: sleep 2
+- returncode: 1
+  stdout: ''
+  stderr: "  File \"<string>\", line 1\n    'print(\"Python\n    ^\nSyntaxError: unterminated\
+    \ string literal (detected at line 1)\n"
+  killed: false
+  reason: null
+  peak_memory_mb: 0.140625
+  duration: 0.11177206039428711
+  command: python -c 'print("Python test")'
