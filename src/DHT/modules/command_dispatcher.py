@@ -55,10 +55,10 @@ class CommandDispatcher:
             
             # Debug logging
             logger.debug(f"Handler type for {command}: {type(handler)}")
-            logger.debug(f"Has fn: {hasattr(handler, 'fn')}, Has run: {hasattr(handler, 'run')}")
+            logger.debug(f"Has fn: {hasattr(handler, 'fn')}")
             
             # Check if this is a Prefect Task
-            if hasattr(handler, 'fn') and hasattr(handler, 'run'):
+            if hasattr(handler, 'fn'):
                 # It's a Prefect Task - we need to check the wrapped function
                 wrapped_fn = handler.fn
                 # Check if the wrapped function is from DHTLCommands
@@ -150,10 +150,12 @@ class CommandDispatcher:
             parser.add_argument("path", nargs="?", default=".", help="Project path")
             parser.add_argument("--python", help="Python version")
             parser.add_argument("--dev", action="store_true", help="Install dev dependencies")
-            parser.add_argument("--no-dev", action="store_true", help="Skip dev dependencies")
+            parser.add_argument("--from-requirements", action="store_true", help="Import from requirements.txt")
+            parser.add_argument("--all-packages", action="store_true", help="Install all workspace packages")
+            parser.add_argument("--compile-bytecode", action="store_true", help="Compile Python files to bytecode")
             parser.add_argument("--editable", action="store_true", help="Install in editable mode")
-            parser.add_argument("--upgrade", action="store_true", help="Upgrade dependencies")
-            parser.add_argument("--force", action="store_true", help="Force reinstall")
+            parser.add_argument("--index-url", help="Custom package index URL")
+            parser.add_argument("--install-pre-commit", action="store_true", help="Install pre-commit hooks")
             
         elif command == "build":
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
