@@ -220,6 +220,29 @@ class CommandDispatcher:
                 parser.add_argument("--format", help="Documentation format (sphinx/mkdocs)")
                 parser.add_argument("--serve", action="store_true", help="Serve docs after building")
 
+        elif command in ["workspaces", "ws"]:
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("subcommand", choices=["run", "exec"], help="Subcommand")
+            parser.add_argument("script", nargs="?", help="Script to run (for 'run' subcommand)")
+            parser.add_argument("args", nargs="*", help="Additional arguments")
+            parser.add_argument("--only", nargs="+", help="Only run in matching packages")
+            parser.add_argument("--ignore", nargs="+", help="Skip matching packages")
+            parser.add_argument("--only-fs", nargs="+", help="Only run in packages with matching files")
+            parser.add_argument("--ignore-fs", nargs="+", help="Skip packages with matching files")
+
+        elif command in ["workspace", "w"]:
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("name", help="Workspace member name")
+            parser.add_argument("subcommand", choices=["run", "exec"], help="Subcommand")
+            parser.add_argument("script", nargs="?", help="Script to run (for 'run' subcommand)")
+            parser.add_argument("args", nargs="*", help="Additional arguments")
+
+        elif command in ["project", "p"]:
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("subcommand", choices=["run"], help="Subcommand")
+            parser.add_argument("script", help="Script to run")
+            parser.add_argument("args", nargs="*", help="Additional arguments")
+
         else:
             # Default parser
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")

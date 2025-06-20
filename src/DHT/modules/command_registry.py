@@ -35,8 +35,11 @@ class CommandRegistry:
             doc_command,
             fmt_command,
             install_command,
+            project_command,
             remove_command,
             upgrade_command,
+            workspace_command,
+            workspaces_command,
         )
         from .dhtl_commands import DHTLCommands
         from .dhtl_utils import lint_command
@@ -60,6 +63,14 @@ class CommandRegistry:
         self.register("check", check_command, "Type check Python code")
         self.register("doc", doc_command, "Generate project documentation")
         self.register("bin", bin_command, "Print executable files installation folder")
+
+        # Workspace commands
+        self.register("workspaces", workspaces_command, "Run commands across workspace members")
+        self.register("ws", workspaces_command, "Run commands across workspace members (alias)")
+        self.register("workspace", workspace_command, "Run command in specific workspace member")
+        self.register("w", workspace_command, "Run command in specific workspace member (alias)")
+        self.register("project", project_command, "Run command in root project only")
+        self.register("p", project_command, "Run command in root project only (alias)")
 
         # Linting and formatting
         self.register("lint", lint_command, "Lint code")

@@ -19,8 +19,11 @@ from .check_command import check_command
 from .doc_command import doc_command
 from .fmt_command import fmt_command
 from .install_command import install_command
+from .project_command import project_command
 from .remove_command import remove_command
 from .upgrade_command import upgrade_command
+from .workspace_command import workspace_command
+from .workspaces_command import workspaces_command
 
 __all__ = [
     "add_command",
@@ -29,6 +32,9 @@ __all__ = [
     "doc_command",
     "fmt_command",
     "install_command",
+    "project_command",
     "remove_command",
     "upgrade_command",
+    "workspace_command",
+    "workspaces_command",
 ]
