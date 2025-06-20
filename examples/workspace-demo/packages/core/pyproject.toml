@@ -1,0 +1,14 @@
+[project]
+name = "demo-core"
+version = "0.1.0"
+description = "Core package for workspace demo"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+core-hello = "core.main:hello"
+core-info = "core.main:info"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

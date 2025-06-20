@@ -4,6 +4,7 @@
 # - Create workspace command module for single workspace member operations
 # - Handles running commands in a specific workspace member
 # - Integrates with Prefect runner
+# - Refactored to use WorkspaceBase to reduce complexity
 #
 
 """
@@ -19,15 +20,13 @@ from typing import Any
 
 from prefect import task
 
+from .workspace_base import WorkspaceBase
+
 logger = logging.getLogger(__name__)
 
 
-class WorkspaceCommand:
+class WorkspaceCommand(WorkspaceBase):
     """Workspace command implementation."""
-
-    def __init__(self):
-        """Initialize workspace command."""
-        self.logger = logging.getLogger(__name__)
 
     @task(
         name="workspace_command",
@@ -81,86 +80,113 @@ class WorkspaceCommand:
 
         # Execute command based on subcommand
         if subcommand == "run":
-            if not script:
-                return {"success": False, "error": "Script name required for 'run' subcommand"}
-
-            # Build command
-            cmd = ["uv", "run", "--directory", str(target_member), script]
-            if args:
-                cmd.extend(args)
-
+            return self._handle_run(target_member, name, script, args)
         elif subcommand == "exec":
-            if not args:
-                return {"success": False, "error": "Command required for 'exec' subcommand"}
-            cmd = args
-
-        elif subcommand == "upgrade":
-            # For upgrade, packages are in script + args
-            packages = []
-            if script:
-                packages.append(script)
-            if args:
-                packages.extend(args)
-            if not packages:
-                return {"success": False, "error": "Package name(s) required for 'upgrade' subcommand"}
-
-            cmd = ["uv", "add", "--upgrade", "--directory", str(target_member)]
-            cmd.extend(packages)
-
-        elif subcommand == "remove":
-            # For remove, packages are in script + args
-            packages = []
-            if script:
-                packages.append(script)
-            if args:
-                packages.extend(args)
-            if not packages:
-                return {"success": False, "error": "Package name(s) required for 'remove' subcommand"}
-
-            cmd = ["uv", "remove", "--directory", str(target_member)]
-            cmd.extend(packages)
-
+            return self._handle_exec(target_member, name, script, args)
+        elif subcommand in ["upgrade", "remove"]:
+            return self._handle_package_operation(target_member, name, subcommand, script, args)
         else:
             return {
                 "success": False,
                 "error": f"Unknown subcommand: {subcommand}. Use 'run', 'exec', 'upgrade', or 'remove'",
             }
 
-        # Execute command
-        try:
-            if subcommand == "exec":
-                # For exec, run in the member directory
-                result = subprocess.run(
-                    cmd,
-                    cwd=target_member,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    shell=True if len(cmd) == 1 else False,
-                    timeout=300,
-                )
-            else:
-                # For run, upgrade, remove - uv handles the directory
-                result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=300)
+    def _handle_run(self, member: Path, name: str, script: str | None, args: list[str] | None) -> dict[str, Any]:
+        """Handle 'run' subcommand for single member."""
+        if not script:
+            return {"success": False, "error": "Script name required for 'run' subcommand"}
 
+        cmd = ["uv", "run", "--directory", str(member), script]
+        if args:
+            cmd.extend(args)
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=self.DEFAULT_TIMEOUT)
             return {
                 "success": result.returncode == 0,
                 "message": f"Command executed in {name}",
                 "stdout": result.stdout,
                 "stderr": result.stderr,
                 "returncode": result.returncode,
-                "workspace_member": str(target_member),
+                "workspace_member": str(member),
             }
-
         except subprocess.TimeoutExpired:
             return {
                 "success": False,
-                "error": "Command timed out after 5 minutes",
-                "workspace_member": str(target_member),
+                "error": f"Command timed out after {self.DEFAULT_TIMEOUT} seconds",
+                "workspace_member": str(member),
             }
         except Exception as e:
             self.logger.error(f"Unexpected error: {e}")
-            return {"success": False, "error": str(e), "workspace_member": str(target_member)}
+            return {"success": False, "error": str(e), "workspace_member": str(member)}
+
+    def _handle_exec(self, member: Path, name: str, script: str | None, args: list[str] | None) -> dict[str, Any]:
+        """Handle 'exec' subcommand for single member."""
+        # Build command from script + args
+        cmd_args = []
+        if script:
+            cmd_args.append(script)
+        if args:
+            cmd_args.extend(args)
+
+        if not cmd_args:
+            return {"success": False, "error": "Command required for 'exec' subcommand"}
+
+        result = self.execute_shell_in_directory(member, cmd_args)
+        return {
+            "success": result["success"],
+            "message": f"Command executed in {name}",
+            "stdout": result.get("stdout", ""),
+            "stderr": result.get("stderr", ""),
+            "returncode": result.get("returncode", -1),
+            "workspace_member": str(member),
+            "error": result.get("error"),
+        }
+
+    def _handle_package_operation(
+        self, member: Path, name: str, operation: str, script: str | None, args: list[str] | None
+    ) -> dict[str, Any]:
+        """Handle package operations for single member."""
+        # Collect packages
+        packages = []
+        if script:
+            packages.append(script)
+        if args:
+            packages.extend(args)
+
+        if not packages:
+            return {"success": False, "error": f"Package name(s) required for '{operation}' subcommand"}
+
+        # Validate package names
+        is_valid, errors = self.validate_package_names(packages)
+        if not is_valid:
+            return {"success": False, "error": "Invalid package names: " + "; ".join(errors)}
+
+        # Build command
+        if operation == "upgrade":
+            cmd = ["uv", "add", "--upgrade", "--directory", str(member)] + packages
+        else:  # remove
+            cmd = ["uv", "remove", "--directory", str(member)] + packages
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=self.DEFAULT_TIMEOUT)
+            return {
+                "success": result.returncode == 0,
+                "message": f"Package {operation} completed in {name}",
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "returncode": result.returncode,
+                "workspace_member": str(member),
+            }
+        except subprocess.TimeoutExpired:
+            return {
+                "success": False,
+                "error": f"Command timed out after {self.DEFAULT_TIMEOUT} seconds",
+                "workspace_member": str(member),
+            }
+        except Exception as e:
+            self.logger.error(f"Unexpected error: {e}")
+            return {"success": False, "error": str(e), "workspace_member": str(member)}
 
 
 # Module-level function for command registry

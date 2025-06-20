@@ -1,0 +1,22 @@
+[project]
+name = "demo-experimental"
+version = "0.0.1"
+description = "Experimental features package"
+requires-python = ">=3.10"
+dependencies = [
+    "demo-core",
+    "demo-utils",
+    "numpy>=1.20",
+]
+
+[project.scripts]
+exp-analyze = "experimental.analyzer:analyze"
+exp-benchmark = "experimental.benchmark:run"
+
+[tool.uv.sources]
+demo-core = { workspace = true }
+demo-utils = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

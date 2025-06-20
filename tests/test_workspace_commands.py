@@ -89,7 +89,7 @@ members = ["pkg1"]
             result = execute_method(cmd, subcommand="run", script="test", args=["--verbose"])
 
         assert result["success"] is True
-        assert "Ran script in" in result["message"]
+        assert "Running 'test' completed" in result["message"]
         assert result["members_count"] == 2  # root + pkg1
 
         # Verify subprocess calls
@@ -130,7 +130,7 @@ members = ["pkg1"]
             result = execute_method(cmd, subcommand="exec", args=["echo", "hello"])
 
         assert result["success"] is True
-        assert "Executed command in" in result["message"]
+        assert "Executed command:" in result["message"]
 
     @patch("subprocess.run")
     def test_workspaces_upgrade_subcommand(self, mock_run, tmp_path):
@@ -158,7 +158,7 @@ members = ["pkg1"]
             result = execute_method(cmd, subcommand="upgrade", script="requests", args=["pytest"])
 
         assert result["success"] is True
-        assert "Upgraded packages in" in result["message"]
+        assert "Upgrading packages completed" in result["message"]
 
         # Verify uv add --upgrade was called
         assert mock_run.call_count == 2
@@ -196,7 +196,7 @@ members = ["pkg1"]
             result = execute_method(cmd, subcommand="remove", script="requests")
 
         assert result["success"] is True
-        assert "Removed packages from" in result["message"]
+        assert "Removing packages completed" in result["message"]
 
         # Verify uv remove was called
         assert mock_run.call_count == 2
@@ -223,10 +223,12 @@ members = ["packages/*"]
         cmd = WorkspacesCommand()
         members = cmd.detect_workspace_members(tmp_path)
 
-        # Test pattern matching
-        assert cmd._match_pattern("foo", "foo*")
-        assert cmd._match_pattern("foobar", "foo*")
-        assert not cmd._match_pattern("bar", "foo*")
+        # Test that correct members are detected
+        assert len(members) == 4  # root + 3 packages
+        member_names = [m.name for m in members]
+        assert "foo" in member_names
+        assert "bar" in member_names
+        assert "foobar" in member_names
 
     def test_workspaces_no_workspace(self, tmp_path):
         """Test error when not in a workspace."""
@@ -268,18 +270,11 @@ members = ["packages/*"]
 
         cmd = WorkspaceCommand()
         with patch.object(Path, "cwd", return_value=tmp_path):
-            with patch("src.DHT.modules.commands.workspace_command.WorkspacesCommand") as mock_ws:
-                mock_ws_instance = mock_ws.return_value
-                mock_ws_instance.detect_workspace_members.return_value = [
-                    tmp_path,
-                    tmp_path / "packages" / "pkg1",
-                    tmp_path / "packages" / "pkg2",
-                ]
-                # Get the underlying method if it's wrapped by Prefect
-                execute_method = cmd.execute
-                if hasattr(execute_method, "fn"):
-                    execute_method = execute_method.fn
-                result = execute_method(cmd, name="pkg1", subcommand="run", script="test")
+            # Get the underlying method if it's wrapped by Prefect
+            execute_method = cmd.execute
+            if hasattr(execute_method, "fn"):
+                execute_method = execute_method.fn
+            result = execute_method(cmd, name="pkg1", subcommand="run", script="test")
 
         assert result["success"] is True
         assert "Command executed in pkg1" in result["message"]
@@ -300,14 +295,11 @@ members = ["packages/*"]
 
         cmd = WorkspaceCommand()
         with patch.object(Path, "cwd", return_value=tmp_path):
-            with patch("src.DHT.modules.commands.workspace_command.WorkspacesCommand") as mock_ws:
-                mock_ws_instance = mock_ws.return_value
-                mock_ws_instance.detect_workspace_members.return_value = [tmp_path]
-                # Get the underlying method if it's wrapped by Prefect
-                execute_method = cmd.execute
-                if hasattr(execute_method, "fn"):
-                    execute_method = execute_method.fn
-                result = execute_method(cmd, name="nonexistent", subcommand="run", script="test")
+            # Get the underlying method if it's wrapped by Prefect
+            execute_method = cmd.execute
+            if hasattr(execute_method, "fn"):
+                execute_method = execute_method.fn
+            result = execute_method(cmd, name="nonexistent", subcommand="run", script="test")
 
         assert result["success"] is False
         assert "not found" in result["error"]
@@ -331,14 +323,11 @@ members = ["pkg1"]
 
         cmd = WorkspaceCommand()
         with patch.object(Path, "cwd", return_value=tmp_path):
-            with patch("src.DHT.modules.commands.workspace_command.WorkspacesCommand") as mock_ws:
-                mock_ws_instance = mock_ws.return_value
-                mock_ws_instance.detect_workspace_members.return_value = [tmp_path, tmp_path / "pkg1"]
-                # Get the underlying method if it's wrapped by Prefect
-                execute_method = cmd.execute
-                if hasattr(execute_method, "fn"):
-                    execute_method = execute_method.fn
-                result = execute_method(cmd, name="pkg1", subcommand="upgrade", script="requests")
+            # Get the underlying method if it's wrapped by Prefect
+            execute_method = cmd.execute
+            if hasattr(execute_method, "fn"):
+                execute_method = execute_method.fn
+            result = execute_method(cmd, name="pkg1", subcommand="upgrade", script="requests")
 
         assert result["success"] is True
         args = mock_run.call_args[0][0]
@@ -366,14 +355,11 @@ members = ["pkg1"]
 
         cmd = WorkspaceCommand()
         with patch.object(Path, "cwd", return_value=tmp_path):
-            with patch("src.DHT.modules.commands.workspace_command.WorkspacesCommand") as mock_ws:
-                mock_ws_instance = mock_ws.return_value
-                mock_ws_instance.detect_workspace_members.return_value = [tmp_path, tmp_path / "pkg1"]
-                # Get the underlying method if it's wrapped by Prefect
-                execute_method = cmd.execute
-                if hasattr(execute_method, "fn"):
-                    execute_method = execute_method.fn
-                result = execute_method(cmd, name="pkg1", subcommand="remove", script="requests", args=["pytest"])
+            # Get the underlying method if it's wrapped by Prefect
+            execute_method = cmd.execute
+            if hasattr(execute_method, "fn"):
+                execute_method = execute_method.fn
+            result = execute_method(cmd, name="pkg1", subcommand="remove", script="requests", args=["pytest"])
 
         assert result["success"] is True
         args = mock_run.call_args[0][0]

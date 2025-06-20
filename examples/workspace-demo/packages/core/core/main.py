@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+"""Core module main functionality."""
+
+import sys
+from pathlib import Path
+
+
+def hello():
+    """Simple hello world function."""
+    print("🎯 Hello from demo-core package!")
+    print(f"Running from: {Path(__file__).parent.parent}")
+    return 0
+
+
+def info():
+    """Display information about the core package."""
+    print("📦 Demo Core Package Information")
+    print("=" * 40)
+    print(f"Python Version: {sys.version.split()[0]}")
+    print(f"Package Location: {Path(__file__).parent.parent}")
+    print(f"Module: {__name__}")
+    print("Features:")
+    print("  - Basic hello world functionality")
+    print("  - Package information display")
+    print("  - Foundation for other packages")
+    return 0
+
+
+if __name__ == "__main__":
+    hello()

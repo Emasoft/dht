@@ -4,6 +4,7 @@
 # - Create project command module for root project operations
 # - Handles running commands in root project only
 # - Integrates with Prefect runner
+# - Updated to use WorkspaceBase for consistency
 #
 
 """
@@ -14,29 +15,34 @@ excluding workspace members.
 """
 
 import logging
+import subprocess
+from pathlib import Path
 from typing import Any
 
 from prefect import task
 
+from .workspace_base import WorkspaceBase
+
 logger = logging.getLogger(__name__)
 
 
-class ProjectCommand:
+class ProjectCommand(WorkspaceBase):
     """Project command implementation."""
 
-    def __init__(self):
-        """Initialize project command."""
-        self.logger = logging.getLogger(__name__)
-
-    @task(name="project_command", description="Run command in root project only", tags=["dht", "project"], retries=0)
+    @task(
+        name="project_command",
+        description="Run command in root project only",
+        tags=["dht", "project"],
+        retries=0,
+    )
     def execute(
         self, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs
     ) -> dict[str, Any]:
         """
-        Execute project command (root only).
+        Execute project command in root only.
 
         Args:
-            subcommand: Subcommand to run (run, exec, etc.)
+            subcommand: Subcommand to run (currently only 'run')
             script: Script name for 'run' subcommand
             args: Arguments for the command
             **kwargs: Additional arguments
@@ -44,27 +50,66 @@ class ProjectCommand:
         Returns:
             Result dictionary
         """
-        # For project command, we just delegate to run command
-        # but ensure we're in the root project directory
+        # Find workspace root
+        project_path = self.find_workspace_root()
+        if not project_path:
+            # Not in a workspace, use current directory
+            project_path = Path.cwd()
 
-        if subcommand != "run":
-            return {"success": False, "error": f"Project command only supports 'run' subcommand, got '{subcommand}'"}
+        self.logger.info(f"Running in root project: {project_path}")
 
+        # Currently only 'run' is supported for project command
+        if subcommand == "run":
+            return self._handle_run(project_path, script, args)
+        else:
+            return {
+                "success": False,
+                "error": f"Unknown subcommand: {subcommand}. Only 'run' is supported for project command",
+            }
+
+    def _handle_run(self, project_path: Path, script: str | None, args: list[str] | None) -> dict[str, Any]:
+        """Handle 'run' subcommand for root project."""
         if not script:
-            return {"success": False, "error": "Script name required for project run command"}
+            return {"success": False, "error": "Script name required for 'run' subcommand"}
 
-        # Import run command
-        from ..dhtl_commands_standalone import run_command as run_cmd
-
-        self.logger.info(f"Running script '{script}' in root project")
-
-        # Prepare arguments for run command
-        run_args = [script]
+        # Build command - run in project root
+        cmd = ["uv", "run", "--directory", str(project_path), script]
         if args:
-            run_args.extend(args)
+            cmd.extend(args)
 
-        # Execute via run command
-        return run_cmd(run_args)
+        self.logger.info(f"Running '{script}' in root project")
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=self.DEFAULT_TIMEOUT,
+            )
+
+            return {
+                "success": result.returncode == 0,
+                "message": f"Script '{script}' executed in root project",
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "returncode": result.returncode,
+                "project_path": str(project_path),
+            }
+
+        except subprocess.TimeoutExpired:
+            return {
+                "success": False,
+                "error": f"Script timed out after {self.DEFAULT_TIMEOUT} seconds",
+                "project_path": str(project_path),
+            }
+        except Exception as e:
+            self.logger.error(f"Unexpected error: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "project_path": str(project_path),
+            }
 
 
 # Module-level function for command registry

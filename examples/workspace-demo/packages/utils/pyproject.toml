@@ -1,0 +1,19 @@
+[project]
+name = "demo-utils"
+version = "0.1.0"
+description = "Utilities package for workspace demo"
+requires-python = ">=3.8"
+dependencies = [
+    "demo-core",
+]
+
+[project.scripts]
+utils-format = "utils.formatter:format_text"
+utils-validate = "utils.validator:validate"
+
+[tool.uv.sources]
+demo-core = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
