@@ -139,17 +139,21 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
 
 ### Workspace Filtering Options
 
-- [ ] **`--only [name glob]`** → Filter packages by name
-  - **Implementation**: Add to workspace commands
+- [x] **`--only [name glob]`** → Filter packages by name
+  - **Status**: ✅ Implemented in workspaces_command.py
+  - **Implementation**: Added to workspace commands
 
-- [ ] **`--ignore [name glob]`** → Exclude packages by name
-  - **Implementation**: Add to workspace commands
+- [x] **`--ignore [name glob]`** → Exclude packages by name
+  - **Status**: ✅ Implemented in workspaces_command.py
+  - **Implementation**: Added to workspace commands
 
-- [ ] **`--only-fs [file glob]`** → Filter by file system glob
-  - **Implementation**: Add to workspace commands
+- [x] **`--only-fs [file glob]`** → Filter by file system glob
+  - **Status**: ✅ Implemented in workspaces_command.py
+  - **Implementation**: Added to workspace commands
 
-- [ ] **`--ignore-fs [file glob]`** → Exclude by file system glob
-  - **Implementation**: Add to workspace commands
+- [x] **`--ignore-fs [file glob]`** → Exclude by file system glob
+  - **Status**: ✅ Implemented in workspaces_command.py
+  - **Implementation**: Added to workspace commands
 
 ### Project/Workspace Specific Commands
 
@@ -232,19 +236,28 @@ Each new command requires:
 ## Progress Tracking
 
 - Total Commands to Implement/Modify: 23
-- Completed: 16
+- Completed: 20
 - In Progress: 0
-- Remaining: 7 (mainly filtering options which are already implemented)
+- Remaining: 3 (help, doc enhancement, migration guide)
 
 ### Summary of Completion:
 - ✅ Phase 1: Command Aliases and Simple Wrappers - COMPLETED
-- ✅ Phase 3: Workspace Commands - COMPLETED (all core functionality)
+- ✅ Phase 3: Workspace Commands - COMPLETED (including all filtering options)
 - 🚧 Phase 2: Documentation Command - Already exists but could be enhanced
 - 🚧 Phase 4: Documentation and Polish - Partially complete
 
-### What's Left:
-1. The filtering options (--only, --ignore, etc.) are already implemented in workspace commands
-2. Documentation command (`dhtl doc`) exists but could support more formats
-3. Final documentation polish and migration guide
+### What's Completed:
+1. All workspace commands (ws run, ws exec, ws upgrade, ws remove)
+2. All filtering options (--only, --ignore, --only-fs, --ignore-fs)
+3. Single workspace targeting (workspace command)
+4. Project-only execution (project command)
+5. All command aliases and wrappers from Phase 1
+6. Comprehensive test coverage
+7. Example workspace demonstration
 
-Last Updated: 2025-01-20 (Phase 1 and 3 completed, workspace commands fully implemented)
+### What's Left:
+1. Documentation command (`dhtl doc`) exists but could support more formats
+2. Migration guide from Bolt to DHT
+3. Help command enhancement (already exists but could be improved)
+
+Last Updated: 2025-01-20 (Phase 1 and 3 fully completed, including filtering options)

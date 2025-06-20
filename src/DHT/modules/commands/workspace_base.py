@@ -263,7 +263,6 @@ class WorkspaceBase:
         Returns:
             Filtered list of members
         """
-        from fnmatch import fnmatch
 
         filtered = []
 
