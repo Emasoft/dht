@@ -1,0 +1,17 @@
+[project]
+name = "shared-utils"
+version = "0.1.0"
+description = "Shared utility functions"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.28.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+test = "echo 'Testing shared-utils...'"
+build = "echo 'Building shared-utils...'"
+lint = "echo 'Linting shared-utils...'"

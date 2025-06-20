@@ -1,0 +1,20 @@
+[project]
+name = "web-app"
+version = "0.1.0"
+description = "Web application"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+test = "echo 'Testing web-app...'"
+build = "echo 'Building web-app for production...'"
+dev = "echo 'Starting web-app in dev mode...'"
+deploy = "echo 'Deploying web-app...'"
+lint = "echo 'Linting web-app...'"

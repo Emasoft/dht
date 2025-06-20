@@ -1,0 +1,19 @@
+[project]
+name = "api-client"
+version = "0.1.0"
+description = "API client library"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+test = "echo 'Testing api-client...'"
+build = "echo 'Building api-client...'"
+lint = "echo 'Linting api-client...'"
+generate = "echo 'Generating API client code...'"
