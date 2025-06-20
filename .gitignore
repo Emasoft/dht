@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 /.env
+
+# Dynamically downloaded dependencies
+tree-sitter-bash/
