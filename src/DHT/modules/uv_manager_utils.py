@@ -14,10 +14,15 @@ from __future__ import annotations
 
 import logging
 import shutil
-import subprocess
 from pathlib import Path
 from typing import Any
 
+from DHT.modules.subprocess_utils import (
+    CommandTimeoutError,
+    ProcessExecutionError,
+    ProcessNotFoundError,
+    run_subprocess,
+)
 from DHT.modules.uv_manager_exceptions import UVError, UVNotFoundError
 
 # Development dependency patterns for intelligent classification
@@ -66,9 +71,7 @@ def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None
         version = parts[1] if len(parts) >= 2 else "unknown"
 
         if not version_meets_minimum(version, min_version):
-            raise UVError(
-                f"UV version {version} is below minimum required {min_version}"
-            )
+            raise UVError(f"UV version {version} is below minimum required {min_version}")
 
         logger.info(f"UV version {version} verified")
     except Exception as e:
@@ -78,8 +81,9 @@ def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None
 
 def version_meets_minimum(version: str, minimum: str) -> bool:
     """Check if version meets minimum requirement."""
+
     def parse_version(v: str) -> tuple[int, ...]:
-        return tuple(int(x) for x in v.split('.'))
+        return tuple(int(x) for x in v.split("."))
 
     try:
         return parse_version(version) >= parse_version(minimum)
@@ -145,7 +149,7 @@ def run_uv_command(
     cwd: Path | None = None,
     capture_output: bool = True,
     check: bool = True,
-    timeout: int = 300  # 5 minutes default
+    timeout: int = 300,  # 5 minutes default
 ) -> dict[str, Any]:
     """
     Run UV command and return structured output.
@@ -174,45 +178,29 @@ def run_uv_command(
     logger.debug(f"Running UV command: {' '.join(cmd)}")
 
     try:
-        result = subprocess.run(
+        # Use enhanced subprocess utilities
+        return run_subprocess(
             cmd,
             cwd=cwd,
             capture_output=capture_output,
-            text=True,
             check=check,
-            timeout=timeout
+            timeout=timeout,
+            retry_count=2,  # Retry UV commands up to 2 times
+            retry_delay=0.5,
+            log_command=False,  # Already logged above
         )
-
-        return {
-            "stdout": result.stdout if capture_output else "",
-            "stderr": result.stderr if capture_output else "",
-            "returncode": result.returncode,
-            "success": result.returncode == 0
-        }
-
-    except subprocess.CalledProcessError as e:
-        return {
-            "stdout": e.stdout if capture_output else "",
-            "stderr": e.stderr if capture_output else "",
-            "returncode": e.returncode,
-            "success": False
-        }
-    except subprocess.TimeoutExpired as e:
-        logger.error(f"UV command timed out after {timeout} seconds")
-        return {
-            "stdout": "",
-            "stderr": f"Command timed out after {timeout} seconds",
-            "returncode": -1,
-            "success": False
-        }
-    except Exception as e:
-        logger.error(f"Unexpected error running UV command: {e}")
-        return {
-            "stdout": "",
-            "stderr": str(e),
-            "returncode": -1,
-            "success": False
-        }
+    except ProcessNotFoundError as e:
+        # Convert to UV-specific error
+        raise UVNotFoundError(f"UV executable not found: {e}")
+    except CommandTimeoutError as e:
+        # Re-raise with UV context
+        logger.error(f"UV command timed out: {e}")
+        raise
+    except ProcessExecutionError as e:
+        # For UV commands, we often want to return error info rather than raise
+        if check:
+            raise
+        return {"stdout": e.stdout, "stderr": e.stderr, "returncode": e.returncode, "success": False}
 
 
 def extract_min_version(constraint: str) -> str:
@@ -241,7 +229,7 @@ def extract_min_version(constraint: str) -> str:
         return constraint[1:].strip()
     else:
         # Try to extract any version number
-        match = re.search(r'\d+\.\d+(?:\.\d+)?', constraint)
+        match = re.search(r"\d+\.\d+(?:\.\d+)?", constraint)
         if match:
             return match.group()
 

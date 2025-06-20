@@ -29,7 +29,7 @@ from DHT.modules.uv_manager import UVManager
 class DHTLCommands:
     """Implementation of dhtl CLI commands."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize dhtl commands."""
         self.logger = logging.getLogger(__name__)
         self.uv_manager = UVManager()

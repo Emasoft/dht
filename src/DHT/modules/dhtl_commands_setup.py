@@ -27,6 +27,7 @@ except ImportError:
     import tomli as tomllib  # Python 3.10 and below
 
 from prefect import task
+from prefect.cache_policies import NO_CACHE
 
 from DHT.modules.dhtl_commands_utils import parse_requirements
 from DHT.modules.uv_manager import UVManager
@@ -40,7 +41,7 @@ class SetupCommand:
         """Initialize setup command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_setup")
+    @task(name="dhtl_setup", cache_policy=NO_CACHE)
     def setup(
         self,
         uv_manager: UVManager,
@@ -93,7 +94,7 @@ class SetupCommand:
             # Handle requirements.txt import first
             if from_requirements and (project_path / "requirements.txt").exists():
                 if not (project_path / "pyproject.toml").exists():
-                    self._create_pyproject_from_requirements(project_path)
+                    self._create_pyproject_from_requirements(project_path, python)
 
             # Ensure pyproject.toml exists
             if not (project_path / "pyproject.toml").exists():
@@ -243,8 +244,13 @@ class SetupCommand:
                 "error": str(e),
             }
 
-    def _create_pyproject_from_requirements(self, project_path: Path) -> None:
-        """Create pyproject.toml from requirements.txt."""
+    def _create_pyproject_from_requirements(self, project_path: Path, python_version: str | None = None) -> None:
+        """Create pyproject.toml from requirements.txt.
+
+        Args:
+            project_path: Path to the project directory
+            python_version: Python version to use (defaults to 3.11)
+        """
         req_file = project_path / "requirements.txt"
         if not req_file.exists():
             return
@@ -259,7 +265,7 @@ class SetupCommand:
                 "name": project_name,
                 "version": "0.1.0",
                 "description": "Python project",
-                "requires-python": ">=3.11",
+                "requires-python": f">={python_version or '3.11'}",
                 "dependencies": deps,
             },
             "build-system": {

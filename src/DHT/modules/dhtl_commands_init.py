@@ -25,6 +25,7 @@ except ImportError:
     import tomli as tomllib  # Python 3.10 and below
 
 from prefect import task
+from prefect.cache_policies import NO_CACHE
 
 from DHT.modules.dhtl_commands_utils import parse_requirements
 from DHT.modules.dhtl_project_templates import (
@@ -43,7 +44,7 @@ class InitCommand:
         """Initialize init command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_init")
+    @task(name="dhtl_init", cache_policy=NO_CACHE)
     def init(
         self,
         uv_manager: UVManager,
@@ -80,10 +81,7 @@ class InitCommand:
 
         # Determine project name
         if name is None:
-            if project_path.exists():
-                name = project_path.name
-            else:
-                name = project_path.name
+            name = project_path.name
 
         # Check if already initialized
         if (project_path / "pyproject.toml").exists():
@@ -138,6 +136,10 @@ class InitCommand:
                 # Add author information if provided
                 if author or email:
                     data["project"]["authors"] = [{"name": author or "", "email": email or ""}]
+
+                # Add license if provided
+                if license:
+                    data["project"]["license"] = {"text": license}
 
                 # Add development dependencies if requested
                 if with_dev:
@@ -233,7 +235,13 @@ class InitCommand:
             tomli_w.dump(pyproject_data, f)
 
     def _create_license_file(self, project_path: Path, license_type: str, author: str | None) -> None:
-        """Create a license file."""
+        """Create a license file.
+
+        Args:
+            project_path: Path to the project directory
+            license_type: Type of license (MIT or APACHE-2.0)
+            author: Author name for the license
+        """
         license_path = project_path / "LICENSE"
 
         if license_type.upper() == "MIT":

@@ -27,6 +27,17 @@ class CommandRegistry:
     def _register_all_commands(self):
         """Register all available commands."""
         # Import all command implementations
+        # Import new modular commands
+        from .commands import (
+            add_command,
+            bin_command,
+            check_command,
+            doc_command,
+            fmt_command,
+            install_command,
+            remove_command,
+            upgrade_command,
+        )
         from .dhtl_commands import DHTLCommands
         from .dhtl_utils import lint_command
         from .utils import format_command
@@ -39,6 +50,16 @@ class CommandRegistry:
         self.register("setup", dhtl_cmds.setup, "Setup project environment")
         self.register("build", dhtl_cmds.build, "Build Python package")
         self.register("sync", dhtl_cmds.sync, "Sync project dependencies")
+
+        # New modular commands and aliases
+        self.register("install", install_command, "Install project dependencies (alias for setup)")
+        self.register("add", add_command, "Add dependencies to the project")
+        self.register("remove", remove_command, "Remove dependencies from the project")
+        self.register("upgrade", upgrade_command, "Upgrade dependencies")
+        self.register("fmt", fmt_command, "Format code (alias for format)")
+        self.register("check", check_command, "Type check Python code")
+        self.register("doc", doc_command, "Generate project documentation")
+        self.register("bin", bin_command, "Print executable files installation folder")
 
         # Linting and formatting
         self.register("lint", lint_command, "Lint code")

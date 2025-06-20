@@ -1,0 +1,148 @@
+name: Super Linter
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      all-files:
+        description: 'Run on all files (not just changed files)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  statuses: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  super-lint:
+    name: Super Linter
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # Full git history is needed for proper linting of new commits
+        fetch-depth: 0
+
+    - name: Run Super Linter
+      uses: super-linter/super-linter@v7.2.0
+      env:
+        # Run on all files if manually triggered with all-files=true
+        VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.all-files == 'true' || 'false' }}
+
+        # GitHub token for PR annotations
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        # Default branch for comparison
+        DEFAULT_BRANCH: main
+
+        # Language-specific configurations
+        PYTHON_BLACK_CONFIG_FILE: pyproject.toml
+        PYTHON_RUFF_CONFIG_FILE: pyproject.toml
+        PYTHON_MYPY_CONFIG_FILE: pyproject.toml
+
+        # Enable specific linters we want
+        VALIDATE_PYTHON_BLACK: true
+        VALIDATE_PYTHON_RUFF: true
+        VALIDATE_PYTHON_MYPY: true
+        VALIDATE_PYTHON_PYLINT: false  # We use ruff instead
+        VALIDATE_PYTHON_FLAKE8: false  # We use ruff instead
+        VALIDATE_YAML: true
+        VALIDATE_JSON: true
+        VALIDATE_MARKDOWN: true
+        VALIDATE_BASH: true
+        VALIDATE_DOCKERFILE_HADOLINT: true
+        VALIDATE_GITHUB_ACTIONS: true
+        VALIDATE_JAVASCRIPT_ES: true
+        VALIDATE_TYPESCRIPT_ES: true
+        VALIDATE_CSS: true
+
+        # Disable linters we don't need
+        VALIDATE_JSCPD: false  # Copy/paste detection can be noisy
+        VALIDATE_NATURAL_LANGUAGE: false
+        VALIDATE_ANSIBLE: false
+        VALIDATE_ARM: false
+        VALIDATE_CLOUDFORMATION: false
+        VALIDATE_CLOJURE: false
+        VALIDATE_COFFEE: false
+        VALIDATE_CSHARP: false
+        VALIDATE_DART: false
+        VALIDATE_EDITORCONFIG: false
+        VALIDATE_ENV: false
+        VALIDATE_GHERKIN: false
+        VALIDATE_GO: false
+        VALIDATE_GROOVY: false
+        VALIDATE_HTML: false
+        VALIDATE_JAVA: false
+        VALIDATE_KOTLIN: false
+        VALIDATE_KUBERNETES_KUBECONFORM: false
+        VALIDATE_LATEX: false
+        VALIDATE_LUA: false
+        VALIDATE_OPENAPI: false
+        VALIDATE_PERL: false
+        VALIDATE_PHP: false
+        VALIDATE_POWERSHELL: false
+        VALIDATE_PROTOBUF: false
+        VALIDATE_R: false
+        VALIDATE_RAKU: false
+        VALIDATE_RUBY: false
+        VALIDATE_RUST: false
+        VALIDATE_SCALAFMT: false
+        VALIDATE_SHELL_SHFMT: false  # We use shellcheck
+        VALIDATE_SNAKEMAKE: false
+        VALIDATE_SQL: false
+        VALIDATE_SQLFLUFF: false
+        VALIDATE_TEKTON: false
+        VALIDATE_TERRAFORM: false
+        VALIDATE_TERRAGRUNT: false
+        VALIDATE_TSX: false
+        VALIDATE_XML: false
+
+        # Error handling
+        SUPPRESS_POSSUM: true  # Don't show the ASCII possum
+        LOG_LEVEL: WARN  # Reduce verbosity
+        CREATE_LOG_FILE: false
+
+        # File size limits
+        YAML_ERROR_ON_WARNING: false
+        MARKDOWN_CONFIG_FILE: .markdownlint.json
+
+        # Custom ignore paths
+        FILTER_REGEX_EXCLUDE: |
+          .*/__pycache__/.*
+          .*/\.venv/.*
+          .*/node_modules/.*
+          .*/dist/.*
+          .*/build/.*
+          .*/\.git/.*
+          .*/\.mypy_cache/.*
+          .*/\.pytest_cache/.*
+          .*/\.ruff_cache/.*
+          .*/tree-sitter-bash/.*
+          .*\.lock$
+          .*\.log$
+
+  super-lint-summary:
+    name: Super Linter Summary
+    runs-on: ubuntu-latest
+    needs: super-lint
+    if: always()
+
+    steps:
+    - name: Summary
+      run: |
+        if [ "${{ needs.super-lint.result }}" == "success" ]; then
+          echo "✅ Super Linter passed all checks!"
+        else
+          echo "❌ Super Linter found issues. Check the logs above for details."
+          echo ""
+          echo "To run Super Linter locally:"
+          echo "docker run --rm -v \$PWD:/tmp/lint github/super-linter:latest"
+        fi

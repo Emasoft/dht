@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from prefect import task
+from prefect.cache_policies import NO_CACHE
 
 from DHT.modules.container_test_runner import ContainerTestRunner, TestFramework
 from DHT.modules.docker_manager import DockerManager
@@ -32,7 +33,7 @@ class DeployCommand:
         """Initialize deploy command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="deploy_project_in_container")
+    @task(name="deploy_project_in_container", cache_policy=NO_CACHE)
     def deploy_project_in_container(
         self,
         project_path: str | None = None,

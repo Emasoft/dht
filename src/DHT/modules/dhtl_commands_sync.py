@@ -18,7 +18,9 @@ from pathlib import Path
 from typing import Any
 
 from prefect import task
+from prefect.cache_policies import NO_CACHE
 
+from DHT.modules.dhtl_commands_utils import count_site_packages
 from DHT.modules.uv_manager import UVManager
 
 
@@ -29,7 +31,7 @@ class SyncCommand:
         """Initialize sync command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_sync")
+    @task(name="dhtl_sync", cache_policy=NO_CACHE)
     def sync(
         self,
         uv_manager: UVManager,
@@ -70,7 +72,11 @@ class SyncCommand:
 
         # Check for pyproject.toml
         if not (project_path / "pyproject.toml").exists():
-            return {"success": False, "message": "No pyproject.toml found", "error": "Not a Python project"}
+            return {
+                "success": False,
+                "message": "No pyproject.toml found",
+                "error": "No pyproject.toml found. Not a Python project",
+            }
 
         try:
             # Build sync command
@@ -82,8 +88,25 @@ class SyncCommand:
             if no_dev:
                 sync_args.append("--no-dev")
             elif dev and not all_extras:
-                # Default behavior includes dev dependencies
-                pass
+                # Check if dev extras exist in the project
+                pyproject = project_path / "pyproject.toml"
+                if pyproject.exists():
+                    try:
+                        import tomllib
+                    except ImportError:
+                        import tomli as tomllib
+
+                    try:
+                        with open(pyproject, "rb") as f:
+                            data = tomllib.load(f)
+
+                        # Check if [project.optional-dependencies] has 'dev'
+                        opt_deps = data.get("project", {}).get("optional-dependencies", {})
+                        if "dev" in opt_deps:
+                            sync_args.extend(["--extra", "dev"])
+                    except Exception:
+                        # If we can't read the file, don't add the extra
+                        pass
 
             if all_extras:
                 sync_args.append("--all-extras")
@@ -102,31 +125,37 @@ class SyncCommand:
             result = uv_manager.run_command(sync_args, cwd=project_path)
 
             if not result["success"]:
-                return {"success": False, "error": f"Sync failed: {result.get('error', 'Unknown error')}"}
+                return {"success": False, "error": f"Sync failed: {result.get('stderr', 'Unknown error')}"}
 
             # Check what was installed
             venv_path = project_path / ".venv"
+            lock_file_path = project_path / "uv.lock"
+
             if venv_path.exists():
                 # Count installed packages
-                site_packages = venv_path / "lib"
-                package_count = 0
-                if site_packages.exists():
-                    for python_dir in site_packages.iterdir():
-                        if python_dir.name.startswith("python"):
-                            sp_dir = python_dir / "site-packages"
-                            if sp_dir.exists():
-                                # Count .dist-info directories
-                                package_count = len(list(sp_dir.glob("*.dist-info")))
-                                break
+                package_count = count_site_packages(venv_path)
 
                 return {
                     "success": True,
                     "message": "Successfully synced dependencies",
+                    "installed": package_count,  # Keep for backward compatibility
                     "packages_installed": package_count,
                     "venv_path": str(venv_path),
+                    "lock_file": str(lock_file_path) if lock_file_path.exists() else None,
+                    "dev_dependencies_installed": dev and not no_dev,
+                    "extras": extras if extras else [],
+                    "upgraded": upgrade,
                 }
             else:
-                return {"success": True, "message": "Dependencies synced (no venv found to count packages)"}
+                return {
+                    "success": True,
+                    "message": "Dependencies synced (no venv found to count packages)",
+                    "installed": 0,
+                    "lock_file": str(lock_file_path) if lock_file_path.exists() else None,
+                    "dev_dependencies_installed": dev and not no_dev,
+                    "extras": extras if extras else [],
+                    "upgraded": upgrade,
+                }
 
         except Exception as e:
             self.logger.error(f"Sync error: {e}")

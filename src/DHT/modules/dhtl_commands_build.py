@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from prefect import task
+from prefect.cache_policies import NO_CACHE
 
 from DHT.modules.uv_manager import UVManager
 
@@ -30,7 +31,7 @@ class BuildCommand:
         """Initialize build command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_build", log_prints=True)
+    @task(name="dhtl_build", log_prints=True, cache_policy=NO_CACHE)
     def build(
         self,
         uv_manager: UVManager,
@@ -66,9 +67,21 @@ class BuildCommand:
         # Run pre-build checks unless disabled
         if not no_checks:
             self.logger.info("Running pre-build checks...")
-            # For now we'll skip actual linting/testing
-            # In production, this would run: ruff check, mypy, pytest
-            self.logger.info("Pre-build checks passed (skipped for now)")
+
+            # Run ruff check
+            ruff_result = uv_manager.run_command(["run", "ruff", "check", "."], cwd=project_path)
+            if not ruff_result["success"]:
+                self.logger.warning("Ruff check found issues")
+                # Don't fail build for linting issues, just warn
+
+            # Run tests if they exist
+            test_dirs = [project_path / "tests", project_path / "test"]
+            if any(d.exists() for d in test_dirs):
+                test_result = uv_manager.run_command(["run", "pytest", "-q"], cwd=project_path)
+                if not test_result["success"]:
+                    return {"success": False, "error": "Tests failed. Use --no-checks to skip."}
+
+            self.logger.info("Pre-build checks passed")
 
         # Clean previous build artifacts
         self.logger.info("Cleaning previous build artifacts...")
@@ -112,7 +125,7 @@ class BuildCommand:
             result = uv_manager.run_command(["build"] + build_args, cwd=project_path)
 
             if not result["success"]:
-                return {"success": False, "error": f"Build failed: {result.get('error', 'Unknown error')}"}
+                return {"success": False, "error": f"Build failed: {result.get('stderr', 'Unknown error')}"}
 
             # Collect build artifacts
             artifacts = []

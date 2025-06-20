@@ -22,6 +22,7 @@ except ImportError:
     # Handle script execution
     import sys
     from pathlib import Path
+
     # Add parent directory to path for imports
     parent_dir = Path(__file__).parent
     if str(parent_dir) not in sys.path:
@@ -41,16 +42,13 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Development Helper Toolkit Launcher",
         add_help=False,  # We handle help ourselves
-        allow_abbrev=False
+        allow_abbrev=False,
     )
 
     # Global options
-    parser.add_argument('--no-guardian', action='store_true',
-                      help='Disable process guardian')
-    parser.add_argument('--quiet', action='store_true',
-                      help='Reduce output verbosity')
-    parser.add_argument('--debug', action='store_true',
-                      help='Enable debug mode')
+    parser.add_argument("--no-guardian", action="store_true", help="Disable process guardian")
+    parser.add_argument("--quiet", action="store_true", help="Reduce output verbosity")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode")
 
     # Parse known args to separate global options from command
     args, remaining = parser.parse_known_args(argv[1:])
@@ -66,11 +64,12 @@ def main(argv=None):
 
     # Extract command and its arguments
     if not remaining:
-        launcher.display_help()
-        return 0
-
-    command = remaining[0]
-    command_args = remaining[1:]
+        # Default to install command when no args provided
+        command = "install"
+        command_args = []
+    else:
+        command = remaining[0]
+        command_args = remaining[1:]
 
     # Run the command
     return launcher.run_command(command, command_args)

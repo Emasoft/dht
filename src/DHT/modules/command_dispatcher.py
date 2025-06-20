@@ -43,9 +43,18 @@ class CommandDispatcher:
     def dispatch(self, command: str, args: list[str]) -> int:
         """Dispatch a command with arguments."""
         if command not in self.commands:
-            print(f"❌ Error: Unknown command: {command}")
-            self.show_help()
-            return 1
+            # Unknown command - try to run it as a script
+            self.logger.info(f"Unknown command '{command}', attempting to run as script")
+            # Pass to run command
+            if "run" in self.commands:
+                run_handler = self.commands["run"]["handler"]
+                # Prepend the command to args
+                all_args = [command] + args
+                return self.dispatch("run", all_args)
+            else:
+                print(f"❌ Error: Unknown command: {command}")
+                self.show_help()
+                return 1
 
         try:
             handler = self.commands[command]
@@ -55,16 +64,16 @@ class CommandDispatcher:
             logger.debug(f"Has fn: {hasattr(handler, 'fn')}")
 
             # Check if this is a Prefect Task
-            if hasattr(handler, 'fn'):
+            if hasattr(handler, "fn"):
                 # It's a Prefect Task - we need to check the wrapped function
                 wrapped_fn = handler.fn
                 # Check if the wrapped function is from DHTLCommands
                 logger.debug(f"Wrapped function: {wrapped_fn}")
                 logger.debug(f"Has __qualname__: {hasattr(wrapped_fn, '__qualname__')}")
-                if hasattr(wrapped_fn, '__qualname__'):
+                if hasattr(wrapped_fn, "__qualname__"):
                     logger.debug(f"__qualname__: {wrapped_fn.__qualname__}")
 
-                if hasattr(wrapped_fn, '__qualname__') and 'DHTLCommands' in wrapped_fn.__qualname__:
+                if hasattr(wrapped_fn, "__qualname__") and "DHTLCommands" in wrapped_fn.__qualname__:
                     # Parse arguments for DHTLCommands methods
                     logger.debug("Handling as DHTLCommands Prefect task")
                     parsed_args = self._parse_command_args(command, args)
@@ -85,7 +94,7 @@ class CommandDispatcher:
                     result = handler(args) if args else handler()
                     return 0 if result else 1
             # Check if this is a method that needs parsed arguments
-            elif hasattr(handler, '__self__'):
+            elif hasattr(handler, "__self__"):
                 # This is a bound method
                 if isinstance(handler.__self__, DHTLCommands):
                     # Parse arguments for DHTLCommands methods
@@ -109,6 +118,7 @@ class CommandDispatcher:
                 # Regular functions
                 # Check if function expects no arguments
                 import inspect
+
                 sig = inspect.signature(handler)
                 if not sig.parameters:
                     # Function takes no arguments
@@ -171,6 +181,45 @@ class CommandDispatcher:
             parser.add_argument("--extras", nargs="*", help="Extra dependency groups")
             parser.add_argument("--upgrade", action="store_true", help="Upgrade dependencies")
 
+        elif command == "install":
+            # Same as setup
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("path", nargs="?", default=".", help="Project path")
+            parser.add_argument("--python", help="Python version")
+            parser.add_argument("--dev", action="store_true", help="Install dev dependencies")
+            parser.add_argument("--from-requirements", action="store_true", help="Import from requirements.txt")
+            parser.add_argument("--all-packages", action="store_true", help="Install all workspace packages")
+            parser.add_argument("--compile-bytecode", action="store_true", help="Compile Python files to bytecode")
+            parser.add_argument("--editable", action="store_true", help="Install in editable mode")
+            parser.add_argument("--index-url", help="Custom package index URL")
+            parser.add_argument("--install-pre-commit", action="store_true", help="Install pre-commit hooks")
+
+        elif command in ["add", "remove"]:
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("packages", nargs="+", help="Package(s) to {command}")
+            parser.add_argument("--dev", action="store_true", help="Add to/remove from dev dependencies")
+            if command == "add":
+                parser.add_argument("--optional", help="Add to optional dependency group")
+                parser.add_argument("--platform", help="Platform-specific dependency")
+                parser.add_argument("--python", help="Python version constraint")
+                parser.add_argument("--editable", action="store_true", help="Add as editable")
+
+        elif command == "upgrade":
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            parser.add_argument("packages", nargs="*", help="Specific packages to upgrade")
+            parser.add_argument("--all", action="store_true", help="Upgrade all packages")
+            parser.add_argument("--dev", action="store_true", help="Include dev dependencies")
+
+        elif command in ["fmt", "format", "check", "doc", "bin"]:
+            parser = argparse.ArgumentParser(prog=f"dhtl {command}")
+            if command == "check":
+                parser.add_argument("path", nargs="?", default=".", help="Path to check")
+                parser.add_argument("--strict", action="store_true", default=True, help="Use strict mode")
+            elif command == "doc":
+                parser.add_argument("path", nargs="?", default=".", help="Project path")
+                parser.add_argument("--format", help="Documentation format (sphinx/mkdocs)")
+                parser.add_argument("--serve", action="store_true", help="Serve docs after building")
+
         else:
             # Default parser
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
@@ -189,12 +238,14 @@ class CommandDispatcher:
 
         # Group commands by category
         categories = {
-            "Project Management": ["init", "setup", "clean"],
-            "Development": ["build", "sync", "test", "lint", "format", "coverage"],
+            "Project Management": ["init", "setup", "install", "clean"],
+            "Dependencies": ["add", "remove", "upgrade", "sync", "restore"],
+            "Development": ["build", "test", "lint", "format", "fmt", "check", "coverage", "doc"],
             "Version Control": ["commit", "tag", "bump", "clone", "fork"],
-            "Deployment": ["publish", "workflows"],
-            "Utilities": ["env", "diagnostics", "restore", "guardian"],
-            "Help": ["help", "version"]
+            "Deployment": ["publish", "workflows", "deploy_project_in_container"],
+            "Utilities": ["env", "diagnostics", "guardian", "bin"],
+            "Runtime": ["run", "script", "python", "node"],
+            "Help": ["help", "version"],
         }
 
         for category, cmds in categories.items():
@@ -209,6 +260,7 @@ class CommandDispatcher:
     def show_version(self, args: list[str] = None) -> int:
         """Show version information."""
         from .. import __version__
+
         print(f"Development Helper Toolkit (DHT) v{__version__}")
         print("Pure Python implementation")
         return 0
