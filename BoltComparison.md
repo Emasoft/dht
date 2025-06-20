@@ -6,15 +6,17 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
 
 ### Basic Commands
 
-- [ ] **`dhtl` (no args)** → Should default to `dhtl install` (currently shows help)
+- [x] **`dhtl` (no args)** → Should default to `dhtl install` (currently shows help)
   - **Current**: Shows help message
   - **Action**: Change default behavior to run `dhtl setup` (equivalent to install)
   - **Implementation**: Modify `dhtl.py` main function to detect no args and run setup
+  - **Status**: ✅ Implemented - defaults to install command
 
-- [ ] **`dhtl [unknown command]`** → Should default to `dhtl run [unknown command]`
+- [x] **`dhtl [unknown command]`** → Should default to `dhtl run [unknown command]`
   - **Current**: Shows error for unknown command
   - **Action**: Catch unknown commands and pass to `dhtl run`
   - **Implementation**: Add fallback in command dispatcher
+  - **Status**: ✅ Implemented - unknown commands fallback to run
 
 - [ ] **`dhtl help`** → Already exists ✅
   - **Current**: `dhtl --help` and `dhtl help`
@@ -22,12 +24,14 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
 
 ### Package Management Commands
 
-- [ ] **`dhtl install`** → Add as alias for `dhtl setup`
+- [x] **`dhtl install`** → Add as alias for `dhtl setup`
   - **Current**: `dhtl setup` does this
   - **Action**: Add `install` as command alias
   - **Implementation**: Add @click.command(name='install') that calls setup
+  - **Status**: ✅ Implemented in install_command.py
 
-- [ ] **`dhtl add [package]`** → New command wrapping `uv add`
+- [x] **`dhtl add [package]`** → New command wrapping `uv add`
+  - **Status**: ✅ Implemented in add_command.py
   - **Current**: Users must use `uv add` directly
   - **Action**: Create new command
   - **Implementation**:
@@ -39,12 +43,14 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
         # Use uv add via subprocess
     ```
 
-- [ ] **`dhtl upgrade [package]`** → New command wrapping `uv add --upgrade`
+- [x] **`dhtl upgrade [package]`** → New command wrapping `uv add --upgrade`
+  - **Status**: ✅ Implemented in upgrade_command.py
   - **Current**: `dhtl sync --upgrade` upgrades all
   - **Action**: Create new command for specific packages
   - **Implementation**: Similar to add but with --upgrade flag
 
-- [ ] **`dhtl remove [package]`** → New command wrapping `uv remove`
+- [x] **`dhtl remove [package]`** → New command wrapping `uv remove`
+  - **Status**: ✅ Implemented in remove_command.py
   - **Current**: Users must use `uv remove` directly
   - **Action**: Create new command
   - **Implementation**: Wrap uv remove command
@@ -63,7 +69,8 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
   - **Current**: `dhtl test` runs pytest
   - **Action**: None needed
 
-- [ ] **`dhtl format` / `dhtl fmt`** → Already exists, add `fmt` alias
+- [x] **`dhtl format` / `dhtl fmt`** → Already exists, add `fmt` alias
+  - **Status**: ✅ Implemented in fmt_command.py
   - **Current**: `dhtl format` exists
   - **Action**: Add `fmt` as alias
   - **Implementation**: Add @click.command(name='fmt') that calls format
@@ -72,7 +79,8 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
   - **Current**: `dhtl lint` runs linters
   - **Action**: None needed
 
-- [ ] **`dhtl doc`** → New command for documentation generation
+- [x] **`dhtl doc`** → New command for documentation generation
+  - **Status**: ✅ Implemented in doc_command.py
   - **Current**: Not implemented
   - **Action**: Create new command using Sphinx/mkdocs
   - **Implementation**:
@@ -83,21 +91,24 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
         # Use Sphinx or mkdocs
     ```
 
-- [ ] **`dhtl check`** → Add as alias for type checking (part of lint)
+- [x] **`dhtl check`** → Add as alias for type checking (part of lint)
+  - **Status**: ✅ Implemented in check_command.py
   - **Current**: Type checking is part of `dhtl lint`
   - **Action**: Add standalone command for mypy
   - **Implementation**: Create command that runs mypy only
 
-- [ ] **`dhtl bin`** → New command to show executable installation folder
+- [x] **`dhtl bin`** → New command to show executable installation folder
+  - **Status**: ✅ Implemented in bin_command.py
   - **Current**: Not implemented
   - **Action**: Create command to show .venv/bin or Scripts path
   - **Implementation**: Print venv bin directory path
 
 ### Workspace Commands (Using UV Workspaces)
 
-- [ ] **`dhtl workspaces run [script]` / `dhtl ws run [script]`** → Run script in all packages
+- [x] **`dhtl workspaces run [script]` / `dhtl ws run [script]`** → Run script in all packages
   - **Current**: Not implemented
   - **Action**: Implement using UV workspace support
+  - **Status**: ✅ Implemented in workspaces_command.py
   - **Implementation**:
     ```python
     @click.command(name='workspaces')
@@ -108,19 +119,22 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
         # Use uv run with workspace iteration
     ```
 
-- [ ] **`dhtl ws exec -- [cmd]`** → Execute shell command in every package
+- [x] **`dhtl ws exec -- [cmd]`** → Execute shell command in every package
   - **Current**: Not implemented
   - **Action**: Implement workspace exec
+  - **Status**: ✅ Implemented in workspaces_command.py
   - **Implementation**: Iterate workspace members and execute command
 
-- [ ] **`dhtl ws upgrade [dependency]`** → Upgrade dependency across all packages
+- [x] **`dhtl ws upgrade [dependency]`** → Upgrade dependency across all packages
   - **Current**: Not implemented
   - **Action**: Implement using UV workspace features
+  - **Status**: ✅ Implemented in workspaces_command.py
   - **Implementation**: Run uv add --upgrade in all workspace members
 
-- [ ] **`dhtl ws remove [dependency]`** → Remove dependency across all packages
+- [x] **`dhtl ws remove [dependency]`** → Remove dependency across all packages
   - **Current**: Not implemented
   - **Action**: Implement workspace-wide removal
+  - **Status**: ✅ Implemented in workspaces_command.py
   - **Implementation**: Run uv remove in all workspace members
 
 ### Workspace Filtering Options
@@ -139,14 +153,16 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
 
 ### Project/Workspace Specific Commands
 
-- [ ] **`dhtl workspace [name] run [script]` / `dhtl w [name] run [script]`**
+- [x] **`dhtl workspace [name] run [script]` / `dhtl w [name] run [script]`**
   - **Current**: Not implemented
   - **Action**: Run script in specific workspace package
+  - **Status**: ✅ Implemented with aliases w
   - **Implementation**: Target specific workspace member
 
-- [ ] **`dhtl project run [script]` / `dhtl p run [script]`**
+- [x] **`dhtl project run [script]` / `dhtl p run [script]`**
   - **Current**: Not implemented
   - **Action**: Run script in root project only
+  - **Status**: ✅ Implemented with alias p
   - **Implementation**: Alias for current `dhtl run`
 
 ### Publishing Commands
@@ -163,15 +179,15 @@ This document tracks the implementation of Bolt-compatible commands in DHT, ensu
 
 ## Implementation Plan
 
-### Phase 1: Command Aliases and Simple Wrappers
-1. [ ] Write tests for all new command behaviors
-2. [ ] Add `install` as alias for `setup`
-3. [ ] Add `fmt` as alias for `format`
-4. [ ] Add `check` command for type checking only
-5. [ ] Implement `add`, `remove`, `upgrade` commands wrapping uv
-6. [ ] Implement `bin` command
-7. [ ] Change default behavior when no command given
-8. [ ] Implement unknown command fallback to `run`
+### Phase 1: Command Aliases and Simple Wrappers ✅ COMPLETED
+1. [x] Write tests for all new command behaviors
+2. [x] Add `install` as alias for `setup`
+3. [x] Add `fmt` as alias for `format`
+4. [x] Add `check` command for type checking only
+5. [x] Implement `add`, `remove`, `upgrade` commands wrapping uv
+6. [x] Implement `bin` command
+7. [x] Change default behavior when no command given
+8. [x] Implement unknown command fallback to `run`
 
 ### Phase 2: Documentation Command
 1. [ ] Write tests for documentation generation
@@ -216,8 +232,8 @@ Each new command requires:
 ## Progress Tracking
 
 - Total Commands to Implement/Modify: 23
-- Completed: 0
+- Completed: 16
 - In Progress: 0
-- Remaining: 23
+- Remaining: 7
 
-Last Updated: 2025-01-20
+Last Updated: 2025-01-20 (Phase 1 completed, workspace commands added)

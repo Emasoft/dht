@@ -178,8 +178,27 @@ class WorkspacesCommand:
             return self._run_script(filtered_members, script, args)
         elif subcommand == "exec":
             return self._exec_command(filtered_members, args)
+        elif subcommand == "upgrade":
+            # For upgrade, packages are in script + args
+            packages = []
+            if script:
+                packages.append(script)
+            if args:
+                packages.extend(args)
+            return self._upgrade_packages(filtered_members, packages)
+        elif subcommand == "remove":
+            # For remove, packages are in script + args
+            packages = []
+            if script:
+                packages.append(script)
+            if args:
+                packages.extend(args)
+            return self._remove_packages(filtered_members, packages)
         else:
-            return {"success": False, "error": f"Unknown subcommand: {subcommand}. Use 'run' or 'exec'"}
+            return {
+                "success": False,
+                "error": f"Unknown subcommand: {subcommand}. Use 'run', 'exec', 'upgrade', or 'remove'",
+            }
 
     def _match_pattern(self, name: str, pattern: str) -> bool:
         """Check if name matches glob pattern."""
@@ -276,6 +295,94 @@ class WorkspacesCommand:
         return {
             "success": all_success,
             "message": f"Executed command in {len(members)} workspace members",
+            "results": results,
+            "members_count": len(members),
+            "failed_count": len([r for r in results.values() if not r.get("success", False)]),
+        }
+
+    def _upgrade_packages(self, members: list[Path], args: list[str] | None) -> dict[str, Any]:
+        """Upgrade packages in all workspace members."""
+        if not args:
+            return {"success": False, "error": "Package name(s) required for 'upgrade' subcommand"}
+
+        results = {}
+        all_success = True
+
+        for member in members:
+            self.logger.info(f"Upgrading packages in {member.name}")
+
+            # Build command
+            cmd = ["uv", "add", "--upgrade", "--directory", str(member)]
+            cmd.extend(args)
+
+            try:
+                result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=300)
+
+                results[str(member)] = {
+                    "success": result.returncode == 0,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "returncode": result.returncode,
+                }
+
+                if result.returncode != 0:
+                    all_success = False
+                    self.logger.error(f"Upgrade failed in {member.name}: {result.stderr}")
+
+            except subprocess.TimeoutExpired:
+                results[str(member)] = {"success": False, "error": "Command timed out"}
+                all_success = False
+            except Exception as e:
+                results[str(member)] = {"success": False, "error": str(e)}
+                all_success = False
+
+        return {
+            "success": all_success,
+            "message": f"Upgraded packages in {len(members)} workspace members",
+            "results": results,
+            "members_count": len(members),
+            "failed_count": len([r for r in results.values() if not r.get("success", False)]),
+        }
+
+    def _remove_packages(self, members: list[Path], args: list[str] | None) -> dict[str, Any]:
+        """Remove packages from all workspace members."""
+        if not args:
+            return {"success": False, "error": "Package name(s) required for 'remove' subcommand"}
+
+        results = {}
+        all_success = True
+
+        for member in members:
+            self.logger.info(f"Removing packages from {member.name}")
+
+            # Build command
+            cmd = ["uv", "remove", "--directory", str(member)]
+            cmd.extend(args)
+
+            try:
+                result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=300)
+
+                results[str(member)] = {
+                    "success": result.returncode == 0,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "returncode": result.returncode,
+                }
+
+                if result.returncode != 0:
+                    all_success = False
+                    self.logger.error(f"Remove failed in {member.name}: {result.stderr}")
+
+            except subprocess.TimeoutExpired:
+                results[str(member)] = {"success": False, "error": "Command timed out"}
+                all_success = False
+            except Exception as e:
+                results[str(member)] = {"success": False, "error": str(e)}
+                all_success = False
+
+        return {
+            "success": all_success,
+            "message": f"Removed packages from {len(members)} workspace members",
             "results": results,
             "members_count": len(members),
             "failed_count": len([r for r in results.values() if not r.get("success", False)]),

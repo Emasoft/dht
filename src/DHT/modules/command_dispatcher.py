@@ -222,8 +222,10 @@ class CommandDispatcher:
 
         elif command in ["workspaces", "ws"]:
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
-            parser.add_argument("subcommand", choices=["run", "exec"], help="Subcommand")
-            parser.add_argument("script", nargs="?", help="Script to run (for 'run' subcommand)")
+            parser.add_argument("subcommand", choices=["run", "exec", "upgrade", "remove"], help="Subcommand")
+            parser.add_argument(
+                "script", nargs="?", help="Script to run (for 'run' subcommand) or packages (for 'upgrade'/'remove')"
+            )
             parser.add_argument("args", nargs="*", help="Additional arguments")
             parser.add_argument("--only", nargs="+", help="Only run in matching packages")
             parser.add_argument("--ignore", nargs="+", help="Skip matching packages")
@@ -233,8 +235,10 @@ class CommandDispatcher:
         elif command in ["workspace", "w"]:
             parser = argparse.ArgumentParser(prog=f"dhtl {command}")
             parser.add_argument("name", help="Workspace member name")
-            parser.add_argument("subcommand", choices=["run", "exec"], help="Subcommand")
-            parser.add_argument("script", nargs="?", help="Script to run (for 'run' subcommand)")
+            parser.add_argument("subcommand", choices=["run", "exec", "upgrade", "remove"], help="Subcommand")
+            parser.add_argument(
+                "script", nargs="?", help="Script to run (for 'run' subcommand) or packages (for 'upgrade'/'remove')"
+            )
             parser.add_argument("args", nargs="*", help="Additional arguments")
 
         elif command in ["project", "p"]:

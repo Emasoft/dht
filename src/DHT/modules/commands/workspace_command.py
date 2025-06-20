@@ -93,8 +93,38 @@ class WorkspaceCommand:
             if not args:
                 return {"success": False, "error": "Command required for 'exec' subcommand"}
             cmd = args
+
+        elif subcommand == "upgrade":
+            # For upgrade, packages are in script + args
+            packages = []
+            if script:
+                packages.append(script)
+            if args:
+                packages.extend(args)
+            if not packages:
+                return {"success": False, "error": "Package name(s) required for 'upgrade' subcommand"}
+
+            cmd = ["uv", "add", "--upgrade", "--directory", str(target_member)]
+            cmd.extend(packages)
+
+        elif subcommand == "remove":
+            # For remove, packages are in script + args
+            packages = []
+            if script:
+                packages.append(script)
+            if args:
+                packages.extend(args)
+            if not packages:
+                return {"success": False, "error": "Package name(s) required for 'remove' subcommand"}
+
+            cmd = ["uv", "remove", "--directory", str(target_member)]
+            cmd.extend(packages)
+
         else:
-            return {"success": False, "error": f"Unknown subcommand: {subcommand}"}
+            return {
+                "success": False,
+                "error": f"Unknown subcommand: {subcommand}. Use 'run', 'exec', 'upgrade', or 'remove'",
+            }
 
         # Execute command
         try:
@@ -110,7 +140,7 @@ class WorkspaceCommand:
                     timeout=300,
                 )
             else:
-                # For run, uv handles the directory
+                # For run, upgrade, remove - uv handles the directory
                 result = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=300)
 
             return {
