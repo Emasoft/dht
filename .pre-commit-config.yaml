@@ -29,8 +29,10 @@ repos:
     rev: v0.12.0
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix, --exit-non-zero-on-fix]
+        files: \.py$
       - id: ruff-format
+        files: \.py$
 
   # MyPy for type checking
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -38,8 +40,9 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies: [types-pyyaml, types-requests, types-toml]
-        args: [--ignore-missing-imports]
+        args: [--ignore-missing-imports, --strict]
         exclude: ^(tests/|tree-sitter-bash/)
+        files: \.py$
 
   # Deptry for dependency checking
   - repo: https://github.com/fpgmaas/deptry
@@ -47,6 +50,28 @@ repos:
     hooks:
       - id: deptry
         args: [src, --config, pyproject.toml]
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [--strict, -c, .yamllint.yml]
+        exclude: ^(tree-sitter-bash/|node_modules/)
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=error, --extended-analysis=true]
+        exclude: ^(tree-sitter-bash/|node_modules/)
+
+  # Actionlint for GitHub Actions
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.5
+    hooks:
+      - id: actionlint
 
   # Commitizen for commit message validation
   - repo: https://github.com/commitizen-tools/commitizen

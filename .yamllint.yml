@@ -1,0 +1,46 @@
+# YAML linting configuration for DHT project
+
+extends: default
+
+rules:
+  # Line length
+  line-length:
+    max: 120
+    level: warning
+
+  # Indentation
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  # Comments
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 2
+
+  # Empty lines
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 0
+
+  # Truthy values
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+
+  # Brackets
+  brackets:
+    forbid: false
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Document start
+  document-start:
+    present: false
+
+ignore: |
+  .venv/
+  node_modules/
+  tree-sitter-bash/
+  dist/
+  build/
