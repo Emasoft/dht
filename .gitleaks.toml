@@ -1,54 +1,159 @@
 # Gitleaks configuration for DHT project
-
 title = "DHT Gitleaks Config"
 
-# DHT specific paths to exclude
+# Global allowlist
 [allowlist]
-description = "DHT project allowlist"
-paths = [
-  # Virtual environment directories
-  '''^\.venv/''',
-  '''^venv/''',
-  '''^env/''',
+description = "Global allowlist for DHT"
 
-  # Build and distribution
-  '''^build/''',
-  '''^dist/''',
-  '''^\.eggs/''',
-  '''^[^/]+\.egg-info/''',
-
-  # Cache directories
-  '''^\.pytest_cache/''',
-  '''^\.mypy_cache/''',
-  '''^\.ruff_cache/''',
-  '''^__pycache__/''',
-
-  # Node modules and frontend build
-  '''^node_modules/''',
-  '''^frontend/build/''',
-  '''^frontend/dist/''',
-
-  # Dynamically downloaded dependencies
-  '''^tree-sitter-bash/''',
-
-  # Generated files
-  '''^requirements\.txt$''',
-  '''^requirements-dev\.txt$''',
-  '''^uv\.lock$''',
-
-  # Test fixtures and data
-  '''^tests/fixtures/''',
-  '''^tests/data/''',
-]
-
-# Common patterns that might appear in DHT but are not secrets
+# Allowed email pattern - specifically for Emasoft
 regexes = [
-  # Example API keys in documentation or tests
-  '''(?i)(example|sample|test|demo|dummy|fake).*(?:key|token|secret|password)''',
-
-  # localhost URLs with credentials (common in dev configs)
-  '''(?i)https?://(?:user|admin|test):(?:pass|password|secret)@localhost''',
-
-  # Placeholder values
-  '''(?i)(?:your|my|the).*(?:api|secret|key|token|password)''',
+  '''713559\+Emasoft@users\.noreply\.github\.com''',
 ]
+
+# Paths to exclude from scanning
+paths = [
+  # Virtual environments
+  '''\.venv''',
+  '''venv''',
+  '''env''',
+
+  # Python cache
+  '''__pycache__''',
+  '''\.pytest_cache''',
+  '''\.mypy_cache''',
+  '''\.ruff_cache''',
+
+  # Build directories
+  '''build''',
+  '''dist''',
+  '''\.egg-info''',
+
+  # Node modules
+  '''node_modules''',
+
+  # Dependencies
+  '''tree-sitter-bash''',
+
+  # Lock files
+  '''requirements\.txt''',
+  '''requirements-dev\.txt''',
+  '''uv\.lock''',
+  '''package-lock\.json''',
+  '''yarn\.lock''',
+  '''pnpm-lock\.yaml''',
+
+  # Test fixtures
+  '''tests/fixtures''',
+  '''tests/data''',
+
+  # IDE
+  '''\.idea''',
+  '''\.vscode''',
+]
+
+# Custom rules for common secrets
+[[rules]]
+id = "aws-access-key"
+description = "AWS Access Key"
+regex = '''(?i)(aws[_\-\s]?)?access[_\-\s]?key[_\-\s]?(id)?[_\-\s]?[=:]\s*['\"]?([A-Z0-9]{20})['\"]?'''
+tags = ["key", "AWS"]
+
+[[rules]]
+id = "aws-secret-key"
+description = "AWS Secret Key"
+regex = '''(?i)(aws[_\-\s]?)?secret[_\-\s]?access[_\-\s]?key[_\-\s]?[=:]\s*['\"]?([A-Za-z0-9/+=]{40})['\"]?'''
+tags = ["key", "AWS"]
+
+[[rules]]
+id = "github-token"
+description = "GitHub Personal Access Token"
+regex = '''ghp_[0-9a-zA-Z]{36}'''
+tags = ["key", "GitHub"]
+
+[[rules]]
+id = "github-oauth"
+description = "GitHub OAuth Access Token"
+regex = '''gho_[0-9a-zA-Z]{36}'''
+tags = ["key", "GitHub"]
+
+[[rules]]
+id = "github-app-token"
+description = "GitHub App Token"
+regex = '''(ghu|ghs)_[0-9a-zA-Z]{36}'''
+tags = ["key", "GitHub"]
+
+[[rules]]
+id = "github-refresh-token"
+description = "GitHub Refresh Token"
+regex = '''ghr_[0-9a-zA-Z]{36}'''
+tags = ["key", "GitHub"]
+
+[[rules]]
+id = "gitlab-token"
+description = "GitLab Personal Access Token"
+regex = '''glpat-[0-9a-zA-Z\-\_]{20}'''
+tags = ["key", "GitLab"]
+
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20}'''
+tags = ["key", "OpenAI"]
+
+[[rules]]
+id = "openai-api-key-new"
+description = "OpenAI API Key (new format)"
+regex = '''sk-proj-[a-zA-Z0-9]{48}'''
+tags = ["key", "OpenAI"]
+
+[[rules]]
+id = "slack-token"
+description = "Slack Token"
+regex = '''xox[baprs]-([0-9a-zA-Z]{10,48})'''
+tags = ["key", "Slack"]
+
+[[rules]]
+id = "stripe-api-key"
+description = "Stripe API Key"
+regex = '''(?i)stripe[_\-\s]?api[_\-\s]?key[_\-\s]?[=:]\s*['\"]?sk_(test|live)_[0-9a-zA-Z]{24}['\"]?'''
+tags = ["key", "Stripe"]
+
+[[rules]]
+id = "pypi-upload-token"
+description = "PyPI Upload Token"
+regex = '''pypi-AgEIcHlwaS5vcmcC[A-Za-z0-9\-_]+'''
+tags = ["key", "PyPI"]
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api[_\-\s]?key|apikey|api[_\-\s]?secret)[_\-\s]?[=:]\s*['\"]?([a-zA-Z0-9\-_]{20,})['\"]?'''
+tags = ["key", "generic"]
+[rules.allowlist]
+regexes = [
+  # Allow placeholder patterns
+  '''(?i)(example|sample|test|demo|dummy|fake|placeholder|your)''',
+  '''(?i)<[A-Z_]+>''',
+  '''xxx+''',
+  '''None|null|undefined|""''',
+]
+
+[[rules]]
+id = "generic-secret"
+description = "Generic Secret"
+regex = '''(?i)(secret|password|passwd|pwd)[_\-\s]?[=:]\s*['\"]?([a-zA-Z0-9\-_!@#$%^&*]{8,})['\"]?'''
+tags = ["secret", "generic"]
+[rules.allowlist]
+regexes = [
+  # Allow placeholder patterns
+  '''(?i)(example|sample|test|demo|dummy|fake|placeholder|your|changeme)''',
+  '''(?i)<[A-Z_]+>''',
+  '''xxx+''',
+  '''None|null|undefined|""''',
+]
+
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN\s+(RSA|DSA|EC|OPENSSH|PGP)\s+PRIVATE\s+KEY-----'''
+tags = ["key", "private"]
