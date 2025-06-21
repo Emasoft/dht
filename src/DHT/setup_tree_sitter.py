@@ -23,6 +23,7 @@ def ensure_tree_sitter_installed():
     """Ensure the tree-sitter Python package is installed"""
     try:
         import tree_sitter
+
         # Get version if available, otherwise just acknowledge it's installed
         try:
             version = tree_sitter.__version__
@@ -38,11 +39,13 @@ def ensure_tree_sitter_installed():
             print("🔄 Installing tree-sitter Python package...")
             subprocess.check_call([sys.executable, "-m", "pip", "install", "tree-sitter"])
             import tree_sitter
+
             print("✅ tree-sitter Python package installed successfully")
             return True
         except Exception as e:
             print(f"❌ Failed to install tree-sitter Python package: {e}")
             return False
+
 
 def ensure_build_directory(project_root):
     """Ensure the build directory exists"""
@@ -53,6 +56,7 @@ def ensure_build_directory(project_root):
     else:
         print(f"✅ Build directory already exists at {build_dir}")
     return build_dir
+
 
 def ensure_tree_sitter_bash(project_root):
     """Ensure tree-sitter-bash grammar is cloned and set up"""
@@ -73,11 +77,16 @@ def ensure_tree_sitter_bash(project_root):
         # Clone the repository
         try:
             print("🔄 Cloning tree-sitter-bash repository...")
-            subprocess.check_call([
-                "git", "clone", "--depth", "1",
-                "https://github.com/tree-sitter/tree-sitter-bash.git",
-                str(ts_bash_dir)
-            ])
+            subprocess.check_call(
+                [
+                    "git",
+                    "clone",
+                    "--depth",
+                    "1",
+                    "https://github.com/tree-sitter/tree-sitter-bash.git",
+                    str(ts_bash_dir),
+                ]
+            )
 
             # Verify the clone worked correctly
             if not (ts_bash_dir / "src" / "parser.c").exists():
@@ -93,6 +102,7 @@ def ensure_tree_sitter_bash(project_root):
 
     return True
 
+
 def build_language_library(project_root):
     """Build the language library using tree-sitter"""
     try:
@@ -104,9 +114,10 @@ def build_language_library(project_root):
 
         # For newer tree-sitter versions, we try to use tree_sitter_languages
         try:
-            import tree_sitter_bash
-            print("✅ tree-sitter-bash Python bindings already installed")
-            return True
+            import importlib.util
+            if importlib.util.find_spec("tree_sitter_bash") is not None:
+                print("✅ tree-sitter-bash Python bindings already installed")
+                return True
         except ImportError:
             pass
 
@@ -131,17 +142,11 @@ def build_language_library(project_root):
 
         # Try the newer API first
         try:
-            Language.build(
-                str(lib_path),
-                [str(ts_bash_dir)]
-            )
+            Language.build(str(lib_path), [str(ts_bash_dir)])
         except AttributeError:
             # Fall back to older API
             try:
-                Language.build_library(
-                    str(lib_path),
-                    [str(ts_bash_dir)]
-                )
+                Language.build_library(str(lib_path), [str(ts_bash_dir)])
             except Exception as e:
                 print(f"❌ Neither Language.build nor Language.build_library available: {e}")
                 print("🔄 Attempting to use pre-installed tree-sitter-bash bindings...")
@@ -149,9 +154,15 @@ def build_language_library(project_root):
                 # Try to install tree-sitter-bash as a package
                 try:
                     subprocess.check_call([sys.executable, "-m", "pip", "install", "tree-sitter-bash"])
-                    import tree_sitter_bash
-                    print("✅ Successfully installed tree-sitter-bash Python bindings")
-                    return True
+                    # Verify installation using importlib
+                    import importlib.util
+
+                    if importlib.util.find_spec("tree_sitter_bash") is not None:
+                        print("✅ Successfully installed tree-sitter-bash Python bindings")
+                        return True
+                    else:
+                        print("❌ tree-sitter-bash installation verification failed")
+                        return False
                 except Exception as install_error:
                     print(f"❌ Failed to install tree-sitter-bash: {install_error}")
                     return False
@@ -171,6 +182,7 @@ def build_language_library(project_root):
     except Exception as e:
         print(f"❌ Failed to build language library: {e}")
         return False
+
 
 def test_bash_parsing(project_root):
     """Test if bash parsing works with a simple example"""
@@ -214,7 +226,7 @@ def test_bash_parsing(project_root):
             for func in function_nodes:
                 for part in func.children:
                     if part.type == "word":
-                        func_name = bash_code[part.start_byte:part.end_byte]
+                        func_name = bash_code[part.start_byte : part.end_byte]
                         print(f"    Function name: {func_name}")
             return True
         else:
@@ -224,6 +236,7 @@ def test_bash_parsing(project_root):
     except Exception as e:
         print(f"❌ Failed to test Bash parsing: {e}")
         return False
+
 
 def main():
     """Main function"""
@@ -258,6 +271,7 @@ def main():
 
     print("\n✅ tree-sitter with Bash grammar is set up successfully!")
     print("You can now use the bash_parser.py and extract_functions.py scripts")
+
 
 if __name__ == "__main__":
     main()

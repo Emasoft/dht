@@ -1,0 +1,73 @@
+# Gitleaks configuration for DHT project
+
+title = "DHT Gitleaks Config"
+# Version is optional but helps with tracking changes
+# config-version = "1.0"
+
+# DHT specific paths to exclude
+[allowlist]
+description = "DHT project allowlist"
+paths = [
+  # Virtual environment directories
+  '''^\.venv/''',
+  '''^venv/''',
+  '''^env/''',
+
+  # Build and distribution
+  '''^build/''',
+  '''^dist/''',
+  '''^\.eggs/''',
+  '''^[^/]+\.egg-info/''',
+
+  # Cache directories
+  '''^\.pytest_cache/''',
+  '''^\.mypy_cache/''',
+  '''^\.ruff_cache/''',
+  '''^__pycache__/''',
+
+  # Node modules and frontend build
+  '''^node_modules/''',
+  '''^frontend/build/''',
+  '''^frontend/dist/''',
+
+  # Dynamically downloaded dependencies
+  '''^tree-sitter-bash/''',
+
+  # Generated files
+  '''^requirements\.txt$''',
+  '''^requirements-dev\.txt$''',
+  '''^uv\.lock$''',
+
+  # Test fixtures and data
+  '''^tests/fixtures/''',
+  '''^tests/data/''',
+]
+
+# Common patterns that might appear in DHT but are not secrets
+regexes = [
+  # Example API keys in documentation or tests
+  '''(?i)(example|sample|test|demo|dummy|fake).*(?:key|token|secret|password)''',
+
+  # localhost URLs with credentials (common in dev configs)
+  '''(?i)https?://(?:user|admin|test):(?:pass|password|secret)@localhost''',
+
+  # Placeholder values
+  '''(?i)(?:your|my|the).*(?:api|secret|key|token|password)''',
+]
+
+# Additional rules to skip for DHT
+[[rules]]
+id = "generic-api-key"
+# Skip generic API key detection in test files
+paths = [
+  '''^tests/''',
+  '''_test\.py$''',
+  '''test_.*\.py$''',
+]
+
+[[rules]]
+id = "private-key"
+# Skip private key detection in test fixtures
+paths = [
+  '''^tests/fixtures/''',
+]

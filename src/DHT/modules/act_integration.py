@@ -33,10 +33,11 @@ from DHT.modules.act_workflow_manager import ActWorkflowManager
 
 console = Console()
 
-# Import container runner if available
+# Check if container runner is available
 try:
-    from act_container_setup import ActContainerRunner
-    HAS_CONTAINER_RUNNER = True
+    import importlib.util
+
+    HAS_CONTAINER_RUNNER = importlib.util.find_spec("act_container_setup") is not None
 except ImportError:
     HAS_CONTAINER_RUNNER = False
 
@@ -102,7 +103,7 @@ class ActIntegration:
             "gh_extension": result.act_extension_installed,
             "standalone_act": result.standalone_act_available,
             "container_act": self.container_manager.setup_container_environment().runtime_available,
-            "preferred_method": result.preferred_method
+            "preferred_method": result.preferred_method,
         }
 
     def install_gh_act_extension(self) -> bool:
@@ -130,7 +131,7 @@ class ActIntegration:
             "act_image_available": container_result.success,
             "runtime_available": container_result.runtime_available,
             "runtime": container_result.runtime,
-            "error": container_result.error
+            "error": container_result.error,
         }
 
     def get_act_command(self, event: str = "push", job: str | None = None, use_container: bool = False) -> list[str]:
@@ -141,10 +142,7 @@ class ActIntegration:
 
         # Build command using command builder
         return builder.get_act_command(
-            event=event,
-            job=job,
-            use_container=use_container,
-            preferred_method=availability["preferred_method"]
+            event=event, job=job, use_container=use_container, preferred_method=availability["preferred_method"]
         )
 
     def list_workflows_and_jobs(self) -> dict[str, Any]:
@@ -185,11 +183,7 @@ def check_act_setup(project_path: Path) -> dict[str, Any]:
     availability = integration.check_act_available()
     workflows = integration.get_workflows()
 
-    return {
-        "has_workflows": True,
-        "workflows": workflows,
-        "act_availability": availability
-    }
+    return {"has_workflows": True, "workflows": workflows, "act_availability": availability}
 
 
 @task(name="setup_act_environment")
@@ -220,7 +214,7 @@ def run_workflow(
     event: str = "push",
     job: str | None = None,
     timeout: int = 1800,  # 30 minutes
-    use_container: bool = False
+    use_container: bool = False,
 ) -> dict[str, Any]:
     """Run a GitHub workflow locally with act."""
     logger = get_run_logger()
@@ -233,6 +227,7 @@ def run_workflow(
         # Use enhanced container runner if available
         if HAS_CONTAINER_RUNNER:
             from act_container_setup import ActContainerRunner
+
             runner = ActContainerRunner(project_path)
 
             # Check for config files
@@ -245,18 +240,14 @@ def run_workflow(
                 job=job,
                 secrets_file=secrets_file if secrets_file.exists() else None,
                 env_file=env_file if env_file.exists() else None,
-                verbose=False
+                verbose=False,
             )
             return result
         else:
             # Fallback to basic container setup
             container_setup = integration.setup_container_environment()
             if not container_setup.get("act_image_available"):
-                return {
-                    "success": False,
-                    "error": "Failed to setup container environment",
-                    "details": container_setup
-                }
+                return {"success": False, "error": "Failed to setup container environment", "details": container_setup}
 
     # Get command
     try:
@@ -269,27 +260,18 @@ def run_workflow(
 
     # Run the workflow
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=str(project_path),
-            capture_output=True,
-            text=True,
-            timeout=timeout
-        )
+        result = subprocess.run(cmd, cwd=str(project_path), capture_output=True, text=True, timeout=timeout)
 
         return {
             "success": result.returncode == 0,
             "stdout": result.stdout,
             "stderr": result.stderr,
-            "command": " ".join(cmd)
+            "command": " ".join(cmd),
         }
 
     except subprocess.TimeoutExpired:
         logger.error(f"Workflow timed out after {timeout} seconds")
-        return {
-            "success": False,
-            "error": f"Timeout after {timeout} seconds"
-        }
+        return {"success": False, "error": f"Timeout after {timeout} seconds"}
 
 
 @flow(name="act_workflow")
@@ -299,7 +281,7 @@ def act_workflow_flow(
     job: str | None = None,
     setup_only: bool = False,
     lint_only: bool = False,
-    use_container: bool = False
+    use_container: bool = False,
 ) -> dict[str, Any]:
     """
     Run GitHub Actions locally using act.
@@ -318,14 +300,16 @@ def act_workflow_flow(
     logger = get_run_logger()
     project_path = Path(project_path).resolve()
 
-    console.print(Panel.fit(
-        f"🎬 DHT Act Integration\n"
-        f"📁 Project: {project_path.name}\n"
-        f"🎯 Event: {event}\n\n"
-        f"[dim]Act runs workflows locally, simulating GitHub Actions.\n"
-        f"For syntax validation only, use --lint with actionlint.[/dim]",
-        style="bold blue"
-    ))
+    console.print(
+        Panel.fit(
+            f"🎬 DHT Act Integration\n"
+            f"📁 Project: {project_path.name}\n"
+            f"🎯 Event: {event}\n\n"
+            f"[dim]Act runs workflows locally, simulating GitHub Actions.\n"
+            f"For syntax validation only, use --lint with actionlint.[/dim]",
+            style="bold blue",
+        )
+    )
 
     # Check setup
     console.print("\n[yellow]🔍 Checking GitHub Actions setup...[/yellow]")
@@ -352,10 +336,7 @@ def act_workflow_flow(
             triggers = [workflow["on"]]
 
         table.add_row(
-            workflow["file"],
-            workflow.get("name", ""),
-            ", ".join(triggers),
-            ", ".join(workflow.get("jobs", []))
+            workflow["file"], workflow.get("name", ""), ", ".join(triggers), ", ".join(workflow.get("jobs", []))
         )
 
     console.print(table)
@@ -369,7 +350,7 @@ def act_workflow_flow(
 
     if use_container:
         console.print("\n[cyan]🐳 Container mode requested[/cyan]")
-        if not availability['container_act']:
+        if not availability["container_act"]:
             console.print("[red]❌ No container runtime available![/red]")
             console.print("   Install Podman or Docker to use container mode")
             return {"success": False, "error": "Container runtime not available"}
@@ -398,7 +379,7 @@ def act_workflow_flow(
     if lint_only:
         return {
             "success": lint_results["total_issues"] == 0 if lint_results["has_actionlint"] else True,
-            "lint_results": lint_results
+            "lint_results": lint_results,
         }
 
     # Check act availability for running workflows
@@ -409,7 +390,6 @@ def act_workflow_flow(
         console.print("  2. brew install act")
         console.print("  3. Install Podman/Docker for container-based act")
         return {"success": False, "error": "No act runner available"}
-
 
     # Setup environment
     console.print("\n[yellow]📋 Setting up act environment...[/yellow]")
@@ -496,11 +476,12 @@ def main():
         job=args.job,
         setup_only=args.setup_only,
         lint_only=args.lint,
-        use_container=args.container
+        use_container=args.container,
     )
 
     # Exit with appropriate code
     import sys
+
     sys.exit(0 if result.get("success", False) else 1)
 
 

@@ -82,10 +82,10 @@ class ConfigIOUtils:
             try:
                 return json.loads(content)
             except json.JSONDecodeError as e:
-                raise ValueError(f"Invalid config file format: {e}")
+                raise ValueError(f"Invalid config file format: {e}") from e
 
         except Exception as e:
-            raise ValueError(f"Failed to load config: {e}")
+            raise ValueError(f"Failed to load config: {e}") from e
 
 
 # Export public API

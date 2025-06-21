@@ -51,6 +51,7 @@ from DHT.modules import cli_commands_registry, system_taxonomy
 # Try to import optional dependencies
 try:
     import psutil
+
     HAS_PSUTIL = True
 except ImportError:
     HAS_PSUTIL = False
@@ -58,6 +59,7 @@ except ImportError:
 
 try:
     import distro
+
     HAS_DISTRO = True
 except ImportError:
     HAS_DISTRO = False
@@ -65,6 +67,7 @@ except ImportError:
 
 try:
     import yaml
+
     HAS_YAML = True
 except ImportError:
     HAS_YAML = False
@@ -74,6 +77,7 @@ except ImportError:
 # --------------------------------------------------------------------------- #
 # Helpers                                                                     #
 # --------------------------------------------------------------------------- #
+
 
 def run_command(cmd: str, timeout: int = 30) -> tuple[str, str | None]:
     """
@@ -87,14 +91,7 @@ def run_command(cmd: str, timeout: int = 30) -> tuple[str, str | None]:
         tuple: (stdout, error) where error is None on success
     """
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            shell=True,
-            text=True,
-            timeout=timeout,
-            env=os.environ.copy()
-        )
+        result = subprocess.run(cmd, capture_output=True, shell=True, text=True, timeout=timeout, env=os.environ.copy())
 
         # Some commands output to stderr even on success
         if result.returncode != 0 and result.stderr.strip():
@@ -111,15 +108,15 @@ def run_command(cmd: str, timeout: int = 30) -> tuple[str, str | None]:
 def snake_case(s: str) -> str:
     """Convert string to snake_case."""
     # Replace common separators with underscore
-    s = re.sub(r'[\s\-\.]+', '_', s.strip())
+    s = re.sub(r"[\s\-\.]+", "_", s.strip())
     # Remove special characters
-    s = re.sub(r'[^\w]', '_', s)
+    s = re.sub(r"[^\w]", "_", s)
     # Convert camelCase to snake_case
-    s = re.sub(r'([a-z])([A-Z])', r'\1_\2', s)
+    s = re.sub(r"([a-z])([A-Z])", r"\1_\2", s)
     # Lowercase and remove duplicate underscores
     s = s.lower()
-    s = re.sub(r'_+', '_', s)
-    return s.strip('_')
+    s = re.sub(r"_+", "_", s)
+    return s.strip("_")
 
 
 def coerce_value(value: str) -> Any:
@@ -127,16 +124,16 @@ def coerce_value(value: str) -> Any:
     value = value.strip()
 
     # Boolean
-    if value.lower() in ('true', 'false'):
-        return value.lower() == 'true'
+    if value.lower() in ("true", "false"):
+        return value.lower() == "true"
 
     # None/null
-    if value.lower() in ('none', 'null', ''):
+    if value.lower() in ("none", "null", ""):
         return None
 
     # Number
     try:
-        if '.' in value:
+        if "." in value:
             return float(value)
         return int(value)
     except ValueError:
@@ -150,10 +147,10 @@ def extract_version(text: str) -> str | None:
     """Extract version number from text."""
     # Common version patterns
     patterns = [
-        r'(\d+\.\d+\.\d+(?:\.\d+)?)',  # 1.2.3 or 1.2.3.4
-        r'version\s+(\d+\.\d+(?:\.\d+)?)',  # version 1.2 or version 1.2.3
-        r'v(\d+\.\d+(?:\.\d+)?)',  # v1.2 or v1.2.3
-        r'(\d+\.\d+)',  # 1.2
+        r"(\d+\.\d+\.\d+(?:\.\d+)?)",  # 1.2.3 or 1.2.3.4
+        r"version\s+(\d+\.\d+(?:\.\d+)?)",  # version 1.2 or version 1.2.3
+        r"v(\d+\.\d+(?:\.\d+)?)",  # v1.2 or v1.2.3
+        r"(\d+\.\d+)",  # 1.2
     ]
 
     for pattern in patterns:
@@ -196,8 +193,8 @@ def parse_key_value_output(text: str) -> tuple[dict[str, Any], list[str]]:
             continue
 
         # Try key: value format
-        if ':' in line:
-            parts = line.split(':', 1)
+        if ":" in line:
+            parts = line.split(":", 1)
             if len(parts) == 2:
                 key = snake_case(parts[0])
                 value = coerce_value(parts[1])
@@ -205,8 +202,8 @@ def parse_key_value_output(text: str) -> tuple[dict[str, Any], list[str]]:
                 continue
 
         # Try key=value format
-        if '=' in line:
-            parts = line.split('=', 1)
+        if "=" in line:
+            parts = line.split("=", 1)
             if len(parts) == 2:
                 key = snake_case(parts[0])
                 value = coerce_value(parts[1])
@@ -226,13 +223,13 @@ def parse_auto_output(text: str) -> tuple[dict[str, Any], list[str]]:
         return {}, []
 
     # Try JSON first
-    if text.startswith(('{', '[')):
+    if text.startswith(("{", "[")):
         parsed, unparsed = parse_json_output(text)
         if parsed:
             return parsed, unparsed
 
     # Try YAML
-    if HAS_YAML and (':' in text or '-' in text.split('\n')[0]):
+    if HAS_YAML and (":" in text or "-" in text.split("\n")[0]):
         parsed, unparsed = parse_yaml_output(text)
         if parsed:
             return parsed, unparsed
@@ -287,6 +284,7 @@ def add_unparsed_lines(data: dict[str, Any], lines: list[str]) -> dict[str, Any]
 # System Information Collectors                                               #
 # --------------------------------------------------------------------------- #
 
+
 def collect_basic_system_info() -> dict[str, Any]:
     """Collect basic system information."""
     uname = platform.uname()
@@ -330,8 +328,9 @@ def collect_psutil_info() -> dict[str, Any]:
             "current_freq_mhz": psutil.cpu_freq().current if psutil.cpu_freq() else None,
             "max_freq_mhz": psutil.cpu_freq().max if psutil.cpu_freq() else None,
         }
-    except Exception:
-        pass
+    except (OSError, ValueError, AttributeError) as e:
+        # CPU info collection might fail on some systems
+        info["cpu"] = {"error": f"Failed to collect CPU info: {str(e)}"}
 
     # Memory info
     try:
@@ -342,20 +341,22 @@ def collect_psutil_info() -> dict[str, Any]:
             "used_mb": vm.used // (1024 * 1024),
             "percent": vm.percent,
         }
-    except Exception:
-        pass
+    except (OSError, MemoryError) as e:
+        # Memory info collection might fail with insufficient permissions
+        info["memory"] = {"error": f"Failed to collect memory info: {str(e)}"}
 
     # Disk info
     try:
-        disk = psutil.disk_usage('/')
+        disk = psutil.disk_usage("/")
         info["disk"] = {
             "total_gb": disk.total // (1024 * 1024 * 1024),
             "used_gb": disk.used // (1024 * 1024 * 1024),
             "free_gb": disk.free // (1024 * 1024 * 1024),
             "percent": disk.percent,
         }
-    except Exception:
-        pass
+    except (OSError, PermissionError) as e:
+        # Disk info collection might fail on some mount points
+        info["disk"] = {"error": f"Failed to collect disk info: {str(e)}"}
 
     # Network info
     try:
@@ -363,8 +364,9 @@ def collect_psutil_info() -> dict[str, Any]:
             "hostname": socket.gethostname(),
             "fqdn": socket.getfqdn(),
         }
-    except Exception:
-        pass
+    except OSError as e:
+        # Network info collection might fail on some systems
+        info["network"] = {"error": f"Failed to collect network info: {str(e)}"}
 
     return info
 
@@ -373,32 +375,25 @@ def collect_psutil_info() -> dict[str, Any]:
 # Tool Information Collector                                                  #
 # --------------------------------------------------------------------------- #
 
+
 def check_tool_installed(tool_name: str) -> bool:
     """Check if a tool is installed by trying to run it with --version."""
     # For Python-based tools, check if they're importable modules first
-    if tool_name in ('pip', 'pip3'):
+    if tool_name in ("pip", "pip3"):
         try:
             result = subprocess.run(
-                [sys.executable, '-m', 'pip', '--version'],
-                capture_output=True,
-                text=True,
-                timeout=5
+                [sys.executable, "-m", "pip", "--version"], capture_output=True, text=True, timeout=5
             )
             return result.returncode == 0
         except Exception:
             pass
 
     # Try common version flags
-    version_flags = ['--version', '-version', 'version', '--help', '-h']
+    version_flags = ["--version", "-version", "version", "--help", "-h"]
 
     for flag in version_flags:
         try:
-            result = subprocess.run(
-                [tool_name, flag],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
+            result = subprocess.run([tool_name, flag], capture_output=True, text=True, timeout=5)
             if result.returncode == 0:
                 return True
         except Exception:
@@ -447,10 +442,7 @@ def collect_tool_info(tool_name: str, tool_spec: dict[str, Any]) -> dict[str, An
 
             # Add unparsed lines
             if unparsed:
-                tool_info[cmd_name] = add_unparsed_lines(
-                    tool_info.get(cmd_name, {}),
-                    unparsed
-                )
+                tool_info[cmd_name] = add_unparsed_lines(tool_info.get(cmd_name, {}), unparsed)
 
     return tool_info
 
@@ -464,7 +456,7 @@ def insert_into_tree(tree: dict[str, Any], path: str, value: Any) -> None:
         path: Dot-separated path (e.g., "tools.build_tools.cmake")
         value: Value to insert
     """
-    parts = path.split('.')
+    parts = path.split(".")
     current = tree
 
     for part in parts[:-1]:
@@ -476,9 +468,7 @@ def insert_into_tree(tree: dict[str, Any], path: str, value: Any) -> None:
 
 
 def collect_all_tools(
-    categories: list[str] | None = None,
-    tools: list[str] | None = None,
-    platform_name: str | None = None
+    categories: list[str] | None = None, tools: list[str] | None = None, platform_name: str | None = None
 ) -> dict[str, Any]:
     """
     Collect information for all tools or filtered subset.
@@ -566,10 +556,9 @@ def collect_all_tools(
 # Main Reporter                                                               #
 # --------------------------------------------------------------------------- #
 
+
 def build_system_report(
-    categories: list[str] | None = None,
-    tools: list[str] | None = None,
-    include_system_info: bool = True
+    categories: list[str] | None = None, tools: list[str] | None = None, include_system_info: bool = True
 ) -> dict[str, Any]:
     """
     Build a comprehensive system report.
@@ -604,6 +593,7 @@ def build_system_report(
 # CLI Interface                                                               #
 # --------------------------------------------------------------------------- #
 
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
@@ -628,57 +618,28 @@ Examples:
 
   # Exclude system info
   %(prog)s --no-system-info
-"""
+""",
     )
 
     parser.add_argument(
-        "--output", "-o",
-        default="system_diagnostic.yaml",
-        help="Output file path (default: system_diagnostic.yaml)"
+        "--output", "-o", default="system_diagnostic.yaml", help="Output file path (default: system_diagnostic.yaml)"
     )
 
     parser.add_argument(
-        "--format", "-f",
-        choices=["yaml", "json"],
-        default="yaml",
-        help="Output format (default: yaml)"
+        "--format", "-f", choices=["yaml", "json"], default="yaml", help="Output format (default: yaml)"
     )
 
-    parser.add_argument(
-        "--categories", "-c",
-        nargs="+",
-        help="Filter by categories (e.g., build_tools compilers)"
-    )
+    parser.add_argument("--categories", "-c", nargs="+", help="Filter by categories (e.g., build_tools compilers)")
 
-    parser.add_argument(
-        "--tools", "-t",
-        nargs="+",
-        help="Filter by specific tools (e.g., cmake gcc python3)"
-    )
+    parser.add_argument("--tools", "-t", nargs="+", help="Filter by specific tools (e.g., cmake gcc python3)")
 
-    parser.add_argument(
-        "--list-categories",
-        action="store_true",
-        help="List available categories and exit"
-    )
+    parser.add_argument("--list-categories", action="store_true", help="List available categories and exit")
 
-    parser.add_argument(
-        "--list-tools",
-        action="store_true",
-        help="List available tools and exit"
-    )
+    parser.add_argument("--list-tools", action="store_true", help="List available tools and exit")
 
-    parser.add_argument(
-        "--no-system-info",
-        action="store_true",
-        help="Exclude basic system information"
-    )
+    parser.add_argument("--no-system-info", action="store_true", help="Exclude basic system information")
 
-    parser.add_argument(
-        "--platform",
-        choices=["macos", "linux", "windows"],
-        help="Override platform detection"
-    )
+    parser.add_argument("--platform", choices=["macos", "linux", "windows"], help="Override platform detection")
 
     return parser.parse_args(argv)
 
@@ -747,42 +708,30 @@ def main(argv: list[str] | None = None) -> None:
         # Build the report
         print("Collecting system information...")
         report = build_system_report(
-            categories=args.categories,
-            tools=args.tools,
-            include_system_info=not args.no_system_info
+            categories=args.categories, tools=args.tools, include_system_info=not args.no_system_info
         )
 
         # Save the report
         output_path = Path(args.output)
 
         if args.format == "json":
-            output_path.write_text(
-                json.dumps(report, indent=2, sort_keys=False, default=str)
-            )
+            output_path.write_text(json.dumps(report, indent=2, sort_keys=False, default=str))
         else:
             if not HAS_YAML:
                 print("Warning: PyYAML not available, falling back to JSON format", file=sys.stderr)
-                output_path = output_path.with_suffix('.json')
-                output_path.write_text(
-                    json.dumps(report, indent=2, sort_keys=False, default=str)
-                )
+                output_path = output_path.with_suffix(".json")
+                output_path.write_text(json.dumps(report, indent=2, sort_keys=False, default=str))
             else:
-                with open(output_path, 'w') as f:
-                    yaml.dump(
-                        report,
-                        f,
-                        default_flow_style=False,
-                        sort_keys=False,
-                        allow_unicode=True,
-                        width=120
-                    )
+                with open(output_path, "w") as f:
+                    yaml.dump(report, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
 
         print(f"System diagnostic written to {output_path}")
 
         # Print summary
         if "tools" in report:
             tool_count = sum(
-                1 for cat_data in report["tools"].values()
+                1
+                for cat_data in report["tools"].values()
                 if isinstance(cat_data, dict)
                 for tool_data in cat_data.values()
                 if isinstance(tool_data, dict) and tool_data.get("is_installed", False)

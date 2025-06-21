@@ -78,6 +78,12 @@ repos:
     hooks:
       - id: actionlint
 
+  # Gitleaks for secret detection
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.23.1
+    hooks:
+      - id: gitleaks
+
   # Commitizen for commit message validation
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.8.3
