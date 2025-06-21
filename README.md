@@ -6,7 +6,7 @@
 
 > ⚡ The Python ecosystem's answer to JavaScript's Bolt - fast, reliable project management
 
-DHT is a universal development automation tool that provides standardized workflows, environment management, and project automation. It's designed to be familiar to developers coming from JavaScript tooling while leveraging Python's powerful ecosystem.
+DHT (Development Helper Toolkit) is a universal development automation tool that provides standardized workflows, environment management, and project automation. It's designed to be familiar to developers coming from JavaScript tooling while leveraging Python's powerful ecosystem.
 
 ## Why DHT?
 
@@ -16,20 +16,50 @@ DHT is a universal development automation tool that provides standardized workfl
 - **Cross-Platform**: Works on macOS, Linux, and Windows
 - **Fail-Safe Execution**: Prefect-based command runner prevents corruption
 - **Deterministic Builds**: Same code produces same results everywhere
+- **Platform Detection**: Automatically detects and adapts to your platform
+- **Resource Management**: Built-in memory limits and timeout protection
 
 ## Installation
 
+### Via pip (Recommended)
 ```bash
-# Via pip (Recommended)
 pip install dht-toolkit
+```
 
-# Via UV (Fastest)
+### Via UV (Fastest)
+```bash
 uv pip install dht-toolkit
+```
 
-# From source
+### From Source (Development)
+
+1. **Clone the repository**:
+```bash
 git clone https://github.com/yourusername/dht.git
 cd dht
-pip install -e .
+```
+
+2. **Create virtual environment with UV**:
+```bash
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+3. **Install dependencies and DHT in development mode**:
+```bash
+uv sync --all-extras --dev
+uv pip install -e .
+```
+
+4. **Verify installation**:
+```bash
+dhtl --help  # Should show the help screen
+dhtl version  # Should show: Development Helper Toolkit (DHT) v1.0.0
+```
+
+5. **Set up pre-commit hooks** (for contributors):
+```bash
+uv run pre-commit install
 ```
 
 ## Quick Start
@@ -109,6 +139,96 @@ dhtl run build
 | `dhtl bin` | Show path to executables |
 | `dhtl help` | Show help |
 | `dhtl [unknown]` | Runs as `dhtl run [unknown]` |
+
+## Full Command Reference (Help Screen)
+
+This is the complete output from `dhtl help`, showing all available commands grouped by category:
+
+```
+Development Helper Toolkit (DHT) v1.0.0
+=====================================
+
+Usage: dhtl <command> [options]
+
+Available commands:
+
+Project Management:
+  init           Initialize a new Python project
+  setup          Setup project environment
+  clean          Clean project
+
+Development:
+  build          Build Python package
+  sync           Sync project dependencies
+  test           Run project tests
+  lint           Lint code
+  format         Format code
+  coverage       Run code coverage
+
+Version Control:
+  commit         Create git commit
+  tag            Create git tag
+  bump           Bump version
+  clone          Clone repository
+  fork           Fork repository
+
+Deployment:
+  publish        Publish package
+  deploy_project_in_container  Deploy project in Docker container
+  workflows      Manage workflows
+
+Utilities:
+  env            Show environment
+  diagnostics    Run diagnostics
+  restore        Restore dependencies
+  guardian       Manage process guardian
+
+Help:
+  help           Show help
+  version        Show version
+
+For command-specific help: dhtl <command> --help
+```
+
+### Additional Commands (Complete List)
+
+Beyond the categorized commands above, DHT provides these additional commands:
+
+| Command | Description |
+|---------|-------------|
+| `dhtl act` | Run GitHub Actions locally with act |
+| `dhtl bin` | Print executable files installation folder |
+| `dhtl check` | Type check Python code |
+| `dhtl coverage` | Run code coverage analysis |
+| `dhtl doc` | Generate project documentation |
+| `dhtl node [args]` | Run node command |
+| `dhtl python [args]` | Run python command |
+| `dhtl script [name]` | Run script |
+| `dhtl test_dht` | Test DHT itself |
+| `dhtl verify_dht` | Verify DHT installation |
+| `dhtl p [command]` | Alias for `project` command |
+
+### Global Options
+
+These options can be used with any command:
+
+- `--no-guardian` - Disable process guardian for this command
+- `--quiet` - Reduce output verbosity
+- `--debug` - Enable debug mode
+- `--help` - Show command-specific help
+
+### Environment Variables
+
+DHT sets these environment variables during execution:
+
+- `PROJECT_ROOT` - Path to the project root directory
+- `DEFAULT_VENV_DIR` - Path to the default virtual environment
+- `PLATFORM` - Detected platform (macos/linux/windows/windows_unix/bsd)
+- `PYTHON_CMD` - Python command to use (python3/python)
+- `DEFAULT_MEM_LIMIT` - Default memory limit in MB (2048)
+- `PYTHON_MEM_LIMIT` - Python process memory limit in MB (2048)
+- `QUIET_MODE` - Whether quiet mode is enabled (0/1)
+- `DEBUG_MODE` - Whether debug mode is enabled (true/false)
 
 ## Workspace Configuration
 
@@ -191,6 +311,8 @@ dhtl workspace cli run dev
 
 ### CI/CD Integration
 
+DHT integrates seamlessly with GitHub Actions using UV for fast, reliable builds:
+
 ```yaml
 # .github/workflows/test.yml
 name: Test
@@ -200,18 +322,62 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+
+      # Install UV for fast package management
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: '3.11'
-      - name: Install DHT
-        run: pip install dht-toolkit
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      # Set up Python version
+      - name: Set up Python
+        run: uv python install 3.11
+
+      # Install dependencies
       - name: Install dependencies
-        run: dhtl install
+        run: uv sync --locked --all-extras --dev
+
+      # Run tests
       - name: Run tests
-        run: dhtl test
+        run: uv run pytest tests/ -v
+
+      # Type check
       - name: Type check
-        run: dhtl check
+        run: uv run mypy src/
+
+      # Lint
+      - name: Lint
+        run: |
+          uv run ruff check src/ tests/
+          uv run ruff format --check src/ tests/
+```
+
+### Pre-commit Integration
+
+DHT uses UV-powered pre-commit hooks to ensure code quality:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  # UV for dependency management
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.13
+    hooks:
+      # Ensure uv.lock is up-to-date
+      - id: uv-lock
+        args: [--locked]
+        files: pyproject.toml
+      # Export requirements for compatibility
+      - id: uv-export
+        args: [--frozen, --no-hashes, --output-file=requirements.txt]
+        files: pyproject.toml|uv.lock
+```
+
+To set up pre-commit hooks:
+```bash
+uv run pre-commit install
 ```
 
 ## Advanced Features
@@ -249,28 +415,184 @@ DHT automatically:
 
 ## Architecture
 
-DHT uses a modular architecture:
+DHT uses a modular architecture designed for reliability and extensibility:
 
-- **Command Runner**: Prefect-based execution with crash recovery
-- **UV Integration**: Fast, reliable package management
-- **Workspace Support**: First-class monorepo support
-- **Platform Normalization**: Consistent behavior across OS
+### Core Components
+
+- **Command Runner**: Prefect-based execution with crash recovery and resource management
+- **UV Integration**: Lightning-fast package management with deterministic builds
+- **Workspace Support**: First-class monorepo support with advanced filtering
+- **Platform Normalization**: Consistent behavior across macOS, Linux, and Windows
+- **Process Guardian**: Memory limits and timeout protection for all operations
+- **Environment Reproducer**: Capture and recreate exact development environments
+
+### Directory Structure
+
+```
+dht/
+├── src/DHT/
+│   ├── modules/           # Core functionality modules
+│   │   ├── commands/      # Individual command implementations
+│   │   ├── parsers/       # File and language parsers
+│   │   └── dht_flows/     # Prefect workflow definitions
+│   ├── launcher.py        # Main DHT launcher
+│   └── dhtl.py           # Entry point
+├── tests/                 # Comprehensive test suite
+├── .pre-commit-config.yaml # Pre-commit hooks with UV
+├── pyproject.toml        # Project configuration
+└── uv.lock              # Locked dependencies
+
+```
+
+### Key Features
+
+1. **Deterministic Builds**: UV lock files ensure identical builds across all platforms
+2. **Resource Protection**: All commands run with configurable memory limits
+3. **Platform Detection**: Automatically adapts to your OS and environment
+4. **Fail-Safe Operations**: Prefect ensures operations complete or rollback cleanly
+5. **Comprehensive Tooling**: Built-in support for linting, formatting, testing, and more
+
+### UV Integration
+
+DHT leverages UV (by Astral) for:
+- **Speed**: 10-100x faster than pip
+- **Reliability**: Built-in resolver prevents conflicts
+- **Reproducibility**: Lock files ensure consistent environments
+- **Python Management**: Automatic Python version installation
+- **Workspace Support**: Native monorepo capabilities
+
+### Environment Configuration
+
+DHT automatically creates a `.dhtconfig` file that captures:
+- Python version requirements
+- System dependencies
+- Tool configurations
+- Platform-specific settings
+
+This allows any project to be regenerated with just:
+```bash
+dhtl regenerate
+```
+
+## Platform-Specific Notes
+
+### macOS
+- DHT automatically detects Homebrew installations
+- Supports Apple Silicon (M1/M2) natively
+- Uses `python3` by default
+
+### Linux
+- Works with all major distributions
+- Detects system package managers (apt, yum, dnf, etc.)
+- Supports both system and user Python installations
+
+### Windows
+- Full support via Git Bash or WSL
+- Native Windows support for Python operations
+- Automatic path normalization
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Command not found**:
+   ```bash
+   # Ensure DHT is in your PATH
+   pip show dht-toolkit  # Check installation
+   which dhtl           # Verify command availability
+   ```
+
+2. **Permission errors**:
+   ```bash
+   # Use --user flag for user installation
+   pip install --user dht-toolkit
+   ```
+
+3. **UV not found**:
+   ```bash
+   # DHT will install UV automatically, or install manually:
+   pip install uv
+   ```
+
+### Debug Mode
+
+Run any command with `--debug` for verbose output:
+```bash
+dhtl --debug setup
+dhtl --debug test
+```
+
+## Security
+
+DHT includes built-in security features:
+
+- **Gitleaks Integration**: Prevents secrets from being committed
+- **Dependency Scanning**: Via deptry for unused/missing dependencies
+- **Resource Limits**: Prevents runaway processes
+- **Sandboxed Execution**: Commands run in isolated environments
+
+## Performance
+
+DHT is optimized for speed:
+
+- **UV Package Manager**: 10-100x faster than pip
+- **Parallel Operations**: Workspace commands run concurrently
+- **Smart Caching**: Reuses previous builds when possible
+- **Minimal Overhead**: Direct command execution without wrappers
 
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).
 
+### Development Setup
+
 ```bash
-# Setup development environment
+# Clone the repository
 git clone https://github.com/yourusername/dht.git
 cd dht
-dhtl setup --dev
 
-# Run tests
-dhtl test
+# Create virtual environment with UV
+uv venv
+source .venv/bin/activate
 
-# Make your changes and submit a PR!
+# Install in development mode with all extras
+uv sync --all-extras --dev
+uv pip install -e .
+
+# Set up pre-commit hooks
+uv run pre-commit install
+
+# Run tests to verify setup
+uv run pytest tests/ -v
+
+# Run linters
+uv run ruff check src/ tests/
+uv run mypy src/
 ```
+
+### Running Tests
+
+```bash
+# Run all tests
+uv run pytest
+
+# Run specific test file
+uv run pytest tests/test_specific.py
+
+# Run with coverage
+uv run pytest --cov=src/DHT --cov-report=html
+
+# Run integration tests
+uv run pytest tests/integration/ -v
+```
+
+### Code Style
+
+DHT uses:
+- **Ruff** for linting and formatting
+- **MyPy** for type checking
+- **Pre-commit** for automatic checks
+- **Black-compatible** formatting
 
 ## License
 
@@ -281,7 +603,21 @@ MIT License - see [LICENSE](LICENSE) for details.
 - Inspired by [Bolt](https://github.com/boltpkg/bolt) for JavaScript
 - Powered by [UV](https://github.com/astral-sh/uv) for fast Python package management
 - Built with [Prefect](https://www.prefect.io/) for reliable task execution
+- Uses [Gitleaks](https://github.com/zricethezav/gitleaks) for security scanning
+
+## Related Projects
+
+- [UV](https://github.com/astral-sh/uv) - An extremely fast Python package installer and resolver
+- [Ruff](https://github.com/astral-sh/ruff) - An extremely fast Python linter
+- [Prefect](https://www.prefect.io/) - Modern workflow orchestration
+- [Bolt](https://github.com/boltpkg/bolt) - The JavaScript monorepo tool that inspired DHT
 
 ---
 
-<p align="center">Made with ❤️ by the Python community</p>
+<p align="center">
+  Made with ❤️ by the Python community<br>
+  <a href="https://github.com/yourusername/dht">GitHub</a> •
+  <a href="https://pypi.org/project/dht-toolkit/">PyPI</a> •
+  <a href="https://github.com/yourusername/dht/issues">Issues</a> •
+  <a href="https://github.com/yourusername/dht/discussions">Discussions</a>
+</p>
