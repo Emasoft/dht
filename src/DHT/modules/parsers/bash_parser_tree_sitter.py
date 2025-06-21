@@ -18,6 +18,7 @@ from typing import Any
 try:
     import tree_sitter
     import tree_sitter_bash
+
     TREE_SITTER_BASH_AVAILABLE = True
 except ImportError:
     TREE_SITTER_BASH_AVAILABLE = False
@@ -97,12 +98,10 @@ class TreeSitterBashParser:
                     "end_line": node.end_point[0] + 1,
                 }
             elif capture_name == "name":
-                current_func["name"] = content[node.start_byte:node.end_byte]
+                current_func["name"] = content[node.start_byte : node.end_byte]
             elif capture_name == "body":
-                current_func["body"] = content[node.start_byte:node.end_byte]
-                current_func["local_vars"] = self.utils.extract_local_vars_from_body(
-                    current_func["body"]
-                )
+                current_func["body"] = content[node.start_byte : node.end_byte]
+                current_func["local_vars"] = self.utils.extract_local_vars_from_body(current_func["body"])
 
         if current_func:
             functions.append(current_func)
@@ -119,12 +118,10 @@ class TreeSitterBashParser:
                     "end_line": node.end_point[0] + 1,
                 }
             elif capture_name == "name":
-                current_func["name"] = content[node.start_byte:node.end_byte]
+                current_func["name"] = content[node.start_byte : node.end_byte]
             elif capture_name == "body":
-                current_func["body"] = content[node.start_byte:node.end_byte]
-                current_func["local_vars"] = self.utils.extract_local_vars_from_body(
-                    current_func["body"]
-                )
+                current_func["body"] = content[node.start_byte : node.end_byte]
+                current_func["local_vars"] = self.utils.extract_local_vars_from_body(current_func["body"])
 
         if current_func and "name" in current_func:
             functions.append(current_func)
@@ -144,9 +141,9 @@ class TreeSitterBashParser:
                     variables.append(current_var)
                 current_var = {"line": node.start_point[0] + 1}
             elif name == "name":
-                current_var["name"] = content[node.start_byte:node.end_byte]
+                current_var["name"] = content[node.start_byte : node.end_byte]
             elif name == "value":
-                current_var["value"] = content[node.start_byte:node.end_byte]
+                current_var["value"] = content[node.start_byte : node.end_byte]
                 current_var["type"] = self.utils.infer_var_type(current_var["value"])
 
         if current_var:
@@ -162,21 +159,25 @@ class TreeSitterBashParser:
 
         for node, name in captures:
             if name == "arg":
-                arg_text = content[node.start_byte:node.end_byte]
+                arg_text = content[node.start_byte : node.end_byte]
                 # Parse the export argument
                 if "=" in arg_text:
                     var_name, var_value = arg_text.split("=", 1)
-                    exports.append({
-                        "name": var_name,
-                        "value": var_value.strip("\"'"),
-                        "line": node.start_point[0] + 1,
-                    })
+                    exports.append(
+                        {
+                            "name": var_name,
+                            "value": var_value.strip("\"'"),
+                            "line": node.start_point[0] + 1,
+                        }
+                    )
                 else:
-                    exports.append({
-                        "name": arg_text,
-                        "value": None,
-                        "line": node.start_point[0] + 1,
-                    })
+                    exports.append(
+                        {
+                            "name": arg_text,
+                            "value": None,
+                            "line": node.start_point[0] + 1,
+                        }
+                    )
 
         return exports
 
@@ -188,12 +189,14 @@ class TreeSitterBashParser:
 
         for node, name in captures:
             if name == "file":
-                file_path = content[node.start_byte:node.end_byte].strip("\"'")
-                sources.append({
-                    "path": file_path,
-                    "line": node.start_point[0] + 1,
-                    "resolved": self.utils.resolve_source_path(file_path),
-                })
+                file_path = content[node.start_byte : node.end_byte].strip("\"'")
+                sources.append(
+                    {
+                        "path": file_path,
+                        "line": node.start_point[0] + 1,
+                        "resolved": self.utils.resolve_source_path(file_path),
+                    }
+                )
 
         return sources
 
@@ -214,12 +217,12 @@ class TreeSitterBashParser:
                         commands.append(current_cmd)
                 current_cmd = {"line": node.start_point[0] + 1, "args": []}
             elif capture_name == "name":
-                name_text = content[node.start_byte:node.end_byte]
+                name_text = content[node.start_byte : node.end_byte]
                 # Skip shell keywords
                 if name_text not in SHELL_KEYWORDS:
                     current_cmd["name"] = name_text
             elif capture_name == "args" and "name" in current_cmd:
-                arg_text = content[node.start_byte:node.end_byte]
+                arg_text = content[node.start_byte : node.end_byte]
                 current_cmd["args"].append(arg_text)
 
         if current_cmd and "name" in current_cmd:
@@ -236,12 +239,14 @@ class TreeSitterBashParser:
         captures = self.query_tree(tree, TREE_SITTER_QUERIES["comments"])
 
         for node, _ in captures:
-            comment_text = content[node.start_byte:node.end_byte]
-            comments.append({
-                "text": comment_text.lstrip("#").strip(),
-                "line": node.start_point[0] + 1,
-                "is_shebang": comment_text.startswith("#!"),
-            })
+            comment_text = content[node.start_byte : node.end_byte]
+            comments.append(
+                {
+                    "text": comment_text.lstrip("#").strip(),
+                    "line": node.start_point[0] + 1,
+                    "is_shebang": comment_text.startswith("#!"),
+                }
+            )
 
         return comments
 

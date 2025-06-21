@@ -36,9 +36,17 @@ def find_project_root(start_dir: Path | None = None) -> Path:
 
     # Project markers to look for
     markers = [
-        ".git", "package.json", "pyproject.toml", "setup.py",
-        "Cargo.toml", "go.mod", "pom.xml", "build.gradle",
-        "Gemfile", "composer.json", ".dhtconfig"
+        ".git",
+        "package.json",
+        "pyproject.toml",
+        "setup.py",
+        "Cargo.toml",
+        "go.mod",
+        "pom.xml",
+        "build.gradle",
+        "Gemfile",
+        "composer.json",
+        ".dhtconfig",
     ]
 
     # Traverse up looking for markers

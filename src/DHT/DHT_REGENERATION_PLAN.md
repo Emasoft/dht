@@ -21,7 +21,7 @@ fingerprint:
 python:
   version: "3.11.7"  # Exact version, not range
   implementation: "cpython"  # cpython, pypy, etc.
-  
+
 # Lock file strategy
 dependencies:
   strategy: "uv"  # uv, pip-tools, poetry
@@ -29,7 +29,7 @@ dependencies:
     - "uv.lock"           # Primary lock file
     - "requirements.lock" # Fallback
   hash_validation: true   # Verify package hashes
-  
+
 # Platform-specific dependencies
 platform_deps:
   darwin:
@@ -40,7 +40,7 @@ platform_deps:
     yum: ["postgresql-devel", "redis"]
   windows:
     choco: ["postgresql14", "redis-64"]
-    
+
 # Binary dependencies with versions
 binaries:
   required:
@@ -50,7 +50,7 @@ binaries:
     - name: "rust"
       version: "1.70.0"
       installer: "rustup"
-      
+
 # Development tools specification
 tools:
   # Exact versions for reproducibility
@@ -59,7 +59,7 @@ tools:
   ruff: "0.1.0"
   black: "23.7.0"
   pre-commit: "3.3.3"
-  
+
 # Environment variables (structure only)
 env_template:
   required:
@@ -68,7 +68,7 @@ env_template:
   optional:
     - DEBUG
     - LOG_LEVEL
-    
+
 # Git configuration
 git:
   hooks:
@@ -76,7 +76,7 @@ git:
     commit_msg: true
   lfs: false
   submodules: []
-  
+
 # Validation checksums
 validation:
   venv_checksum: "sha256:abcd1234..."  # Hash of installed packages
@@ -112,7 +112,7 @@ DHT will:
    # Create comprehensive lock files
    uv pip compile requirements.in -o requirements.lock
    uv lock  # Creates uv.lock with exact versions
-   
+
    # Capture tool versions
    dhtl freeze-tools > .dht/tools.lock
    ```
@@ -155,7 +155,7 @@ The regeneration follows this deterministic sequence:
    # Use UV to install exact Python version
    uv python install 3.11.7
    uv venv --python 3.11.7
-   
+
    # Verify installation
    python --version | verify_exact_match "3.11.7"
    ```
@@ -165,7 +165,7 @@ The regeneration follows this deterministic sequence:
    def install_platform_dependencies():
        platform = detect_platform()
        deps = parse_dhtconfig()['platform_deps'][platform]
-       
+
        if platform == 'darwin':
            run_command(['brew', 'install'] + deps['brew'])
        elif platform == 'linux':
@@ -181,7 +181,7 @@ The regeneration follows this deterministic sequence:
    ```bash
    # Use lock files with hash verification
    uv sync --locked --require-hashes
-   
+
    # Verify installation matches checksum
    dhtl verify-environment --checksum ${validation.venv_checksum}
    ```
@@ -191,7 +191,7 @@ The regeneration follows this deterministic sequence:
    def install_binary_tools():
        for tool in parse_dhtconfig()['binaries']['required']:
            if tool['installer'] == 'uv tool':
-               run_command(['uv', 'tool', 'install', 
+               run_command(['uv', 'tool', 'install',
                           f"{tool['name']}=={tool['version']}"])
            elif tool['installer'] == 'rustup':
                install_rust_toolchain(tool['version'])
@@ -201,10 +201,10 @@ The regeneration follows this deterministic sequence:
    ```bash
    # Install exact tool versions
    uv pip install pytest==7.4.0 mypy==1.5.0 ruff==0.1.0
-   
+
    # Setup git hooks
    pre-commit install
-   
+
    # Create .env template
    dhtl generate-env-template
    ```
@@ -218,13 +218,13 @@ def dhtl_clone(url):
     # 1. Use gh CLI to clone
     repo_name = extract_repo_name(url)
     run_command(['gh', 'repo', 'clone', url])
-    
+
     # 2. Change to repo directory
     os.chdir(repo_name)
-    
+
     # 3. Run regeneration
     dhtl_regenerate()
-    
+
     # 4. Show status
     print(f"✓ Cloned {repo_name}")
     print(f"✓ Python {python_version} environment created")
@@ -239,17 +239,17 @@ def dhtl_clone(url):
 def dhtl_fork(url):
     # 1. Fork using gh CLI
     run_command(['gh', 'repo', 'fork', url, '--clone'])
-    
+
     # 2. Get local directory name
     repo_name = extract_repo_name(url)
     os.chdir(repo_name)
-    
+
     # 3. Run regeneration
     dhtl_regenerate()
-    
+
     # 4. Setup upstream
     run_command(['git', 'remote', 'add', 'upstream', url])
-    
+
     print(f"✓ Forked and cloned {repo_name}")
     print(f"✓ Environment regenerated successfully")
 ```
@@ -267,11 +267,11 @@ def ensure_python_version(required_version):
         lambda: use_system_python(required_version),     # OK: system
         lambda: use_docker_fallback(required_version),   # Fallback: Docker
     ]
-    
+
     for strategy in strategies:
         if strategy():
             return True
-    
+
     raise EnvironmentError(f"Cannot provide Python {required_version}")
 ```
 
@@ -281,14 +281,14 @@ def ensure_python_version(required_version):
 def verify_package_installation():
     # Generate current environment checksum
     current_checksum = generate_venv_checksum()
-    
+
     # Compare with expected
     expected_checksum = parse_dhtconfig()['validation']['venv_checksum']
-    
+
     if current_checksum != expected_checksum:
         # Try to diagnose differences
         diagnose_environment_differences()
-        
+
         # Offer fixes
         if prompt_user("Try automatic fix?"):
             fix_environment_differences()
@@ -300,12 +300,12 @@ def verify_package_installation():
 class PlatformAdapter:
     def __init__(self, platform):
         self.platform = platform
-        
+
     def install_system_package(self, generic_name):
         # Map generic name to platform-specific
         mapping = load_platform_mappings()
         specific_name = mapping[generic_name][self.platform]
-        
+
         # Use appropriate package manager
         if self.platform == 'darwin':
             return self._install_via_brew(specific_name)
@@ -321,12 +321,12 @@ class PlatformAdapter:
 ```python
 def handle_missing_system_deps():
     missing = detect_missing_system_deps()
-    
+
     if missing:
         print("Missing system dependencies detected:")
         for dep in missing:
             print(f"  - {dep}")
-        
+
         if is_container_environment():
             generate_dockerfile_snippet(missing)
         else:
@@ -351,10 +351,10 @@ def merge_lock_files():
     # If multiple lock files exist, merge intelligently
     primary_lock = load_uv_lock()
     requirements_lock = load_requirements_lock()
-    
+
     # UV lock takes precedence
     merged = merge_with_resolution(primary_lock, requirements_lock)
-    
+
     # Validate merged result
     validate_no_conflicts(merged)
 ```
@@ -451,7 +451,7 @@ Environment successfully regenerated!
 Missing environment variables:
   - DATABASE_URL (required)
   - REDIS_URL (required)
-  
+
 Run 'dhtl env-setup' for instructions.
 ```
 

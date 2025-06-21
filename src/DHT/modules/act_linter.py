@@ -46,7 +46,7 @@ class ActLinter:
             "method": "docker" if use_docker else "native",
             "errors": [],
             "warnings": [],
-            "linted_files": []
+            "linted_files": [],
         }
 
         if not self.workflows_path.exists():
@@ -86,11 +86,7 @@ class ActLinter:
 
             try:
                 # Run actionlint
-                proc = subprocess.run(
-                    ["actionlint", str(workflow_file)],
-                    capture_output=True,
-                    text=True
-                )
+                proc = subprocess.run(["actionlint", str(workflow_file)], capture_output=True, text=True)
 
                 if proc.returncode != 0:
                     result["success"] = False
@@ -118,7 +114,7 @@ class ActLinter:
             "errors": [],
             "warnings": [],
             "linted_files": [],
-            "docker_image": f"rhysd/actionlint:{tag}"
+            "docker_image": f"rhysd/actionlint:{tag}",
         }
 
         if not self._check_docker_available():
@@ -139,12 +135,7 @@ class ActLinter:
                 result["linted_files"].append(wf.name)
 
             # Build Docker command
-            cmd = [
-                "docker", "run", "--rm",
-                "-v", f"{tmp_path}:/work",
-                "-w", "/work",
-                f"rhysd/actionlint:{tag}"
-            ]
+            cmd = ["docker", "run", "--rm", "-v", f"{tmp_path}:/work", "-w", "/work", f"rhysd/actionlint:{tag}"]
 
             if color:
                 cmd.append("-color")
@@ -172,19 +163,14 @@ class ActLinter:
             output: Raw actionlint output
             results: Results dict to populate
         """
-        for line in output.strip().split('\n'):
+        for line in output.strip().split("\n"):
             if not line:
                 continue
 
             # Parse actionlint output format: file:line:col: message
-            parts = line.split(':', 3)
+            parts = line.split(":", 3)
             if len(parts) >= 4:
-                error = {
-                    "file": Path(parts[0]).name,
-                    "line": parts[1],
-                    "column": parts[2],
-                    "message": parts[3].strip()
-                }
+                error = {"file": Path(parts[0]).name, "line": parts[1], "column": parts[2], "message": parts[3].strip()}
                 results["errors"].append(error)
             else:
                 # Fallback for unparseable lines
@@ -197,11 +183,7 @@ class ActLinter:
             True if Docker is available
         """
         try:
-            subprocess.run(
-                ["docker", "--version"],
-                capture_output=True,
-                check=True
-            )
+            subprocess.run(["docker", "--version"], capture_output=True, check=True)
             return True
         except (subprocess.CalledProcessError, FileNotFoundError):
             return False

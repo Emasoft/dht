@@ -47,7 +47,7 @@ def test_dht_init():
     with tempfile.TemporaryDirectory() as tmpdir:
         project_dir = Path(tmpdir) / "test_project"
         project_dir.mkdir()
-        
+
         # Manually create files
         (project_dir / "pyproject.toml").write_text("...")
         (project_dir / "README.md").write_text("...")
@@ -67,7 +67,7 @@ def test_dht_init():
         include_tests=True,
         include_ci=True
     )
-    
+
     try:
         # Your test code here - project is fully set up
         assert (project_path / "manage.py").exists()
@@ -158,7 +158,7 @@ When creating test projects, you can specify:
 3. **Use metadata for assertions:**
    ```python
    project_path, metadata = create_temporary_project("ml")
-   
+
    # metadata contains useful info
    assert metadata["type"] == "ml"
    assert metadata["python_version"] == "3.10"
@@ -172,7 +172,7 @@ When creating test projects, you can specify:
        project_path, metadata = create_temporary_project("django")
        yield project_path, metadata
        cleanup_temporary_project(project_path)
-   
+
    def test_django_feature(django_project):
        project_path, metadata = django_project
        # Use in test
@@ -218,12 +218,12 @@ def test_analyze_project_dependencies():
         include_docs=True,
         include_ci=True
     )
-    
+
     try:
         # Analyze backend
         pyproject = project_path / "pyproject.toml"
         assert "fastapi" in pyproject.read_text()
-        
+
         # Analyze frontend
         package_json = project_path / "frontend" / "package.json"
         assert "react" in package_json.read_text()

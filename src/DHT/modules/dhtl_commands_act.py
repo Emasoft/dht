@@ -157,4 +157,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['act_command', 'placeholder_command']
+__all__ = ["act_command", "placeholder_command"]

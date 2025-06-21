@@ -2,15 +2,15 @@ import os
 import sys
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import mock_bash_script, run_bash_command
 
 
 def test_guardian_command_status():
     """Test the guardian_command function with status subcommand."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -66,16 +66,18 @@ def test_guardian_command_status():
     finally:
         # Clean up the temporary script and mock guardian files
         os.unlink(script_path)
-        guardian_dir = os.path.join(dht_dir, '.process_guardian')
+        guardian_dir = os.path.join(dht_dir, ".process_guardian")
         if os.path.exists(guardian_dir):
             import shutil
+
             shutil.rmtree(guardian_dir)
+
 
 def test_guardian_command_start():
     """Test the guardian_command function with start subcommand."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -170,19 +172,21 @@ def test_guardian_command_start():
     finally:
         # Clean up the temporary script and mock guardian files
         os.unlink(script_path)
-        mock_watchdog = os.path.join(dht_dir, 'process-guardian-watchdog.py')
+        mock_watchdog = os.path.join(dht_dir, "process-guardian-watchdog.py")
         if os.path.exists(mock_watchdog):
             os.unlink(mock_watchdog)
-        guardian_dir = os.path.join(dht_dir, '.process_guardian')
+        guardian_dir = os.path.join(dht_dir, ".process_guardian")
         if os.path.exists(guardian_dir):
             import shutil
+
             shutil.rmtree(guardian_dir)
+
 
 def test_guardian_command_stop():
     """Test the guardian_command function with stop subcommand."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -252,15 +256,17 @@ def test_guardian_command_stop():
     finally:
         # Clean up the temporary script and mock guardian files
         os.unlink(script_path)
-        guardian_dir = os.path.join(dht_dir, '.process_guardian')
+        guardian_dir = os.path.join(dht_dir, ".process_guardian")
         if os.path.exists(guardian_dir):
             import shutil
+
             shutil.rmtree(guardian_dir)
+
 
 def test_guardian_help():
     """Test the guardian help command."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables

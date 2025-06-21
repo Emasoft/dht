@@ -25,28 +25,20 @@ SYSTEM_PACKAGE_MAPPINGS = {
     "python-dev": {
         "darwin": [],  # Usually available via Xcode tools
         "linux": ["python3-dev", "python3-distutils"],
-        "windows": []  # Usually not needed
+        "windows": [],  # Usually not needed
     },
     "build-essential": {
         "darwin": [],  # Xcode command line tools
         "linux": ["build-essential", "gcc", "g++", "make"],
-        "windows": []  # Visual Studio Build Tools
+        "windows": [],  # Visual Studio Build Tools
     },
     "git": {
         "darwin": ["git"],  # via Xcode or Homebrew
         "linux": ["git"],
-        "windows": ["git"]  # Git for Windows
+        "windows": ["git"],  # Git for Windows
     },
-    "curl": {
-        "darwin": ["curl"],
-        "linux": ["curl"],
-        "windows": ["curl"]
-    },
-    "openssl": {
-        "darwin": ["openssl"],
-        "linux": ["libssl-dev", "openssl"],
-        "windows": []
-    }
+    "curl": {"darwin": ["curl"], "linux": ["curl"], "windows": ["curl"]},
+    "openssl": {"darwin": ["openssl"], "linux": ["libssl-dev", "openssl"], "windows": []},
 }
 
 # Tool-specific configurations
@@ -54,28 +46,12 @@ TOOL_CONFIGS = {
     "pytest": {
         "packages": ["pytest", "pytest-cov", "pytest-xdist"],
         "config_files": ["pytest.ini", "pyproject.toml"],
-        "env_vars": {"PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"}
+        "env_vars": {"PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"},
     },
-    "black": {
-        "packages": ["black"],
-        "config_files": ["pyproject.toml", ".black"],
-        "env_vars": {}
-    },
-    "ruff": {
-        "packages": ["ruff"],
-        "config_files": ["ruff.toml", "pyproject.toml"],
-        "env_vars": {}
-    },
-    "mypy": {
-        "packages": ["mypy"],
-        "config_files": ["mypy.ini", "pyproject.toml"],
-        "env_vars": {}
-    },
-    "pre-commit": {
-        "packages": ["pre-commit"],
-        "config_files": [".pre-commit-config.yaml"],
-        "env_vars": {}
-    }
+    "black": {"packages": ["black"], "config_files": ["pyproject.toml", ".black"], "env_vars": {}},
+    "ruff": {"packages": ["ruff"], "config_files": ["ruff.toml", "pyproject.toml"], "env_vars": {}},
+    "mypy": {"packages": ["mypy"], "config_files": ["mypy.ini", "pyproject.toml"], "env_vars": {}},
+    "pre-commit": {"packages": ["pre-commit"], "config_files": [".pre-commit-config.yaml"], "env_vars": {}},
 }
 
 
@@ -88,7 +64,7 @@ def generate_container_config(config: EnvironmentConfig) -> dict[str, Any]:
         "working_dir": "/app",
         "exposed_ports": [],
         "volumes": [],
-        "environment": config.environment_variables
+        "environment": config.environment_variables,
     }
 
     # Add common development ports
@@ -100,48 +76,35 @@ def generate_container_config(config: EnvironmentConfig) -> dict[str, Any]:
     return container_config
 
 
-def generate_ci_config(
-    config: EnvironmentConfig,
-    ci_setup: dict[str, Any]
-) -> dict[str, Any]:
+def generate_ci_config(config: EnvironmentConfig, ci_setup: dict[str, Any]) -> dict[str, Any]:
     """Generate CI/CD configuration."""
     ci_config = {
         "platforms": ci_setup.get("platforms", []),
         "workflows": ci_setup.get("workflows", []),
         "matrix_testing": ci_setup.get("matrix_testing", False),
-        "python_versions": ["3.9", "3.10", "3.11", "3.12"] if ci_setup.get("matrix_testing") else [config.python_version],
-        "os_matrix": ["ubuntu-latest", "macos-latest", "windows-latest"] if ci_setup.get("matrix_testing") else ["ubuntu-latest"],
-        "steps": []
+        "python_versions": ["3.9", "3.10", "3.11", "3.12"]
+        if ci_setup.get("matrix_testing")
+        else [config.python_version],
+        "os_matrix": ["ubuntu-latest", "macos-latest", "windows-latest"]
+        if ci_setup.get("matrix_testing")
+        else ["ubuntu-latest"],
+        "steps": [],
     }
 
     # Define workflow steps
     if "test" in ci_config["workflows"]:
-        ci_config["steps"].extend([
-            "checkout",
-            "setup-python",
-            "install-dependencies",
-            "run-tests"
-        ])
+        ci_config["steps"].extend(["checkout", "setup-python", "install-dependencies", "run-tests"])
 
     if "lint" in ci_config["workflows"]:
-        ci_config["steps"].extend([
-            "run-linting",
-            "run-formatting-check"
-        ])
+        ci_config["steps"].extend(["run-linting", "run-formatting-check"])
 
     if "build" in ci_config["workflows"]:
-        ci_config["steps"].extend([
-            "build-package",
-            "upload-artifacts"
-        ])
+        ci_config["steps"].extend(["build-package", "upload-artifacts"])
 
     return ci_config
 
 
-def apply_custom_requirements(
-    config: EnvironmentConfig,
-    custom: dict[str, Any]
-) -> EnvironmentConfig:
+def apply_custom_requirements(config: EnvironmentConfig, custom: dict[str, Any]) -> EnvironmentConfig:
     """Apply custom requirements to override defaults."""
     # Override Python version
     if "python_version" in custom:
@@ -167,14 +130,11 @@ def apply_custom_requirements(
 def resolve_system_packages(requirements: list[str]) -> list[str]:
     """Resolve system package names for current platform."""
     import platform
+
     system = platform.system().lower()
 
     # Map system names
-    platform_map = {
-        "darwin": "darwin",
-        "linux": "linux",
-        "windows": "windows"
-    }
+    platform_map = {"darwin": "darwin", "linux": "linux", "windows": "windows"}
     platform_key = platform_map.get(system, "linux")
 
     resolved = []
@@ -187,10 +147,7 @@ def resolve_system_packages(requirements: list[str]) -> list[str]:
     return resolved
 
 
-def create_configuration_artifacts(
-    result: ConfigurationResult,
-    analysis: dict[str, Any]
-) -> None:
+def create_configuration_artifacts(result: ConfigurationResult, analysis: dict[str, Any]) -> None:
     """Create Prefect artifacts with configuration details."""
     # Generate environment report
     config = result.config
@@ -200,22 +157,22 @@ def create_configuration_artifacts(
 **Project**: {config.project_path.name}
 **Type**: {config.project_type}
 **Timestamp**: {datetime.now().isoformat()}
-**Success**: {'✅' if result.success else '❌'}
+**Success**: {"✅" if result.success else "❌"}
 
 ## Configuration Summary
 
 ### Python Environment
-- **Version**: {config.python_version or 'Default'}
+- **Version**: {config.python_version or "Default"}
 - **Runtime Packages**: {len(config.python_packages)}
 - **Development Packages**: {len(config.dev_packages)}
 
 ### Quality Tools
-- **Configured**: {', '.join(config.quality_tools) if config.quality_tools else 'None'}
-- **Test Frameworks**: {', '.join(config.test_frameworks) if config.test_frameworks else 'None'}
+- **Configured**: {", ".join(config.quality_tools) if config.quality_tools else "None"}
+- **Test Frameworks**: {", ".join(config.test_frameworks) if config.test_frameworks else "None"}
 
 ### System Requirements
 - **Packages**: {len(config.system_packages)}
-- **Build Tools**: {', '.join(config.build_tools) if config.build_tools else 'None'}
+- **Build Tools**: {", ".join(config.build_tools) if config.build_tools else "None"}
 
 ## Steps Completed
 """
@@ -237,9 +194,7 @@ def create_configuration_artifacts(
 
     # Create configuration artifact
     create_markdown_artifact(
-        key="environment-configuration-report",
-        markdown=report,
-        description="Environment configuration report"
+        key="environment-configuration-report", markdown=report, description="Environment configuration report"
     )
 
     # Create detailed configuration as JSON artifact
@@ -255,7 +210,7 @@ def create_configuration_artifacts(
         "build_tools": config.build_tools,
         "environment_variables": config.environment_variables,
         "container_config": config.container_config,
-        "ci_config": config.ci_config
+        "ci_config": config.ci_config,
     }
 
     # Save detailed configuration

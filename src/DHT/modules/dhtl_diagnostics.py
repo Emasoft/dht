@@ -48,18 +48,14 @@ def diagnostics_command(*args, **kwargs) -> int:
         "git": "Version control",
         "uv": "Python package manager",
         "python": "Python interpreter",
-        "pip": "Python package installer"
+        "pip": "Python package installer",
     }
 
     for tool, description in tools.items():
         if shutil.which(tool):
             try:
-                result = subprocess.run(
-                    [tool, "--version"],
-                    capture_output=True,
-                    text=True
-                )
-                version = result.stdout.strip().split('\n')[0]
+                result = subprocess.run([tool, "--version"], capture_output=True, text=True)
+                version = result.stdout.strip().split("\n")[0]
                 log_success(f"  ✓ {tool}: {version}")
             except Exception:
                 log_success(f"  ✓ {tool}: Found")
@@ -82,7 +78,7 @@ def diagnostics_command(*args, **kwargs) -> int:
         "setup.py": "Legacy Python setup",
         "package.json": "Node.js project",
         ".git": "Git repository",
-        ".dhtconfig": "DHT configuration"
+        ".dhtconfig": "DHT configuration",
     }
 
     found_project_type = False

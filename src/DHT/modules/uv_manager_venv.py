@@ -35,12 +35,7 @@ class VirtualEnvironmentManager:
         self.run_command = run_command_func
 
     @task
-    def create_venv(
-        self,
-        project_path: Path,
-        python_version: str | None = None,
-        venv_path: Path | None = None
-    ) -> Path:
+    def create_venv(self, project_path: Path, python_version: str | None = None, venv_path: Path | None = None) -> Path:
         """
         Create virtual environment for project.
 
@@ -74,11 +69,7 @@ class VirtualEnvironmentManager:
         self.logger.info(f"Created virtual environment at {venv_path}")
         return venv_path
 
-    def setup_virtual_environment(
-        self,
-        project_path: Path,
-        python_version: str | None = None
-    ) -> dict[str, Any]:
+    def setup_virtual_environment(self, project_path: Path, python_version: str | None = None) -> dict[str, Any]:
         """
         Set up virtual environment for project.
 
@@ -96,13 +87,9 @@ class VirtualEnvironmentManager:
                 "success": True,
                 "venv_path": str(venv_path),
                 "python_version": python_version,
-                "message": f"Virtual environment created at {venv_path}"
+                "message": f"Virtual environment created at {venv_path}",
             }
 
         except Exception as e:
             self.logger.error(f"Failed to set up virtual environment: {e}")
-            return {
-                "success": False,
-                "error": str(e),
-                "message": "Virtual environment setup failed"
-            }
+            return {"success": False, "error": str(e), "message": "Virtual environment setup failed"}

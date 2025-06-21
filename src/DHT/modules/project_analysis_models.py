@@ -21,6 +21,7 @@ from DHT.modules.project_type_enums import ProjectCategory, ProjectType
 @dataclass
 class ProjectAnalysis:
     """Results of project type analysis."""
+
     type: ProjectType
     category: ProjectCategory
     confidence: float
@@ -43,6 +44,7 @@ class ProjectAnalysis:
 @dataclass
 class ValidationResult:
     """Configuration validation results."""
+
     is_valid: bool
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)

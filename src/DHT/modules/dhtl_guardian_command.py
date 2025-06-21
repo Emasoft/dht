@@ -132,11 +132,7 @@ def guardian_run(args: list[str]) -> int:
     limits = ResourceLimits(memory_mb, cpu_percent, timeout)
 
     # Run with guardian
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         log_success("Command completed successfully")
@@ -208,18 +204,10 @@ def guardian_batch(args: list[str]) -> int:
     # Run commands
     if sequential:
         log_info("Running commands sequentially...")
-        results = guardian_sequential_flow(
-            commands=commands,
-            stop_on_failure=stop_on_failure,
-            default_limits=limits
-        )
+        results = guardian_sequential_flow(commands=commands, stop_on_failure=stop_on_failure, default_limits=limits)
     else:
         log_info(f"Running commands in batches of {batch_size}...")
-        results = guardian_batch_flow(
-            commands=commands,
-            batch_size=batch_size,
-            default_limits=limits
-        )
+        results = guardian_batch_flow(commands=commands, batch_size=batch_size, default_limits=limits)
 
     # Save results
     output_path = Path(".dht") / "guardian_results.yaml"
@@ -354,4 +342,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['guardian_command', 'placeholder_command']
+__all__ = ["guardian_command", "placeholder_command"]

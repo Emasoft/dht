@@ -22,8 +22,7 @@ class TestPythonEfficiency:
         self.dht_dir = Path(__file__).parent.parent.parent / "src" / "DHT"
         self.python_files = list(self.dht_dir.rglob("*.py"))
         # Filter out __pycache__ and test files
-        self.python_files = [f for f in self.python_files
-                           if "__pycache__" not in str(f) and "test_" not in f.name]
+        self.python_files = [f for f in self.python_files if "__pycache__" not in str(f) and "test_" not in f.name]
         self.max_file_size_kb = 10  # CLAUDE.md mentions 10KB limit for Python files
 
     def test_python_files_exist(self):
@@ -31,11 +30,7 @@ class TestPythonEfficiency:
         assert len(self.python_files) > 0, "Should find Python files in DHT package"
 
         # Core Python files should exist
-        core_files = [
-            "dhtl.py",
-            "launcher.py",
-            "colors.py"
-        ]
+        core_files = ["dhtl.py", "launcher.py", "colors.py"]
 
         existing_files = [f.name for f in self.python_files]
         for core_file in core_files:
@@ -56,8 +51,7 @@ class TestPythonEfficiency:
                 print(f"  {file_info}")
 
         # CLAUDE.md states: "always keep the size of source code files below 10Kb"
-        assert len(oversized_files) == 0, \
-            f"These Python files exceed the 10KB limit: {oversized_files}"
+        assert len(oversized_files) == 0, f"These Python files exceed the 10KB limit: {oversized_files}"
 
     def test_files_have_proper_headers(self):
         """Test that Python files have proper headers."""
@@ -65,15 +59,17 @@ class TestPythonEfficiency:
             content = py_file.read_text()
 
             # Should start with shebang
-            assert content.startswith("#!/usr/bin/env python3"), \
+            assert content.startswith("#!/usr/bin/env python3"), (
                 f"{py_file.name} should start with #!/usr/bin/env python3 shebang"
+            )
 
             # Should have encoding declaration
-            lines = content.split('\n')
+            lines = content.split("\n")
             if len(lines) > 1:
                 second_line = lines[1]
-                assert "coding" in second_line or "utf-8" in second_line, \
+                assert "coding" in second_line or "utf-8" in second_line, (
                     f"{py_file.name} should have encoding declaration on second line"
+                )
 
     def test_files_have_valid_syntax(self):
         """Test that all Python files have valid syntax."""
@@ -100,10 +96,10 @@ class TestPythonEfficiency:
                 tree = ast.parse(content)
                 # Check if first statement is a docstring
                 has_docstring = (
-                    len(tree.body) > 0 and
-                    isinstance(tree.body[0], ast.Expr) and
-                    isinstance(tree.body[0].value, ast.Constant) and
-                    isinstance(tree.body[0].value.value, str)
+                    len(tree.body) > 0
+                    and isinstance(tree.body[0], ast.Expr)
+                    and isinstance(tree.body[0].value, ast.Constant)
+                    and isinstance(tree.body[0].value.value, str)
                 )
 
                 if not has_docstring:
@@ -121,8 +117,9 @@ class TestPythonEfficiency:
         # CLAUDE.md states: "always write the docstrings of all functions"
         # Allow some files to not have docstrings, but most should
         docstring_ratio = (len(self.python_files) - len(files_without_docstrings)) / len(self.python_files)
-        assert docstring_ratio >= 0.7, \
-            f"Only {docstring_ratio*100:.1f}% of Python files have docstrings (expected >70%)"
+        assert docstring_ratio >= 0.7, (
+            f"Only {docstring_ratio * 100:.1f}% of Python files have docstrings (expected >70%)"
+        )
 
     def test_functions_have_docstrings(self):
         """Test that functions have docstrings (CLAUDE.md requirement)."""
@@ -141,10 +138,10 @@ class TestPythonEfficiency:
 
                         # Check if function has docstring
                         has_docstring = (
-                            len(node.body) > 0 and
-                            isinstance(node.body[0], ast.Expr) and
-                            isinstance(node.body[0].value, ast.Constant) and
-                            isinstance(node.body[0].value.value, str)
+                            len(node.body) > 0
+                            and isinstance(node.body[0], ast.Expr)
+                            and isinstance(node.body[0].value, ast.Constant)
+                            and isinstance(node.body[0].value.value, str)
                         )
 
                         if not has_docstring:
@@ -164,8 +161,9 @@ class TestPythonEfficiency:
         if total_functions > 0:
             docstring_ratio = (total_functions - len(functions_without_docstrings)) / total_functions
             # CLAUDE.md is strict about docstrings, but allow some flexibility
-            assert docstring_ratio >= 0.6, \
-                f"Only {docstring_ratio*100:.1f}% of functions have docstrings (expected >60%)"
+            assert docstring_ratio >= 0.6, (
+                f"Only {docstring_ratio * 100:.1f}% of functions have docstrings (expected >60%)"
+            )
 
     def test_functions_use_type_annotations(self):
         """Test that functions use type annotations (CLAUDE.md requirement)."""
@@ -181,15 +179,15 @@ class TestPythonEfficiency:
                 for node in ast.walk(tree):
                     if isinstance(node, ast.FunctionDef):
                         # Skip magic methods and some special cases
-                        if node.name.startswith('_'):
+                        if node.name.startswith("_"):
                             continue
 
                         total_functions += 1
 
                         # Check for type annotations
                         has_annotations = (
-                            node.returns is not None or  # Return type annotation
-                            any(arg.annotation is not None for arg in node.args.args)  # Parameter annotations
+                            node.returns is not None  # Return type annotation
+                            or any(arg.annotation is not None for arg in node.args.args)  # Parameter annotations
                         )
 
                         if not has_annotations:
@@ -209,8 +207,9 @@ class TestPythonEfficiency:
         if total_functions > 0:
             type_annotation_ratio = (total_functions - len(functions_without_types)) / total_functions
             # CLAUDE.md states: "always use type annotations"
-            assert type_annotation_ratio >= 0.5, \
-                f"Only {type_annotation_ratio*100:.1f}% of functions have type annotations (expected >50%)"
+            assert type_annotation_ratio >= 0.5, (
+                f"Only {type_annotation_ratio * 100:.1f}% of functions have type annotations (expected >50%)"
+            )
 
     def test_imports_are_organized(self):
         """Test that imports are properly organized."""
@@ -227,8 +226,9 @@ class TestPythonEfficiency:
                         imports.append(node)
 
                 # Check that imports are at the top (after docstring and comments)
-                non_import_nodes = [node for node in tree.body
-                                  if not isinstance(node, ast.Import | ast.ImportFrom | ast.Expr)]
+                non_import_nodes = [
+                    node for node in tree.body if not isinstance(node, ast.Import | ast.ImportFrom | ast.Expr)
+                ]
 
                 if imports and non_import_nodes:
                     first_non_import_line = non_import_nodes[0].lineno
@@ -250,16 +250,18 @@ class TestPythonEfficiency:
             content = py_file.read_text()
 
             # Simple regex-based check for obvious unused imports
-            import_pattern = r'^(?:from\s+\S+\s+)?import\s+([^#\n]+)'
+            import_pattern = r"^(?:from\s+\S+\s+)?import\s+([^#\n]+)"
             imports = re.findall(import_pattern, content, re.MULTILINE)
 
             for import_line in imports:
                 # Extract module/function names
-                names = [name.strip().split(' as ')[0] for name in import_line.split(',')]
+                names = [name.strip().split(" as ")[0] for name in import_line.split(",")]
 
                 for name in names:
                     name = name.strip()
-                    if name and not re.search(rf'\b{re.escape(name)}\b', content[content.find(import_line)+len(import_line):]):
+                    if name and not re.search(
+                        rf"\b{re.escape(name)}\b", content[content.find(import_line) + len(import_line) :]
+                    ):
                         if py_file.name not in files_with_potential_unused_imports:
                             files_with_potential_unused_imports.append(py_file.name)
                         break
@@ -283,7 +285,7 @@ class TestPythonEfficiency:
                 for node in ast.walk(tree):
                     if isinstance(node, ast.FunctionDef):
                         # Count lines in function (simple complexity measure)
-                        if hasattr(node, 'end_lineno') and hasattr(node, 'lineno'):
+                        if hasattr(node, "end_lineno") and hasattr(node, "lineno"):
                             func_lines = node.end_lineno - node.lineno
 
                             # Functions over 50 lines might be too complex
@@ -300,5 +302,4 @@ class TestPythonEfficiency:
                 print(f"  - {func_info}")
 
         # Allow some complex functions but flag excessive complexity
-        assert len(complex_functions) < 5, \
-            f"Too many complex functions found: {len(complex_functions)}"
+        assert len(complex_functions) < 5, f"Too many complex functions found: {len(complex_functions)}"

@@ -28,11 +28,7 @@ from DHT.modules.uv_task_utils import find_uv_executable, get_logger
     retries=2,
     retry_delay_seconds=RETRY_DELAYS,
 )
-def install_dependencies(
-    project_path: Path,
-    extras: list[str] | None = None,
-    dev: bool = True
-) -> dict[str, Any]:
+def install_dependencies(project_path: Path, extras: list[str] | None = None, dev: bool = True) -> dict[str, Any]:
     """
     Install project dependencies using UV.
 
@@ -74,16 +70,13 @@ def install_dependencies(
             logger.info("Installing dependencies from requirements.txt")
         else:
             logger.warning("No dependency files found")
-            return {
-                "success": False,
-                "error": "No pyproject.toml or requirements.txt found"
-            }
+            return {"success": False, "error": "No pyproject.toml or requirements.txt found"}
 
         # Run installation
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
@@ -91,11 +84,7 @@ def install_dependencies(
 
         logger.info("Dependencies installed successfully")
 
-        return {
-            "success": True,
-            "method": "sync" if pyproject_path.exists() else "pip",
-            "output": result.stdout
-        }
+        return {"success": True, "method": "sync" if pyproject_path.exists() else "pip", "output": result.stdout}
 
     except Exception as e:
         logger.error(f"Error installing dependencies: {e}")
@@ -108,10 +97,7 @@ def install_dependencies(
     retries=2,
     retry_delay_seconds=RETRY_DELAYS,
 )
-def sync_dependencies(
-    project_path: Path,
-    frozen: bool = True
-) -> dict[str, Any]:
+def sync_dependencies(project_path: Path, frozen: bool = True) -> dict[str, Any]:
     """
     Sync dependencies to match lock file exactly.
 
@@ -139,17 +125,13 @@ def sync_dependencies(
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
             raise UVTaskError(f"Dependency sync failed: {result.stderr}")
 
-        return {
-            "success": True,
-            "frozen": frozen,
-            "output": result.stdout
-        }
+        return {"success": True, "frozen": frozen, "output": result.stdout}
 
     except Exception as e:
         logger.error(f"Error syncing dependencies: {e}")
@@ -186,7 +168,7 @@ def generate_lock_file(project_path: Path) -> dict[str, Any]:
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
@@ -195,12 +177,7 @@ def generate_lock_file(project_path: Path) -> dict[str, Any]:
         lock_file = project_path / "uv.lock"
         logger.info(f"Generated lock file at {lock_file}")
 
-        return {
-            "success": True,
-            "path": str(lock_file),
-            "exists": lock_file.exists(),
-            "output": result.stdout
-        }
+        return {"success": True, "path": str(lock_file), "exists": lock_file.exists(), "output": result.stdout}
 
     except Exception as e:
         logger.error(f"Error generating lock file: {e}")
@@ -214,11 +191,7 @@ def generate_lock_file(project_path: Path) -> dict[str, Any]:
     retry_delay_seconds=RETRY_DELAYS,
 )
 def add_dependency(
-    project_path: Path,
-    package: str,
-    version: str | None = None,
-    dev: bool = False,
-    optional: str | None = None
+    project_path: Path, package: str, version: str | None = None, dev: bool = False, optional: str | None = None
 ) -> dict[str, Any]:
     """
     Add a dependency to the project.
@@ -258,7 +231,7 @@ def add_dependency(
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
@@ -272,7 +245,7 @@ def add_dependency(
             "version": version,
             "dev": dev,
             "optional": optional,
-            "output": result.stdout
+            "output": result.stdout,
         }
 
     except Exception as e:
@@ -311,7 +284,7 @@ def remove_dependency(project_path: Path, package: str) -> dict[str, Any]:
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=DEFAULT_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
@@ -319,11 +292,7 @@ def remove_dependency(project_path: Path, package: str) -> dict[str, Any]:
 
         logger.info(f"Successfully removed {package}")
 
-        return {
-            "success": True,
-            "package": package,
-            "output": result.stdout
-        }
+        return {"success": True, "package": package, "output": result.stdout}
 
     except Exception as e:
         logger.error(f"Error removing dependency: {e}")

@@ -37,19 +37,19 @@ UV is a modern, ultra-fast Python package and project manager written in Rust. I
 ```python
 class UVEnvironmentManager:
     """Manages Python environments using UV."""
-    
+
     def detect_python_version(self, project_path: Path) -> str:
         """Detect required Python version from project files."""
         # Check .python-version
         # Check pyproject.toml requires-python
         # Check setup.py python_requires
         # Return specific version or constraint
-    
+
     def ensure_python_available(self, version: str) -> Path:
         """Ensure Python version is available, installing if needed."""
         # Use uv python install if version not found
         # Return path to Python executable
-    
+
     def create_environment(self, project_path: Path, python_version: str):
         """Create UV-managed virtual environment."""
         # uv venv --python {version}
@@ -60,19 +60,19 @@ class UVEnvironmentManager:
 ```python
 class UVDependencyManager:
     """Manages dependencies using UV."""
-    
+
     def analyze_dependencies(self, project_path: Path) -> Dict[str, Any]:
         """Analyze project dependencies."""
         # Parse requirements.txt, pyproject.toml, etc.
         # Identify dependency groups (runtime, dev, test)
         # Detect version conflicts
-    
+
     def install_dependencies(self, project_path: Path, groups: List[str] = None):
         """Install dependencies using UV."""
         # uv sync for lock file
         # uv pip install for requirements
         # Handle optional dependency groups
-    
+
     def generate_lock_file(self, project_path: Path):
         """Generate deterministic lock file."""
         # uv lock to create uv.lock
@@ -85,7 +85,7 @@ class UVDependencyManager:
 ```python
 class ProjectTypeDetector:
     """Detect project type and configure accordingly."""
-    
+
     PROJECT_PATTERNS = {
         "django": {
             "files": ["manage.py", "settings.py"],
@@ -113,7 +113,7 @@ class ProjectTypeDetector:
         },
         # More patterns...
     }
-    
+
     def detect_and_configure(self, project_path: Path):
         """Detect project type and apply UV configuration."""
         # Use project analyzer results
@@ -126,13 +126,13 @@ class ProjectTypeDetector:
 ```python
 class CrossProjectResolver:
     """Resolve dependencies across multiple related projects."""
-    
+
     def analyze_workspace(self, workspace_path: Path) -> Dict[str, Any]:
         """Analyze multi-project workspace."""
         # Detect monorepo structure
         # Find shared dependencies
         # Identify version conflicts
-    
+
     def create_workspace_lock(self, workspace_path: Path):
         """Create unified lock for workspace."""
         # UV workspace support (future feature)
@@ -145,7 +145,7 @@ class CrossProjectResolver:
 ```python
 class PlatformBuilder:
     """Build for specific platforms using UV."""
-    
+
     def build_for_platform(self, project_path: Path, platform: str):
         """Build project for specific platform."""
         # Use UV's platform resolution
@@ -157,14 +157,14 @@ class PlatformBuilder:
 ```python
 class EnvironmentReproducer:
     """Reproduce exact environments across machines."""
-    
+
     def capture_environment(self, project_path: Path) -> Dict[str, Any]:
         """Capture complete environment state."""
         # Python version
         # All dependencies with hashes
         # System dependencies (for DHT to handle)
         # Environment variables
-    
+
     def reproduce_environment(self, project_path: Path, state: Dict[str, Any]):
         """Reproduce environment from captured state."""
         # Install exact Python version
@@ -180,11 +180,11 @@ Create `dht/modules/uv_manager.py`:
 ```python
 class UVManager:
     """Central UV integration for DHT."""
-    
+
     def __init__(self):
         self.uv_path = self._find_uv_executable()
         self._verify_uv_version()
-    
+
     def run_command(self, args: List[str], cwd: Path = None) -> Dict[str, Any]:
         """Run UV command and parse output."""
         # Execute UV with proper error handling
@@ -197,7 +197,7 @@ Create `dht/modules/project_configurator.py`:
 ```python
 class ProjectConfigurator:
     """Generate UV-compatible project configuration."""
-    
+
     def generate_pyproject_toml(self, analysis: Dict[str, Any]) -> str:
         """Generate pyproject.toml from project analysis."""
         # Create [project] section

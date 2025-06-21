@@ -60,10 +60,7 @@ class TestRestoreFlow:
 
     def test_find_project_root_with_pyproject(self):
         """Test finding project root with pyproject.toml."""
-        project_path, metadata = create_temporary_project(
-            project_type="simple",
-            project_name="test_project"
-        )
+        project_path, metadata = create_temporary_project(project_type="simple", project_name="test_project")
 
         try:
             # Test from project root
@@ -95,8 +92,8 @@ class TestRestoreFlow:
         with pytest.raises(ValueError, match="Could not find project root"):
             find_project_root(empty_dir)
 
-    @patch('sys.prefix', '/tmp/test_venv')
-    @patch('sys.base_prefix', '/usr/bin/python')
+    @patch("sys.prefix", "/tmp/test_venv")
+    @patch("sys.base_prefix", "/usr/bin/python")
     def test_detect_virtual_environment_exists(self):
         """Test detecting existing virtual environment."""
         project_path, _ = create_temporary_project("simple")
@@ -105,12 +102,12 @@ class TestRestoreFlow:
             # Test with activated venv (sys.prefix != sys.base_prefix)
             exists, detected_path = detect_virtual_environment(project_path)
             assert exists is True
-            assert detected_path == Path('/tmp/test_venv')
+            assert detected_path == Path("/tmp/test_venv")
 
         finally:
             cleanup_temporary_project(project_path)
 
-    @patch('sys.prefix', sys.base_prefix)  # Make sure we're not in a venv
+    @patch("sys.prefix", sys.base_prefix)  # Make sure we're not in a venv
     def test_detect_virtual_environment_not_exists(self):
         """Test detecting when no virtual environment exists."""
         project_path, _ = create_temporary_project("simple")
@@ -123,7 +120,7 @@ class TestRestoreFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    @patch('DHT.modules.dht_flows.restore_flow.UVManager')
+    @patch("DHT.modules.dht_flows.restore_flow.UVManager")
     def test_create_virtual_environment(self, mock_uv_manager_class):
         """Test virtual environment creation."""
         # Mock UV manager
@@ -137,13 +134,10 @@ class TestRestoreFlow:
 
         assert result == venv_path
         mock_uv_manager_class.assert_called_once()  # Check UVManager was instantiated
-        mock_uv.create_venv.assert_called_once_with(
-            path=venv_path,
-            python_version="3.10"
-        )
+        mock_uv.create_venv.assert_called_once_with(path=venv_path, python_version="3.10")
 
-    @patch('DHT.modules.dht_flows.restore_flow.run_with_guardian')
-    @patch('DHT.modules.dht_flows.restore_flow.UVManager')
+    @patch("DHT.modules.dht_flows.restore_flow.run_with_guardian")
+    @patch("DHT.modules.dht_flows.restore_flow.UVManager")
     def test_install_dependencies_with_lock(self, mock_uv_manager_class, mock_run):
         """Test installing dependencies with uv.lock."""
         project_path, _ = create_temporary_project("simple")
@@ -165,10 +159,7 @@ class TestRestoreFlow:
             mock_run.return_value = mock_result
 
             result = install_dependencies(
-                project_root=project_path,
-                venv_path=project_path / ".venv",
-                extras="dev",
-                upgrade=False
+                project_root=project_path, venv_path=project_path / ".venv", extras="dev", upgrade=False
             )
 
             assert result["success"] is True
@@ -182,7 +173,7 @@ class TestRestoreFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    @patch('DHT.modules.dht_flows.restore_flow.subprocess.run')
+    @patch("DHT.modules.dht_flows.restore_flow.subprocess.run")
     def test_verify_installation(self, mock_subprocess):
         """Test installation verification."""
         project_path, _ = create_temporary_project("simple", project_name="my_app")
@@ -218,20 +209,14 @@ class TestRestoreFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    @patch('DHT.modules.dht_flows.restore_flow.find_project_root')
-    @patch('DHT.modules.dht_flows.restore_flow.detect_virtual_environment')
-    @patch('DHT.modules.dht_flows.restore_flow.create_virtual_environment')
-    @patch('DHT.modules.dht_flows.restore_flow.install_dependencies')
-    @patch('DHT.modules.dht_flows.restore_flow.install_dht_dependencies')
-    @patch('DHT.modules.dht_flows.restore_flow.verify_installation')
+    @patch("DHT.modules.dht_flows.restore_flow.find_project_root")
+    @patch("DHT.modules.dht_flows.restore_flow.detect_virtual_environment")
+    @patch("DHT.modules.dht_flows.restore_flow.create_virtual_environment")
+    @patch("DHT.modules.dht_flows.restore_flow.install_dependencies")
+    @patch("DHT.modules.dht_flows.restore_flow.install_dht_dependencies")
+    @patch("DHT.modules.dht_flows.restore_flow.verify_installation")
     def test_restore_dependencies_flow_complete(
-        self,
-        mock_verify,
-        mock_install_dht,
-        mock_install_deps,
-        mock_create_venv,
-        mock_detect_venv,
-        mock_find_root
+        self, mock_verify, mock_install_dht, mock_install_deps, mock_create_venv, mock_detect_venv, mock_find_root
     ):
         """Test complete restore dependencies flow."""
         # Setup mocks
@@ -241,20 +226,12 @@ class TestRestoreFlow:
         mock_find_root.return_value = project_root
         mock_detect_venv.return_value = (False, venv_path)
         mock_create_venv.return_value = venv_path
-        mock_install_deps.return_value = {
-            "success": True,
-            "message": "Dependencies installed",
-            "install_time": 10.5
-        }
-        mock_install_dht.return_value = {
-            "success": True,
-            "message": "DHT dependencies installed",
-            "install_time": 5.0
-        }
+        mock_install_deps.return_value = {"success": True, "message": "Dependencies installed", "install_time": 10.5}
+        mock_install_dht.return_value = {"success": True, "message": "DHT dependencies installed", "install_time": 5.0}
         mock_verify.return_value = {
             "success": True,
             "python_version": "Python 3.10.0",
-            "import_results": {"my_app": True, "prefect": True}
+            "import_results": {"my_app": True, "prefect": True},
         }
 
         # Run flow
@@ -263,7 +240,7 @@ class TestRestoreFlow:
             python_version="3.10",
             extras="dev,test",
             upgrade=True,
-            install_dht_deps=True
+            install_dht_deps=True,
         )
 
         # Verify results
@@ -285,16 +262,16 @@ class TestRestoreFlow:
 class TestTestFlow:
     """Test the test command Prefect flow."""
 
-    @patch('psutil.virtual_memory')
-    @patch('psutil.cpu_count')
-    @patch('psutil.cpu_percent')
+    @patch("psutil.virtual_memory")
+    @patch("psutil.cpu_count")
+    @patch("psutil.cpu_percent")
     def test_check_test_resources(self, mock_cpu_percent, mock_cpu_count, mock_vm):
         """Test resource checking."""
         # Mock system resources
         mock_vm.return_value = create_psutil_virtual_memory_mock(
             total=16 * 1024 * 1024 * 1024,  # 16GB
             available=8 * 1024 * 1024 * 1024,  # 8GB
-            percent=50.0
+            percent=50.0,
         )
         mock_cpu_count.return_value = 4
         mock_cpu_percent.return_value = 25.0
@@ -309,10 +286,7 @@ class TestTestFlow:
 
     def test_discover_tests_pytest_project(self):
         """Test discovering tests in a pytest project."""
-        project_path, _ = create_temporary_project(
-            project_type="simple",
-            include_tests=True
-        )
+        project_path, _ = create_temporary_project(project_type="simple", include_tests=True)
 
         try:
             result = discover_tests(project_path, test_pattern="utils")
@@ -328,10 +302,7 @@ class TestTestFlow:
 
     def test_discover_tests_no_tests(self):
         """Test discovering when no tests exist."""
-        project_path, _ = create_temporary_project(
-            project_type="simple",
-            include_tests=False
-        )
+        project_path, _ = create_temporary_project(project_type="simple", include_tests=False)
 
         try:
             result = discover_tests(project_path)
@@ -350,11 +321,7 @@ class TestTestFlow:
         (venv_path / "bin").mkdir()
         (venv_path / "bin" / "python").touch()
 
-        discovery_info = {
-            "framework": "pytest",
-            "test_dirs": ["tests"],
-            "test_pattern": "test_utils"
-        }
+        discovery_info = {"framework": "pytest", "test_dirs": ["tests"], "test_pattern": "test_utils"}
 
         cmd = prepare_test_command(
             project_root=tmp_path,
@@ -363,7 +330,7 @@ class TestTestFlow:
             verbose=True,
             coverage=True,
             parallel=True,
-            timeout=300
+            timeout=300,
         )
 
         assert str(venv_path / "bin" / "python") in cmd
@@ -446,13 +413,13 @@ class TestTestFlow:
         assert summary["failed"] == 1
         assert summary["errors"] == 1
 
-    @patch('DHT.modules.dht_flows.test_flow.check_test_resources')
-    @patch('DHT.modules.dht_flows.test_flow.find_project_root')
-    @patch('DHT.modules.dht_flows.test_flow.detect_virtual_environment')
-    @patch('DHT.modules.dht_flows.test_flow.discover_tests')
-    @patch('DHT.modules.dht_flows.test_flow.prepare_test_command')
-    @patch('DHT.modules.dht_flows.test_flow.run_tests')
-    @patch('DHT.modules.dht_flows.test_flow.generate_coverage_report')
+    @patch("DHT.modules.dht_flows.test_flow.check_test_resources")
+    @patch("DHT.modules.dht_flows.test_flow.find_project_root")
+    @patch("DHT.modules.dht_flows.test_flow.detect_virtual_environment")
+    @patch("DHT.modules.dht_flows.test_flow.discover_tests")
+    @patch("DHT.modules.dht_flows.test_flow.prepare_test_command")
+    @patch("DHT.modules.dht_flows.test_flow.run_tests")
+    @patch("DHT.modules.dht_flows.test_flow.generate_coverage_report")
     def test_test_command_flow_complete(
         self,
         mock_coverage,
@@ -461,24 +428,17 @@ class TestTestFlow:
         mock_discover,
         mock_detect_venv,
         mock_find_root,
-        mock_check_resources
+        mock_check_resources,
     ):
         """Test complete test command flow."""
         # Setup mocks
         project_root = Path("/tmp/test_project")
         venv_path = Path("/tmp/test_project/.venv")
 
-        mock_check_resources.return_value = {
-            "has_resources": True,
-            "memory": {"available_mb": 8192}
-        }
+        mock_check_resources.return_value = {"has_resources": True, "memory": {"available_mb": 8192}}
         mock_find_root.return_value = project_root
         mock_detect_venv.return_value = (True, venv_path)
-        mock_discover.return_value = {
-            "test_files_count": 10,
-            "test_dirs": ["tests"],
-            "framework": "pytest"
-        }
+        mock_discover.return_value = {"test_files_count": 10, "test_dirs": ["tests"], "framework": "pytest"}
         mock_prepare_cmd.return_value = ["python", "-m", "pytest"]
         mock_run_tests.return_value = {
             "success": True,
@@ -486,19 +446,9 @@ class TestTestFlow:
             "execution_time": 5.5,
             "stdout": "10 passed",
             "stderr": "",
-            "summary": {
-                "total": 10,
-                "passed": 10,
-                "failed": 0,
-                "errors": 0,
-                "skipped": 0
-            }
+            "summary": {"total": 10, "passed": 10, "failed": 0, "errors": 0, "skipped": 0},
         }
-        mock_coverage.return_value = {
-            "has_coverage": True,
-            "coverage_percent": 85,
-            "report": "Coverage report..."
-        }
+        mock_coverage.return_value = {"has_coverage": True, "coverage_percent": 85, "report": "Coverage report..."}
 
         # Run flow
         result = run_test_command_flow(
@@ -508,7 +458,7 @@ class TestTestFlow:
             coverage=True,
             parallel=False,
             timeout=600,
-            memory_limit_mb=2048
+            memory_limit_mb=2048,
         )
 
         # Verify results
@@ -527,7 +477,7 @@ class TestTestFlow:
         mock_run_tests.assert_called_once()
         mock_coverage.assert_called_once()
 
-    @patch('DHT.modules.dht_flows.test_flow.detect_virtual_environment')
+    @patch("DHT.modules.dht_flows.test_flow.detect_virtual_environment")
     def test_test_command_flow_no_venv(self, mock_detect_venv):
         """Test error when no virtual environment exists."""
         project_path, _ = create_temporary_project("simple")

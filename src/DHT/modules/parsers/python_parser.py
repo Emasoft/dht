@@ -170,21 +170,15 @@ class PythonParser(BaseParser):
         functions = []
 
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef) or isinstance(
-                node, ast.AsyncFunctionDef
-            ):
+            if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
                 func_info = {
                     "name": node.name,
                     "line": node.lineno if hasattr(node, "lineno") else None,
                     "async": isinstance(node, ast.AsyncFunctionDef),
                     "docstring": ast.get_docstring(node),
                     "args": self._extract_arguments(node.args),
-                    "decorators": [
-                        self._get_decorator_name(d) for d in node.decorator_list
-                    ],
-                    "returns": self._extract_annotation(node.returns)
-                    if node.returns
-                    else None,
+                    "decorators": [self._get_decorator_name(d) for d in node.decorator_list],
+                    "returns": self._extract_annotation(node.returns) if node.returns else None,
                     "is_method": self._is_method(node),
                     "complexity": self._calculate_complexity(node),
                 }
@@ -203,9 +197,7 @@ class PythonParser(BaseParser):
                     "line": node.lineno if hasattr(node, "lineno") else None,
                     "docstring": ast.get_docstring(node),
                     "bases": [self._get_name(base) for base in node.bases],
-                    "decorators": [
-                        self._get_decorator_name(d) for d in node.decorator_list
-                    ],
+                    "decorators": [self._get_decorator_name(d) for d in node.decorator_list],
                     "methods": self._extract_class_methods(node),
                     "attributes": self._extract_class_attributes(node),
                     "is_dataclass": self._is_dataclass(node),
@@ -231,9 +223,7 @@ class PythonParser(BaseParser):
             arg_info["args"].append(
                 {
                     "name": arg.arg,
-                    "annotation": self._extract_annotation(arg.annotation)
-                    if arg.annotation
-                    else None,
+                    "annotation": self._extract_annotation(arg.annotation) if arg.annotation else None,
                 }
             )
 
@@ -245,18 +235,14 @@ class PythonParser(BaseParser):
         if args.vararg:
             arg_info["vararg"] = {
                 "name": args.vararg.arg,
-                "annotation": self._extract_annotation(args.vararg.annotation)
-                if args.vararg.annotation
-                else None,
+                "annotation": self._extract_annotation(args.vararg.annotation) if args.vararg.annotation else None,
             }
 
         # **kwargs
         if args.kwarg:
             arg_info["kwarg"] = {
                 "name": args.kwarg.arg,
-                "annotation": self._extract_annotation(args.kwarg.annotation)
-                if args.kwarg.annotation
-                else None,
+                "annotation": self._extract_annotation(args.kwarg.annotation) if args.kwarg.annotation else None,
             }
 
         # Keyword-only arguments
@@ -264,16 +250,12 @@ class PythonParser(BaseParser):
             arg_info["kwonlyargs"].append(
                 {
                     "name": arg.arg,
-                    "annotation": self._extract_annotation(arg.annotation)
-                    if arg.annotation
-                    else None,
+                    "annotation": self._extract_annotation(arg.annotation) if arg.annotation else None,
                 }
             )
 
         if args.kw_defaults:
-            arg_info["kw_defaults"] = [
-                self._get_value(d) if d else None for d in args.kw_defaults
-            ]
+            arg_info["kw_defaults"] = [self._get_value(d) if d else None for d in args.kw_defaults]
 
         return arg_info
 
@@ -288,23 +270,18 @@ class PythonParser(BaseParser):
                     "line": node.lineno,
                     "async": isinstance(node, ast.AsyncFunctionDef),
                     "docstring": ast.get_docstring(node),
-                    "decorators": [
-                        self._get_decorator_name(d) for d in node.decorator_list
-                    ],
+                    "decorators": [self._get_decorator_name(d) for d in node.decorator_list],
                     "is_static": self._has_decorator(node, "staticmethod"),
                     "is_class": self._has_decorator(node, "classmethod"),
                     "is_property": self._has_decorator(node, "property"),
                     "is_private": node.name.startswith("_"),
-                    "is_dunder": node.name.startswith("__")
-                    and node.name.endswith("__"),
+                    "is_dunder": node.name.startswith("__") and node.name.endswith("__"),
                 }
                 methods.append(method_info)
 
         return methods
 
-    def _extract_class_attributes(
-        self, class_node: ast.ClassDef
-    ) -> list[dict[str, Any]]:
+    def _extract_class_attributes(self, class_node: ast.ClassDef) -> list[dict[str, Any]]:
         """Extract class attributes"""
         attributes = []
 
@@ -456,10 +433,7 @@ class PythonParser(BaseParser):
         elif isinstance(node, ast.List):
             return [self._get_value(elt) for elt in node.elts]
         elif isinstance(node, ast.Dict):
-            return {
-                self._get_value(k): self._get_value(v)
-                for k, v in zip(node.keys, node.values, strict=False)
-            }
+            return {self._get_value(k): self._get_value(v) for k, v in zip(node.keys, node.values, strict=False)}
         elif isinstance(node, ast.Set):
             return {self._get_value(elt) for elt in node.elts}
         elif isinstance(node, ast.Tuple):
@@ -489,9 +463,7 @@ class PythonParser(BaseParser):
 
     def _is_dataclass(self, node: ast.ClassDef) -> bool:
         """Check if class is a dataclass"""
-        return self._has_decorator(node, "dataclass") or self._has_decorator(
-            node, "dataclasses.dataclass"
-        )
+        return self._has_decorator(node, "dataclass") or self._has_decorator(node, "dataclasses.dataclass")
 
     def _get_metaclass(self, node: ast.ClassDef) -> str | None:
         """Extract metaclass if specified"""
@@ -505,14 +477,10 @@ class PythonParser(BaseParser):
         for node in ast.walk(tree):
             if isinstance(node, ast.If):
                 if isinstance(node.test, ast.Compare):
-                    if (
-                        isinstance(node.test.left, ast.Name)
-                        and node.test.left.id == "__name__"
-                    ):
+                    if isinstance(node.test.left, ast.Name) and node.test.left.id == "__name__":
                         if any(isinstance(op, ast.Eq) for op in node.test.ops):
                             if any(
-                                isinstance(comp, ast.Constant)
-                                and comp.value == "__main__"
+                                isinstance(comp, ast.Constant) and comp.value == "__main__"
                                 for comp in node.test.comparators
                             ):
                                 return True

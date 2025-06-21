@@ -85,17 +85,13 @@ class ProjectTypeDetector:
         heuristic_result = self.heuristics.analyze(analysis_result)
 
         # Detect project type
-        project_type, detected_types = detect_project_type(
-            analysis_result, heuristic_result
-        )
+        project_type, detected_types = detect_project_type(analysis_result, heuristic_result)
 
         # Determine category
         category = determine_category(project_type, detected_types)
 
         # Calculate confidence
-        confidence = self._calculate_confidence(
-            project_type, analysis_result, heuristic_result
-        )
+        confidence = self._calculate_confidence(project_type, analysis_result, heuristic_result)
 
         # Extract markers
         markers = extract_markers(analysis_result, heuristic_result)
@@ -124,9 +120,7 @@ class ProjectTypeDetector:
             migration_paths.append("conda_to_uv")
 
         # Check if publishable
-        is_publishable_flag = is_publishable_library(
-            project_type, analysis_result
-        )
+        is_publishable_flag = is_publishable_library(project_type, analysis_result)
 
         return ProjectAnalysis(
             type=project_type,
@@ -145,14 +139,11 @@ class ProjectTypeDetector:
             migration_paths=migration_paths,
             is_publishable=is_publishable_flag,
             project_path=project_path,
-            analysis_timestamp=datetime.now().isoformat()
+            analysis_timestamp=datetime.now().isoformat(),
         )
 
     @task
-    def generate_configurations(
-        self,
-        analysis: ProjectAnalysis
-    ) -> dict[str, str]:
+    def generate_configurations(self, analysis: ProjectAnalysis) -> dict[str, str]:
         """
         Generate configuration files based on project type.
 
@@ -181,10 +172,7 @@ class ProjectTypeDetector:
         return configs
 
     @task
-    def get_setup_recommendations(
-        self,
-        analysis: ProjectAnalysis
-    ) -> dict[str, Any]:
+    def get_setup_recommendations(self, analysis: ProjectAnalysis) -> dict[str, Any]:
         """
         Get setup recommendations based on project type.
 
@@ -197,11 +185,7 @@ class ProjectTypeDetector:
         return get_setup_recommendations(analysis)
 
     @task
-    def validate_configurations(
-        self,
-        configs: dict[str, str],
-        analysis: ProjectAnalysis
-    ) -> ValidationResult:
+    def validate_configurations(self, configs: dict[str, str], analysis: ProjectAnalysis) -> ValidationResult:
         """
         Validate generated configurations.
 
@@ -232,28 +216,16 @@ class ProjectTypeDetector:
         is_valid = len(errors) == 0
         summary = "All configurations valid" if is_valid else f"{len(errors)} errors found"
 
-        return ValidationResult(
-            is_valid=is_valid,
-            errors=errors,
-            warnings=warnings,
-            summary=summary
-        )
-
-
+        return ValidationResult(is_valid=is_valid, errors=errors, warnings=warnings, summary=summary)
 
     def _calculate_confidence(
-        self,
-        project_type: ProjectType,
-        analysis_result: dict[str, Any],
-        heuristic_result: dict[str, Any]
+        self, project_type: ProjectType, analysis_result: dict[str, Any], heuristic_result: dict[str, Any]
     ) -> float:
         """Calculate confidence score for detection."""
         base_confidence = heuristic_result["project_type"]["confidence"]
 
         # Calculate confidence boost based on markers
-        confidence_boost = calculate_confidence_boost(
-            project_type, analysis_result, heuristic_result
-        )
+        confidence_boost = calculate_confidence_boost(project_type, analysis_result, heuristic_result)
 
         # Calculate markers count for minimum confidence thresholds
         # This is a simplified version - the actual marker counting is in the helper

@@ -49,12 +49,12 @@ dependencies:
       version: "4.20.0"
     - name: "tree-sitter"
       version: "0.20.4"
-    
+
   lock_files:
     requirements: "requirements.txt"
     requirements_dev: "requirements-dev.txt"
     uv_lock: "uv.lock"
-  
+
   system_packages:
     - name: "git"
       platform: "all"
@@ -74,7 +74,7 @@ tools:
     - name: "pip"
     - name: "setuptools"
     - name: "wheel"
-  
+
   optional:
     - name: "docker"
       purpose: "Container builds and testing"
@@ -89,14 +89,14 @@ tools:
 build:
   pre_install:
     - "python -m pip install --upgrade pip setuptools wheel"
-  
+
   post_install:
     - "pre-commit install"
     - "python setup_tree_sitter.py"
-  
+
   build_commands:
     - "python -m build"
-  
+
   test_commands:
     - "pytest -v"
     - "mypy DHT/"
@@ -107,7 +107,7 @@ environment:
   required:
     PYTHONPATH: "${PROJECT_ROOT}"
     DHT_HOME: "${PROJECT_ROOT}/DHT"
-  
+
   optional:
     PYTHONDONTWRITEBYTECODE: "1"
     PYTEST_TIMEOUT: "300"
@@ -122,7 +122,7 @@ platform_overrides:
     environment:
       required:
         OBJC_DISABLE_INITIALIZE_FORK_SAFETY: "YES"
-  
+
   linux:
     dependencies:
       system_packages:
@@ -131,7 +131,7 @@ platform_overrides:
         - name: "python3-venv"
         - name: "libffi-dev"
         - name: "libssl-dev"
-  
+
   windows:
     dependencies:
       system_packages:
@@ -149,7 +149,7 @@ validation:
     requirements.txt: "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
     pyproject.toml: "fedcba0987654321098765432109876543210fedcba9876543210987654321fed"
     setup.py: "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
-  
+
   tool_behaviors:
     black:
       version: "23.12.1"

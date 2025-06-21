@@ -49,14 +49,7 @@ def coverage_command(*args, **kwargs) -> int:
         return 1
 
     # Build coverage command
-    coverage_cmd = [
-        pytest_cmd,
-        "--cov=.",
-        "--cov-report=term-missing",
-        "--cov-report=html",
-        "--cov-report=xml",
-        "-v"
-    ]
+    coverage_cmd = [pytest_cmd, "--cov=.", "--cov-report=term-missing", "--cov-report=html", "--cov-report=xml", "-v"]
 
     # Add any extra arguments
     if args:
@@ -67,12 +60,7 @@ def coverage_command(*args, **kwargs) -> int:
 
     # Run with guardian
     log_info("Running pytest with coverage...")
-    exit_code = run_with_guardian(
-        coverage_cmd[0],
-        "pytest-coverage",
-        mem_limit,
-        *coverage_cmd[1:]
-    )
+    exit_code = run_with_guardian(coverage_cmd[0], "pytest-coverage", mem_limit, *coverage_cmd[1:])
 
     if exit_code == 0:
         log_success("Coverage analysis completed successfully!")
@@ -98,4 +86,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['coverage_command', 'placeholder_command']
+__all__ = ["coverage_command", "placeholder_command"]

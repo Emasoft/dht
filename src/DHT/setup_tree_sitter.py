@@ -115,6 +115,7 @@ def build_language_library(project_root):
         # For newer tree-sitter versions, we try to use tree_sitter_languages
         try:
             import importlib.util
+
             if importlib.util.find_spec("tree_sitter_bash") is not None:
                 print("✅ tree-sitter-bash Python bindings already installed")
                 return True

@@ -109,9 +109,7 @@ class PyProjectParser(BaseParser):
         if "optional-dependencies" in project:
             metadata["optional_dependencies"] = {}
             for group, deps in project["optional-dependencies"].items():
-                metadata["optional_dependencies"][group] = self._parse_dependencies(
-                    deps
-                )
+                metadata["optional_dependencies"][group] = self._parse_dependencies(deps)
 
         # Entry points
         if "scripts" in project:
@@ -209,24 +207,18 @@ class PyProjectParser(BaseParser):
 
         # Dependencies
         if "dependencies" in poetry:
-            result["dependencies"] = self._parse_poetry_dependencies(
-                poetry["dependencies"]
-            )
+            result["dependencies"] = self._parse_poetry_dependencies(poetry["dependencies"])
 
         # Dev dependencies (old style)
         if "dev-dependencies" in poetry:
-            result["dev_dependencies"] = self._parse_poetry_dependencies(
-                poetry["dev-dependencies"]
-            )
+            result["dev_dependencies"] = self._parse_poetry_dependencies(poetry["dev-dependencies"])
 
         # Group dependencies (new style)
         if "group" in poetry:
             result["groups"] = {}
             for group_name, group_config in poetry["group"].items():
                 if "dependencies" in group_config:
-                    result["groups"][group_name] = self._parse_poetry_dependencies(
-                        group_config["dependencies"]
-                    )
+                    result["groups"][group_name] = self._parse_poetry_dependencies(group_config["dependencies"])
 
         # Extras
         if "extras" in poetry:
@@ -248,9 +240,7 @@ class PyProjectParser(BaseParser):
 
         # Dev dependencies
         if "dev-dependencies" in uv:
-            result["dev-dependencies"] = self._parse_dependencies(
-                uv["dev-dependencies"]
-            )
+            result["dev-dependencies"] = self._parse_dependencies(uv["dev-dependencies"])
 
         # Sources (custom package sources)
         if "sources" in uv:

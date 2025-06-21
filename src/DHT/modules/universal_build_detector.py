@@ -19,6 +19,7 @@ from pathlib import Path
 @dataclass
 class BuildConfig:
     """Build configuration for a project."""
+
     project_type: str
     build_tool: str
     build_commands: list[str]
@@ -94,7 +95,7 @@ class UniversalBuildDetector:
             build_commands=["python -m build"],
             artifacts_path="dist",
             pre_build_commands=["pip install --upgrade build"],
-            notes="Python project with setup.py"
+            notes="Python project with setup.py",
         )
 
     def _python_pyproject_config(self) -> BuildConfig:
@@ -105,12 +106,14 @@ class UniversalBuildDetector:
 
         # Parse pyproject.toml to determine project type
         import tomllib
+
         with open(pyproject_path, "rb") as f:
             try:
                 pyproject = tomllib.load(f)
             except (AttributeError, tomllib.TOMLDecodeError):
                 # Fallback for older Python without tomllib
                 import toml
+
                 pyproject = toml.load(pyproject_path)
 
         # Check for Poetry
@@ -124,7 +127,7 @@ class UniversalBuildDetector:
                     build_tool="poetry",
                     build_commands=["poetry build"],
                     artifacts_path="dist",
-                    notes="Python Poetry library (has packages)"
+                    notes="Python Poetry library (has packages)",
                 )
 
             # Check for explicit scripts (application)
@@ -133,7 +136,7 @@ class UniversalBuildDetector:
                     project_type="python-app",
                     build_tool="poetry",
                     build_commands=[],
-                    notes="Python Poetry application (has scripts, no packages)"
+                    notes="Python Poetry application (has scripts, no packages)",
                 )
 
             # Default Poetry project - check for src layout
@@ -143,15 +146,12 @@ class UniversalBuildDetector:
                     build_tool="poetry",
                     build_commands=["poetry build"],
                     artifacts_path="dist",
-                    notes="Python Poetry library (src layout)"
+                    notes="Python Poetry library (src layout)",
                 )
             else:
                 # Application by default
                 return BuildConfig(
-                    project_type="python-app",
-                    build_tool="poetry",
-                    build_commands=[],
-                    notes="Python Poetry application"
+                    project_type="python-app", build_tool="poetry", build_commands=[], notes="Python Poetry application"
                 )
 
         # Check for setuptools with pyproject.toml
@@ -175,8 +175,7 @@ class UniversalBuildDetector:
                     break
 
         # Check for main application files
-        has_main = any((self.project_path / name).exists()
-                      for name in ["main.py", "app.py", "__main__.py"])
+        has_main = any((self.project_path / name).exists() for name in ["main.py", "app.py", "__main__.py"])
 
         if has_packages and not has_main:
             # Pure library
@@ -186,7 +185,7 @@ class UniversalBuildDetector:
                 build_commands=["python -m build"],
                 artifacts_path="dist",
                 pre_build_commands=["pip install --upgrade build"],
-                notes="Python library project (pyproject.toml)"
+                notes="Python library project (pyproject.toml)",
             )
         elif has_main and not has_packages:
             # Pure application
@@ -194,7 +193,7 @@ class UniversalBuildDetector:
                 project_type="python-app",
                 build_tool="pyproject",
                 build_commands=[],
-                notes="Python application (no packages to distribute)"
+                notes="Python application (no packages to distribute)",
             )
         else:
             # Mixed or unclear - default to library behavior
@@ -204,7 +203,7 @@ class UniversalBuildDetector:
                 build_commands=["python -m build"],
                 artifacts_path="dist",
                 pre_build_commands=["pip install --upgrade build"],
-                notes="Python project with pyproject.toml"
+                notes="Python project with pyproject.toml",
             )
 
     def _nodejs_config(self) -> BuildConfig:
@@ -238,7 +237,7 @@ class UniversalBuildDetector:
                         build_commands=build_commands,
                         artifacts_path="dist",
                         pre_build_commands=["npm install"],
-                        notes="Electron desktop application"
+                        notes="Electron desktop application",
                     )
 
         if not build_commands:
@@ -247,7 +246,7 @@ class UniversalBuildDetector:
                 project_type="nodejs",
                 build_tool="npm",
                 build_commands=[],
-                notes="Node.js project - check package.json scripts"
+                notes="Node.js project - check package.json scripts",
             )
 
         return BuildConfig(
@@ -256,7 +255,7 @@ class UniversalBuildDetector:
             build_commands=build_commands,
             artifacts_path="dist",
             pre_build_commands=["npm install"],
-            notes="Node.js project with build script"
+            notes="Node.js project with build script",
         )
 
     def _rust_config(self) -> BuildConfig:
@@ -266,7 +265,7 @@ class UniversalBuildDetector:
             build_tool="cargo",
             build_commands=["cargo build --release"],
             artifacts_path="target/release",
-            notes="Rust project"
+            notes="Rust project",
         )
 
     def _go_config(self) -> BuildConfig:
@@ -285,7 +284,7 @@ class UniversalBuildDetector:
             build_tool="go",
             build_commands=[f"go build -o {module_name}"],
             artifacts_path=".",
-            notes="Go project"
+            notes="Go project",
         )
 
     def _cmake_config(self) -> BuildConfig:
@@ -293,13 +292,9 @@ class UniversalBuildDetector:
         return BuildConfig(
             project_type="cpp",
             build_tool="cmake",
-            build_commands=[
-                "mkdir -p build",
-                "cd build && cmake ..",
-                "cd build && make"
-            ],
+            build_commands=["mkdir -p build", "cd build && cmake ..", "cd build && make"],
             artifacts_path="build",
-            notes="CMake C++ project"
+            notes="CMake C++ project",
         )
 
     def _makefile_config(self) -> BuildConfig:
@@ -309,7 +304,7 @@ class UniversalBuildDetector:
             build_tool="make",
             build_commands=["make"],
             artifacts_path=".",
-            notes="Makefile-based project"
+            notes="Makefile-based project",
         )
 
     def _docker_config(self) -> BuildConfig:
@@ -326,9 +321,7 @@ class UniversalBuildDetector:
                 build_tool="none",
                 build_commands=[],
                 notes=f"Container project - {container_info['reason']}",
-                pre_build_commands=[
-                    f"echo '{container_info['recommendation']}'"
-                ]
+                pre_build_commands=[f"echo '{container_info['recommendation']}'"],
             )
 
         # Container build is possible
@@ -336,7 +329,7 @@ class UniversalBuildDetector:
             project_type="container",
             build_tool=container_info["builder"],
             build_commands=container_info["commands"],
-            notes=f"Container project using {container_info['builder']} ({'rootless' if container_info['rootless'] else 'requires daemon'})"
+            notes=f"Container project using {container_info['builder']} ({'rootless' if container_info['rootless'] else 'requires daemon'})",
         )
 
     def _gradle_config(self) -> BuildConfig:
@@ -346,7 +339,7 @@ class UniversalBuildDetector:
             build_tool="gradle",
             build_commands=["./gradlew build"],
             artifacts_path="build/libs",
-            notes="Gradle project"
+            notes="Gradle project",
         )
 
     def _maven_config(self) -> BuildConfig:
@@ -356,7 +349,7 @@ class UniversalBuildDetector:
             build_tool="maven",
             build_commands=["mvn package"],
             artifacts_path="target",
-            notes="Maven project"
+            notes="Maven project",
         )
 
     def _dotnet_config(self) -> BuildConfig:
@@ -366,7 +359,7 @@ class UniversalBuildDetector:
             build_tool="dotnet",
             build_commands=["dotnet build --configuration Release"],
             artifacts_path="bin/Release",
-            notes=".NET project"
+            notes=".NET project",
         )
 
     def get_build_summary(self) -> dict[str, any]:
@@ -382,7 +375,7 @@ class UniversalBuildDetector:
                     "If this should be packaged, add appropriate build configuration",
                     "For Python: add setup.py or pyproject.toml",
                     "For Node.js: add build script to package.json",
-                ]
+                ],
             }
 
         if not config.build_commands:
@@ -395,7 +388,7 @@ class UniversalBuildDetector:
                     "This appears to be an application, not a library",
                     "Applications typically don't need build artifacts",
                     "Use 'dhtl run' to execute the application",
-                ]
+                ],
             }
 
         return {
@@ -404,7 +397,7 @@ class UniversalBuildDetector:
             "build_tool": config.build_tool,
             "build_commands": config.build_commands,
             "artifacts_path": config.artifacts_path,
-            "notes": config.notes
+            "notes": config.notes,
         }
 
 

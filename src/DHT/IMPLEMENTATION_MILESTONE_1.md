@@ -5,7 +5,7 @@ Implement a working `dhtl regenerate` command that can recreate a Python environ
 
 ## Success Criteria
 - [ ] Can regenerate exact Python version environment
-- [ ] Restores all pip dependencies with correct versions  
+- [ ] Restores all pip dependencies with correct versions
 - [ ] Works on Mac and Linux (Windows in v2)
 - [ ] Validates regenerated environment matches original
 
@@ -38,7 +38,7 @@ with open('.dhtconfig') as f:
 # In dhtl_python_manager.sh
 ensure_python_version() {
     local required="$1"
-    
+
     # Strategy 1: UV Python
     if uv python list | grep -q "$required"; then
         echo "Python $required already available"
@@ -46,7 +46,7 @@ ensure_python_version() {
         echo "Installing Python $required..."
         uv python install "$required"
     fi
-    
+
     # Create venv with specific version
     uv venv --python "$required" .venv
 }
@@ -59,10 +59,10 @@ ensure_python_version() {
 install_with_checksum() {
     # Install from lock file
     uv sync --locked
-    
+
     # Generate checksum
     local checksum=$(generate_checksum)
-    
+
     # Validate if expected checksum exists
     if [[ -n "$EXPECTED_CHECKSUM" ]]; then
         if [[ "$checksum" != "$EXPECTED_CHECKSUM" ]]; then
@@ -96,22 +96,22 @@ def get_platform_package(generic_name, platform):
 # In dhtl_commands_9.sh
 regenerate_command() {
     echo "🔄 Regenerating environment from .dhtconfig..."
-    
+
     # Parse config
     parse_dhtconfig || die "Failed to parse .dhtconfig"
-    
+
     # Install Python
     ensure_python_version "$PYTHON_VERSION" || die "Failed to install Python"
-    
+
     # Install system deps
     install_platform_deps || warn "Some system deps may be missing"
-    
+
     # Install Python deps
     install_with_checksum || die "Failed to install dependencies"
-    
+
     # Validate
     validate_environment || warn "Environment validation failed"
-    
+
     echo "✅ Environment regenerated successfully!"
 }
 ```
@@ -122,13 +122,13 @@ regenerate_command() {
 # In dhtl_commands_9.sh
 clone_command() {
     local url="$1"
-    
+
     # Clone repo
     gh repo clone "$url" || git clone "$url"
-    
+
     # Enter directory
     cd "$(basename "$url" .git)"
-    
+
     # Regenerate
     regenerate_command
 }
@@ -156,11 +156,11 @@ python --version  # Should match exactly
 ```bash
 # Test on Mac
 docker run -v $PWD:/project python:3.10 bash -c "
-cd /project && 
+cd /project &&
 ./dhtl.sh regenerate
 "
 
-# Test on Ubuntu  
+# Test on Ubuntu
 docker run -v $PWD:/project ubuntu:22.04 bash -c "
 cd /project &&
 ./dhtl.sh regenerate
@@ -214,7 +214,7 @@ validation:
    ```bash
    if ! uv python install "$version"; then
        echo "Trying pyenv..."
-       try_pyenv "$version" || 
+       try_pyenv "$version" ||
        echo "Please install Python $version manually"
    fi
    ```

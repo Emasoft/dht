@@ -30,6 +30,7 @@ from typing import Any
 # Error types as an enum
 class ErrorCode(IntEnum):
     """Standard error codes for DHT."""
+
     GENERAL = 1
     COMMAND_NOT_FOUND = 2
     MISSING_DEPENDENCY = 3
@@ -46,22 +47,23 @@ class ErrorCode(IntEnum):
 # Color codes for terminal output
 class Colors:
     """ANSI color codes for terminal output."""
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[33m'
-    BLUE = '\033[34m'
-    CYAN = '\033[36m'
-    RESET = '\033[0m'
+
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    CYAN = "\033[36m"
+    RESET = "\033[0m"
 
     @classmethod
     def disable(cls):
         """Disable colors for non-terminal output."""
-        cls.RED = ''
-        cls.GREEN = ''
-        cls.YELLOW = ''
-        cls.BLUE = ''
-        cls.CYAN = ''
-        cls.RESET = ''
+        cls.RED = ""
+        cls.GREEN = ""
+        cls.YELLOW = ""
+        cls.BLUE = ""
+        cls.CYAN = ""
+        cls.RESET = ""
 
 
 # Check if output supports colors
@@ -76,9 +78,9 @@ class DHTErrorHandler:
         """Initialize the error handler."""
         self.temp_files: list[str] = []
         self.temp_dirs: list[str] = []
-        self.log_file = os.environ.get('DHT_LOG_FILE')
-        self.quiet_mode = os.environ.get('QUIET_MODE', 'false').lower() == 'true'
-        self.debug_mode = os.environ.get('DEBUG_MODE', 'false').lower() == 'true'
+        self.log_file = os.environ.get("DHT_LOG_FILE")
+        self.quiet_mode = os.environ.get("QUIET_MODE", "false").lower() == "true"
+        self.debug_mode = os.environ.get("DEBUG_MODE", "false").lower() == "true"
 
         # Set up cleanup handlers
         atexit.register(self._cleanup)
@@ -90,8 +92,7 @@ class DHTErrorHandler:
             log_dir = Path(self.log_file).parent
             log_dir.mkdir(parents=True, exist_ok=True)
 
-    def log_error(self, message: str, code: ErrorCode = ErrorCode.GENERAL,
-                  stack_trace: bool = False) -> int:
+    def log_error(self, message: str, code: ErrorCode = ErrorCode.GENERAL, stack_trace: bool = False) -> int:
         """Log an error message."""
         # Print to stderr with color
         print(f"{Colors.RED}❌ ERROR: {message}{Colors.RESET}", file=sys.stderr)
@@ -103,8 +104,8 @@ class DHTErrorHandler:
 
         # Log to file if enabled
         if self.log_file:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(self.log_file, 'a') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] [ERROR] [{code}] {message}\n")
                 if stack_trace:
                     f.write("Stack trace:\n")
@@ -119,8 +120,8 @@ class DHTErrorHandler:
 
         # Log to file if enabled
         if self.log_file:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(self.log_file, 'a') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] [WARNING] {message}\n")
 
         return 0
@@ -133,8 +134,8 @@ class DHTErrorHandler:
 
         # Log to file if enabled
         if self.log_file:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(self.log_file, 'a') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] [INFO] {message}\n")
 
         return 0
@@ -145,8 +146,8 @@ class DHTErrorHandler:
 
         # Log to file if enabled
         if self.log_file:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(self.log_file, 'a') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] [SUCCESS] {message}\n")
 
         return 0
@@ -159,14 +160,13 @@ class DHTErrorHandler:
 
         # Log to file if enabled
         if self.log_file:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(self.log_file, 'a') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.log_file, "a") as f:
                 f.write(f"[{timestamp}] [DEBUG] {message}\n")
 
         return 0
 
-    def check_command(self, command_name: str,
-                      error_message: str | None = None) -> int:
+    def check_command(self, command_name: str, error_message: str | None = None) -> int:
         """Check if a command is available."""
         import shutil
 
@@ -178,8 +178,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_dependency(self, dependency: str,
-                         error_message: str | None = None) -> int:
+    def check_dependency(self, dependency: str, error_message: str | None = None) -> int:
         """Check if a required dependency is available."""
         import shutil
 
@@ -206,8 +205,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def validate_argument(self, argument: str, pattern: str,
-                          error_message: str | None = None) -> int:
+    def validate_argument(self, argument: str, pattern: str, error_message: str | None = None) -> int:
         """Validate an argument against a pattern."""
         import re
 
@@ -219,8 +217,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_file(self, file_path: str,
-                   error_message: str | None = None) -> int:
+    def check_file(self, file_path: str, error_message: str | None = None) -> int:
         """Check if a file exists."""
         if error_message is None:
             error_message = f"File not found: '{file_path}'"
@@ -230,8 +227,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_directory(self, dir_path: str,
-                        error_message: str | None = None) -> int:
+    def check_directory(self, dir_path: str, error_message: str | None = None) -> int:
         """Check if a directory exists."""
         if error_message is None:
             error_message = f"Directory not found: '{dir_path}'"
@@ -241,8 +237,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_readable(self, file_path: str,
-                       error_message: str | None = None) -> int:
+    def check_readable(self, file_path: str, error_message: str | None = None) -> int:
         """Check if a file is readable."""
         if error_message is None:
             error_message = f"File not readable: '{file_path}'"
@@ -253,8 +248,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_writable(self, file_path: str,
-                       error_message: str | None = None) -> int:
+    def check_writable(self, file_path: str, error_message: str | None = None) -> int:
         """Check if a file is writable."""
         if error_message is None:
             error_message = f"File not writable: '{file_path}'"
@@ -265,8 +259,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_directory_writable(self, dir_path: str,
-                                 error_message: str | None = None) -> int:
+    def check_directory_writable(self, dir_path: str, error_message: str | None = None) -> int:
         """Check if a directory is writable."""
         if error_message is None:
             error_message = f"Directory not writable: '{dir_path}'"
@@ -277,17 +270,14 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_git_repository(self, repo_path: str = ".",
-                             error_message: str | None = None) -> int:
+    def check_git_repository(self, repo_path: str = ".", error_message: str | None = None) -> int:
         """Check if we're in a Git repository."""
         if error_message is None:
             error_message = f"Not a Git repository: '{repo_path}'"
 
         try:
             result = subprocess.run(
-                ["git", "-C", repo_path, "rev-parse", "--git-dir"],
-                capture_output=True,
-                check=False
+                ["git", "-C", repo_path, "rev-parse", "--git-dir"], capture_output=True, check=False
             )
             if result.returncode != 0:
                 return self.log_error(error_message, ErrorCode.ENVIRONMENT)
@@ -296,17 +286,14 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_git_clean(self, repo_path: str = ".",
-                        error_message: str | None = None) -> int:
+    def check_git_clean(self, repo_path: str = ".", error_message: str | None = None) -> int:
         """Check if the working directory is clean."""
         if error_message is None:
             error_message = f"Git working directory not clean: '{repo_path}'"
 
         try:
             result = subprocess.run(
-                ["git", "-C", repo_path, "diff-index", "--quiet", "HEAD", "--"],
-                capture_output=True,
-                check=False
+                ["git", "-C", repo_path, "diff-index", "--quiet", "HEAD", "--"], capture_output=True, check=False
             )
             if result.returncode != 0:
                 return self.log_error(error_message, ErrorCode.ENVIRONMENT)
@@ -315,9 +302,9 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_python_module(self, module_name: str,
-                            error_message: str | None = None,
-                            python_cmd: str | None = None) -> int:
+    def check_python_module(
+        self, module_name: str, error_message: str | None = None, python_cmd: str | None = None
+    ) -> int:
         """Check if a Python module is available."""
         if error_message is None:
             error_message = f"Python module '{module_name}' not found"
@@ -326,11 +313,7 @@ class DHTErrorHandler:
             python_cmd = sys.executable
 
         try:
-            result = subprocess.run(
-                [python_cmd, "-c", f"import {module_name}"],
-                capture_output=True,
-                check=False
-            )
+            result = subprocess.run([python_cmd, "-c", f"import {module_name}"], capture_output=True, check=False)
             if result.returncode != 0:
                 return self.log_error(error_message, ErrorCode.MISSING_DEPENDENCY)
         except Exception:
@@ -338,18 +321,13 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_node_module(self, module_name: str,
-                          error_message: str | None = None) -> int:
+    def check_node_module(self, module_name: str, error_message: str | None = None) -> int:
         """Check if a Node.js module is available."""
         if error_message is None:
             error_message = f"Node.js module '{module_name}' not found"
 
         try:
-            result = subprocess.run(
-                ["node", "-e", f"require('{module_name}')"],
-                capture_output=True,
-                check=False
-            )
+            result = subprocess.run(["node", "-e", f"require('{module_name}')"], capture_output=True, check=False)
             if result.returncode != 0:
                 return self.log_error(error_message, ErrorCode.MISSING_DEPENDENCY)
         except Exception:
@@ -357,8 +335,7 @@ class DHTErrorHandler:
 
         return 0
 
-    def check_network(self, host: str = "google.com",
-                      error_message: str | None = None) -> int:
+    def check_network(self, host: str = "google.com", error_message: str | None = None) -> int:
         """Check network connectivity."""
         if error_message is None:
             error_message = f"Network connectivity issue, cannot connect to '{host}'"
@@ -381,16 +358,10 @@ class DHTErrorHandler:
     def run_with_timeout(self, timeout: int, command: list[str]) -> int:
         """Run a command with timeout."""
         try:
-            result = subprocess.run(
-                command,
-                timeout=timeout,
-                capture_output=False,
-                check=False
-            )
+            result = subprocess.run(command, timeout=timeout, capture_output=False, check=False)
             return result.returncode
         except subprocess.TimeoutExpired:
-            self.log_error(f"Command timed out after {timeout} seconds",
-                           ErrorCode.TIMEOUT)
+            self.log_error(f"Command timed out after {timeout} seconds", ErrorCode.TIMEOUT)
             return ErrorCode.TIMEOUT
         except Exception as e:
             self.log_error(f"Error running command: {e}", ErrorCode.UNEXPECTED)
@@ -445,14 +416,14 @@ class DHTErrorHandler:
             try:
                 if os.path.exists(temp_dir):
                     import shutil
+
                     shutil.rmtree(temp_dir)
             except Exception:
                 pass  # Ignore errors during cleanup
 
     def _signal_handler(self, signum: int, frame: Any) -> None:
         """Handle signals for clean exit."""
-        self.handle_exit(130 if signum == signal.SIGINT else 1,
-                         "Exiting due to interrupt")
+        self.handle_exit(130 if signum == signal.SIGINT else 1, "Exiting due to interrupt")
 
 
 # Global instance for convenience

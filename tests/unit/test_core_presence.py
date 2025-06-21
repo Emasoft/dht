@@ -46,7 +46,10 @@ def test_dht_core_files_exist(project_root):
     # Verify Prefect is in dependencies
     pyproject_content = pyproject.read_text()
     assert "prefect" in pyproject_content, "Prefect dependency not found in pyproject.toml"
-    assert 'requires-python = ">=3.10"' in pyproject_content or 'requires-python = ">=3.11"' in pyproject_content, "Python 3.10+ requirement not found"
+    assert 'requires-python = ">=3.10"' in pyproject_content or 'requires-python = ">=3.11"' in pyproject_content, (
+        "Python 3.10+ requirement not found"
+    )
+
 
 def test_dht_parsers_exist(project_root):
     """Test that parser modules exist."""

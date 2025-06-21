@@ -40,6 +40,7 @@ class EnvironmentCaptureUtils:
                 self.logger = get_run_logger()
             except Exception:
                 import logging
+
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
@@ -69,9 +70,9 @@ class EnvironmentCaptureUtils:
 
         try:
             # Get installed packages using pip list
-            result = subprocess.run([
-                sys.executable, "-m", "pip", "list", "--format=json"
-            ], capture_output=True, text=True, timeout=30)
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, timeout=30
+            )
 
             if result.returncode == 0:
                 packages = json.loads(result.stdout)
@@ -86,9 +87,9 @@ class EnvironmentCaptureUtils:
             uv_check = check_uv_available()
             if uv_check["available"]:
                 # Get UV managed packages
-                result = subprocess.run([
-                    "uv", "pip", "list", "--format=json"
-                ], capture_output=True, text=True, timeout=30)
+                result = subprocess.run(
+                    ["uv", "pip", "list", "--format=json"], capture_output=True, text=True, timeout=30
+                )
 
                 if result.returncode == 0:
                     uv_packages = json.loads(result.stdout)
@@ -103,10 +104,20 @@ class EnvironmentCaptureUtils:
         """Capture relevant environment variables."""
         # Important environment variables for development
         important_vars = {
-            "PATH", "PYTHONPATH", "VIRTUAL_ENV", "CONDA_DEFAULT_ENV",
-            "NODE_ENV", "UV_PYTHON", "PIP_INDEX_URL", "PIP_EXTRA_INDEX_URL",
-            "PYTHONDONTWRITEBYTECODE", "PYTHONUNBUFFERED",
-            "CC", "CXX", "CFLAGS", "CXXFLAGS"
+            "PATH",
+            "PYTHONPATH",
+            "VIRTUAL_ENV",
+            "CONDA_DEFAULT_ENV",
+            "NODE_ENV",
+            "UV_PYTHON",
+            "PIP_INDEX_URL",
+            "PIP_EXTRA_INDEX_URL",
+            "PYTHONDONTWRITEBYTECODE",
+            "PYTHONUNBUFFERED",
+            "CC",
+            "CXX",
+            "CFLAGS",
+            "CXXFLAGS",
         }
 
         env_vars = {}

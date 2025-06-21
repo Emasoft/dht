@@ -95,7 +95,7 @@ tools:
       site_packages: "/usr/local/lib/python3.11/site-packages"
       venv_active: false
       pip_version: "23.3.1"
-    
+
     node:
       is_installed: true
       version: "20.10.0"
@@ -105,7 +105,7 @@ tools:
       config:
         registry: "https://registry.npmjs.org/"
         prefix: "/usr/local"
-    
+
     rust:
       is_installed: true
       version: "1.75.0"
@@ -126,7 +126,7 @@ tools:
           prefix: "/opt/homebrew"
           installed_count: 234
           tap_list: ["homebrew/core", "homebrew/cask"]
-    
+
     language:
       python:
         pip:
@@ -134,18 +134,18 @@ tools:
           version: "23.3.1"
           config_global_index_url: "https://pypi.org/simple"
           inspect: {...}  # Full pip inspect output
-        
+
         conda:
           is_installed: true
           version: "23.11.0"
           info: {...}  # Full conda info
           envs: ["base", "ml-project", "web-dev"]
-        
+
         uv:
           is_installed: true
           version: "0.1.5"
           pip_version: "0.1.5"
-      
+
       javascript:
         npm:
           is_installed: true
@@ -162,7 +162,7 @@ tools:
       is_installed: true
       version: "3.81"
       features_make_version: "3.81"
-    
+
     cmake:
       is_installed: true
       version: "3.28.1"
@@ -181,7 +181,7 @@ tools:
       version: "13.2.0"
       target: "aarch64-apple-darwin23"
       search_dirs_install: "/opt/homebrew/Cellar/gcc/13.2.0"
-    
+
     clang:
       is_installed: true
       version: "15.0.0"
@@ -201,7 +201,7 @@ tools:
         CgroupDriver: "cgroupfs"
         DockerRootDir: "/var/lib/docker"
       compose_version: "2.23.3"
-    
+
     kubectl:
       is_installed: true
       version: "1.29.0"
@@ -219,7 +219,7 @@ tools:
       configure_list_profile: "default"
       configure_list_region: "us-east-1"
       profiles: ["default", "production", "staging"]
-    
+
     terraform:
       is_installed: true
       version: "1.6.6"
@@ -234,7 +234,7 @@ tools:
       is_installed: true
       version: "3.5.3"
       help_formats: "gzip, bzip2, xz, lzip"
-    
+
     zip:
       is_installed: true
       version: "3.0"
@@ -249,7 +249,7 @@ tools:
       version: "8.5.0"
       protocols: "dict file ftp ftps gopher gophers http https"
       features: "AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6"
-    
+
     openssl:
       is_installed: true
       version: "3.2.0"

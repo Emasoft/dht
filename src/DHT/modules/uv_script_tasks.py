@@ -33,7 +33,7 @@ def run_python_script(
     script: str,
     args: list[str] | None = None,
     timeout: int = DEFAULT_TIMEOUT,
-    memory_mb: int = 2048
+    memory_mb: int = 2048,
 ) -> dict[str, Any]:
     """
     Run a Python script in the project environment.
@@ -67,9 +67,7 @@ def run_python_script(
         cmd_args.extend(args)
 
     result = run_with_guardian(
-        command=cmd_args,
-        limits=ResourceLimits(memory_mb=memory_mb, timeout=timeout),
-        cwd=str(project_path)
+        command=cmd_args, limits=ResourceLimits(memory_mb=memory_mb, timeout=timeout), cwd=str(project_path)
     )
 
     return {
@@ -78,5 +76,5 @@ def run_python_script(
         "output": result.stdout,
         "error": result.stderr,
         "duration": result.execution_time,
-        "peak_memory_mb": result.peak_memory_mb
+        "peak_memory_mb": result.peak_memory_mb,
     }

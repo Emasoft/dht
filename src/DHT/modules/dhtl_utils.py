@@ -108,8 +108,7 @@ class LintCommand:
         else:
             return self._run_individual_linters(project_root, tools)
 
-    def _check_tools(self, project_root: Path, venv_bin_path: Path,
-                     venv_scripts_path: Path) -> dict:
+    def _check_tools(self, project_root: Path, venv_bin_path: Path, venv_scripts_path: Path) -> dict:
         """Check which linting tools are available."""
         tools = {
             "use_precommit": False,
@@ -121,7 +120,7 @@ class LintCommand:
             "ruff_cmd": "",
             "black_cmd": "",
             "mypy_cmd": "",
-            "shellcheck_cmd": ""
+            "shellcheck_cmd": "",
         }
 
         # Check pre-commit first (preferred method)
@@ -137,8 +136,10 @@ class LintCommand:
                 tools["use_precommit"] = True
                 log_warning("Using global pre-commit.")
             else:
-                log_warning(".pre-commit-config.yaml found, but pre-commit command not found. "
-                            "Install it ('dhtl setup' or 'uv pip install pre-commit').")
+                log_warning(
+                    ".pre-commit-config.yaml found, but pre-commit command not found. "
+                    "Install it ('dhtl setup' or 'uv pip install pre-commit')."
+                )
 
         # Check individual linters if pre-commit isn't used/available
         if not tools["use_precommit"]:
@@ -191,8 +192,7 @@ class LintCommand:
                 tools["use_shellcheck"] = True
                 log_info("Using shellcheck-py wrapper from venv.")
             else:
-                log_warning("shellcheck command not found globally or in venv. "
-                            "Skipping shell script linting.")
+                log_warning("shellcheck command not found globally or in venv. Skipping shell script linting.")
 
         return tools
 
@@ -201,10 +201,7 @@ class LintCommand:
         log_info("🔄 Running pre-commit hooks (preferred method)...")
 
         # Run pre-commit with guardian
-        exit_code = self.run_with_guardian(
-            precommit_cmd, "precommit", self.python_mem_limit,
-            "run", "--all-files"
-        )
+        exit_code = self.run_with_guardian(precommit_cmd, "precommit", self.python_mem_limit, "run", "--all-files")
 
         if exit_code != 0:
             log_error(f"Pre-commit checks failed with exit code {exit_code}.")
@@ -216,8 +213,7 @@ class LintCommand:
 
     def _run_individual_linters(self, project_root: Path, tools: dict) -> int:
         """Run individual linters if pre-commit wasn't used."""
-        log_info("No pre-commit config found or pre-commit command unavailable. "
-                 "Running individual linters...")
+        log_info("No pre-commit config found or pre-commit command unavailable. Running individual linters...")
 
         lint_failed = False
         ran_any_linter = False
@@ -229,8 +225,7 @@ class LintCommand:
             # Run ruff check
             log_info("🔄 Running ruff check...")
             exit_code = self.run_with_guardian(
-                tools["ruff_cmd"], "ruff", self.python_mem_limit,
-                "check", str(project_root)
+                tools["ruff_cmd"], "ruff", self.python_mem_limit, "check", str(project_root)
             )
             if exit_code != 0:
                 lint_failed = True
@@ -239,8 +234,7 @@ class LintCommand:
             # Run ruff format check
             log_info("🔄 Running ruff format check...")
             exit_code = self.run_with_guardian(
-                tools["ruff_cmd"], "ruff", self.python_mem_limit,
-                "format", "--check", str(project_root)
+                tools["ruff_cmd"], "ruff", self.python_mem_limit, "format", "--check", str(project_root)
             )
             if exit_code != 0:
                 lint_failed = True
@@ -252,8 +246,7 @@ class LintCommand:
             log_info("🔄 Running black format check...")
 
             exit_code = self.run_with_guardian(
-                tools["black_cmd"], "black", self.python_mem_limit,
-                "--check", str(project_root)
+                tools["black_cmd"], "black", self.python_mem_limit, "--check", str(project_root)
             )
             if exit_code != 0:
                 lint_failed = True
@@ -269,10 +262,7 @@ class LintCommand:
             if not mypy_target.is_dir():
                 mypy_target = project_root  # Fallback to root
 
-            exit_code = self.run_with_guardian(
-                tools["mypy_cmd"], "mypy", self.python_mem_limit,
-                str(mypy_target)
-            )
+            exit_code = self.run_with_guardian(tools["mypy_cmd"], "mypy", self.python_mem_limit, str(mypy_target))
             if exit_code != 0:
                 lint_failed = True
                 log_error("MyPy found type issues.")
@@ -288,8 +278,12 @@ class LintCommand:
             if sh_files:
                 # Run shellcheck on all files at once
                 exit_code = self.run_with_guardian(
-                    tools["shellcheck_cmd"], "shellcheck", self.default_mem_limit,
-                    "--severity=error", "--external-sources", *[str(f) for f in sh_files]
+                    tools["shellcheck_cmd"],
+                    "shellcheck",
+                    self.default_mem_limit,
+                    "--severity=error",
+                    "--external-sources",
+                    *[str(f) for f in sh_files],
                 )
                 if exit_code != 0:
                     lint_failed = True
@@ -298,8 +292,7 @@ class LintCommand:
                 log_info("No shell scripts found to check.")
 
         if not ran_any_linter:
-            log_warning("No recognized linters (pre-commit, ruff, black, mypy, shellcheck) "
-                        "found or configured.")
+            log_warning("No recognized linters (pre-commit, ruff, black, mypy, shellcheck) found or configured.")
             log_warning("Consider running 'dhtl setup' or installing linters manually.")
 
         # Final result
@@ -315,8 +308,7 @@ class LintCommand:
         sh_files = []
 
         # Directories to exclude
-        exclude_dirs = {".git", ".venv", ".venv_windows", "__pycache__",
-                        "node_modules", "dist", "build"}
+        exclude_dirs = {".git", ".venv", ".venv_windows", "__pycache__", "node_modules", "dist", "build"}
 
         for root, dirs, files in os.walk(project_root):
             # Remove excluded directories from dirs list to prevent descending into them

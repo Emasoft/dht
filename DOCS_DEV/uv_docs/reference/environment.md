@@ -675,4 +675,3 @@ Used to determine which `.zshenv` to use when Zsh is being used.
 ### `ZSH_VERSION`
 
 Used to detect Zsh shell usage.
-

@@ -94,9 +94,7 @@ class BashParser(BaseParser):
         # Fall back to regex parsing
         return self._parse_with_regex(content, file_path)
 
-    def _parse_with_tree_sitter(
-        self, tree: Any, content: str, file_path: Path
-    ) -> dict[str, Any]:
+    def _parse_with_tree_sitter(self, tree: Any, content: str, file_path: Path) -> dict[str, Any]:
         """Parse using tree-sitter."""
         return {
             "file_metadata": self.get_file_metadata(file_path),

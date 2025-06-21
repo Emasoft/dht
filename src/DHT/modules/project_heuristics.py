@@ -77,7 +77,6 @@ IMPORT_TO_SYSTEM_DEPS = {
     "mysqlclient": ["mysql-client", "libmysqlclient-dev"],
     "pymongo": ["mongodb-clients", "mongodb-tools"],
     "redis": ["redis-tools"],
-
     # Scientific computing
     "numpy": ["libopenblas-dev", "gfortran"],
     "scipy": ["liblapack-dev", "libblas-dev", "gfortran"],
@@ -85,35 +84,28 @@ IMPORT_TO_SYSTEM_DEPS = {
     "matplotlib": ["libfreetype6-dev", "libpng-dev"],
     "opencv": ["libopencv-dev", "python3-opencv"],
     "cv2": ["libopencv-dev", "python3-opencv"],
-
     # Machine learning
     "tensorflow": ["cuda-toolkit", "cudnn"],
     "torch": ["cuda-toolkit", "cudnn"],
     "jax": ["cuda-toolkit", "cudnn"],
-
     # Image processing
     "PIL": ["libjpeg-dev", "zlib1g-dev", "libtiff-dev"],
     "Pillow": ["libjpeg-dev", "zlib1g-dev", "libtiff-dev"],
     "wand": ["imagemagick", "libmagickwand-dev"],
-
     # Audio/Video
     "pyaudio": ["portaudio19-dev"],
     "pydub": ["ffmpeg"],
     "moviepy": ["ffmpeg", "imagemagick"],
-
     # Cryptography
     "cryptography": ["libssl-dev", "libffi-dev"],
     "pycrypto": ["libssl-dev"],
-
     # Web scraping
     "lxml": ["libxml2-dev", "libxslt-dev"],
     "beautifulsoup4": ["libxml2-dev", "libxslt-dev"],
-
     # Geographic
     "geopandas": ["libgdal-dev", "gdal-bin"],
     "shapely": ["libgeos-dev"],
     "fiona": ["libgdal-dev"],
-
     # Other
     "uwsgi": ["build-essential", "python3-dev"],
     "gunicorn": ["build-essential"],
@@ -131,7 +123,7 @@ CONFIG_TEMPLATES = {
             "tool.coverage.run": {
                 "source": ["."],
                 "omit": ["*/migrations/*", "*/tests/*", "*/venv/*"],
-            }
+            },
         },
         "setup.cfg": {
             "flake8": {
@@ -141,16 +133,10 @@ CONFIG_TEMPLATES = {
         },
         ".pre-commit-config.yaml": {
             "repos": [
-                {
-                    "repo": "https://github.com/psf/black",
-                    "hooks": [{"id": "black"}]
-                },
-                {
-                    "repo": "https://github.com/pycqa/isort",
-                    "hooks": [{"id": "isort"}]
-                },
+                {"repo": "https://github.com/psf/black", "hooks": [{"id": "black"}]},
+                {"repo": "https://github.com/pycqa/isort", "hooks": [{"id": "isort"}]},
             ]
-        }
+        },
     },
     "fastapi": {
         "pyproject.toml": {
@@ -160,7 +146,7 @@ CONFIG_TEMPLATES = {
             },
             "tool.mypy": {
                 "plugins": ["pydantic.mypy"],
-            }
+            },
         },
         ".env.example": "DATABASE_URL=postgresql://user:pass@localhost/dbname\nSECRET_KEY=your-secret-key\n",
     },
@@ -171,7 +157,7 @@ CONFIG_TEMPLATES = {
             },
             "tool.black": {
                 "include": '"\\.ipynb$"',
-            }
+            },
         },
         ".gitignore": "*.csv\n*.h5\n*.pkl\n*.model\ndata/\nmodels/\n",
     },
@@ -246,18 +232,14 @@ class ProjectHeuristics:
                 scores[framework] = {
                     "score": score,
                     "matches": matches,
-                    "confidence": min(score / 30.0, 1.0)  # Normalize to 0-1, adjusted for new scoring
+                    "confidence": min(score / 30.0, 1.0),  # Normalize to 0-1, adjusted for new scoring
                 }
 
         # Detect additional project characteristics
         characteristics = self._detect_characteristics(file_paths, imports, analysis_result)
 
         # Sort frameworks by score
-        ranked_frameworks = sorted(
-            scores.items(),
-            key=lambda x: x[1]["score"],
-            reverse=True
-        )
+        ranked_frameworks = sorted(scores.items(), key=lambda x: x[1]["score"], reverse=True)
 
         result = {
             "primary_type": ranked_frameworks[0][0] if ranked_frameworks else "generic",
@@ -303,7 +285,7 @@ class ProjectHeuristics:
                 system_deps[import_name] = deps
             else:
                 # Check if it's a submodule of a known package
-                base_module = import_name.split('.')[0]
+                base_module = import_name.split(".")[0]
                 if base_module in IMPORT_TO_SYSTEM_DEPS:
                     deps = IMPORT_TO_SYSTEM_DEPS[base_module]
                     system_deps[base_module] = deps
@@ -321,9 +303,7 @@ class ProjectHeuristics:
 
     @task
     def suggest_configurations(
-        self,
-        project_type_info: dict[str, Any],
-        analysis_result: dict[str, Any]
+        self, project_type_info: dict[str, Any], analysis_result: dict[str, Any]
     ) -> dict[str, Any]:
         """
         Suggest optimal configurations based on project type.
@@ -367,41 +347,53 @@ class ProjectHeuristics:
 
         # Type-specific recommendations
         if primary_type == "django":
-            suggestions["recommended_files"].extend([
-                ".env.example",
-                "requirements/base.txt",
-                "requirements/dev.txt",
-                "requirements/prod.txt",
-            ])
-            suggestions["best_practices"].extend([
-                "Use environment variables for sensitive settings",
-                "Split requirements by environment",
-                "Add django-debug-toolbar for development",
-            ])
+            suggestions["recommended_files"].extend(
+                [
+                    ".env.example",
+                    "requirements/base.txt",
+                    "requirements/dev.txt",
+                    "requirements/prod.txt",
+                ]
+            )
+            suggestions["best_practices"].extend(
+                [
+                    "Use environment variables for sensitive settings",
+                    "Split requirements by environment",
+                    "Add django-debug-toolbar for development",
+                ]
+            )
 
         elif primary_type == "fastapi":
-            suggestions["recommended_files"].extend([
-                ".env.example",
-                "alembic.ini",
-                "docker-compose.yml",
-            ])
-            suggestions["best_practices"].extend([
-                "Use Alembic for database migrations",
-                "Implement proper CORS configuration",
-                "Add OpenAPI documentation",
-            ])
+            suggestions["recommended_files"].extend(
+                [
+                    ".env.example",
+                    "alembic.ini",
+                    "docker-compose.yml",
+                ]
+            )
+            suggestions["best_practices"].extend(
+                [
+                    "Use Alembic for database migrations",
+                    "Implement proper CORS configuration",
+                    "Add OpenAPI documentation",
+                ]
+            )
 
         elif primary_type == "flask":
-            suggestions["recommended_files"].extend([
-                ".env",
-                ".flaskenv",
-                "requirements.txt",
-            ])
-            suggestions["best_practices"].extend([
-                "Use Flask-Migrate for database migrations",
-                "Implement application factory pattern",
-                "Add Flask-CORS for API endpoints",
-            ])
+            suggestions["recommended_files"].extend(
+                [
+                    ".env",
+                    ".flaskenv",
+                    "requirements.txt",
+                ]
+            )
+            suggestions["best_practices"].extend(
+                [
+                    "Use Flask-Migrate for database migrations",
+                    "Implement application factory pattern",
+                    "Add Flask-CORS for API endpoints",
+                ]
+            )
 
         # Testing recommendations
         if "testing" in characteristics:
@@ -469,8 +461,12 @@ class ProjectHeuristics:
 
         # Check for linting/formatting configs
         linting_configs = {
-            ".flake8", "setup.cfg", ".pylintrc", "pyproject.toml",
-            ".pre-commit-config.yaml", "ruff.toml"
+            ".flake8",
+            "setup.cfg",
+            ".pylintrc",
+            "pyproject.toml",
+            ".pre-commit-config.yaml",
+            "ruff.toml",
         }
         quality_indicators["has_linting"] = bool(linting_configs & existing_files)
 
@@ -569,10 +565,7 @@ class ProjectHeuristics:
         return imports
 
     def _detect_characteristics(
-        self,
-        file_paths: list[str],
-        imports: set[str],
-        analysis_result: dict[str, Any]
+        self, file_paths: list[str], imports: set[str], analysis_result: dict[str, Any]
     ) -> list[str]:
         """Detect additional project characteristics."""
         characteristics = []
@@ -608,8 +601,7 @@ class ProjectHeuristics:
             characteristics.append("database")
 
         # Async programming
-        if any("async def" in str(analysis_result.get("file_analysis", {}).get(f, {}))
-               for f in file_paths):
+        if any("async def" in str(analysis_result.get("file_analysis", {}).get(f, {})) for f in file_paths):
             characteristics.append("async")
 
         # Containerization
@@ -620,9 +612,9 @@ class ProjectHeuristics:
         # Check configurations from analyzer
         configs = analysis_result.get("configurations", {})
         has_package_files = (
-            configs.get("has_setup_py", False) or
-            configs.get("has_pyproject", False) or
-            any("setup.cfg" in str(f) for f in file_paths)
+            configs.get("has_setup_py", False)
+            or configs.get("has_pyproject", False)
+            or any("setup.cfg" in str(f) for f in file_paths)
         )
 
         if has_package_files:

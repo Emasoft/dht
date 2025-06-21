@@ -39,15 +39,11 @@ class ProjectCaptureUtils:
                 self.logger = get_run_logger()
             except Exception:
                 import logging
+
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    def capture_project_info(
-        self,
-        snapshot: EnvironmentSnapshot,
-        project_path: Path,
-        include_configs: bool
-    ):
+    def capture_project_info(self, snapshot: EnvironmentSnapshot, project_path: Path, include_configs: bool):
         """Capture project-specific information."""
         logger = self._get_logger()
 
@@ -56,8 +52,7 @@ class ProjectCaptureUtils:
         # Analyze project with configurator
         try:
             analysis = self.configurator.analyze_environment_requirements(
-                project_path=project_path,
-                include_system_info=False
+                project_path=project_path, include_system_info=False
             )
 
             project_info = analysis.get("project_info", {})
@@ -78,9 +73,7 @@ class ProjectCaptureUtils:
         logger = self._get_logger()
 
         try:
-            lock_files_info = self.lock_manager.generate_project_lock_files(
-                project_path, snapshot.project_type
-            )
+            lock_files_info = self.lock_manager.generate_project_lock_files(project_path, snapshot.project_type)
 
             for filename, lock_info in lock_files_info.items():
                 snapshot.lock_files[filename] = lock_info.content
@@ -93,18 +86,25 @@ class ProjectCaptureUtils:
         logger = self._get_logger()
 
         config_files = [
-            "pyproject.toml", "setup.py", "setup.cfg",
-            "package.json", "tsconfig.json",
-            ".python-version", ".node-version",
-            "ruff.toml", "mypy.ini", "pytest.ini",
-            ".pre-commit-config.yaml", ".gitignore"
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "package.json",
+            "tsconfig.json",
+            ".python-version",
+            ".node-version",
+            "ruff.toml",
+            "mypy.ini",
+            "pytest.ini",
+            ".pre-commit-config.yaml",
+            ".gitignore",
         ]
 
         for config_file in config_files:
             config_path = project_path / config_file
             if config_path.exists():
                 try:
-                    content = config_path.read_text(encoding='utf-8')
+                    content = config_path.read_text(encoding="utf-8")
                     snapshot.config_files[config_file] = content
                     checksum = hashlib.sha256(content.encode()).hexdigest()
                     snapshot.checksums[config_file] = checksum

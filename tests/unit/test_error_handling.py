@@ -4,16 +4,19 @@ import sys
 import pytest
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import mock_bash_script, run_bash_command
 
 # Skip all tests in this file since we've migrated from shell to Python
-pytestmark = pytest.mark.skip(reason="Shell scripts have been migrated to Python. Error handling is now tested through Python unit tests.")
+pytestmark = pytest.mark.skip(
+    reason="Shell scripts have been migrated to Python. Error handling is now tested through Python unit tests."
+)
+
 
 def test_log_error():
     """Test the log_error function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -33,9 +36,9 @@ def test_log_error():
     # Test log_error with stack trace
     log_error "Test error message with stack trace" 10 stack_trace
     echo "EXIT_CODE_3=$?"
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)
@@ -54,10 +57,11 @@ def test_log_error():
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_log_warning():
     """Test the log_warning function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -68,9 +72,9 @@ def test_log_warning():
     # Test log_warning
     log_warning "Test warning message"
     echo "EXIT_CODE=$?"
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)
@@ -86,10 +90,11 @@ def test_log_warning():
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_check_dependency():
     """Test the check_dependency function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -108,9 +113,9 @@ def test_check_dependency():
     # Test check_dependency for a dependency with custom error message
     check_dependency "non_existent_command" "Custom error message"
     echo "EXIT_CODE_3=$?"
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)
@@ -128,10 +133,11 @@ def test_check_dependency():
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_validate_argument():
     """Test the validate_argument function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -150,9 +156,9 @@ def test_validate_argument():
     # Test validate_argument with custom error message
     validate_argument "abc" "^[0-9]+$" "Custom error message"
     echo "EXIT_CODE_3=$?"
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)
@@ -170,10 +176,11 @@ def test_validate_argument():
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_check_file():
     """Test the check_file function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -199,9 +206,9 @@ def test_check_file():
 
     # Clean up
     rm -f "$TEMP_FILE"
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)
@@ -219,10 +226,11 @@ def test_check_file():
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_create_temp_file():
     """Test the create_temp_file function."""
     # Create a script that sources the module and calls the function
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
     # Set up environment variables
     export DHTL_SESSION_ID="test_session"
     export DHT_DIR="{}"
@@ -251,9 +259,9 @@ def test_create_temp_file():
     else
         echo "SUFFIX_CORRECT=false"
     fi
-    '''.format(
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT')),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    """.format(
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT")),
     )
 
     script_path = mock_bash_script(script_content)

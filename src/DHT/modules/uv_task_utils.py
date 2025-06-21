@@ -26,6 +26,7 @@ def get_logger():
     except Exception:
         # Fallback for testing
         import logging
+
         return logging.getLogger(__name__)
 
 

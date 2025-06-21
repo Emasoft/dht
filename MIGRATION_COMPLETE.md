@@ -9,7 +9,7 @@ The DHT (Development Helper Toolkit) has been successfully migrated from a hybri
 ### Files Converted: 45 → 45 ✅
 - **Entry Points**: 2 files (dhtl.sh, dhtl.bat)
 - **Module Scripts**: 36 files
-- **Helper Scripts**: 3 files  
+- **Helper Scripts**: 3 files
 - **Test Scripts**: 2 files
 - **GitHub Module**: 1 file (dhtl_github.sh - found during migration)
 - **Test Compact**: 1 file (test_compact.sh - found during migration)

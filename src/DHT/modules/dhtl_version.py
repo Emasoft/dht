@@ -84,11 +84,7 @@ def tag_command(*args, **kwargs) -> int:
             return 1
 
     # Check if tag exists
-    result = subprocess.run(
-        ["git", "tag", "-l", tag_name],
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["git", "tag", "-l", tag_name], capture_output=True, text=True)
 
     if result.stdout.strip():
         if not force:
@@ -346,9 +342,7 @@ def update_version_in_files(project_root: Path, old_version: str, new_version: s
                 try:
                     content = version_path.read_text()
                     new_content = re.sub(
-                        r"__version__\s*=\s*['\"][^'\"]+['\"]",
-                        f'__version__ = "{new_version}"',
-                        content
+                        r"__version__\s*=\s*['\"][^'\"]+['\"]", f'__version__ = "{new_version}"', content
                     )
                     if new_content != content:
                         version_path.write_text(new_content)

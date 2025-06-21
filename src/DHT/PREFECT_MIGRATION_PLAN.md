@@ -77,9 +77,9 @@ def save_report(self, data: dict, output_path: Path):
     """Save report in YAML format"""
     # Convert datetime objects to strings
     cleaned_data = self._clean_for_yaml(data)
-    
+
     with open(output_path, 'w') as f:
-        yaml.dump(cleaned_data, f, 
+        yaml.dump(cleaned_data, f,
                   default_flow_style=False,
                   sort_keys=False,
                   allow_unicode=True)
@@ -95,22 +95,22 @@ from prefect import task
 
 class BaseParser(ABC):
     """Base class for all file parsers"""
-    
+
     def __init__(self, language: str = None):
         if language:
             self.parser = tree_sitter.Parser()
             self.parser.set_language(self.get_language(language))
-    
+
     @abstractmethod
     def parse_file(self, file_path: Path) -> dict:
         """Parse file and return structured data"""
         pass
-    
+
     @abstractmethod
     def extract_dependencies(self, file_path: Path) -> list:
         """Extract dependencies from file"""
         pass
-    
+
     @task
     def parse_with_prefect(self, file_path: Path) -> dict:
         """Prefect task wrapper for parsing"""
@@ -131,14 +131,14 @@ class PythonParser(BaseParser):
         """Parse Python file using AST"""
         with open(file_path, 'r') as f:
             tree = ast.parse(f.read())
-        
+
         return {
             'imports': self._extract_imports(tree),
             'functions': self._extract_functions(tree),
             'classes': self._extract_classes(tree),
             'dependencies': self._infer_dependencies(tree)
         }
-    
+
     def _extract_imports(self, tree):
         imports = []
         for node in ast.walk(tree):
@@ -163,32 +163,32 @@ class BashParser(BaseParser):
     def __init__(self):
         super().__init__('bash')
         self.language = tree_sitter.Language('build/languages.so', 'bash')
-        
+
     def parse_file(self, file_path: Path) -> dict:
         """Parse Bash file using tree-sitter"""
         with open(file_path, 'rb') as f:
             content = f.read()
-        
+
         tree = self.parser.parse(content)
-        
+
         return {
             'functions': self._extract_functions(tree),
             'variables': self._extract_variables(tree),
             'commands': self._extract_commands(tree),
             'sourced_files': self._extract_sources(tree)
         }
-    
+
     def _extract_functions(self, tree):
         """Extract function definitions from bash AST"""
         functions = []
-        
+
         # Query for function definitions
         query = self.language.query("""
             (function_definition
                 name: (word) @name
                 body: (compound_statement) @body)
         """)
-        
+
         captures = query.captures(tree.root_node)
         for node, name in captures:
             if name == 'name':
@@ -197,7 +197,7 @@ class BashParser(BaseParser):
                     'start_line': node.start_point[0],
                     'end_line': node.end_point[0]
                 })
-        
+
         return functions
 ```
 
@@ -214,7 +214,7 @@ class PyProjectParser(BaseParser):
         """Parse pyproject.toml"""
         with open(file_path, 'r') as f:
             data = toml.load(f)
-        
+
         return {
             'project_name': data.get('project', {}).get('name'),
             'version': data.get('project', {}).get('version'),
@@ -229,7 +229,7 @@ class PackageJsonParser(BaseParser):
         """Parse package.json"""
         with open(file_path, 'r') as f:
             data = json.load(f)
-        
+
         return {
             'name': data.get('name'),
             'version': data.get('version'),
@@ -244,7 +244,7 @@ class CargoTomlParser(BaseParser):
         """Parse Cargo.toml"""
         with open(file_path, 'r') as f:
             data = toml.load(f)
-        
+
         return {
             'package': data.get('package', {}),
             'dependencies': data.get('dependencies', {}),
@@ -277,30 +277,30 @@ class ProjectAnalyzer:
             'Gemfile': GemfileParser(),
             'CMakeLists.txt': CMakeParser(),
         }
-    
+
     @flow(name="analyze-project")
     def analyze(self) -> Dict:
         """Comprehensive project analysis"""
         # Step 1: Find all relevant files
         files = self.find_all_files()
-        
+
         # Step 2: Parse files in parallel
         parsed_data = self.parse_files_parallel(files)
-        
+
         # Step 3: Extract cross-file relationships
         relationships = self.analyze_relationships(parsed_data)
-        
+
         # Step 4: Infer project structure
         structure = self.infer_project_structure(parsed_data)
-        
+
         # Step 5: Generate comprehensive report
         return self.generate_report(parsed_data, relationships, structure)
-    
+
     @task
     def find_all_files(self) -> Dict[str, List[Path]]:
         """Find all files grouped by type"""
         files = {}
-        
+
         # Define patterns for each file type
         patterns = {
             'python': ['**/*.py'],
@@ -309,38 +309,38 @@ class ProjectAnalyzer:
             'rust': ['**/*.rs'],
             'go': ['**/*.go'],
             'c_cpp': ['**/*.c', '**/*.cpp', '**/*.h', '**/*.hpp'],
-            'config': ['**/pyproject.toml', '**/package.json', '**/Cargo.toml', 
-                      '**/go.mod', '**/requirements*.txt', '**/Gemfile', 
+            'config': ['**/pyproject.toml', '**/package.json', '**/Cargo.toml',
+                      '**/go.mod', '**/requirements*.txt', '**/Gemfile',
                       '**/CMakeLists.txt', '**/.env*', '**/*.yaml', '**/*.yml']
         }
-        
+
         for file_type, patterns_list in patterns.items():
             files[file_type] = []
             for pattern in patterns_list:
                 files[file_type].extend(self.project_root.glob(pattern))
-        
+
         return files
-    
+
     @task
     def parse_files_parallel(self, files: Dict[str, List[Path]]) -> Dict:
         """Parse all files using appropriate parsers"""
         parsed_data = {}
-        
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             futures = {}
-            
+
             for file_type, file_list in files.items():
                 for file_path in file_list:
                     # Skip virtual environments and build directories
                     if any(part in str(file_path) for part in ['.venv', '__pycache__', 'node_modules', 'target', 'build']):
                         continue
-                    
+
                     # Get appropriate parser
                     parser = self.get_parser_for_file(file_path)
                     if parser:
                         future = executor.submit(parser.parse_file, file_path)
                         futures[future] = (file_path, file_type)
-            
+
             # Collect results
             for future in concurrent.futures.as_completed(futures):
                 file_path, file_type = futures[future]
@@ -352,7 +352,7 @@ class ProjectAnalyzer:
                     }
                 except Exception as e:
                     print(f"Error parsing {file_path}: {e}")
-        
+
         return parsed_data
 ```
 
@@ -364,7 +364,7 @@ from pathlib import Path
 
 class ProjectHeuristics:
     """Heuristic analysis for project type and structure inference"""
-    
+
     @staticmethod
     def detect_project_type(parsed_data: Dict) -> str:
         """Detect the primary project type"""
@@ -379,7 +379,7 @@ class ProjectHeuristics:
             'data-science': ['jupyter files', 'pandas imports', 'numpy imports'],
             'microservice': ['Dockerfile', 'docker-compose.yml', 'multiple services']
         }
-        
+
         scores = {}
         for project_type, markers in indicators.items():
             score = 0
@@ -387,9 +387,9 @@ class ProjectHeuristics:
                 if ProjectHeuristics._check_marker(parsed_data, marker):
                     score += 1
             scores[project_type] = score
-        
+
         return max(scores, key=scores.get) if scores else 'generic'
-    
+
     @staticmethod
     def infer_dependencies(parsed_data: Dict) -> Dict[str, List[str]]:
         """Infer system and package dependencies from imports"""
@@ -400,7 +400,7 @@ class ProjectHeuristics:
             'rust': [],
             'go': []
         }
-        
+
         # Python dependencies from imports
         import_to_package = {
             'cv2': 'opencv-python',
@@ -410,7 +410,7 @@ class ProjectHeuristics:
             'psycopg2': {'package': 'psycopg2-binary', 'system': ['postgresql-client']},
             'mysqldb': {'package': 'mysqlclient', 'system': ['mysql-client']},
         }
-        
+
         # Analyze all Python files
         for file_path, file_data in parsed_data.items():
             if file_data['type'] == 'python':
@@ -424,11 +424,11 @@ class ProjectHeuristics:
                             dependencies['system'].extend(mapping.get('system', []))
                         else:
                             dependencies['python'].append(mapping)
-        
+
         # Remove duplicates
         for key in dependencies:
             dependencies[key] = list(set(dependencies[key]))
-        
+
         return dependencies
 ```
 
@@ -442,21 +442,21 @@ from prefect import flow
 
 class DiagnosticReporter:
     # ... existing code ...
-    
+
     @flow(name="comprehensive-diagnostic")
     def generate_comprehensive_report(self, include_project_analysis=True):
         """Generate complete environment and project report"""
-        
+
         # Existing system diagnostics
         system_data = self.collect_system_info()
-        
+
         # New project analysis
         if include_project_analysis:
             analyzer = ProjectAnalyzer(Path.cwd())
             project_data = analyzer.analyze()
         else:
             project_data = {}
-        
+
         # Combine all data
         report = {
             'version': '2.0',
@@ -465,11 +465,11 @@ class DiagnosticReporter:
             'project': project_data,
             'validation': self.generate_checksums()
         }
-        
+
         # Save as YAML
         output_path = Path('.dht') / 'environment_report.yaml'
         self.save_report(report, output_path)
-        
+
         return report
 ```
 
@@ -483,18 +483,18 @@ import time
 
 def start_background_analysis():
     """Start Prefect server with analysis flows"""
-    
+
     # Create deployments
     analyzer_deployment = ProjectAnalyzer.analyze.to_deployment(
         name="project-analyzer",
         interval=300  # Run every 5 minutes
     )
-    
+
     diagnostic_deployment = DiagnosticReporter.generate_comprehensive_report.to_deployment(
         name="diagnostic-reporter",
         interval=600  # Run every 10 minutes
     )
-    
+
     # Serve both deployments
     serve(analyzer_deployment, diagnostic_deployment)
 ```

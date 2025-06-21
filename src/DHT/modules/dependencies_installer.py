@@ -26,10 +26,7 @@ class DependenciesInstaller:
 
     @task(name="install_project_dependencies")
     def install_project_dependencies(
-        self,
-        snapshot: EnvironmentSnapshot,
-        result: ReproductionResult,
-        target_path: Path
+        self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path
     ):
         """Install project dependencies."""
         logger = get_run_logger()
@@ -38,9 +35,7 @@ class DependenciesInstaller:
             if "uv.lock" in snapshot.lock_files:
                 # Use UV sync
                 cmd_result = run_with_guardian(
-                    ["uv", "sync"],
-                    limits=ResourceLimits(memory_mb=2048, timeout=600),
-                    cwd=str(target_path)
+                    ["uv", "sync"], limits=ResourceLimits(memory_mb=2048, timeout=600), cwd=str(target_path)
                 )
 
                 if cmd_result.success:
@@ -53,7 +48,7 @@ class DependenciesInstaller:
                 cmd_result = run_with_guardian(
                     ["pip", "install", "-r", "requirements.txt"],
                     limits=ResourceLimits(memory_mb=2048, timeout=600),
-                    cwd=str(target_path)
+                    cwd=str(target_path),
                 )
 
                 if cmd_result.success:
@@ -64,9 +59,7 @@ class DependenciesInstaller:
             elif "package-lock.json" in snapshot.lock_files:
                 # Use npm ci
                 cmd_result = run_with_guardian(
-                    ["npm", "ci"],
-                    limits=ResourceLimits(memory_mb=2048, timeout=600),
-                    cwd=str(target_path)
+                    ["npm", "ci"], limits=ResourceLimits(memory_mb=2048, timeout=600), cwd=str(target_path)
                 )
 
                 if cmd_result.success:
@@ -79,7 +72,7 @@ class DependenciesInstaller:
                 cmd_result = run_with_guardian(
                     ["yarn", "install", "--frozen-lockfile"],
                     limits=ResourceLimits(memory_mb=2048, timeout=600),
-                    cwd=str(target_path)
+                    cwd=str(target_path),
                 )
 
                 if cmd_result.success:
@@ -90,9 +83,7 @@ class DependenciesInstaller:
             elif "poetry.lock" in snapshot.lock_files:
                 # Use poetry install
                 cmd_result = run_with_guardian(
-                    ["poetry", "install"],
-                    limits=ResourceLimits(memory_mb=2048, timeout=600),
-                    cwd=str(target_path)
+                    ["poetry", "install"], limits=ResourceLimits(memory_mb=2048, timeout=600), cwd=str(target_path)
                 )
 
                 if cmd_result.success:

@@ -12,20 +12,20 @@ def ensure_python_version(required_version):
     strategies = [
         # 1. UV Python (best - exact version)
         lambda: try_uv_python(required_version),
-        
+
         # 2. Relaxed patch version (3.11.7 → 3.11.x)
         lambda: try_uv_python_minor(required_version),
-        
+
         # 3. System Python if close enough
         lambda: try_system_python_compatible(required_version),
-        
+
         # 4. Docker fallback
         lambda: create_docker_dev_env(required_version),
-        
+
         # 5. Error with clear instructions
         lambda: show_python_install_guide(required_version)
     ]
-    
+
     for strategy in strategies:
         if result := strategy():
             return result
@@ -56,12 +56,12 @@ PACKAGE_MAPPINGS = {
         'ubuntu:20.04': {'apt': 'postgresql-client-12'},
         'debian:11': {'apt': 'postgresql-client-13'},
         'debian:12': {'apt': 'postgresql-client-15'},
-        
+
         # Fallback patterns
         'ubuntu:*': {'apt': 'postgresql-client'},
         'fedora:*': {'dnf': 'postgresql'},
         'arch:*': {'pacman': 'postgresql-libs'},
-        
+
         # Special handling
         'alpine:*': {
             'apk': 'postgresql-client',
@@ -81,39 +81,39 @@ class ProxyAwareDownloader:
     def detect_proxy_settings(self):
         # Check multiple sources
         proxies = {}
-        
+
         # 1. Environment variables
         for key in ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy']:
             if value := os.environ.get(key):
                 proxies[key.lower().split('_')[0]] = value
-        
+
         # 2. System proxy (Windows)
         if platform.system() == 'Windows':
             import winreg
             # Read from registry
-        
+
         # 3. Corporate config files
         corp_configs = [
             '/etc/corporate/proxy.conf',
             '~/.corporate/settings.ini',
             'C:\\ProgramData\\Corporate\\proxy.txt'
         ]
-        
+
         return proxies
-    
+
     def configure_tools_for_proxy(self, proxies):
         # Configure each tool
         configs = []
-        
+
         # pip
         configs.append(f"pip config set global.proxy {proxies['http']}")
-        
+
         # git
         configs.append(f"git config --global http.proxy {proxies['http']}")
-        
+
         # npm (if needed)
         configs.append(f"npm config set proxy {proxies['http']}")
-        
+
         # Corporate CA certificates
         if ca_bundle := self.find_corporate_ca_bundle():
             configs.append(f"export REQUESTS_CA_BUNDLE={ca_bundle}")
@@ -143,7 +143,7 @@ def detect_container_environment():
             'CODESPACES env var exists'
         ]
     }
-    
+
     # Adapt behavior
     if in_container:
         # Don't try to install system packages
@@ -239,18 +239,18 @@ version: "2.0"
 environments:
   default:
     python: "3.11.7"
-    
+
   services/legacy-api:
     python: "3.8.17"  # Old service
     dependencies:
       strategy: "requirements"  # Not yet on UV
-      
+
   services/ml-service:
     python: "3.10.12"  # TensorFlow compatibility
     platform_deps:
       linux:
         apt: ["libcudnn8", "cuda-toolkit-11-8"]
-        
+
   services/web-app:
     python: "3.12.0"  # Latest features
     languages:
@@ -284,7 +284,7 @@ def configure_package_registry():
             'trusted-host': None
         }
     }
-    
+
     # Corporate registry detection
     if corp_registry := detect_corporate_registry():
         registries['corporate'] = {
@@ -293,12 +293,12 @@ def configure_package_registry():
             'username': get_keyring('corp_registry_user'),
             'password': get_keyring('corp_registry_pass')
         }
-    
+
     # Geographic optimization
     if country := detect_country():
         if mirror := COUNTRY_MIRRORS.get(country):
             registries['mirror'] = mirror
-    
+
     # Configure UV and pip
     config_commands = []
     if 'corporate' in registries:
@@ -322,7 +322,7 @@ class BinaryDependencyHandler:
             return self.install_pillow_deps()
         elif package.needs_rust():
             return self.setup_rust_toolchain()
-    
+
     def install_psycopg2_binary(self):
         # Prefer binary wheel
         try:
@@ -332,7 +332,7 @@ class BinaryDependencyHandler:
             if not self.has_pg_config():
                 self.install_pg_dev_files()
             run("uv pip install psycopg2 --no-binary psycopg2")
-    
+
     def setup_rust_toolchain(self):
         # For packages like cryptography, orjson
         if not shutil.which('cargo'):
@@ -352,16 +352,16 @@ def optimize_for_network_fs():
     if is_network_filesystem('.'):
         # Option 1: Local cache
         local_venv = Path.home() / '.dht' / 'cache' / project_hash()
-        
+
         # Create venv on local disk
         create_venv(local_venv)
-        
+
         # Symlink to project
         (project_root / '.venv').symlink_to(local_venv)
-        
+
         # Option 2: Byte-compile optimization
         run("python -m compileall -j 0 .venv")
-        
+
         # Option 3: Zip site-packages
         create_zipapp(".venv/lib/python3.11/site-packages")
 ```
@@ -377,17 +377,17 @@ def handle_windows_long_paths():
     if platform.system() == 'Windows':
         # Check if already enabled
         import winreg
-        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
                            r"SYSTEM\CurrentControlSet\Control\FileSystem")
         value = winreg.QueryValueEx(key, "LongPathsEnabled")[0]
-        
+
         if not value:
             print("⚠️  Long path support not enabled")
             print("Run as admin: reg add ... /v LongPathsEnabled /d 1")
-    
+
     # 2. Use short paths for venv
     venv_path = Path("~/.dht/v/" + short_hash(project_path))
-    
+
     # 3. Junction instead of symlink
     if len(str(project_path / '.venv')) > 150:
         run(f"mklink /J .venv {venv_path}")
@@ -411,7 +411,7 @@ def parse_complex_requirements(req_file):
         parse_environment_markers,      # package; python_version >= "3.8"
         parse_index_url_requirement,    # -i https://custom.index/
     ]
-    
+
     requirements = []
     for line in req_file:
         for parser in parsers:
@@ -427,14 +427,14 @@ def parse_complex_requirements(req_file):
 ```python
 def discover_test_configuration():
     """Detect all test configurations"""
-    
+
     configs = {
         'frameworks': [],
         'patterns': [],
         'runners': [],
         'fixtures': []
     }
-    
+
     # Check for test frameworks
     if has_pytest_tests():
         configs['frameworks'].append('pytest')
@@ -444,18 +444,18 @@ def discover_test_configuration():
         configs['frameworks'].append('nose')
     if has_doctest_tests():
         configs['frameworks'].append('doctest')
-    
+
     # Django special case
     if is_django_project():
         configs['runners'].append('python manage.py test')
         configs['fixtures'].append('django.test.TestCase')
-    
+
     # Custom test commands
     if makefile_has_test():
         configs['runners'].append('make test')
     if tox_ini_exists():
         configs['runners'].append('tox')
-    
+
     return configs
 ```
 
@@ -494,7 +494,7 @@ $ dhtl fix-env --deep
 class SetupRecovery:
     def __init__(self):
         self.checkpoint_file = '.dht/setup-progress.json'
-    
+
     def save_checkpoint(self, step, data):
         """Save progress after each major step"""
         checkpoints = self.load_checkpoints()
@@ -504,12 +504,12 @@ class SetupRecovery:
             'status': 'completed'
         }
         self.write_checkpoints(checkpoints)
-    
+
     def recover_from_failure(self):
         """Resume from last successful step"""
         checkpoints = self.load_checkpoints()
         last_successful = self.find_last_successful(checkpoints)
-        
+
         print(f"🔄 Resuming from: {last_successful}")
         return self.resume_from_step(last_successful)
 ```

@@ -37,7 +37,7 @@ def _normalize_args(args, kwargs):
         return []
     elif not isinstance(args, list):
         # If called with *args, convert to list
-        return [args] + list(kwargs.get('args', []))
+        return [args] + list(kwargs.get("args", []))
     return args
 
 
@@ -78,11 +78,7 @@ def python_command(args=None, **kwargs) -> int:
 
     # Run with guardian (default limits)
     limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         if results[0].get("stdout"):
@@ -131,11 +127,7 @@ def node_command(args=None, **kwargs) -> int:
 
     # Run with guardian (default limits)
     limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         if results[0].get("stdout"):
@@ -165,11 +157,7 @@ def run_command(args=None, **kwargs) -> int:
 
     # Run with guardian (default limits)
     limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         if results[0].get("stdout"):
@@ -217,11 +205,7 @@ def script_command(args=None, **kwargs) -> int:
 
     # Run with guardian (default limits)
     limits = ResourceLimits(memory_mb=2048, cpu_percent=100, timeout=900)
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         if results[0].get("stdout"):
@@ -241,4 +225,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['python_command', 'node_command', 'run_command', 'script_command', 'placeholder_command']
+__all__ = ["python_command", "node_command", "run_command", "script_command", "placeholder_command"]

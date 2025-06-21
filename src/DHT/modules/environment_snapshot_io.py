@@ -26,16 +26,8 @@ from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
 class EnvironmentSnapshotIO:
     """Handles environment snapshot I/O operations."""
 
-    @task(
-        name="save_environment_snapshot",
-        description="Save environment snapshot to file"
-    )
-    def save_snapshot(
-        self,
-        snapshot: EnvironmentSnapshot,
-        output_path: Path,
-        format: str = "json"
-    ) -> Path:
+    @task(name="save_environment_snapshot", description="Save environment snapshot to file")
+    def save_snapshot(self, snapshot: EnvironmentSnapshot, output_path: Path, format: str = "json") -> Path:
         """
         Save environment snapshot to file.
 
@@ -57,19 +49,16 @@ class EnvironmentSnapshotIO:
 
         # Save in requested format
         if format.lower() == "yaml":
-            with open(output_path, 'w') as f:
+            with open(output_path, "w") as f:
                 yaml.dump(snapshot_dict, f, default_flow_style=False, sort_keys=False)
         else:
-            with open(output_path, 'w') as f:
+            with open(output_path, "w") as f:
                 json.dump(snapshot_dict, f, indent=2, sort_keys=True)
 
         logger.info(f"Environment snapshot saved to {output_path}")
         return output_path
 
-    @task(
-        name="load_environment_snapshot",
-        description="Load environment snapshot from file"
-    )
+    @task(name="load_environment_snapshot", description="Load environment snapshot from file")
     def load_snapshot(self, snapshot_path: Path) -> EnvironmentSnapshot:
         """
         Load environment snapshot from file.
@@ -86,7 +75,7 @@ class EnvironmentSnapshotIO:
             raise FileNotFoundError(f"Snapshot file not found: {snapshot_path}")
 
         # Determine format by extension
-        if snapshot_path.suffix.lower() in ['.yaml', '.yml']:
+        if snapshot_path.suffix.lower() in [".yaml", ".yml"]:
             with open(snapshot_path) as f:
                 data = yaml.safe_load(f)
         else:
@@ -104,7 +93,7 @@ class EnvironmentSnapshotIO:
                 "platform": snapshot.platform,
                 "architecture": snapshot.architecture,
                 "dht_version": snapshot.dht_version,
-                "snapshot_id": snapshot.snapshot_id
+                "snapshot_id": snapshot.snapshot_id,
             },
             "environment": {
                 "python_version": snapshot.python_version,
@@ -114,19 +103,16 @@ class EnvironmentSnapshotIO:
                 "tool_versions": snapshot.tool_versions,
                 "tool_paths": snapshot.tool_paths,
                 "environment_variables": snapshot.environment_variables,
-                "path_entries": snapshot.path_entries
+                "path_entries": snapshot.path_entries,
             },
             "project": {
                 "project_path": snapshot.project_path,
                 "project_type": snapshot.project_type,
                 "lock_files": snapshot.lock_files,
                 "config_files": snapshot.config_files,
-                "checksums": snapshot.checksums
+                "checksums": snapshot.checksums,
             },
-            "reproduction": {
-                "steps": snapshot.reproduction_steps,
-                "platform_notes": snapshot.platform_notes
-            }
+            "reproduction": {"steps": snapshot.reproduction_steps, "platform_notes": snapshot.platform_notes},
         }
 
     def _dict_to_snapshot(self, data: dict[str, Any]) -> EnvironmentSnapshot:
@@ -156,7 +142,7 @@ class EnvironmentSnapshotIO:
             config_files=project["config_files"],
             checksums=project["checksums"],
             reproduction_steps=reproduction["steps"],
-            platform_notes=reproduction["platform_notes"]
+            platform_notes=reproduction["platform_notes"],
         )
 
 

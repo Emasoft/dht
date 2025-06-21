@@ -71,7 +71,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:

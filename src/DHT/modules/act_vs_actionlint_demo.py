@@ -64,13 +64,15 @@ jobs:
 def demo_actionlint_vs_act():
     """Demonstrate the difference between actionlint and act."""
 
-    console.print(Panel.fit(
-        "🎯 Act vs Actionlint Demo\n\n"
-        "This demo shows the fundamental difference between:\n"
-        "• actionlint: Static analysis (finds errors without running)\n"
-        "• act: Execution (actually runs the workflow)",
-        style="bold blue"
-    ))
+    console.print(
+        Panel.fit(
+            "🎯 Act vs Actionlint Demo\n\n"
+            "This demo shows the fundamental difference between:\n"
+            "• actionlint: Static analysis (finds errors without running)\n"
+            "• act: Execution (actually runs the workflow)",
+            style="bold blue",
+        )
+    )
 
     # Create a temporary directory for the demo
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -91,11 +93,7 @@ def demo_actionlint_vs_act():
         # Run actionlint
         console.print("\n[cyan]🔍 Running actionlint (static analysis):[/cyan]")
         try:
-            result = subprocess.run(
-                ["actionlint", str(error_workflow)],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run(["actionlint", str(error_workflow)], capture_output=True, text=True)
             if result.returncode != 0:
                 console.print("[red]❌ Actionlint found errors:[/red]")
                 console.print(result.stdout)
@@ -123,11 +121,7 @@ def demo_actionlint_vs_act():
         # Run actionlint
         console.print("\n[cyan]🔍 Running actionlint (static analysis):[/cyan]")
         try:
-            result = subprocess.run(
-                ["actionlint", str(valid_workflow)],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run(["actionlint", str(valid_workflow)], capture_output=True, text=True)
             if result.returncode == 0:
                 console.print("[green]✅ No syntax errors found[/green]")
                 console.print("   Actionlint confirms the workflow syntax is valid")
@@ -148,19 +142,21 @@ def demo_actionlint_vs_act():
         console.print("   6. Execute 'echo \"Build complete!\"'")
 
         # Summary
-        console.print(Panel.fit(
-            "📊 Summary:\n\n"
-            "• Actionlint: Found syntax errors without running anything\n"
-            "  - Fast (milliseconds)\n"
-            "  - No Docker/containers needed\n"
-            "  - Catches errors before execution\n\n"
-            "• Act: Would actually run the workflow commands\n"
-            "  - Slower (seconds to minutes)\n"
-            "  - Requires Docker/Podman\n"
-            "  - Tests actual execution\n\n"
-            "💡 Best practice: Use actionlint first, then act",
-            style="bold green"
-        ))
+        console.print(
+            Panel.fit(
+                "📊 Summary:\n\n"
+                "• Actionlint: Found syntax errors without running anything\n"
+                "  - Fast (milliseconds)\n"
+                "  - No Docker/containers needed\n"
+                "  - Catches errors before execution\n\n"
+                "• Act: Would actually run the workflow commands\n"
+                "  - Slower (seconds to minutes)\n"
+                "  - Requires Docker/Podman\n"
+                "  - Tests actual execution\n\n"
+                "💡 Best practice: Use actionlint first, then act",
+                style="bold green",
+            )
+        )
 
 
 def show_dht_usage():

@@ -14,7 +14,6 @@ and framework-specific setup recommendations.
 # - Added tests for migration detection
 # - Added tests for hybrid project support
 
-
 import pytest
 
 from DHT.modules.framework_configs import FrameworkConfig

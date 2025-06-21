@@ -66,12 +66,7 @@ def test_command(*args, **kwargs) -> int:
     mem_limit = int(os.environ.get("PYTHON_MEM_LIMIT", "2048"))
 
     # Run with guardian
-    exit_code = run_with_guardian(
-        test_cmd[0],
-        "pytest",
-        mem_limit,
-        *test_cmd[1:]
-    )
+    exit_code = run_with_guardian(test_cmd[0], "pytest", mem_limit, *test_cmd[1:])
 
     if exit_code == 0:
         log_success("All tests passed!")
@@ -88,4 +83,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['test_command', 'placeholder_command']
+__all__ = ["test_command", "placeholder_command"]

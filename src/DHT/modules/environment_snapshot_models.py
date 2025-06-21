@@ -35,8 +35,8 @@ class EnvironmentSnapshot:
 
     # Tool versions (exact versions for reproducibility)
     tool_versions: dict[str, str] = field(default_factory=dict)  # tool -> version
-    tool_paths: dict[str, str] = field(default_factory=dict)     # tool -> path
-    tool_configs: dict[str, Any] = field(default_factory=dict)   # tool -> config
+    tool_paths: dict[str, str] = field(default_factory=dict)  # tool -> path
+    tool_configs: dict[str, Any] = field(default_factory=dict)  # tool -> config
 
     # Environment variables and settings
     environment_variables: dict[str, str] = field(default_factory=dict)
@@ -59,6 +59,7 @@ class EnvironmentSnapshot:
 @dataclass
 class ReproductionResult:
     """Result of environment reproduction attempt."""
+
     success: bool
     snapshot_id: str
     platform: str

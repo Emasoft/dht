@@ -37,10 +37,7 @@ def check_command_args(args: list[str]) -> tuple[list[str], dict[str, Any]]:
         - cleaned_args: Arguments with special flags removed
         - options_dict: Dictionary with parsed options
     """
-    options = {
-        "use_guardian": True,
-        "quiet_mode": False
-    }
+    options = {"use_guardian": True, "quiet_mode": False}
 
     cleaned_args = []
 
@@ -136,8 +133,7 @@ class FormatCommand:
 
         return formatters
 
-    def _run_formatters(self, project_root: Path, venv_dir: Path,
-                        formatters: dict[str, tuple[bool, str]]) -> int:
+    def _run_formatters(self, project_root: Path, venv_dir: Path, formatters: dict[str, tuple[bool, str]]) -> int:
         """Run available formatters on the project."""
         format_errors = False
 
@@ -148,8 +144,7 @@ class FormatCommand:
             log_info("🔄 Running ruff format...")
 
             exit_code = run_with_guardian(
-                formatters["ruff"][1], "ruff", self.python_mem_limit,
-                "format", str(project_root)
+                formatters["ruff"][1], "ruff", self.python_mem_limit, "format", str(project_root)
             )
 
             if exit_code != 0:
@@ -162,10 +157,7 @@ class FormatCommand:
         elif formatters["black"][0]:
             log_info("🔄 Running black...")
 
-            exit_code = run_with_guardian(
-                formatters["black"][1], "black", self.python_mem_limit,
-                str(project_root)
-            )
+            exit_code = run_with_guardian(formatters["black"][1], "black", self.python_mem_limit, str(project_root))
 
             if exit_code != 0:
                 format_errors = True
@@ -178,10 +170,7 @@ class FormatCommand:
         if formatters["isort"][0] and not formatters["ruff"][0]:
             log_info("🔄 Running isort...")
 
-            exit_code = run_with_guardian(
-                formatters["isort"][1], "isort", self.python_mem_limit,
-                str(project_root)
-            )
+            exit_code = run_with_guardian(formatters["isort"][1], "isort", self.python_mem_limit, str(project_root))
 
             if exit_code != 0:
                 format_errors = True

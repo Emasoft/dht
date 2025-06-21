@@ -12,7 +12,6 @@ DHT Test Dhtl Basic Module.
 Converted from shell to Python for the pure Python DHT implementation.
 """
 
-
 from DHT.modules.dhtl_error_handling import log_warning
 
 

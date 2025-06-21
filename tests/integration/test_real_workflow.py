@@ -31,6 +31,7 @@ from tabulate import tabulate
 @dataclass
 class OperationResult:
     """Result of a single operation."""
+
     success: bool = False
     time: float = 0.0
     output: str = ""
@@ -41,6 +42,7 @@ class OperationResult:
 @dataclass
 class RepoWorkflowResult:
     """Complete workflow result for a repository."""
+
     repo_url: str
     repo_name: str
     clone: OperationResult = field(default_factory=OperationResult)
@@ -89,8 +91,7 @@ class TestRealDHTWorkflow:
         """Clean up test environment."""
         os.chdir(self.original_dir)
 
-    def run_command(self, cmd: list[str], timeout: int = 300,
-                   env: dict | None = None) -> tuple[bool, str, float]:
+    def run_command(self, cmd: list[str], timeout: int = 300, env: dict | None = None) -> tuple[bool, str, float]:
         """
         Run a command and capture output.
 
@@ -105,14 +106,7 @@ class TestRealDHTWorkflow:
             cmd_env.update(env)
 
         try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=False,
-                env=cmd_env
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False, env=cmd_env)
             execution_time = time.time() - start_time
 
             output = result.stdout + result.stderr
@@ -132,13 +126,13 @@ class TestRealDHTWorkflow:
 
     def test_single_repo(self, repo_url: str) -> RepoWorkflowResult:
         """Test complete workflow for a single repository."""
-        repo_name = repo_url.rstrip('/').split('/')[-1]
+        repo_name = repo_url.rstrip("/").split("/")[-1]
         result = RepoWorkflowResult(repo_url=repo_url, repo_name=repo_name)
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Testing: {repo_name}")
         print(f"URL: {repo_url}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         # Step 1: Clone using full path to dhtl.sh
         print("📥 Cloning repository...")
@@ -146,10 +140,7 @@ class TestRealDHTWorkflow:
         success, output, exec_time = self.run_command(cmd, timeout=120)
 
         result.clone = OperationResult(
-            success=success,
-            time=exec_time,
-            output=output if success else "",
-            error=output if not success else ""
+            success=success, time=exec_time, output=output if success else "", error=output if not success else ""
         )
 
         if not success:
@@ -183,18 +174,13 @@ class TestRealDHTWorkflow:
             success, output, exec_time = self.run_command(cmd, timeout=600)
 
             result.setup = OperationResult(
-                success=success,
-                time=exec_time,
-                output=output if success else "",
-                error=output if not success else ""
+                success=success, time=exec_time, output=output if success else "", error=output if not success else ""
             )
 
             # Check what was created
-            result.venv_created = any((
-                (repo_dir / ".venv").exists(),
-                (repo_dir / "venv").exists(),
-                (repo_dir / ".venv_windows").exists()
-            ))
+            result.venv_created = any(
+                ((repo_dir / ".venv").exists(), (repo_dir / "venv").exists(), (repo_dir / ".venv_windows").exists())
+            )
             result.uv_lock_created = (repo_dir / "uv.lock").exists()
 
             if not success:
@@ -226,10 +212,7 @@ class TestRealDHTWorkflow:
                         venv_bin = venv_dir / "Scripts"  # Windows
 
                     # Run build with activated venv
-                    env = {
-                        "PATH": f"{venv_bin}:{os.environ['PATH']}",
-                        "VIRTUAL_ENV": str(venv_dir)
-                    }
+                    env = {"PATH": f"{venv_bin}:{os.environ['PATH']}", "VIRTUAL_ENV": str(venv_dir)}
 
                     # Now we can use just 'dhtl' since venv is activated
                     # But for consistency, still use full path
@@ -240,15 +223,14 @@ class TestRealDHTWorkflow:
                         success=success,
                         time=exec_time,
                         output=output if success else "",
-                        error=output if not success else ""
+                        error=output if not success else "",
                     )
 
                     # Check for build artifacts
                     dist_dir = repo_dir / "dist"
                     if dist_dir.exists():
                         result.dist_files = [
-                            f.name for f in dist_dir.iterdir()
-                            if f.is_file() and f.suffix in ['.whl', '.tar.gz']
+                            f.name for f in dist_dir.iterdir() if f.is_file() and f.suffix in [".whl", ".tar.gz"]
                         ]
 
                     # Build success is determined by artifacts, not exit code
@@ -266,11 +248,7 @@ class TestRealDHTWorkflow:
             os.chdir(self.test_dir)
 
         # Determine overall success
-        result.overall_success = (
-            result.clone.success and
-            result.setup.success and
-            result.build.success
-        )
+        result.overall_success = result.clone.success and result.setup.success and result.build.success
 
         return result
 
@@ -278,10 +256,10 @@ class TestRealDHTWorkflow:
         """Run tests on all repositories."""
         results = []
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("DHT REAL WORKFLOW TEST")
         print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print("="*80)
+        print("=" * 80)
 
         # Check GitHub CLI auth
         if not self.check_gh_auth():
@@ -302,9 +280,9 @@ class TestRealDHTWorkflow:
 
     def print_tabulated_report(self, results: list[RepoWorkflowResult]):
         """Print detailed tabulated report."""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("DETAILED TEST RESULTS")
-        print("="*80)
+        print("=" * 80)
 
         # Prepare table data
         table_data = []
@@ -324,23 +302,34 @@ class TestRealDHTWorkflow:
             # Artifacts
             artifacts = len(r.dist_files) if r.dist_files else 0
 
-            table_data.append([
-                r.repo_name,
-                clone_status,
-                clone_time,
-                setup_status,
-                setup_time,
-                venv_status,
-                lock_status,
-                build_status,
-                build_time,
-                artifacts,
-                r.notes or "Success" if r.overall_success else r.notes or "Failed"
-            ])
+            table_data.append(
+                [
+                    r.repo_name,
+                    clone_status,
+                    clone_time,
+                    setup_status,
+                    setup_time,
+                    venv_status,
+                    lock_status,
+                    build_status,
+                    build_time,
+                    artifacts,
+                    r.notes or "Success" if r.overall_success else r.notes or "Failed",
+                ]
+            )
 
         headers = [
-            "Repository", "Clone", "Time", "Setup", "Time",
-            "Venv", "Lock", "Build", "Time", "Artifacts", "Notes"
+            "Repository",
+            "Clone",
+            "Time",
+            "Setup",
+            "Time",
+            "Venv",
+            "Lock",
+            "Build",
+            "Time",
+            "Artifacts",
+            "Notes",
         ]
         print(tabulate(table_data, headers=headers, tablefmt="grid"))
 
@@ -353,18 +342,18 @@ class TestRealDHTWorkflow:
         lock_created = sum(1 for r in results if r.uv_lock_created)
         overall_success = sum(1 for r in results if r.overall_success)
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("SUMMARY STATISTICS")
-        print("="*80)
+        print("=" * 80)
 
         summary_data = [
             ["Total Repositories", total, "100%"],
-            ["Successful Clones", clone_success, f"{clone_success/total*100:.1f}%"],
-            ["Successful Setups", setup_success, f"{setup_success/total*100:.1f}%"],
-            ["Virtual Envs Created", venv_created, f"{venv_created/total*100:.1f}%"],
-            ["UV Locks Created", lock_created, f"{lock_created/total*100:.1f}%"],
-            ["Successful Builds", build_success, f"{build_success/total*100:.1f}%"],
-            ["Complete Success", overall_success, f"{overall_success/total*100:.1f}%"],
+            ["Successful Clones", clone_success, f"{clone_success / total * 100:.1f}%"],
+            ["Successful Setups", setup_success, f"{setup_success / total * 100:.1f}%"],
+            ["Virtual Envs Created", venv_created, f"{venv_created / total * 100:.1f}%"],
+            ["UV Locks Created", lock_created, f"{lock_created / total * 100:.1f}%"],
+            ["Successful Builds", build_success, f"{build_success / total * 100:.1f}%"],
+            ["Complete Success", overall_success, f"{overall_success / total * 100:.1f}%"],
         ]
 
         print(tabulate(summary_data, headers=["Metric", "Count", "Percentage"], tablefmt="grid"))
@@ -372,9 +361,9 @@ class TestRealDHTWorkflow:
         # Failed repositories details
         failed_clones = [r for r in results if not r.clone.success]
         if failed_clones:
-            print("\n" + "="*80)
+            print("\n" + "=" * 80)
             print("FAILED CLONES")
-            print("="*80)
+            print("=" * 80)
             for r in failed_clones:
                 print(f"\n{r.repo_name}: {r.notes}")
                 if r.clone.error:
@@ -384,36 +373,38 @@ class TestRealDHTWorkflow:
         """Save detailed results to JSON."""
         results_data = []
         for r in results:
-            results_data.append({
-                "repo_url": r.repo_url,
-                "repo_name": r.repo_name,
-                "clone": {
-                    "success": r.clone.success,
-                    "time": r.clone.time,
-                    "error": r.clone.error[:500] if r.clone.error else ""
-                },
-                "setup": {
-                    "success": r.setup.success,
-                    "time": r.setup.time,
-                    "venv_created": r.venv_created,
-                    "uv_lock_created": r.uv_lock_created
-                },
-                "build": {
-                    "success": r.build.success,
-                    "time": r.build.time,
-                    "dist_files": r.dist_files
-                },
-                "overall_success": r.overall_success,
-                "notes": r.notes
-            })
+            results_data.append(
+                {
+                    "repo_url": r.repo_url,
+                    "repo_name": r.repo_name,
+                    "clone": {
+                        "success": r.clone.success,
+                        "time": r.clone.time,
+                        "error": r.clone.error[:500] if r.clone.error else "",
+                    },
+                    "setup": {
+                        "success": r.setup.success,
+                        "time": r.setup.time,
+                        "venv_created": r.venv_created,
+                        "uv_lock_created": r.uv_lock_created,
+                    },
+                    "build": {"success": r.build.success, "time": r.build.time, "dist_files": r.dist_files},
+                    "overall_success": r.overall_success,
+                    "notes": r.notes,
+                }
+            )
 
         with open("dht_workflow_results.json", "w") as f:
-            json.dump({
-                "test_date": datetime.now().isoformat(),
-                "dhtl_path": str(self.dhtl_path),
-                "test_dir": str(self.test_dir),
-                "results": results_data
-            }, f, indent=2)
+            json.dump(
+                {
+                    "test_date": datetime.now().isoformat(),
+                    "dhtl_path": str(self.dhtl_path),
+                    "test_dir": str(self.test_dir),
+                    "results": results_data,
+                },
+                f,
+                indent=2,
+            )
 
         print(f"\nDetailed results saved to: {self.test_dir}/dht_workflow_results.json")
 

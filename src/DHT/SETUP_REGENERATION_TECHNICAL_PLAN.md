@@ -32,7 +32,7 @@ def find_project_root(start_path="."):
         "CMakeLists.txt",          # C++ component
         "Makefile",                # Generic build
     ]
-    
+
     # Walk up directory tree looking for markers
     current = Path(start_path).resolve()
     while current != current.parent:
@@ -40,7 +40,7 @@ def find_project_root(start_path="."):
             if (current / marker).exists():
                 return current
         current = current.parent
-    
+
     return Path(start_path).resolve()  # Default to start path
 ```
 
@@ -51,7 +51,7 @@ class ProjectConfigParser:
         """Extract all relevant information from pyproject.toml"""
         with open(path, 'rb') as f:
             data = tomli.load(f)
-        
+
         config = {
             'project_name': data.get('project', {}).get('name'),
             'version': data.get('project', {}).get('version'),
@@ -61,30 +61,30 @@ class ProjectConfigParser:
             'build_system': data.get('build-system', {}).get('build-backend'),
             'tools': {}
         }
-        
+
         # Extract tool configurations
         for tool in ['pytest', 'mypy', 'ruff', 'black', 'isort', 'coverage']:
             if tool in data.get('tool', {}):
                 config['tools'][tool] = data['tool'][tool]
-        
+
         return config
-    
+
     def parse_setup_py(self, path):
         """Parse setup.py using AST to avoid execution"""
         with open(path) as f:
             tree = ast.parse(f.read())
-        
+
         # Extract setup() call arguments
         for node in ast.walk(tree):
             if isinstance(node, ast.Call) and getattr(node.func, 'id', None) == 'setup':
                 return self._extract_setup_args(node)
-        
+
         return {}
-    
+
     def parse_requirements(self, path):
         """Parse requirements.txt with support for -r includes"""
         requirements = []
-        
+
         with open(path) as f:
             for line in f:
                 line = line.strip()
@@ -95,7 +95,7 @@ class ProjectConfigParser:
                         requirements.extend(self.parse_requirements(include_path))
                     else:
                         requirements.append(line)
-        
+
         return requirements
 ```
 
@@ -114,9 +114,9 @@ class ProjectTypeDetector:
             'library': ['__init__.py', 'no main.py', 'no app.py'],
             'data-science': ['pandas', 'numpy', 'scikit-learn', 'tensorflow', 'torch'],
         }
-        
+
         detected_types = []
-        
+
         # Check file presence
         for type_name, markers in indicators.items():
             score = 0
@@ -129,14 +129,14 @@ class ProjectTypeDetector:
                     score += 1
                 elif self._check_import(project_root, marker):
                     score += 1
-            
+
             if score >= len(markers) / 2:
                 detected_types.append((type_name, score))
-        
+
         # Return highest scoring type
         if detected_types:
             return max(detected_types, key=lambda x: x[1])[0]
-        
+
         return 'generic'
 ```
 
@@ -152,19 +152,19 @@ class ImportAnalyzer:
             'yaml': 'PyYAML',
             # ... comprehensive mapping
         }
-    
+
     def analyze_imports(self, project_root):
         """Analyze all Python files to find imports"""
         imports = set()
-        
+
         for py_file in project_root.rglob('*.py'):
             if '.venv' in str(py_file) or '__pycache__' in str(py_file):
                 continue
-                
+
             try:
                 with open(py_file) as f:
                     tree = ast.parse(f.read())
-                
+
                 for node in ast.walk(tree):
                     if isinstance(node, ast.Import):
                         for name in node.names:
@@ -174,16 +174,16 @@ class ImportAnalyzer:
                             imports.add(node.module.split('.')[0])
             except:
                 continue
-        
+
         # Filter out stdlib and local modules
         external_imports = imports - self.stdlib_modules
-        
+
         # Map to package names
         packages = set()
         for imp in external_imports:
             package = self.import_to_package.get(imp, imp)
             packages.add(package)
-        
+
         return packages
 ```
 
@@ -224,24 +224,24 @@ class SystemAnalyzer:
                 'PYTHONPATH': os.environ.get('PYTHONPATH', '').split(os.pathsep),
             }
         }
-    
+
     def _find_python_versions(self):
         """Find all available Python versions"""
         versions = {}
-        
+
         # Check common Python locations
         possible_pythons = ['python', 'python3'] + [f'python3.{i}' for i in range(6, 15)]
-        
+
         for py_cmd in possible_pythons:
             try:
-                result = subprocess.run([py_cmd, '--version'], 
+                result = subprocess.run([py_cmd, '--version'],
                                       capture_output=True, text=True)
                 if result.returncode == 0:
                     version = result.stdout.strip().split()[-1]
                     versions[py_cmd] = version
             except:
                 pass
-        
+
         # Check pyenv
         if shutil.which('pyenv'):
             try:
@@ -251,7 +251,7 @@ class SystemAnalyzer:
                     versions[f'pyenv:{version}'] = version
             except:
                 pass
-        
+
         # Check UV python list
         if shutil.which('uv'):
             try:
@@ -266,13 +266,13 @@ class SystemAnalyzer:
                             versions[f'uv:{parts[1]}'] = parts[1]
             except:
                 pass
-        
+
         return versions
-    
+
     def _detect_system_package_managers(self):
         """Detect available system package managers"""
         managers = {}
-        
+
         checks = {
             'apt': ['apt', '--version'],
             'yum': ['yum', '--version'],
@@ -283,7 +283,7 @@ class SystemAnalyzer:
             'pacman': ['pacman', '--version'],
             'zypper': ['zypper', '--version'],
         }
-        
+
         for name, cmd in checks.items():
             if shutil.which(cmd[0]):
                 try:
@@ -292,13 +292,13 @@ class SystemAnalyzer:
                         managers[name] = result.stdout.strip().split('\n')[0]
                 except:
                     pass
-        
+
         return managers
-    
+
     def _detect_dev_tools(self):
         """Detect installed development tools"""
         tools = {}
-        
+
         # Compilers and build tools
         compiler_checks = {
             'gcc': ['gcc', '--version'],
@@ -314,7 +314,7 @@ class SystemAnalyzer:
             'yarn': ['yarn', '--version'],
             'pnpm': ['pnpm', '--version'],
         }
-        
+
         # Node version managers
         node_managers = {
             'nvm': self._check_nvm,
@@ -323,7 +323,7 @@ class SystemAnalyzer:
             'volta': ['volta', '--version'],
             'asdf': ['asdf', '--version'],
         }
-        
+
         for name, cmd in {**compiler_checks, **node_managers}.items():
             if callable(cmd):
                 tools[name] = cmd()
@@ -334,9 +334,9 @@ class SystemAnalyzer:
                         tools[name] = result.stdout.strip().split('\n')[0]
                 except:
                     pass
-        
+
         return tools
-    
+
     def _check_nvm(self):
         """Special check for nvm which is a shell function"""
         nvm_dir = os.environ.get('NVM_DIR', os.path.expanduser('~/.nvm'))
@@ -353,7 +353,7 @@ class UserConfigAnalyzer:
     def analyze(self):
         """Analyze user configuration files"""
         home = Path.home()
-        
+
         configs = {
             'git': self._parse_gitconfig(),
             'npm': self._parse_npmrc(),
@@ -363,7 +363,7 @@ class UserConfigAnalyzer:
             'editor': self._detect_editor(),
             'tools': {}
         }
-        
+
         # Check tool-specific configs
         tool_configs = {
             '.pylintrc': 'pylint',
@@ -373,19 +373,19 @@ class UserConfigAnalyzer:
             '.isort.cfg': 'isort',
             '.pre-commit-config.yaml': 'pre-commit',
         }
-        
+
         for config_file, tool in tool_configs.items():
             for location in [Path.cwd(), home]:
                 config_path = location / config_file
                 if config_path.exists():
                     configs['tools'][tool] = str(config_path)
-        
+
         return configs
-    
+
     def _parse_gitconfig(self):
         """Parse git configuration"""
         try:
-            result = subprocess.run(['git', 'config', '--list'], 
+            result = subprocess.run(['git', 'config', '--list'],
                                   capture_output=True, text=True)
             if result.returncode == 0:
                 config = {}
@@ -414,22 +414,22 @@ class PackageManagerMigrator:
             'pipenv': self._migrate_from_pipenv,
             'conda': self._migrate_from_conda,
         }
-        
+
         if current_manager in migrations:
             return migrations[current_manager](project_root)
-        
+
         return self._migrate_from_pip(project_root)  # Default
-    
+
     def _migrate_from_pip(self, project_root):
         """Migrate from pip to UV"""
         steps = []
-        
+
         # Check for requirements files
-        req_files = ['requirements.txt', 'requirements-dev.txt', 
+        req_files = ['requirements.txt', 'requirements-dev.txt',
                      'requirements-test.txt', 'requirements-prod.txt']
-        
+
         existing_reqs = [f for f in req_files if (project_root / f).exists()]
-        
+
         if existing_reqs:
             # Create pyproject.toml if missing
             if not (project_root / 'pyproject.toml').exists():
@@ -438,42 +438,42 @@ class PackageManagerMigrator:
                     'reason': 'Modern Python packaging standard',
                     'command': self._create_minimal_pyproject_toml
                 })
-            
+
             # Convert requirements to dependencies
             steps.append({
                 'action': 'convert_requirements',
                 'files': existing_reqs,
                 'command': lambda: self._convert_requirements_to_pyproject(project_root, existing_reqs)
             })
-        
+
         # Create UV lock file
         steps.append({
             'action': 'create_uv_lock',
             'command': lambda: subprocess.run(['uv', 'lock'], cwd=project_root)
         })
-        
+
         return steps
-    
+
     def _migrate_from_poetry(self, project_root):
         """Migrate from Poetry to UV"""
         steps = []
-        
+
         if (project_root / 'poetry.lock').exists():
             # Export requirements
             steps.append({
                 'action': 'export_poetry_requirements',
                 'command': lambda: subprocess.run([
-                    'poetry', 'export', '-f', 'requirements.txt', 
+                    'poetry', 'export', '-f', 'requirements.txt',
                     '-o', 'requirements.txt', '--without-hashes'
                 ], cwd=project_root)
             })
-            
+
             # Convert pyproject.toml poetry section to standard
             steps.append({
                 'action': 'convert_poetry_pyproject',
                 'command': lambda: self._convert_poetry_pyproject(project_root)
             })
-        
+
         return steps
 ```
 
@@ -484,20 +484,20 @@ class TestFrameworkMigrator:
         """Migrate from unittest or nose to pytest"""
         test_files = list(project_root.rglob('test*.py')) + \
                     list(project_root.rglob('*_test.py'))
-        
+
         migration_plan = {
             'files_to_convert': [],
             'new_files': [],
             'configuration': {}
         }
-        
+
         for test_file in test_files:
             if self._uses_unittest(test_file):
                 migration_plan['files_to_convert'].append({
                     'file': test_file,
                     'changes': self._analyze_unittest_file(test_file)
                 })
-        
+
         # Create pytest.ini or add to pyproject.toml
         migration_plan['configuration'] = {
             'pytest.ini': self._generate_pytest_config(project_root),
@@ -510,9 +510,9 @@ class TestFrameworkMigrator:
                 }
             }
         }
-        
+
         return migration_plan
-    
+
     def _uses_unittest(self, file_path):
         """Check if file uses unittest"""
         try:
@@ -521,11 +521,11 @@ class TestFrameworkMigrator:
                 return 'import unittest' in content or 'from unittest' in content
         except:
             return False
-    
+
     def _analyze_unittest_file(self, file_path):
         """Analyze unittest file for conversion"""
         changes = []
-        
+
         # Common conversions
         conversions = {
             'self.assertEqual': 'assert',
@@ -537,14 +537,14 @@ class TestFrameworkMigrator:
             'tearDown': 'teardown_method',
             'TestCase': '# Remove TestCase inheritance',
         }
-        
+
         with open(file_path) as f:
             content = f.read()
-            
+
         for old, new in conversions.items():
             if old in content:
                 changes.append(f"Convert {old} to {new}")
-        
+
         return changes
 ```
 
@@ -555,7 +555,7 @@ class TestFrameworkMigrator:
 class ToolStandardizer:
     def standardize_tools(self, project_root, project_type):
         """Ensure standard tool configuration"""
-        
+
         # Base tools for all projects
         base_tools = {
             'pytest': '>=7.4.0',
@@ -565,7 +565,7 @@ class ToolStandardizer:
             'black': '>=23.7.0',
             'pre-commit': '>=3.3.3',
         }
-        
+
         # Type-specific tools
         type_tools = {
             'django': {
@@ -583,9 +583,9 @@ class ToolStandardizer:
                 'notebook': '>=7.0.0',
             }
         }
-        
+
         tools = {**base_tools, **type_tools.get(project_type, {})}
-        
+
         # Configure each tool
         configurations = {
             'ruff': self._configure_ruff(project_root),
@@ -594,9 +594,9 @@ class ToolStandardizer:
             'pytest': self._configure_pytest(project_root),
             'pre-commit': self._configure_precommit(project_root),
         }
-        
+
         return tools, configurations
-    
+
     def _configure_ruff(self, project_root):
         """Generate ruff configuration"""
         return {
@@ -610,7 +610,7 @@ class ToolStandardizer:
                 }
             }
         }
-    
+
     def _configure_precommit(self, project_root):
         """Generate pre-commit configuration"""
         return {
@@ -656,54 +656,54 @@ repos:
 class EnvironmentCreator:
     def create_deterministic_venv(self, project_root, python_version):
         """Create virtual environment with exact Python version"""
-        
+
         # Step 1: Ensure Python version is available
         python_path = self._ensure_python_version(python_version)
-        
+
         # Step 2: Create virtual environment
         venv_path = project_root / '.venv'
-        
+
         if venv_path.exists():
             # Verify existing venv Python version
             existing_version = self._get_venv_python_version(venv_path)
             if existing_version != python_version:
                 print(f"Removing incompatible venv (Python {existing_version})")
                 shutil.rmtree(venv_path)
-        
+
         # Use UV to create venv with specific Python
         subprocess.run([
-            'uv', 'venv', 
+            'uv', 'venv',
             '--python', python_version,
             str(venv_path)
         ], check=True)
-        
+
         # Step 3: Install base tools
         self._install_base_tools(venv_path)
-        
+
         return venv_path
-    
+
     def _ensure_python_version(self, version):
         """Ensure specific Python version is available"""
         # First, check if UV has it
         result = subprocess.run(
-            ['uv', 'python', 'list'], 
-            capture_output=True, 
+            ['uv', 'python', 'list'],
+            capture_output=True,
             text=True
         )
-        
+
         if version in result.stdout:
             return f"python{version}"
-        
+
         # Install via UV
         print(f"Installing Python {version} via UV...")
         subprocess.run(['uv', 'python', 'install', version], check=True)
-        
+
         return f"python{version}"
-    
+
     def _install_base_tools(self, venv_path):
         """Install DHT base tools in venv"""
         pip = venv_path / 'bin' / 'pip'
-        
+
         # Base tools that should be in every DHT-managed environment
         base_packages = [
             'uv>=0.1.0',  # UV in venv for complete isolation
@@ -711,7 +711,7 @@ class EnvironmentCreator:
             'setuptools>=68.0',
             'wheel>=0.41.0',
         ]
-        
+
         subprocess.run([
             str(pip), 'install', '--upgrade'
         ] + base_packages, check=True)
@@ -722,11 +722,11 @@ class EnvironmentCreator:
 class DependencyInstaller:
     def install_locked_dependencies(self, project_root, venv_path):
         """Install dependencies exactly as specified in lock files"""
-        
+
         # Activate venv for UV
         env = os.environ.copy()
         env['VIRTUAL_ENV'] = str(venv_path)
-        
+
         # Step 1: Use UV lock file if available
         if (project_root / 'uv.lock').exists():
             print("Installing from uv.lock...")
@@ -737,23 +737,23 @@ class DependencyInstaller:
                 check=True
             )
             return True
-        
+
         # Step 2: Fall back to requirements.lock or requirements.txt
         lock_files = [
             'requirements.lock',
             'requirements-lock.txt',
             'requirements.txt'
         ]
-        
+
         for lock_file in lock_files:
             if (project_root / lock_file).exists():
                 print(f"Installing from {lock_file}...")
-                
+
                 # Use --require-hashes if .lock file
                 args = ['uv', 'pip', 'install', '-r', lock_file]
                 if '.lock' in lock_file:
                     args.append('--require-hashes')
-                
+
                 subprocess.run(
                     args,
                     cwd=project_root,
@@ -761,9 +761,9 @@ class DependencyInstaller:
                     check=True
                 )
                 return True
-        
+
         return False
-    
+
     def generate_lock_file(self, project_root):
         """Generate lock file from current dependencies"""
         print("Generating uv.lock file...")
@@ -800,20 +800,20 @@ class SystemDependencyManager:
             },
             # ... more mappings
         }
-    
+
     def install_system_dependencies(self, dependencies, platform_info):
         """Install platform-specific system dependencies"""
         os_type = platform_info['system'].lower()
         os_dist = self._get_distribution(platform_info)
-        
+
         installed = []
         failed = []
-        
+
         for dep in dependencies:
             if dep in self.package_mappings:
                 mapping = self.package_mappings[dep].get(os_dist) or \
                          self.package_mappings[dep].get(os_type)
-                
+
                 if mapping:
                     success = self._install_package(mapping)
                     if success:
@@ -822,9 +822,9 @@ class SystemDependencyManager:
                         failed.append(dep)
                 else:
                     failed.append(f"{dep} (no mapping for {os_dist})")
-        
+
         return installed, failed
-    
+
     def _install_package(self, mapping):
         """Install package using appropriate package manager"""
         for manager, package in mapping.items():
@@ -833,7 +833,7 @@ class SystemDependencyManager:
             elif manager == 'apt' and shutil.which('apt'):
                 return self._run_install(['sudo', 'apt', 'install', '-y', package])
             # ... other package managers
-        
+
         return False
 ```
 
@@ -842,7 +842,7 @@ class SystemDependencyManager:
 class DevToolConfigurator:
     def configure_venv_tools(self, venv_path, project_root):
         """Configure development tools within venv"""
-        
+
         # Step 1: Install tools as UV tools (isolated environments)
         tools_to_install = [
             ('ruff', '>=0.1.0'),
@@ -851,35 +851,35 @@ class DevToolConfigurator:
             ('pytest', '>=7.4.0'),
             ('pre-commit', '>=3.3.3'),
         ]
-        
+
         for tool, version in tools_to_install:
             self._install_uv_tool(tool, version, venv_path)
-        
+
         # Step 2: Create wrapper scripts in venv/bin
         self._create_tool_wrappers(venv_path, tools_to_install)
-        
+
         # Step 3: Configure git hooks
         if (project_root / '.git').exists():
             self._setup_git_hooks(venv_path, project_root)
-    
+
     def _install_uv_tool(self, tool, version, venv_path):
         """Install tool using UV's tool management"""
         # UV tools are installed in isolated environments
         subprocess.run([
-            'uv', 'tool', 'install', 
+            'uv', 'tool', 'install',
             f'{tool}{version}',
             '--force'  # Ensure we get the exact version
         ], check=True)
-    
+
     def _create_tool_wrappers(self, venv_path, tools):
         """Create wrapper scripts that use UV tools"""
         bin_dir = venv_path / 'bin'
-        
+
         wrapper_template = '''#!/bin/bash
 # Auto-generated wrapper for {tool}
 exec uv tool run {tool} "$@"
 '''
-        
+
         for tool, _ in tools:
             wrapper_path = bin_dir / tool
             wrapper_path.write_text(wrapper_template.format(tool=tool))
@@ -895,7 +895,7 @@ exec uv tool run {tool} "$@"
 class DHTConfigGenerator:
     def generate(self, collected_info):
         """Generate minimal .dhtconfig with only non-inferrable information"""
-        
+
         config = {
             'version': '2.0',
             'dht_version': get_dht_version(),
@@ -905,31 +905,31 @@ class DHTConfigGenerator:
                 'platform': f"{platform.system().lower()}-{platform.machine()}",
             }
         }
-        
+
         # Only add Python version if it can't be inferred from pyproject.toml
         if not collected_info['project'].get('python_requires'):
             config['python'] = {
                 'version': collected_info['python']['exact_version']
             }
-        
+
         # Only add system deps that aren't standard
         non_standard_deps = self._identify_non_standard_deps(collected_info)
         if non_standard_deps:
             config['platform_deps'] = non_standard_deps
-        
+
         # Add validation checksums
         config['validation'] = {
             'venv_checksum': self._generate_venv_checksum(collected_info),
             'config_checksum': self._generate_config_checksum(collected_info),
         }
-        
+
         # Only add tools if non-standard versions required
         non_standard_tools = self._identify_non_standard_tools(collected_info)
         if non_standard_tools:
             config['tools'] = non_standard_tools
-        
+
         return config
-    
+
     def _identify_non_standard_deps(self, info):
         """Identify system dependencies that can't be inferred"""
         # Standard deps that can be inferred from Python packages
@@ -939,23 +939,23 @@ class DHTConfigGenerator:
             'pillow': ['libjpeg', 'libpng'],
             # ... more mappings
         }
-        
+
         required_system_deps = info.get('system_dependencies', [])
         non_inferrable = []
-        
+
         for dep in required_system_deps:
             is_inferrable = False
             for py_pkg, sys_deps in inferrable_deps.items():
                 if dep in sys_deps and py_pkg in info['project']['dependencies']:
                     is_inferrable = True
                     break
-            
+
             if not is_inferrable:
                 non_inferrable.append(dep)
-        
+
         if non_inferrable:
             return self._create_platform_dep_mapping(non_inferrable)
-        
+
         return None
 ```
 
@@ -966,9 +966,9 @@ class DHTConfigGenerator:
 class EnvironmentValidator:
     def generate_checksum(self, venv_path, project_root):
         """Generate deterministic checksum of environment"""
-        
+
         components = []
-        
+
         # 1. Python version (exact)
         python_exe = venv_path / 'bin' / 'python'
         result = subprocess.run(
@@ -977,7 +977,7 @@ class EnvironmentValidator:
             text=True
         )
         components.append(f"python:{result.stdout.strip()}")
-        
+
         # 2. Installed packages with versions and hashes
         result = subprocess.run(
             [str(venv_path / 'bin' / 'pip'), 'freeze', '--all'],
@@ -986,22 +986,22 @@ class EnvironmentValidator:
         )
         packages = sorted(result.stdout.strip().split('\n'))
         components.extend(packages)
-        
+
         # 3. Package hashes (for extra security)
         result = subprocess.run(
-            [str(venv_path / 'bin' / 'pip'), 'show', '-f'] + 
+            [str(venv_path / 'bin' / 'pip'), 'show', '-f'] +
             [pkg.split('==')[0] for pkg in packages if '==' in pkg],
             capture_output=True,
             text=True
         )
-        
+
         # Extract file hashes
         for line in result.stdout.split('\n'):
             if line.strip().endswith('.py'):
                 file_path = venv_path / 'lib' / line.strip()
                 if file_path.exists():
                     components.append(f"file:{self._hash_file(file_path)}")
-        
+
         # 4. Tool configurations
         config_files = [
             'pyproject.toml',
@@ -1011,31 +1011,31 @@ class EnvironmentValidator:
             '.flake8',
             'mypy.ini',
         ]
-        
+
         for config_file in config_files:
             config_path = project_root / config_file
             if config_path.exists():
                 components.append(f"config:{config_file}:{self._hash_file(config_path)}")
-        
+
         # Generate final checksum
         combined = '\n'.join(components)
         return hashlib.sha256(combined.encode()).hexdigest()
-    
+
     def validate_environment(self, venv_path, project_root, expected_checksum):
         """Validate environment matches expected checksum"""
         current_checksum = self.generate_checksum(venv_path, project_root)
-        
+
         if current_checksum == expected_checksum:
             return True, "Environment validated successfully"
-        
+
         # Generate detailed diff report
         diff_report = self._generate_diff_report(
-            venv_path, 
-            project_root, 
-            expected_checksum, 
+            venv_path,
+            project_root,
+            expected_checksum,
             current_checksum
         )
-        
+
         return False, diff_report
 ```
 
@@ -1048,31 +1048,31 @@ class EnvironmentValidator:
 class EnvironmentRegenerator:
     def regenerate(self, project_root):
         """Complete environment regeneration from .dhtconfig"""
-        
+
         # Step 1: Load .dhtconfig
         config_path = project_root / '.dhtconfig'
         if not config_path.exists():
             raise FileNotFoundError("No .dhtconfig found. Run 'dhtl setup' first.")
-        
+
         with open(config_path) as f:
             config = yaml.safe_load(f)
-        
+
         # Step 2: Validate DHT version compatibility
         self._check_dht_compatibility(config)
-        
+
         # Step 3: Collect current system info
         system_info = SystemAnalyzer().analyze()
-        
+
         # Step 4: Determine Python version
         python_version = self._determine_python_version(config, project_root)
-        
+
         # Step 5: Create virtual environment
         print(f"Creating virtual environment with Python {python_version}...")
         venv_path = EnvironmentCreator().create_deterministic_venv(
-            project_root, 
+            project_root,
             python_version
         )
-        
+
         # Step 6: Install system dependencies
         if 'platform_deps' in config:
             print("Installing platform-specific dependencies...")
@@ -1082,19 +1082,19 @@ class EnvironmentRegenerator:
                     config['platform_deps'][platform_key],
                     system_info['platform']
                 )
-        
+
         # Step 7: Install Python dependencies
         print("Installing Python dependencies...")
         DependencyInstaller().install_locked_dependencies(project_root, venv_path)
-        
+
         # Step 8: Configure development tools
         print("Configuring development tools...")
         DevToolConfigurator().configure_venv_tools(venv_path, project_root)
-        
+
         # Step 9: Setup additional languages if needed
         if 'languages' in config:
             self._setup_additional_languages(config['languages'], venv_path)
-        
+
         # Step 10: Validate regenerated environment
         if 'validation' in config and 'venv_checksum' in config['validation']:
             print("Validating environment...")
@@ -1104,20 +1104,20 @@ class EnvironmentRegenerator:
                 project_root,
                 config['validation']['venv_checksum']
             )
-            
+
             if not is_valid:
                 print(f"Warning: Environment validation failed:\n{report}")
                 if not self._prompt_continue():
                     raise EnvironmentError("Environment validation failed")
-        
+
         # Step 11: Create activation script with checks
         self._create_activation_script(venv_path, project_root)
-        
+
         print("\n✅ Environment regeneration complete!")
         print(f"Activate with: source {venv_path}/bin/activate")
-        
+
         return True
-    
+
     def _setup_additional_languages(self, languages, venv_path):
         """Setup additional language runtimes in venv"""
         for lang, spec in languages.items():
@@ -1127,20 +1127,20 @@ class EnvironmentRegenerator:
                 self._setup_rust(spec, venv_path)
             elif lang == 'go':
                 self._setup_go(spec, venv_path)
-    
+
     def _setup_node(self, spec, venv_path):
         """Setup Node.js in venv using UV tools or other methods"""
         version = spec.get('version', 'latest')
         installer = spec.get('installer', 'uv tool')
-        
+
         if installer == 'uv tool':
             # Install node via UV tool
             subprocess.run([
-                'uv', 'tool', 'install', 
+                'uv', 'tool', 'install',
                 f'node@{version}',
                 '--force'
             ])
-            
+
             # Create wrapper in venv
             wrapper = venv_path / 'bin' / 'node'
             wrapper.write_text('#!/bin/bash\nexec uv tool run node "$@"\n')
@@ -1154,27 +1154,27 @@ class EnvironmentRegenerator:
 class SmartCloner:
     def clone(self, url, target_dir=None):
         """Clone repository and regenerate environment"""
-        
+
         # Step 1: Parse repository URL
         repo_info = self._parse_repo_url(url)
-        
+
         if not target_dir:
             target_dir = repo_info['name']
-        
+
         # Step 2: Clone repository
         print(f"Cloning {repo_info['full_name']}...")
-        
+
         if shutil.which('gh') and 'github.com' in url:
             # Use GitHub CLI for better authentication
             subprocess.run(['gh', 'repo', 'clone', url, target_dir], check=True)
         else:
             # Fallback to git
             subprocess.run(['git', 'clone', url, target_dir], check=True)
-        
+
         # Step 3: Enter directory
         project_root = Path(target_dir).resolve()
         os.chdir(project_root)
-        
+
         # Step 4: Check for .dhtconfig
         if (project_root / '.dhtconfig').exists():
             print("\nFound .dhtconfig, regenerating environment...")
@@ -1182,15 +1182,15 @@ class SmartCloner:
         else:
             print("\nNo .dhtconfig found, running initial setup...")
             self._run_initial_setup(project_root)
-        
+
         # Step 5: Show status
         self._show_project_status(project_root)
-        
+
         return project_root
-    
+
     def fork(self, url, target_dir=None):
         """Fork repository and regenerate environment"""
-        
+
         # Step 1: Fork using gh CLI
         print(f"Forking repository...")
         result = subprocess.run(
@@ -1198,23 +1198,23 @@ class SmartCloner:
             capture_output=True,
             text=True
         )
-        
+
         if result.returncode != 0:
             raise RuntimeError(f"Failed to fork: {result.stderr}")
-        
+
         # Extract forked repo URL from output
         fork_url = self._extract_fork_url(result.stdout)
-        
+
         # Step 2: Clone the fork
         project_root = self.clone(fork_url, target_dir)
-        
+
         # Step 3: Add upstream remote
         subprocess.run([
             'git', 'remote', 'add', 'upstream', url
         ], cwd=project_root, check=True)
-        
+
         print(f"\nAdded upstream remote: {url}")
-        
+
         return project_root
 ```
 
@@ -1227,10 +1227,10 @@ class SmartCloner:
 class ActivationHookGenerator:
     def create_hooks(self, venv_path, project_root):
         """Create post-activation hooks for continuous validation"""
-        
+
         # Create custom activation script
         activate_script = venv_path / 'bin' / 'activate.dht'
-        
+
         hook_content = f'''#!/bin/bash
 # DHT-enhanced activation script
 
@@ -1244,7 +1244,7 @@ if command -v dhtl >/dev/null 2>&1; then
         echo "⚠️  Warning: Environment may have drifted from .dhtconfig"
         echo "   Run 'dhtl validate-env' for details"
     fi
-    
+
     # Check for missing env vars
     if [ -f .env.template ]; then
         while IFS= read -r line; do
@@ -1256,7 +1256,7 @@ if command -v dhtl >/dev/null 2>&1; then
             fi
         done < .env.template
     fi
-    
+
     # Show project status
     echo "📁 Project: $(basename "{project_root}")"
     echo "🐍 Python: $(python --version 2>&1 | cut -d' ' -f2)"
@@ -1273,10 +1273,10 @@ if [ -d "{project_root}/scripts" ]; then
     export PATH="{project_root}/scripts:$PATH"
 fi
 '''
-        
+
         activate_script.write_text(hook_content)
         activate_script.chmod(0o755)
-        
+
         # Create deactivation hook
         self._create_deactivation_hook(venv_path)
 ```
@@ -1288,18 +1288,18 @@ fi
 class ValidationCommands:
     def validate_env(self, quick=False, quiet=False):
         """Validate current environment against .dhtconfig"""
-        
+
         project_root = Path.cwd()
         config_path = project_root / '.dhtconfig'
-        
+
         if not config_path.exists():
             if not quiet:
                 print("No .dhtconfig found")
             return True
-        
+
         with open(config_path) as f:
             config = yaml.safe_load(f)
-        
+
         validation_results = {
             'python_version': self._validate_python_version(config),
             'dependencies': self._validate_dependencies(config) if not quick else None,
@@ -1307,30 +1307,30 @@ class ValidationCommands:
             'tools': self._validate_tools(config),
             'checksums': self._validate_checksums(config) if not quick else None,
         }
-        
+
         # Generate report
         if not quiet:
             self._print_validation_report(validation_results)
-        
+
         # Return True if all validations passed
         return all(
-            result.get('valid', True) 
-            for result in validation_results.values() 
+            result.get('valid', True)
+            for result in validation_results.values()
             if result is not None
         )
-    
+
     def fix_env(self):
         """Attempt to fix environment discrepancies"""
-        
+
         print("🔧 Attempting to fix environment...")
-        
+
         # Re-run regeneration with --fix flag
         fixer = EnvironmentFixer()
         issues = fixer.detect_issues()
-        
+
         for issue in issues:
             print(f"\n📍 Fixing: {issue['description']}")
-            
+
             if issue['type'] == 'missing_package':
                 fixer.install_missing_package(issue['package'])
             elif issue['type'] == 'wrong_version':
@@ -1339,7 +1339,7 @@ class ValidationCommands:
                 fixer.install_system_dep(issue['dependency'])
             elif issue['type'] == 'missing_tool':
                 fixer.install_tool(issue['tool'])
-        
+
         # Validate again
         if self.validate_env(quiet=True):
             print("\n✅ Environment fixed successfully!")

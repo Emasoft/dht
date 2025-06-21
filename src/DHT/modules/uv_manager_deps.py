@@ -40,7 +40,7 @@ class DependencyManager:
         project_path: Path,
         requirements_file: Path | None = None,
         dev: bool = False,
-        extras: list[str] | None = None
+        extras: list[str] | None = None,
     ) -> dict[str, Any]:
         """
         Install project dependencies.
@@ -80,10 +80,7 @@ class DependencyManager:
         return {"success": True, "message": "No dependencies found"}
 
     def _sync_dependencies(
-        self,
-        project_path: Path,
-        dev: bool = False,
-        extras: list[str] | None = None
+        self, project_path: Path, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:
         """Sync dependencies from uv.lock file."""
         args = ["sync"]
@@ -100,14 +97,10 @@ class DependencyManager:
         return {
             "success": result["success"],
             "method": "uv sync",
-            "message": result["stdout"] if result["success"] else result["stderr"]
+            "message": result["stdout"] if result["success"] else result["stderr"],
         }
 
-    def _pip_install_requirements(
-        self,
-        project_path: Path,
-        requirements_file: Path
-    ) -> dict[str, Any]:
+    def _pip_install_requirements(self, project_path: Path, requirements_file: Path) -> dict[str, Any]:
         """Install from requirements file using uv pip."""
         args = ["pip", "install", "-r", str(requirements_file)]
 
@@ -117,14 +110,11 @@ class DependencyManager:
             "success": result["success"],
             "method": "uv pip install -r",
             "requirements_file": str(requirements_file),
-            "message": result["stdout"] if result["success"] else result["stderr"]
+            "message": result["stdout"] if result["success"] else result["stderr"],
         }
 
     def _pip_install_project(
-        self,
-        project_path: Path,
-        dev: bool = False,
-        extras: list[str] | None = None
+        self, project_path: Path, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:
         """Install project with optional extras."""
         # Install the project itself
@@ -139,11 +129,7 @@ class DependencyManager:
         result = self.run_command(args, cwd=project_path)
 
         if not result["success"]:
-            return {
-                "success": False,
-                "method": "uv pip install -e",
-                "message": result["stderr"]
-            }
+            return {"success": False, "method": "uv pip install -e", "message": result["stderr"]}
 
         # Install dev dependencies if requested
         if dev:
@@ -154,35 +140,23 @@ class DependencyManager:
 
                 # Check for dev dependencies in various locations
                 dev_deps = (
-                    data.get("project", {}).get("optional-dependencies", {}).get("dev", []) or
-                    data.get("dependency-groups", {}).get("dev", []) or
-                    data.get("tool", {}).get("pdm", {}).get("dev-dependencies", {})
+                    data.get("project", {}).get("optional-dependencies", {}).get("dev", [])
+                    or data.get("dependency-groups", {}).get("dev", [])
+                    or data.get("tool", {}).get("pdm", {}).get("dev-dependencies", {})
                 )
 
                 if dev_deps:
                     # Try installing as extra first
-                    dev_result = self.run_command(
-                        ["pip", "install", "-e", ".[dev]"],
-                        cwd=project_path,
-                        check=False
-                    )
+                    dev_result = self.run_command(["pip", "install", "-e", ".[dev]"], cwd=project_path, check=False)
 
                     if not dev_result["success"]:
                         # Try installing individually
                         for dep in dev_deps:
-                            self.run_command(
-                                ["pip", "install", dep],
-                                cwd=project_path,
-                                check=False
-                            )
+                            self.run_command(["pip", "install", dep], cwd=project_path, check=False)
             except Exception as e:
                 self.logger.warning(f"Could not install dev dependencies: {e}")
 
-        return {
-            "success": True,
-            "method": "uv pip install -e",
-            "message": "Dependencies installed successfully"
-        }
+        return {"success": True, "method": "uv pip install -e", "message": "Dependencies installed successfully"}
 
     @task
     def generate_lock_file(self, project_path: Path) -> Path:
@@ -209,11 +183,7 @@ class DependencyManager:
 
     @task
     def add_dependency(
-        self,
-        project_path: Path,
-        package: str,
-        dev: bool = False,
-        extras: list[str] | None = None
+        self, project_path: Path, package: str, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:
         """
         Add a dependency to the project.
@@ -253,7 +223,7 @@ class DependencyManager:
             "success": result["success"],
             "package": package,
             "dev": dev,
-            "message": result["stdout"] if result["success"] else result["stderr"]
+            "message": result["stdout"] if result["success"] else result["stderr"],
         }
 
     def remove_dependency(self, project_path: Path, package: str) -> dict[str, Any]:
@@ -274,7 +244,7 @@ class DependencyManager:
         return {
             "success": result["success"],
             "package": package,
-            "message": result["stdout"] if result["success"] else result["stderr"]
+            "message": result["stdout"] if result["success"] else result["stderr"],
         }
 
     def check_outdated(self, project_path: Path) -> list[dict[str, Any]]:

@@ -74,18 +74,12 @@ class EnvironmentConfigurator:
                 self.logger = get_run_logger()
             except Exception:
                 import logging
+
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    @task(
-        name="analyze_environment_requirements",
-        description="Analyze project to determine environment requirements"
-    )
-    def analyze_environment_requirements(
-        self,
-        project_path: Path,
-        include_system_info: bool = True
-    ) -> dict[str, Any]:
+    @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")
+    def analyze_environment_requirements(self, project_path: Path, include_system_info: bool = True) -> dict[str, Any]:
         """
         Analyze project and system to determine environment requirements.
 
@@ -119,17 +113,13 @@ class EnvironmentConfigurator:
             "python_requirements": self._determine_python_requirements(project_path, project_info),
             "quality_setup": self._recommend_quality_tools(project_info),
             "ci_setup": self._recommend_ci_setup(project_info),
-            "info_tree": info_tree
+            "info_tree": info_tree,
         }
 
         logger.info(f"Analysis complete: {len(analysis['detected_tools'])} tools detected")
         return analysis
 
-    def _detect_tools_from_project(
-        self,
-        project_path: Path,
-        project_info: dict[str, Any]
-    ) -> list[str]:
+    def _detect_tools_from_project(self, project_path: Path, project_info: dict[str, Any]) -> list[str]:
         """Delegate to environment analyzer."""
         return self.env_analyzer._detect_tools_from_project(project_path, project_info)
 
@@ -141,11 +131,7 @@ class EnvironmentConfigurator:
         """Delegate to environment analyzer."""
         return self.env_analyzer._determine_system_requirements(project_info)
 
-    def _determine_python_requirements(
-        self,
-        project_path: Path,
-        project_info: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _determine_python_requirements(self, project_path: Path, project_info: dict[str, Any]) -> dict[str, Any]:
         """Delegate to environment analyzer."""
         return self.env_analyzer._determine_python_requirements(project_path, project_info)
 
@@ -157,15 +143,9 @@ class EnvironmentConfigurator:
         """Delegate to environment analyzer."""
         return self.env_analyzer._recommend_ci_setup(project_info)
 
-    @task(
-        name="generate_environment_config",
-        description="Generate environment configuration from analysis"
-    )
+    @task(name="generate_environment_config", description="Generate environment configuration from analysis")
     def generate_environment_config(
-        self,
-        project_path: Path,
-        analysis: dict[str, Any],
-        custom_requirements: dict[str, Any] | None = None
+        self, project_path: Path, analysis: dict[str, Any], custom_requirements: dict[str, Any] | None = None
     ) -> EnvironmentConfig:
         """
         Generate environment configuration from analysis results.
@@ -185,10 +165,7 @@ class EnvironmentConfigurator:
         project_type = project_info.get("project_type", "unknown")
 
         # Start with base configuration
-        config = EnvironmentConfig(
-            project_path=project_path,
-            project_type=project_type
-        )
+        config = EnvironmentConfig(project_path=project_path, project_type=project_type)
 
         # Python version
         python_req = analysis.get("python_requirements", {})
@@ -211,9 +188,7 @@ class EnvironmentConfigurator:
         # Quality tools
         quality = analysis.get("quality_setup", {})
         config.quality_tools = (
-            quality.get("linting", []) +
-            quality.get("formatting", []) +
-            quality.get("type_checking", [])
+            quality.get("linting", []) + quality.get("formatting", []) + quality.get("type_checking", [])
         )
         config.test_frameworks = quality.get("testing", [])
 
@@ -225,15 +200,13 @@ class EnvironmentConfigurator:
         config.environment_variables = {
             "PYTHONDONTWRITEBYTECODE": "1",
             "PYTHONUNBUFFERED": "1",
-            "PIP_NO_CACHE_DIR": "1"
+            "PIP_NO_CACHE_DIR": "1",
         }
 
         # Add tool-specific environment variables
         for tool in config.quality_tools:
             if tool in TOOL_CONFIGS:
-                config.environment_variables.update(
-                    TOOL_CONFIGS[tool]["env_vars"]
-                )
+                config.environment_variables.update(TOOL_CONFIGS[tool]["env_vars"])
 
         # Container configuration
         if project_info.get("configurations", {}).get("has_dockerfile"):
@@ -256,17 +229,14 @@ class EnvironmentConfigurator:
         logger.info(f"Generated configuration for {project_type} project")
         return config
 
-    @flow(
-        name="configure_development_environment",
-        description="Complete development environment configuration flow"
-    )
+    @flow(name="configure_development_environment", description="Complete development environment configuration flow")
     def configure_development_environment(
         self,
         project_path: Path,
         auto_install: bool = True,
         include_system_info: bool = True,
         custom_requirements: dict[str, Any] | None = None,
-        create_artifacts: bool = True
+        create_artifacts: bool = True,
     ) -> ConfigurationResult:
         """
         Configure a complete development environment for a project.
@@ -282,6 +252,7 @@ class EnvironmentConfigurator:
             ConfigurationResult with success status and details
         """
         import time
+
         start_time = time.time()
 
         logger = self._get_logger()
@@ -290,16 +261,14 @@ class EnvironmentConfigurator:
         logger.info(f"Starting environment configuration for {project_path}")
 
         result = ConfigurationResult(
-            success=False,
-            config=EnvironmentConfig(project_path=project_path, project_type="unknown")
+            success=False, config=EnvironmentConfig(project_path=project_path, project_type="unknown")
         )
 
         try:
             # Step 1: Analyze requirements
             logger.info("Analyzing environment requirements...")
             analysis = self.analyze_environment_requirements(
-                project_path=project_path,
-                include_system_info=include_system_info
+                project_path=project_path, include_system_info=include_system_info
             )
             result.steps_completed.append("analyze_requirements")
             result.info_tree = analysis.get("info_tree")
@@ -307,9 +276,7 @@ class EnvironmentConfigurator:
             # Step 2: Generate configuration
             logger.info("Generating environment configuration...")
             config = self.generate_environment_config(
-                project_path=project_path,
-                analysis=analysis,
-                custom_requirements=custom_requirements
+                project_path=project_path, analysis=analysis, custom_requirements=custom_requirements
             )
             result.config = config
             result.steps_completed.append("generate_configuration")
@@ -358,19 +325,11 @@ class EnvironmentConfigurator:
 
         return result
 
-    def _install_python_environment(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    def _install_python_environment(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Delegate to environment installer."""
         return self.installer.install_python_environment(config, result)
 
-    def _install_with_pip(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    def _install_with_pip(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Delegate to environment installer."""
         return self.installer._install_with_pip(config, result)
 
@@ -378,11 +337,7 @@ class EnvironmentConfigurator:
         """Delegate to environment installer."""
         self.installer._install_additional_packages(project_path, packages)
 
-    def _configure_quality_tools(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    def _configure_quality_tools(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Configure quality tools like linters and formatters."""
         logger = self._get_logger()
 
@@ -391,7 +346,7 @@ class EnvironmentConfigurator:
             configs_generated = generate_all_configs(
                 project_path=config.project_path,
                 quality_tools=config.quality_tools,
-                test_frameworks=config.test_frameworks
+                test_frameworks=config.test_frameworks,
             )
 
             logger.info(f"Generated configurations: {', '.join(configs_generated)}")
@@ -401,11 +356,7 @@ class EnvironmentConfigurator:
             logger.error(f"Quality tools configuration failed: {e}")
             return False
 
-    def _generate_config_files(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    def _generate_config_files(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Generate various configuration files."""
         logger = self._get_logger()
 
@@ -447,10 +398,5 @@ class EnvironmentConfigurator:
             return False
 
 
-
 # Export public API
-__all__ = [
-    "EnvironmentConfigurator",
-    "EnvironmentConfig",
-    "ConfigurationResult"
-]
+__all__ = ["EnvironmentConfigurator", "EnvironmentConfig", "ConfigurationResult"]

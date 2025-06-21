@@ -15,26 +15,26 @@
 class FileSystemNormalizer:
     def normalize_path(self, path: str, context: str = 'runtime') -> str:
         """Normalize paths for cross-platform compatibility"""
-        
+
         # Always use Path objects internally
         path_obj = Path(path)
-        
+
         # Context-specific handling
         if context == 'config':
             # Use forward slashes in all config files
             return path_obj.as_posix()
-            
+
         elif context == 'script':
             # Use Path.resolve() for absolute paths
             return str(path_obj.resolve())
-            
+
         elif context == 'relative':
             # Always relative to project root
             try:
                 return str(path_obj.relative_to(self.project_root))
             except ValueError:
                 return str(path_obj)
-        
+
         # Handle Windows special cases
         if platform.system() == 'Windows':
             # Check for reserved names
@@ -43,33 +43,33 @@ class FileSystemNormalizer:
                any(name.startswith(f'{x}{i}') for x in ['COM', 'LPT'] for i in range(1, 10)):
                 # Append underscore to reserved names
                 path_obj = path_obj.with_name(f"{path_obj.name}_")
-            
+
             # Handle long paths
             str_path = str(path_obj)
             if len(str_path) > 260:
                 # Use extended path syntax
                 if not str_path.startswith('\\\\?\\'):
                     return f'\\\\?\\{path_obj.resolve()}'
-        
+
         return str(path_obj)
-    
+
     def create_file_safely(self, path: str, content: str) -> Path:
         """Create file handling platform differences"""
-        
+
         path = self.normalize_path(path)
         path_obj = Path(path)
-        
+
         # Ensure parent directory exists
         path_obj.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Write with consistent encoding and line endings
         with open(path_obj, 'w', encoding='utf-8', newline='\n') as f:
             f.write(content)
-        
+
         # Set consistent permissions (Unix only)
         if platform.system() != 'Windows':
             path_obj.chmod(0o644)  # rw-r--r--
-        
+
         return path_obj
 ```
 
@@ -116,32 +116,32 @@ class LineEndingNormalizer:
 *.zip binary
 *.tar binary
 '''
-    
+
     def setup_line_endings(self, project_root: Path):
         """Configure consistent line endings"""
-        
+
         # Create .gitattributes
         gitattributes = project_root / '.gitattributes'
         gitattributes.write_text(self.gitattributes_content, encoding='utf-8', newline='\n')
-        
+
         # Configure Git
         subprocess.run(['git', 'config', 'core.autocrlf', 'false'], cwd=project_root)
         subprocess.run(['git', 'config', 'core.eol', 'lf'], cwd=project_root)
-        
+
         # Normalize existing files
         self.normalize_existing_files(project_root)
-    
+
     def normalize_existing_files(self, project_root: Path):
         """Convert all text files to LF"""
-        
+
         text_extensions = {'.py', '.sh', '.yml', '.yaml', '.json', '.md', '.txt', '.cfg', '.ini', '.toml'}
-        
+
         for file_path in project_root.rglob('*'):
             if file_path.is_file() and file_path.suffix in text_extensions:
                 # Skip if in .git or .venv
                 if '.git' in file_path.parts or '.venv' in file_path.parts:
                     continue
-                
+
                 # Read and normalize
                 try:
                     content = file_path.read_text(encoding='utf-8')
@@ -172,7 +172,7 @@ class LineEndingNormalizer:
 class ShellCommandNormalizer:
     def create_portable_command(self, command: str, args: list) -> list:
         """Create command that works on all platforms"""
-        
+
         # Map common commands to platform equivalents
         command_map = {
             'rm': {
@@ -200,15 +200,15 @@ class ShellCommandNormalizer:
                 'unix': ['which']
             }
         }
-        
+
         # Get platform-specific command
         platform_type = 'windows' if platform.system() == 'Windows' else 'unix'
-        
+
         if command in command_map:
             base_cmd = command_map[command][platform_type]
         else:
             base_cmd = [command]
-        
+
         # Normalize paths in arguments
         normalized_args = []
         for arg in args:
@@ -217,12 +217,12 @@ class ShellCommandNormalizer:
                 normalized_args.append(self.normalize_path(arg))
             else:
                 normalized_args.append(arg)
-        
+
         return base_cmd + normalized_args
-    
+
     def create_portable_script(self, commands: list, script_name: str) -> dict:
         """Generate scripts that work on all platforms"""
-        
+
         # Python script (universal)
         py_script = '''#!/usr/bin/env python3
 import subprocess
@@ -242,11 +242,11 @@ def run_command(cmd):
         text=True,
         env=os.environ.copy()
     )
-    
+
     print(result.stdout)
     if result.stderr:
         print(result.stderr, file=sys.stderr)
-    
+
     return result.returncode
 
 def main():
@@ -260,10 +260,10 @@ def main():
 if __name__ == "__main__":
     main()
 '''.format(commands=repr(commands))
-        
+
         # Platform wrappers
         scripts = {f'{script_name}.py': py_script}
-        
+
         if platform.system() == 'Windows':
             scripts[f'{script_name}.bat'] = f'''@echo off
 python "%~dp0{script_name}.py" %*
@@ -272,7 +272,7 @@ python "%~dp0{script_name}.py" %*
             scripts[f'{script_name}.sh'] = f'''#!/bin/bash
 exec python "$(dirname "$0")/{script_name}.py" "$@"
 '''
-        
+
         return scripts
 ```
 
@@ -295,10 +295,10 @@ exec python "$(dirname "$0")/{script_name}.py" "$@"
 class EnvironmentNormalizer:
     def __init__(self):
         self.path_sep = ';' if platform.system() == 'Windows' else ':'
-    
+
     def normalize_environment(self) -> dict:
         """Create normalized environment for all platforms"""
-        
+
         # Start with minimal base
         base_env = {
             'PYTHONUNBUFFERED': '1',
@@ -312,20 +312,20 @@ class EnvironmentNormalizer:
             'COLUMNS': '80',  # Fixed terminal width
             'LINES': '24',    # Fixed terminal height
         }
-        
+
         # Normalize PATH
         path_entries = []
-        
+
         # Add venv first
         venv_bin = '.venv/Scripts' if platform.system() == 'Windows' else '.venv/bin'
         path_entries.append(str(Path(venv_bin).resolve()))
-        
+
         # Add system paths
         system_paths = self._get_minimal_system_paths()
         path_entries.extend(system_paths)
-        
+
         base_env['PATH'] = self.path_sep.join(path_entries)
-        
+
         # Platform-specific additions
         if platform.system() == 'Windows':
             base_env['PATHEXT'] = '.COM;.EXE;.BAT;.CMD;.PY'
@@ -334,14 +334,14 @@ class EnvironmentNormalizer:
             base_env['SHELL'] = '/bin/bash'
             base_env['LC_ALL'] = 'C.UTF-8'
             base_env['LANG'] = 'C.UTF-8'
-        
+
         return base_env
-    
+
     def create_activation_script(self, venv_path: Path) -> dict:
         """Create consistent activation scripts"""
-        
+
         scripts = {}
-        
+
         # Unix activation
         scripts['activate.sh'] = f'''#!/bin/bash
 # DHT Normalized Activation Script
@@ -376,7 +376,7 @@ deactivate() {{
     unset -f deactivate
 }}
 '''
-        
+
         # Windows activation
         scripts['activate.bat'] = f'''@echo off
 REM DHT Normalized Activation Script
@@ -399,7 +399,7 @@ REM DHT-specific
 set DHT_ACTIVE=1
 set DHT_PROJECT_ROOT={venv_path.parent}
 '''
-        
+
         return scripts
 ```
 
@@ -421,14 +421,14 @@ set DHT_PROJECT_ROOT={venv_path.parent}
 class BinaryToolManager:
     def install_binary_tool(self, tool_name: str, version: str) -> Path:
         """Install binary tool for current platform"""
-        
+
         # Determine platform specifics
         platform_info = {
             'system': platform.system().lower(),
             'machine': platform.machine().lower(),
             'arch': 'x64' if '64' in platform.machine() else 'x86',
         }
-        
+
         # Construct download URL
         tool_urls = {
             'node': {
@@ -443,20 +443,20 @@ class BinaryToolManager:
             },
             # More tools...
         }
-        
+
         # Download and extract
         tool_dir = self.download_and_extract(tool_name, version, platform_info)
-        
+
         # Create portable wrapper
         self.create_tool_wrapper(tool_name, tool_dir)
-        
+
         return tool_dir
-    
+
     def create_tool_wrapper(self, tool_name: str, tool_dir: Path):
         """Create wrapper script for consistent tool access"""
-        
+
         wrapper_path = self.venv_bin / tool_name
-        
+
         if platform.system() == 'Windows':
             # Batch wrapper
             wrapper_path = wrapper_path.with_suffix('.bat')
@@ -470,64 +470,64 @@ export LD_LIBRARY_PATH="{tool_dir}/lib:$LD_LIBRARY_PATH"
 export DYLD_LIBRARY_PATH="{tool_dir}/lib:$DYLD_LIBRARY_PATH"
 exec "{tool_dir}/bin/{tool_name}" "$@"
 '''
-        
+
         wrapper_path.write_text(content)
         wrapper_path.chmod(0o755)
-    
+
     def verify_binary_compatibility(self, binary_path: Path) -> dict:
         """Check if binary is compatible with current platform"""
-        
+
         checks = {
             'exists': binary_path.exists(),
             'executable': os.access(binary_path, os.X_OK),
             'architecture': None,
             'dependencies': [],
         }
-        
+
         if not checks['exists']:
             return checks
-        
+
         # Check architecture
         if platform.system() == 'Linux':
-            result = subprocess.run(['file', str(binary_path)], 
+            result = subprocess.run(['file', str(binary_path)],
                                   capture_output=True, text=True)
-            
+
             if 'ELF 64-bit' in result.stdout:
                 checks['architecture'] = 'x64'
             elif 'ELF 32-bit' in result.stdout:
                 checks['architecture'] = 'x86'
-            
+
             # Check dependencies
-            ldd_result = subprocess.run(['ldd', str(binary_path)], 
+            ldd_result = subprocess.run(['ldd', str(binary_path)],
                                       capture_output=True, text=True)
-            
+
             for line in ldd_result.stdout.splitlines():
                 if 'not found' in line:
                     lib = line.split('=>')[0].strip()
                     checks['dependencies'].append({'missing': lib})
-        
+
         elif platform.system() == 'Darwin':
-            result = subprocess.run(['file', str(binary_path)], 
+            result = subprocess.run(['file', str(binary_path)],
                                   capture_output=True, text=True)
-            
+
             if 'x86_64' in result.stdout:
                 checks['architecture'] = 'x64'
             elif 'arm64' in result.stdout:
                 checks['architecture'] = 'arm64'
-            
+
             # Check dependencies
-            otool_result = subprocess.run(['otool', '-L', str(binary_path)], 
+            otool_result = subprocess.run(['otool', '-L', str(binary_path)],
                                         capture_output=True, text=True)
-            
+
             for line in otool_result.stdout.splitlines():
                 if '@rpath' in line:
                     lib = line.split()[0]
                     checks['dependencies'].append({'rpath': lib})
-        
+
         elif platform.system() == 'Windows':
             # Use dumpbin or Dependencies.exe if available
             checks['architecture'] = 'x64' if 'x64' in str(binary_path) else 'x86'
-        
+
         return checks
 ```
 
@@ -556,110 +556,110 @@ class TestOutputNormalizer:
             self._normalize_platform_errors,
             self._normalize_line_numbers,
         ]
-    
+
     def normalize_output(self, output: str) -> str:
         """Normalize test output for comparison"""
-        
+
         for normalizer in self.normalizers:
             output = normalizer(output)
-        
+
         return output
-    
+
     def _normalize_paths(self, text: str) -> str:
         """Normalize path representations"""
-        
+
         # Windows paths to Unix
         text = re.sub(r'[A-Z]:\\\\', '/', text)
         text = re.sub(r'\\\\', '/', text)
-        
+
         # Normalize home directory
         text = re.sub(r'/Users/\w+', '/home/user', text)
         text = re.sub(r'/home/\w+', '/home/user', text)
         text = re.sub(r'C:/Users/\w+', '/home/user', text)
-        
+
         # Normalize temp paths
         text = re.sub(r'/tmp/[^/\s]+', '/tmp/TEMP', text)
         text = re.sub(r'/var/folders/[^/\s]+/[^/\s]+/[^/\s]+', '/tmp/TEMP', text)
         text = re.sub(r'%TEMP%\\[^\\s]+', '/tmp/TEMP', text)
-        
+
         # Normalize venv paths
-        text = re.sub(r'\.venv[/\\](?:lib[/\\]python\d+\.\d+[/\\])?site-packages', 
+        text = re.sub(r'\.venv[/\\](?:lib[/\\]python\d+\.\d+[/\\])?site-packages',
                      '.venv/site-packages', text)
-        
+
         return text
-    
+
     def _normalize_timestamps(self, text: str) -> str:
         """Replace timestamps with placeholders"""
-        
+
         # ISO format
         text = re.sub(r'\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?',
                      '<TIMESTAMP>', text)
-        
+
         # Unix timestamps
         text = re.sub(r'\b1\d{9}\b', '<UNIX_TIME>', text)
-        
+
         # Execution times
         text = re.sub(r'\d+\.\d+s', '<TIME>s', text)
         text = re.sub(r'\d+ms', '<TIME>ms', text)
-        
+
         return text
-    
+
     def _normalize_memory(self, text: str) -> str:
         """Normalize memory addresses and sizes"""
-        
+
         # Memory addresses
         text = re.sub(r'0x[0-9a-fA-F]+', '<ADDR>', text)
-        
+
         # Memory sizes (platform-specific)
         text = re.sub(r'\d+\s*[KMG]B', '<SIZE>', text)
-        
+
         # Process IDs
         text = re.sub(r'pid[= ]\d+', 'pid=<PID>', text, flags=re.IGNORECASE)
-        
+
         return text
-    
+
     def _normalize_platform_errors(self, text: str) -> str:
         """Normalize platform-specific error messages"""
-        
+
         error_mappings = {
             # Windows -> Unix errors
             'The system cannot find the file specified': 'No such file or directory',
             'Access is denied': 'Permission denied',
             'The process cannot access the file': 'Resource temporarily unavailable',
-            
+
             # Normalize errno representations
             r'\\[Errno \d+\\]': '[Errno N]',
             r'error: \d+': 'error: N',
         }
-        
+
         for pattern, replacement in error_mappings.items():
             text = re.sub(pattern, replacement, text)
-        
+
         return text
-    
+
     def _normalize_line_numbers(self, text: str) -> str:
         """Normalize line numbers in stack traces"""
-        
+
         # Python traceback
-        text = re.sub(r'File "([^"]+)", line \d+', 
-                     lambda m: f'File "{self._normalize_paths(m.group(1))}", line N', 
+        text = re.sub(r'File "([^"]+)", line \d+',
+                     lambda m: f'File "{self._normalize_paths(m.group(1))}", line N',
                      text)
-        
+
         # Other common formats
         text = re.sub(r':\d+:\d+', ':N:N', text)  # file.py:10:5
         text = re.sub(r'@\d+:\d+', '@N:N', text)  # JavaScript
-        
+
         return text
 
 # Usage in test comparison
 def compare_test_outputs(output1: str, output2: str) -> bool:
     """Compare test outputs across platforms"""
-    
+
     normalizer = TestOutputNormalizer()
-    
+
     normalized1 = normalizer.normalize_output(output1)
     normalized2 = normalizer.normalize_output(output2)
-    
+
     if normalized1 != normalized2:
         # Generate diff for debugging
         import difflib
@@ -669,12 +669,12 @@ def compare_test_outputs(output1: str, output2: str) -> bool:
             fromfile='platform1',
             tofile='platform2'
         )
-        
+
         print("Normalized outputs differ:")
         print(''.join(diff))
-        
+
         return False
-    
+
     return True
 ```
 
@@ -690,31 +690,31 @@ def compare_test_outputs(output1: str, output2: str) -> bool:
 ```python
 class PlatformCompatibilityTest:
     """Test that verifies code works identically on all platforms"""
-    
+
     def test_cross_platform_build(self):
         """Build and verify on multiple platforms"""
-        
+
         results = {}
-        
+
         # Run on each platform (via CI or Docker)
         for platform_name in ['ubuntu', 'windows', 'macos']:
             with PlatformEnvironment(platform_name) as env:
                 # Setup
                 env.run('dhtl regenerate --strict')
-                
+
                 # Build
                 build_result = env.run('dhtl build --reproducible')
-                
+
                 # Test
                 test_result = env.run('dhtl test --deterministic')
-                
+
                 # Collect artifacts
                 results[platform_name] = {
                     'build': env.collect_artifacts('dist/*'),
                     'test_output': test_result.stdout,
                     'checksums': env.calculate_checksums(),
                 }
-        
+
         # Verify all platforms produced identical results
         self.assert_builds_identical(results)
         self.assert_tests_identical(results)

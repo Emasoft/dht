@@ -62,10 +62,7 @@ class AdvancedProcessGuardian:
 
             # Start monitoring thread
             self.monitoring = True
-            monitor_thread = threading.Thread(
-                target=self.monitor_process,
-                args=(process.pid, mem_limit)
-            )
+            monitor_thread = threading.Thread(target=self.monitor_process, args=(process.pid, mem_limit))
             monitor_thread.daemon = True
             monitor_thread.start()
 

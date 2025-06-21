@@ -26,7 +26,7 @@ class TestBashParser:
     @pytest.fixture
     def sample_bash_script(self):
         """Create a sample bash script for testing."""
-        return '''#!/bin/bash
+        return """#!/bin/bash
 # Sample bash script for testing
 
 # Global variables
@@ -87,13 +87,13 @@ case "$1" in
         echo "Stopping..."
         ;;
 esac
-'''
+"""
 
     def test_parser_initialization(self, parser):
         """Test that the parser initializes correctly."""
         assert parser is not None
-        assert hasattr(parser, 'parse_file')
-        assert hasattr(parser, 'extract_dependencies')
+        assert hasattr(parser, "parse_file")
+        assert hasattr(parser, "extract_dependencies")
 
     def test_parse_file_with_invalid_path(self, parser):
         """Test parsing with an invalid file path."""
@@ -103,7 +103,7 @@ esac
 
     def test_parse_file_returns_expected_structure(self, parser, sample_bash_script):
         """Test that parse_file returns the expected data structure."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -133,7 +133,7 @@ esac
 
     def test_extract_shebang(self, parser, sample_bash_script):
         """Test shebang extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -145,7 +145,7 @@ esac
 
     def test_extract_functions(self, parser, sample_bash_script):
         """Test function extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -159,7 +159,7 @@ esac
             # Check hello_world function
             hello_func = next(f for f in functions if f["name"] == "hello_world")
             assert hello_func is not None
-            assert "echo \"Hello, World!\"" in hello_func["body"]
+            assert 'echo "Hello, World!"' in hello_func["body"]
             assert hello_func.get("local_vars", []) == []
 
             # Check setup_environment function
@@ -173,7 +173,7 @@ esac
 
     def test_extract_variables(self, parser, sample_bash_script):
         """Test variable extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -205,7 +205,7 @@ esac
 
     def test_extract_exports(self, parser, sample_bash_script):
         """Test export statement extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -236,7 +236,7 @@ esac
 
     def test_extract_sourced_files(self, parser, sample_bash_script):
         """Test sourced file extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -257,7 +257,7 @@ esac
 
     def test_extract_commands(self, parser, sample_bash_script):
         """Test command extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -281,7 +281,7 @@ esac
 
     def test_extract_dependencies(self, parser, sample_bash_script):
         """Test dependency extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -302,7 +302,7 @@ esac
 
     def test_extract_control_structures(self, parser, sample_bash_script):
         """Test control structure extraction."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
             temp_path = Path(f.name)
 
@@ -323,7 +323,7 @@ esac
 
     def test_parse_empty_file(self, parser):
         """Test parsing an empty file."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write("")
             temp_path = Path(f.name)
 
@@ -341,7 +341,7 @@ esac
 
     def test_parse_file_with_syntax_errors(self, parser):
         """Test parsing a file with bash syntax errors."""
-        broken_script = '''#!/bin/bash
+        broken_script = """#!/bin/bash
 # Broken script
 
 function missing_closing_brace {
@@ -353,8 +353,8 @@ VAR=value without quotes containing spaces
 if [ condition ]
     echo "Missing then"
 fi
-'''
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+"""
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(broken_script)
             temp_path = Path(f.name)
 
@@ -373,7 +373,7 @@ fi
 
     def test_variable_type_inference(self, parser):
         """Test variable type inference."""
-        script = '''#!/bin/bash
+        script = """#!/bin/bash
 STRING_VAR="hello"
 NUMBER_VAR=42
 NEGATIVE_NUM=-5
@@ -388,8 +388,8 @@ CMD_SUB=$(date)
 BACKTICK_SUB=`hostname`
 VAR_REF=$OTHER_VAR
 EMPTY_VAR=
-'''
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+"""
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
 
@@ -417,7 +417,7 @@ EMPTY_VAR=
 
     def test_comments_extraction(self, parser):
         """Test comment extraction."""
-        script = '''#!/bin/bash
+        script = """#!/bin/bash
 # This is a header comment
 # It spans multiple lines
 
@@ -430,8 +430,8 @@ do_something() {
 # TODO: Add more features
 # FIXME: Fix this bug
 # NOTE: Important information
-'''
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+"""
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
 
@@ -457,7 +457,7 @@ do_something() {
 
     def test_complex_function_parsing(self, parser):
         """Test parsing of complex function definitions."""
-        script = '''#!/bin/bash
+        script = """#!/bin/bash
 
 # Function with multiple parameters and complex logic
 process_files() {
@@ -486,8 +486,8 @@ function validate_args {
     [[ $# -eq 0 ]] && return 1
     return 0
 }
-'''
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+"""
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(script)
             temp_path = Path(f.name)
 

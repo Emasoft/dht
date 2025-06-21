@@ -74,7 +74,7 @@ GitHub workflows have been updated to use UV:
   run: |
     curl -LsSf https://astral.sh/uv/install.sh | sh
     python -m pip install uv
-    
+
 - name: Install dependencies
   run: |
     uv sync

@@ -9,6 +9,7 @@ import pytest
 # Assuming conftest.py provides mock_project_dir fixture
 # Assuming run_dhtl_command helper from test_dhtl_setup_init
 
+
 def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 300):
     """Helper to run dhtl commands via subprocess."""
     # Use Python implementation instead of shell script
@@ -23,7 +24,7 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
         run_env.update(env)
     # Ensure PROJECT_ROOT is set correctly for the script execution if not already mocked
     run_env["PROJECT_ROOT"] = str(cwd)
-    run_env["DHT_DIR"] = str(cwd / "DHT") # Ensure DHT_DIR points inside mock project
+    run_env["DHT_DIR"] = str(cwd / "DHT")  # Ensure DHT_DIR points inside mock project
 
     # Add the DHT project directory to PYTHONPATH so the module can be found
     dht_project_root = Path(__file__).parent.parent.parent  # tests/integration -> tests -> dht
@@ -35,23 +36,16 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
     if uv_path:
         run_env["PATH"] = f"{os.path.dirname(uv_path)}:{run_env.get('PATH', '')}"
 
-
-    process = subprocess.run(
-        cmd_list,
-        capture_output=True,
-        text=True,
-        env=run_env,
-        cwd=cwd,
-        timeout=timeout
-    )
+    process = subprocess.run(cmd_list, capture_output=True, text=True, env=run_env, cwd=cwd, timeout=timeout)
     print("STDOUT:")
     print(process.stdout)
     print("STDERR:")
     print(process.stderr)
     return process
 
+
 # --- Setup Fixture ---
-@pytest.fixture(scope="function") # Use function scope for isolation
+@pytest.fixture(scope="function")  # Use function scope for isolation
 def setup_project(mock_project_dir):
     """Fixture to run dhtl setup once per test function."""
     # Create basic pyproject.toml for setup to succeed
@@ -87,7 +81,9 @@ dev = ["pytest", "pytest-cov", "ruff", "black", "pre-commit", "tox", "uv"] # Add
     yield mock_project_dir
     # Teardown: Restore PATH if needed (though test isolation should handle this)
 
+
 # --- Test Cases ---
+
 
 @pytest.mark.integration
 def test_dhtl_lint_command(setup_project):
@@ -110,10 +106,11 @@ repos:
     # Assert
     assert result.returncode == 0
     assert "Running linters on project..." in result.stdout
-    assert "Running pre-commit hooks" in result.stdout # Check it used pre-commit
+    assert "Running pre-commit hooks" in result.stdout  # Check it used pre-commit
     assert "check-yaml" in result.stdout
     assert "Passed" in result.stdout
     assert "All linting checks passed" in result.stdout
+
 
 @pytest.mark.integration
 def test_dhtl_format_command(setup_project):
@@ -130,38 +127,43 @@ def test_dhtl_format_command(setup_project):
     # Assert
     assert result.returncode == 0
     assert "Formatting code in project..." in result.stdout
-    assert "Running ruff format..." in result.stdout # Assuming ruff is default
+    assert "Running ruff format..." in result.stdout  # Assuming ruff is default
     assert "Running ruff check --fix..." in result.stdout
     # The message changed slightly in the script
-    assert "Code formatting completed successfully" in result.stdout or "All formatting completed successfully" in result.stdout
+    assert (
+        "Code formatting completed successfully" in result.stdout
+        or "All formatting completed successfully" in result.stdout
+    )
     # Check if the file was actually changed
     new_content = badly_formatted_file.read_text()
     assert new_content != original_content
-    assert "import os" in new_content # Check for some formatting change
+    assert "import os" in new_content  # Check for some formatting change
     assert "import sys" in new_content
     assert "def my_func(x):" in new_content
+
 
 @pytest.mark.integration
 def test_dhtl_build_command(setup_project):
     """Test the 'dhtl build' command."""
     # Arrange
     dist_dir = setup_project / "dist"
-    if dist_dir.exists(): # Clean previous build
+    if dist_dir.exists():  # Clean previous build
         shutil.rmtree(dist_dir)
 
     # Act
-    result = run_dhtl_command(["build", "--no-checks"], cwd=setup_project) # Skip checks for speed
+    result = run_dhtl_command(["build", "--no-checks"], cwd=setup_project)  # Skip checks for speed
 
     # Assert
     assert result.returncode == 0
     assert "Building Python package..." in result.stdout
-    assert "Building with uv..." in result.stdout # Check it used uv
+    assert "Building with uv..." in result.stdout  # Check it used uv
     assert "Build completed successfully" in result.stdout
     assert dist_dir.is_dir()
     # Check for wheel and sdist
-    built_files = list(dist_dir.glob('*'))
+    built_files = list(dist_dir.glob("*"))
     assert any(f.name.endswith(".whl") for f in built_files), "Wheel file not found"
     assert any(f.name.endswith(".tar.gz") for f in built_files), "Source distribution not found"
+
 
 @pytest.mark.integration
 def test_dhtl_clean_command(setup_project):
@@ -191,6 +193,7 @@ def test_dhtl_clean_command(setup_project):
     # Check dirs were recreated if needed (cache dir is)
     assert cache_dir.is_dir()
 
+
 @pytest.mark.integration
 def test_dhtl_commit_command(setup_project):
     """Test the 'dhtl commit' command (basic execution)."""
@@ -214,8 +217,11 @@ def test_dhtl_commit_command(setup_project):
     assert "Changes committed successfully" in result.stdout
 
     # Verify commit exists
-    log_result = subprocess.run(["git", "log", "-1", "--pretty=%s"], cwd=setup_project, capture_output=True, text=True, check=True)
+    log_result = subprocess.run(
+        ["git", "log", "-1", "--pretty=%s"], cwd=setup_project, capture_output=True, text=True, check=True
+    )
     assert "Test commit via dhtl" in log_result.stdout
+
 
 @pytest.mark.integration
 def test_dhtl_coverage_command(setup_project):
@@ -235,13 +241,16 @@ def test_dhtl_coverage_command(setup_project):
     assert (coverage_dir / "index.html").exists()
     assert (coverage_dir / "coverage.xml").exists()
 
+
 @pytest.mark.integration
-@patch('subprocess.run')
+@patch("subprocess.run")
 def test_dhtl_publish_command(mock_subprocess, setup_project):
     """Test the 'dhtl publish' command (mocks underlying script)."""
     # Arrange
     # Mock the actual publish script to avoid network calls/git pushes
-    mock_subprocess.return_value = subprocess.CompletedProcess(args=[], returncode=0, stdout="Mock publish script executed", stderr="")
+    mock_subprocess.return_value = subprocess.CompletedProcess(
+        args=[], returncode=0, stdout="Mock publish script executed", stderr=""
+    )
     # Create a dummy publish script for dhtl to find
     publish_script = setup_project / "DHT" / "publish_to_github.sh"
     publish_script.touch(mode=0o755)
@@ -263,7 +272,7 @@ def test_dhtl_publish_command(mock_subprocess, setup_project):
 
 
 @pytest.mark.integration
-@patch('subprocess.run')
+@patch("subprocess.run")
 def test_dhtl_rebase_command(mock_subprocess, setup_project):
     """Test the 'dhtl rebase' command (mocks git and zip)."""
     # Arrange
@@ -286,21 +295,21 @@ def test_dhtl_rebase_command(mock_subprocess, setup_project):
         elif "git" in cmd[0] and "clean" in cmd:
             mock_process.stdout = "Mock clean successful"
         elif "git" in cmd[0] and "remote show origin" in cmd:
-             mock_process.stdout = "  HEAD branch: main" # Simulate default branch detection
+            mock_process.stdout = "  HEAD branch: main"  # Simulate default branch detection
         # Allow other git commands (like status, rev-parse) to pass through or mock if needed
         elif "git" in cmd[0]:
-             pass # Allow other git commands needed for setup/checks
+            pass  # Allow other git commands needed for setup/checks
         else:
             # Let other commands (like bash, echo etc.) run normally
-             original_run = subprocess.run
-             return original_run(*args, **kwargs)
+            original_run = subprocess.run
+            return original_run(*args, **kwargs)
 
         return mock_process
 
     mock_subprocess.side_effect = mock_run
 
     # Act
-    result = run_dhtl_command(["rebase", "--no-backup"], cwd=setup_project) # Skip backup for simplicity
+    result = run_dhtl_command(["rebase", "--no-backup"], cwd=setup_project)  # Skip backup for simplicity
 
     # Assert
     assert result.returncode == 0
@@ -310,25 +319,27 @@ def test_dhtl_rebase_command(mock_subprocess, setup_project):
     assert "Cleaning untracked files" in result.stdout
     assert "Local repository has been reset" in result.stdout
 
+
 @pytest.mark.integration
-@patch('subprocess.run')
+@patch("subprocess.run")
 def test_dhtl_workflows_command(mock_subprocess, setup_project):
     """Test the 'dhtl workflows' command (mocks gh)."""
+
     # Arrange
     # Mock gh commands
     def mock_run(*args, **kwargs):
         cmd = args[0]
         mock_process = subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
         if "gh" in cmd[0] and "auth status" in cmd:
-            mock_process.stdout = "Logged in" # Simulate logged in
+            mock_process.stdout = "Logged in"  # Simulate logged in
         elif "gh" in cmd[0] and "repo view" in cmd:
-            mock_process.stdout = '{"nameWithOwner": "test/repo"}' # Simulate repo found
+            mock_process.stdout = '{"nameWithOwner": "test/repo"}'  # Simulate repo found
         elif "gh" in cmd[0] and "workflow list" in cmd:
-            mock_process.stdout = 'test.yml\t123\t.github/workflows/test.yml\n' # Simulate workflow list
+            mock_process.stdout = "test.yml\t123\t.github/workflows/test.yml\n"  # Simulate workflow list
         elif "gh" in cmd[0] and "run list" in cmd:
-            mock_process.stdout = 'Run 456\tmain\tSuccess\n' # Simulate run list
+            mock_process.stdout = "Run 456\tmain\tSuccess\n"  # Simulate run list
         elif "gh" in cmd[0] and "workflow run" in cmd:
-            mock_process.stdout = 'Workflow run triggered'
+            mock_process.stdout = "Workflow run triggered"
         else:
             # Let other commands pass through
             original_run = subprocess.run
@@ -350,6 +361,7 @@ def test_dhtl_workflows_command(mock_subprocess, setup_project):
     assert result_run.returncode == 0
     assert "Triggering specific workflow 'test.yml'" in result_run.stdout
 
+
 @pytest.mark.integration
 def test_dhtl_env_command(setup_project):
     """Test the 'dhtl env' command."""
@@ -361,11 +373,12 @@ def test_dhtl_env_command(setup_project):
     # Assert
     assert result.returncode == 0
     assert "Displaying Environment Information..." in result.stdout
-    assert "Environment Report" in result.stdout # Checks if diagnostics ran and report is mentioned
+    assert "Environment Report" in result.stdout  # Checks if diagnostics ran and report is mentioned
     # Check if some key info is present (exact values depend on test env)
     assert "Platform:" in result.stdout
     assert "Project Root:" in result.stdout
-    assert "Active:" in result.stdout # Virtual Env section
+    assert "Active:" in result.stdout  # Virtual Env section
+
 
 @pytest.mark.integration
 def test_dhtl_restore_command(setup_project):
@@ -388,6 +401,7 @@ def test_dhtl_restore_command(setup_project):
     # Check if the tool was reinstalled
     assert ruff_path.exists()
 
+
 @pytest.mark.integration
 def test_dhtl_script_command(setup_project):
     """Test the 'dhtl script' command."""
@@ -402,6 +416,7 @@ def test_dhtl_script_command(setup_project):
     assert "Hello from DHT script!" in result.stdout
     assert "Args: arg1 arg2" in result.stdout
 
+
 @pytest.mark.integration
 def test_dhtl_script_command_not_found(setup_project):
     """Test 'dhtl script' when the script doesn't exist."""
@@ -409,6 +424,5 @@ def test_dhtl_script_command_not_found(setup_project):
     result = run_dhtl_command(["script", "nonexistent"], cwd=setup_project)
 
     # Assert
-    assert result.returncode == 1 # Should fail
-    assert "Script not found" in result.stderr or "Script not found" in result.stdout # Check error message
-
+    assert result.returncode == 1  # Should fail
+    assert "Script not found" in result.stderr or "Script not found" in result.stdout  # Check error message

@@ -69,11 +69,9 @@ def env_command(*args, **kwargs) -> int:
     if git_dir.exists():
         try:
             import subprocess
+
             result = subprocess.run(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                capture_output=True,
-                text=True,
-                cwd=project_root
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, cwd=project_root
             )
             if result.returncode == 0:
                 log_info(f"\nGit branch: {result.stdout.strip()}")

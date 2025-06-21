@@ -21,63 +21,32 @@ from prefect import task
 
 # Platform-specific tool mappings
 TOOL_COMMAND_MAPPINGS = {
-    "git": {
-        "darwin": ["git", "--version"],
-        "linux": ["git", "--version"],
-        "windows": ["git.exe", "--version"]
-    },
+    "git": {"darwin": ["git", "--version"], "linux": ["git", "--version"], "windows": ["git.exe", "--version"]},
     "python": {
         "darwin": ["python3", "--version"],
         "linux": ["python3", "--version"],
-        "windows": ["python.exe", "--version"]
+        "windows": ["python.exe", "--version"],
     },
     "pip": {
         "darwin": ["python3", "-m", "pip", "--version"],
         "linux": ["python3", "-m", "pip", "--version"],
-        "windows": ["python.exe", "-m", "pip", "--version"]
+        "windows": ["python.exe", "-m", "pip", "--version"],
     },
-    "uv": {
-        "darwin": ["uv", "--version"],
-        "linux": ["uv", "--version"],
-        "windows": ["uv.exe", "--version"]
-    },
+    "uv": {"darwin": ["uv", "--version"], "linux": ["uv", "--version"], "windows": ["uv.exe", "--version"]},
     "docker": {
         "darwin": ["docker", "--version"],
         "linux": ["docker", "--version"],
-        "windows": ["docker.exe", "--version"]
+        "windows": ["docker.exe", "--version"],
     },
-    "node": {
-        "darwin": ["node", "--version"],
-        "linux": ["node", "--version"],
-        "windows": ["node.exe", "--version"]
-    },
-    "npm": {
-        "darwin": ["npm", "--version"],
-        "linux": ["npm", "--version"],
-        "windows": ["npm.exe", "--version"]
-    }
+    "node": {"darwin": ["node", "--version"], "linux": ["node", "--version"], "windows": ["node.exe", "--version"]},
+    "npm": {"darwin": ["npm", "--version"], "linux": ["npm", "--version"], "windows": ["npm.exe", "--version"]},
 }
 
 # Platform-specific path separators and conventions
 PATH_CONVENTIONS = {
-    "darwin": {
-        "separator": ":",
-        "home": "$HOME",
-        "config_dir": "$HOME/.config",
-        "cache_dir": "$HOME/.cache"
-    },
-    "linux": {
-        "separator": ":",
-        "home": "$HOME",
-        "config_dir": "$HOME/.config",
-        "cache_dir": "$HOME/.cache"
-    },
-    "windows": {
-        "separator": ";",
-        "home": "%USERPROFILE%",
-        "config_dir": "%APPDATA%",
-        "cache_dir": "%LOCALAPPDATA%"
-    }
+    "darwin": {"separator": ":", "home": "$HOME", "config_dir": "$HOME/.config", "cache_dir": "$HOME/.cache"},
+    "linux": {"separator": ":", "home": "$HOME", "config_dir": "$HOME/.config", "cache_dir": "$HOME/.cache"},
+    "windows": {"separator": ";", "home": "%USERPROFILE%", "config_dir": "%APPDATA%", "cache_dir": "%LOCALAPPDATA%"},
 }
 
 
@@ -88,7 +57,7 @@ def get_platform_info() -> dict[str, str]:
         "architecture": platform.machine().lower(),
         "python_version": platform.python_version(),
         "platform": platform.platform(),
-        "processor": platform.processor() or "unknown"
+        "processor": platform.processor() or "unknown",
     }
 
 
@@ -104,7 +73,7 @@ def normalize_platform_name(platform_name: str) -> str:
         "windows": "windows",
         "win32": "windows",
         "win64": "windows",
-        "cygwin": "windows"
+        "cygwin": "windows",
     }
     return platform_map.get(platform_name.lower(), platform_name.lower())
 
@@ -124,7 +93,7 @@ def normalize_path(path: str) -> str:
         path_obj = path_obj.resolve()
 
     # Use forward slashes on all platforms for consistency
-    return str(path_obj).replace('\\', '/')
+    return str(path_obj).replace("\\", "/")
 
 
 def get_tool_command(tool: str, platform_name: str | None = None) -> list[str] | None:
@@ -140,8 +109,7 @@ def get_tool_command(tool: str, platform_name: str | None = None) -> list[str] |
 
 @task(name="verify_platform_compatibility")
 def verify_platform_compatibility(
-    snapshot_platform: str,
-    current_platform: str | None = None
+    snapshot_platform: str, current_platform: str | None = None
 ) -> tuple[bool, list[str]]:
     """
     Verify platform compatibility between snapshot and current system.
@@ -169,8 +137,7 @@ def verify_platform_compatibility(
 
     if (snapshot_platform, current_platform) in compatible_pairs:
         warnings.append(
-            f"Platform differs ({snapshot_platform} -> {current_platform}), "
-            "but environments are generally compatible"
+            f"Platform differs ({snapshot_platform} -> {current_platform}), but environments are generally compatible"
         )
         return True, warnings
 

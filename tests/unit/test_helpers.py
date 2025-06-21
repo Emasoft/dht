@@ -30,9 +30,7 @@ from typing import Any
 from unittest.mock import MagicMock
 
 # Platform uname mock that matches the actual structure
-PlatformUname = namedtuple(
-    "uname_result", ["system", "node", "release", "version", "machine", "processor"]
-)
+PlatformUname = namedtuple("uname_result", ["system", "node", "release", "version", "machine", "processor"])
 
 
 def create_platform_uname_mock(
@@ -177,9 +175,7 @@ def create_project_structure(
     return metadata
 
 
-def create_base_structure(
-    project_dir: Path, project_name: str, python_version: str, metadata: dict
-):
+def create_base_structure(project_dir: Path, project_name: str, python_version: str, metadata: dict):
     """Create base project structure common to all project types."""
     # Create pyproject.toml
     pyproject_content = f'''[build-system]
@@ -1442,9 +1438,7 @@ save_every: 5
         "nbformat": 4,
         "nbformat_minor": 4,
     }
-    (notebooks_dir / "exploration.ipynb").write_text(
-        json.dumps(notebook_content, indent=2)
-    )
+    (notebooks_dir / "exploration.ipynb").write_text(json.dumps(notebook_content, indent=2))
     metadata["files"].append("notebooks/exploration.ipynb")
 
 
@@ -2287,9 +2281,7 @@ def create_temporary_project(
     if project_name is None:
         project_name = f"test_{project_type}_project"
 
-    metadata = create_project_structure(
-        temp_dir, project_type=project_type, project_name=project_name, **kwargs
-    )
+    metadata = create_project_structure(temp_dir, project_type=project_type, project_name=project_name, **kwargs)
 
     return metadata["root"], metadata
 
@@ -2303,9 +2295,7 @@ def cleanup_temporary_project(project_path: Path) -> None:
 # Additional utility functions for tests
 
 
-def run_in_project(
-    project_path: Path, command: str | list[str], **kwargs
-) -> subprocess.CompletedProcess:
+def run_in_project(project_path: Path, command: str | list[str], **kwargs) -> subprocess.CompletedProcess:
     """Run a command in a project directory."""
     if isinstance(command, str):
         command = command.split()
@@ -2362,4 +2352,3 @@ dev = {json.dumps(dev_dependencies)}
     pyproject_path = project_dir / "pyproject.toml"
     pyproject_path.write_text(content)
     return pyproject_path
-

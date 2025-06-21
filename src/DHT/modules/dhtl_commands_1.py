@@ -74,12 +74,7 @@ def restore_command(*args, **kwargs) -> int:
         # Run uv sync
         sync_cmd = [uv_cmd, "sync"]
 
-        exit_code = run_with_guardian(
-            sync_cmd[0],
-            "uv-sync",
-            mem_limit,
-            *sync_cmd[1:]
-        )
+        exit_code = run_with_guardian(sync_cmd[0], "uv-sync", mem_limit, *sync_cmd[1:])
 
         if exit_code == 0:
             log_success("Python dependencies restored successfully!")
@@ -115,12 +110,7 @@ def restore_command(*args, **kwargs) -> int:
         # Install from requirements.txt
         install_cmd = [pip_cmd, "install", "-r", str(requirements_txt)]
 
-        exit_code = run_with_guardian(
-            install_cmd[0],
-            "pip-install",
-            mem_limit,
-            *install_cmd[1:]
-        )
+        exit_code = run_with_guardian(install_cmd[0], "pip-install", mem_limit, *install_cmd[1:])
 
         if exit_code == 0:
             log_success("Python dependencies restored successfully!")
@@ -200,4 +190,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['restore_command', 'placeholder_command']
+__all__ = ["restore_command", "placeholder_command"]

@@ -28,10 +28,7 @@ from DHT.modules.uv_task_utils import find_uv_executable, get_logger
     retries=2,
     retry_delay_seconds=RETRY_DELAYS,
 )
-def build_project(
-    project_path: Path,
-    output_dir: Path | None = None
-) -> dict[str, Any]:
+def build_project(project_path: Path, output_dir: Path | None = None) -> dict[str, Any]:
     """
     Build Python project using UV.
 
@@ -58,7 +55,7 @@ def build_project(
     result = run_with_guardian(
         command=args,
         limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["build_project"], timeout=BUILD_TIMEOUT),
-        cwd=str(project_path)
+        cwd=str(project_path),
     )
 
     # Determine output directory
@@ -67,5 +64,5 @@ def build_project(
     return {
         "success": result.return_code == 0,
         "output": result.stdout if result.return_code == 0 else result.stderr,
-        "artifacts": [str(f) for f in build_dir.glob("*")] if result.return_code == 0 else []
+        "artifacts": [str(f) for f in build_dir.glob("*")] if result.return_code == 0 else [],
     }

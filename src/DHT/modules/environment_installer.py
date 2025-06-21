@@ -41,15 +41,8 @@ def _get_logger():
 class EnvironmentInstaller:
     """Handles environment installation and setup."""
 
-    @task(
-        name="install_python_environment",
-        description="Install Python environment based on configuration"
-    )
-    def install_python_environment(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    @task(name="install_python_environment", description="Install Python environment based on configuration")
+    def install_python_environment(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Install Python environment based on configuration.
 
@@ -79,17 +72,13 @@ class EnvironmentInstaller:
 
             # Create virtual environment
             venv_path = create_virtual_environment(
-                project_path=config.project_path,
-                python_version=config.python_version
+                project_path=config.project_path, python_version=config.python_version
             )
             logger.info(f"Created virtual environment at {venv_path}")
             result.steps_completed.append("create_virtual_environment")
 
             # Install dependencies
-            deps_result = install_dependencies(
-                project_path=config.project_path,
-                dev=True
-            )
+            deps_result = install_dependencies(project_path=config.project_path, dev=True)
 
             if not deps_result["success"]:
                 result.warnings.append(f"Dependency installation issues: {deps_result.get('message')}")
@@ -114,44 +103,35 @@ class EnvironmentInstaller:
             result.steps_failed.append("install_python_environment")
             return False
 
-    def _install_with_pip(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    def _install_with_pip(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Fallback installation using system pip."""
         try:
             logger = _get_logger()
         except Exception:
             # Not in a Prefect context, use standard logging
             import logging
+
             logger = logging.getLogger(__name__)
 
         try:
             # Create virtual environment with venv
             venv_path = config.project_path / ".venv"
 
-            subprocess.run([
-                sys.executable, "-m", "venv", str(venv_path)
-            ], check=True)
+            subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
 
             # Determine pip path
-            if os.name == 'nt':  # Windows
+            if os.name == "nt":  # Windows
                 pip_path = venv_path / "Scripts" / "pip.exe"
             else:
                 pip_path = venv_path / "bin" / "pip"
 
             # Upgrade pip
-            subprocess.run([
-                str(pip_path), "install", "--upgrade", "pip"
-            ], check=True)
+            subprocess.run([str(pip_path), "install", "--upgrade", "pip"], check=True)
 
             # Install packages
             all_packages = config.python_packages + config.dev_packages
             if all_packages:
-                subprocess.run([
-                    str(pip_path), "install"
-                ] + all_packages, check=True)
+                subprocess.run([str(pip_path), "install"] + all_packages, check=True)
 
             logger.info(f"Installed Python environment with pip at {venv_path}")
             result.steps_completed.append("create_virtual_environment_pip")
@@ -173,11 +153,7 @@ class EnvironmentInstaller:
             # Use UV to install packages
             for package in packages:
                 try:
-                    add_dependency(
-                        project_path=project_path,
-                        package=package,
-                        dev=True
-                    )
+                    add_dependency(project_path=project_path, package=package, dev=True)
                     logger.info(f"Installed {package}")
                 except Exception as e:
                     logger.warning(f"Failed to install {package}: {e}")
@@ -201,7 +177,7 @@ class EnvironmentInstaller:
             "flake8": "flake8",
             "pylint": "pylint",
             "bandit": "bandit",
-            "safety": "safety"
+            "safety": "safety",
         }
 
         packages_to_install = []
@@ -212,16 +188,8 @@ class EnvironmentInstaller:
         if packages_to_install:
             self._install_additional_packages(project_path, packages_to_install)
 
-    @task(
-        name="install_system_packages",
-        description="Install system-level packages"
-    )
-    def install_system_packages(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult,
-        platform: str
-    ) -> bool:
+    @task(name="install_system_packages", description="Install system-level packages")
+    def install_system_packages(self, config: EnvironmentConfig, result: ConfigurationResult, platform: str) -> bool:
         """
         Install system-level packages.
 
@@ -241,14 +209,8 @@ class EnvironmentInstaller:
 
         # Platform-specific package managers
         package_managers = {
-            "darwin": {
-                "check": ["brew", "--version"],
-                "install": ["brew", "install"]
-            },
-            "linux": {
-                "check": ["apt-get", "--version"],
-                "install": ["sudo", "apt-get", "install", "-y"]
-            }
+            "darwin": {"check": ["brew", "--version"], "install": ["brew", "install"]},
+            "linux": {"check": ["apt-get", "--version"], "install": ["sudo", "apt-get", "install", "-y"]},
         }
 
         if platform not in package_managers:
@@ -284,15 +246,8 @@ class EnvironmentInstaller:
 
         return len(failed_packages) == 0
 
-    @task(
-        name="run_post_install_commands",
-        description="Run post-installation commands"
-    )
-    def run_post_install_commands(
-        self,
-        config: EnvironmentConfig,
-        result: ConfigurationResult
-    ) -> bool:
+    @task(name="run_post_install_commands", description="Run post-installation commands")
+    def run_post_install_commands(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Run post-installation commands.
 
@@ -312,12 +267,7 @@ class EnvironmentInstaller:
         for command in config.post_install_commands:
             try:
                 # Run command in project directory
-                subprocess.run(
-                    command,
-                    shell=True,
-                    cwd=config.project_path,
-                    check=True
-                )
+                subprocess.run(command, shell=True, cwd=config.project_path, check=True)
                 logger.info(f"Executed post-install command: {command}")
             except Exception as e:
                 logger.warning(f"Failed to execute command '{command}': {e}")

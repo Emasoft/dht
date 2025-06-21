@@ -50,14 +50,7 @@ def run_pre_build_commands(commands: list, project_path: Path) -> bool:
     for cmd in commands:
         logger.info(f"Running pre-build: {cmd}")
         try:
-            result = subprocess.run(
-                cmd,
-                shell=True,
-                cwd=str(project_path),
-                capture_output=True,
-                text=True,
-                timeout=300
-            )
+            result = subprocess.run(cmd, shell=True, cwd=str(project_path), capture_output=True, text=True, timeout=300)
             if result.returncode != 0:
                 logger.error(f"Pre-build command failed: {cmd}")
                 logger.error(result.stderr)
@@ -88,17 +81,19 @@ def run_build_commands(commands: list, project_path: Path) -> dict[str, Any]:
                 cwd=str(project_path),
                 capture_output=True,
                 text=True,
-                timeout=900  # 15 minutes for complex builds
+                timeout=900,  # 15 minutes for complex builds
             )
             duration = time.time() - start_time
 
-            results.append({
-                "command": cmd,
-                "success": result.returncode == 0,
-                "stdout": result.stdout,
-                "stderr": result.stderr,
-                "duration": duration
-            })
+            results.append(
+                {
+                    "command": cmd,
+                    "success": result.returncode == 0,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "duration": duration,
+                }
+            )
 
             if result.returncode != 0:
                 logger.error(f"Build command failed: {cmd}")
@@ -111,19 +106,18 @@ def run_build_commands(commands: list, project_path: Path) -> dict[str, Any]:
 
         except subprocess.TimeoutExpired:
             logger.error(f"Build command timed out: {cmd}")
-            results.append({
-                "command": cmd,
-                "success": False,
-                "stdout": "",
-                "stderr": "Command timed out after 900 seconds",
-                "duration": 900
-            })
+            results.append(
+                {
+                    "command": cmd,
+                    "success": False,
+                    "stdout": "",
+                    "stderr": "Command timed out after 900 seconds",
+                    "duration": 900,
+                }
+            )
             break
 
-    return {
-        "all_success": all(r["success"] for r in results),
-        "results": results
-    }
+    return {"all_success": all(r["success"] for r in results), "results": results}
 
 
 @task(name="check_artifacts")
@@ -147,11 +141,7 @@ def check_artifacts(artifacts_path: str | None, project_path: Path) -> list:
 
 
 @flow(name="universal_build")
-def universal_build_flow(
-    project_path: str,
-    skip_checks: bool = False,
-    verbose: bool = False
-) -> dict[str, Any]:
+def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: bool = False) -> dict[str, Any]:
     """
     Universal build flow for any project type.
 
@@ -166,11 +156,7 @@ def universal_build_flow(
     logger = get_run_logger()
     project_path = Path(project_path).resolve()
 
-    console.print(Panel.fit(
-        f"🏗️  DHT Universal Build System\n"
-        f"📁 Project: {project_path.name}",
-        style="bold blue"
-    ))
+    console.print(Panel.fit(f"🏗️  DHT Universal Build System\n📁 Project: {project_path.name}", style="bold blue"))
 
     # 1. Detect build configuration
     console.print("\n[yellow]🔍 Detecting project type...[/yellow]")
@@ -185,11 +171,7 @@ def universal_build_flow(
             for suggestion in config["suggestions"]:
                 console.print(f"  [dim]•[/dim] {suggestion}")
 
-        return {
-            "success": True,
-            "can_build": False,
-            "reason": config["reason"]
-        }
+        return {"success": True, "can_build": False, "reason": config["reason"]}
 
     # 2. Display build plan
     console.print("\n[green]✅ Build configuration detected![/green]")
@@ -212,10 +194,7 @@ def universal_build_flow(
         console.print("\n[yellow]📋 Running pre-build steps...[/yellow]")
         success = run_pre_build_commands(pre_commands, project_path)
         if not success:
-            return {
-                "success": False,
-                "error": "Pre-build commands failed"
-            }
+            return {"success": False, "error": "Pre-build commands failed"}
 
     # 4. Clean previous artifacts
     if config.get("artifacts_path"):
@@ -223,6 +202,7 @@ def universal_build_flow(
         if artifacts_dir.exists():
             console.print(f"\n[yellow]🧹 Cleaning {config['artifacts_path']}...[/yellow]")
             import shutil
+
             shutil.rmtree(artifacts_dir)
 
     # 5. Run build commands
@@ -230,11 +210,7 @@ def universal_build_flow(
     build_results = run_build_commands(config["build_commands"], project_path)
 
     if not build_results["all_success"]:
-        return {
-            "success": False,
-            "error": "Build failed",
-            "details": build_results["results"]
-        }
+        return {"success": False, "error": "Build failed", "details": build_results["results"]}
 
     # 6. Check artifacts
     artifacts = []
@@ -252,12 +228,14 @@ def universal_build_flow(
     # 7. Summary
     total_duration = sum(r["duration"] for r in build_results["results"])
 
-    console.print(Panel.fit(
-        f"[green]✅ Build completed successfully![/green]\n"
-        f"⏱️  Total time: {total_duration:.1f}s\n"
-        f"📦 Artifacts: {len(artifacts)}",
-        style="bold green"
-    ))
+    console.print(
+        Panel.fit(
+            f"[green]✅ Build completed successfully![/green]\n"
+            f"⏱️  Total time: {total_duration:.1f}s\n"
+            f"📦 Artifacts: {len(artifacts)}",
+            style="bold green",
+        )
+    )
 
     # 8. Check for GitHub Actions workflows
     act_integration = ActIntegration(project_path)
@@ -277,7 +255,7 @@ def universal_build_flow(
         "duration": total_duration,
         "artifacts": artifacts,
         "artifacts_count": len(artifacts),
-        "has_workflows": act_integration.has_workflows()
+        "has_workflows": act_integration.has_workflows(),
     }
 
 
@@ -293,11 +271,7 @@ def main():
     args = parser.parse_args()
 
     # Run the build flow
-    result = universal_build_flow(
-        project_path=args.path,
-        skip_checks=args.no_checks,
-        verbose=args.verbose
-    )
+    result = universal_build_flow(project_path=args.path, skip_checks=args.no_checks, verbose=args.verbose)
 
     # Exit with appropriate code
     sys.exit(0 if result["success"] else 1)

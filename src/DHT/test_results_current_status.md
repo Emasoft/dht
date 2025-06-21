@@ -25,7 +25,7 @@
 ### ⚠️ Partially Passing Categories
 1. **Environment Configurator**: ~35/40 tests passing
    - Black config generation (missing tomli_w)
-   - Gitignore generation 
+   - Gitignore generation
    - Dockerfile generation
    - Integration test
 

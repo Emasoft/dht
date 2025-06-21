@@ -12,7 +12,6 @@ DHT Dhtl Commands 3 Module.
 Converted from shell to Python for the pure Python DHT implementation.
 """
 
-
 from .dhtl_error_handling import log_info, log_warning
 
 
@@ -27,4 +26,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['placeholder_command']
+__all__ = ["placeholder_command"]

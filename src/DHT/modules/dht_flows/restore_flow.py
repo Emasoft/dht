@@ -121,9 +121,7 @@ def create_virtual_environment(venv_path: Path, python_version: str | None = Non
     # Create virtual environment
     logger.info(f"Creating virtual environment at {venv_path}")
     created_venv_path = uv_manager.create_venv(
-        project_path=venv_path.parent,
-        python_version=python_version,
-        venv_path=venv_path
+        project_path=venv_path.parent, python_version=python_version, venv_path=venv_path
     )
 
     return venv_path

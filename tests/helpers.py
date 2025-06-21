@@ -45,14 +45,7 @@ def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=Tru
         cwd = Path(cwd)
 
     # Run the command
-    result = subprocess.run(
-        cmd,
-        cwd=str(cwd),
-        env=run_env,
-        check=check,
-        capture_output=capture_output,
-        text=True
-    )
+    result = subprocess.run(cmd, cwd=str(cwd), env=run_env, check=check, capture_output=capture_output, text=True)
 
     return result
 
@@ -65,11 +58,12 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
     """
     # Determine the source DHT directory (where the original dhtl.sh and modules are)
     # This assumes tests are run from the project root or DHT_SOURCE_DIR is set.
-    source_dht_dir = Path(os.environ.get("DHT_SOURCE_DIR", Path(__file__).parent.parent.parent)) # Assumes helpers.py is in DHT/tests/
+    source_dht_dir = Path(
+        os.environ.get("DHT_SOURCE_DIR", Path(__file__).parent.parent.parent)
+    )  # Assumes helpers.py is in DHT/tests/
     if not (source_dht_dir / "dhtl.sh").exists():
         # Fallback if DHT_SOURCE_DIR is not set and script is not in expected location
         source_dht_dir = Path(os.environ.get("DHT_DIR", source_dht_dir))
-
 
     with tempfile.TemporaryDirectory() as temp_project_root_str:
         temp_project_root = Path(temp_project_root_str)
@@ -108,7 +102,7 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
         effective_cwd = Path(cwd) if cwd else temp_project_root
         if not effective_cwd.is_absolute():
             effective_cwd = temp_project_root / effective_cwd
-        effective_cwd.mkdir(parents=True, exist_ok=True) # Ensure CWD exists
+        effective_cwd.mkdir(parents=True, exist_ok=True)  # Ensure CWD exists
 
         # Prepare environment
         run_env = os.environ.copy()
@@ -116,16 +110,12 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
             run_env.update(env)
         # Ensure PROJECT_ROOT is set correctly for the dhtl script within the temp env
         run_env["PROJECT_ROOT"] = str(temp_project_root)
-        run_env["DHT_DIR"] = str(temp_dht_dir) # dhtl.sh expects DHT_DIR to be its own location
+        run_env["DHT_DIR"] = str(temp_dht_dir)  # dhtl.sh expects DHT_DIR to be its own location
 
         return subprocess.run(
-            full_command,
-            cwd=str(effective_cwd),
-            env=run_env,
-            check=check,
-            capture_output=capture_output,
-            text=True
+            full_command, cwd=str(effective_cwd), env=run_env, check=check, capture_output=capture_output, text=True
         )
+
 
 def run_bash_command(command, cwd=None, env=None):
     """
@@ -139,19 +129,13 @@ def run_bash_command(command, cwd=None, env=None):
     Returns:
         str: The command output (both stdout and stderr combined)
     """
-    result = subprocess.run(
-        ["bash", "-c", command],
-        cwd=cwd,
-        env=env,
-        check=True,
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["bash", "-c", command], cwd=cwd, env=env, check=True, capture_output=True, text=True)
     # Combine stdout and stderr for tests that expect error messages
     output = result.stdout
     if result.stderr:
         output += result.stderr
     return output.strip()
+
 
 def create_mock_file(directory, filename, content=""):
     """Create a mock file with the given content."""
@@ -159,6 +143,7 @@ def create_mock_file(directory, filename, content=""):
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text(content)
     return file_path
+
 
 def mock_bash_script(script_content):
     """
@@ -179,6 +164,7 @@ def mock_bash_script(script_content):
     os.chmod(script_path, 0o755)
     return script_path
 
+
 def verify_dhtl_components(project_dir):
     """
     Verify that the essential DHT components are present in the project.
@@ -194,7 +180,7 @@ def verify_dhtl_components(project_dir):
         "DHT/README.md",
         "DHT/modules/core.sh",
         "DHT/modules/environment.sh",
-        "DHT/modules/commands.sh"
+        "DHT/modules/commands.sh",
     ]
 
     for file_path in required_files:

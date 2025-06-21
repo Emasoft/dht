@@ -25,12 +25,13 @@ os.environ["PREFECT_LOGGING_TO_API_ENABLED"] = "False"
 os.environ["PREFECT_API_REQUEST_TIMEOUT"] = "30"
 os.environ["PYTHONWARNINGS"] = "ignore"
 
+
 # Pytest hooks to reduce output
 def pytest_configure(config):
     """Configure pytest for minimal output."""
     # Override verbosity settings
     config.option.verbose = -1  # Minimal verbosity
-    config.option.tb = "no"     # No tracebacks
+    config.option.tb = "no"  # No tracebacks
     config.option.showlocals = False
     config.option.showcapture = "no"
 

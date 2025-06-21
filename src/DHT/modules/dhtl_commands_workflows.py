@@ -463,4 +463,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['workflows_command', 'placeholder_command']
+__all__ = ["workflows_command", "placeholder_command"]

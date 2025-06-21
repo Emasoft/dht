@@ -28,12 +28,7 @@ class ReproductionArtifactCreator:
         """Initialize the artifact creator."""
         self.version_critical_tools = version_critical_tools
 
-    def create_reproduction_artifacts(
-        self,
-        snapshot: EnvironmentSnapshot,
-        results: dict[str, Any],
-        output_dir: Path
-    ):
+    def create_reproduction_artifacts(self, snapshot: EnvironmentSnapshot, results: dict[str, Any], output_dir: Path):
         """Create Prefect artifacts with reproduction information."""
         # Create reproduction guide markdown
         guide = self._generate_reproduction_guide(snapshot, results)
@@ -41,9 +36,7 @@ class ReproductionArtifactCreator:
         # Create markdown artifact (replace underscores with dashes for key)
         artifact_key = f"reproduction-guide-{snapshot.snapshot_id.replace('_', '-')}"
         create_markdown_artifact(
-            key=artifact_key,
-            markdown=guide,
-            description=f"Environment reproduction guide for {snapshot.snapshot_id}"
+            key=artifact_key, markdown=guide, description=f"Environment reproduction guide for {snapshot.snapshot_id}"
         )
 
         # Create tool versions table
@@ -52,20 +45,14 @@ class ReproductionArtifactCreator:
         # Replace underscores with dashes for key
         table_key = f"tool-versions-{snapshot.snapshot_id.replace('_', '-')}"
         create_table_artifact(
-            key=table_key,
-            table=tool_data,
-            description=f"Tool versions for snapshot {snapshot.snapshot_id}"
+            key=table_key, table=tool_data, description=f"Tool versions for snapshot {snapshot.snapshot_id}"
         )
 
         # Save reproduction guide to file
         guide_file = output_dir / f"{snapshot.snapshot_id}_reproduction_guide.md"
-        guide_file.write_text(guide, encoding='utf-8')
+        guide_file.write_text(guide, encoding="utf-8")
 
-    def _generate_reproduction_guide(
-        self,
-        snapshot: EnvironmentSnapshot,
-        results: dict[str, Any]
-    ) -> str:
+    def _generate_reproduction_guide(self, snapshot: EnvironmentSnapshot, results: dict[str, Any]) -> str:
         """Generate markdown reproduction guide."""
         guide = f"""# Environment Reproduction Guide
 
@@ -126,12 +113,7 @@ class ReproductionArtifactCreator:
         for tool, version in snapshot.tool_versions.items():
             path = snapshot.tool_paths.get(tool, "")
             critical = "Yes" if tool in self.version_critical_tools else "No"
-            tool_data.append({
-                "Tool": tool,
-                "Version": version,
-                "Path": path,
-                "Critical": critical
-            })
+            tool_data.append({"Tool": tool, "Version": version, "Path": path, "Critical": critical})
         return tool_data
 
 

@@ -92,6 +92,7 @@ def clone_command(*args, **kwargs) -> int:
         log_info("Found .dhtconfig - running dhtl setup...")
         os.chdir(clone_dir)
         from .dhtl_commands import DHTLCommands
+
         commands = DHTLCommands()
         result = commands.setup(path=str(clone_dir))
         if result.get("success"):
@@ -130,11 +131,7 @@ def fork_command(*args, **kwargs) -> int:
     # If no repo URL, try to fork current repo
     if not repo_url:
         # Check if we're in a git repo
-        result = subprocess.run(
-            ["git", "remote", "get-url", "origin"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["git", "remote", "get-url", "origin"], capture_output=True, text=True)
 
         if result.returncode == 0:
             repo_url = result.stdout.strip()
@@ -173,6 +170,7 @@ def fork_command(*args, **kwargs) -> int:
                 log_info("Found .dhtconfig - running dhtl setup...")
                 os.chdir(clone_dir)
                 from .dhtl_commands import DHTLCommands
+
                 commands = DHTLCommands()
                 result = commands.setup(path=str(clone_dir))
                 if result.get("success"):
@@ -227,7 +225,7 @@ def extract_owner_repo(url: str) -> str | None:
     # Handle various GitHub URL formats
     patterns = [
         r"github\.com[/:]([^/]+/[^/]+?)(?:\.git)?$",
-        r"^([^/]+/[^/]+)$"  # Already in owner/repo format
+        r"^([^/]+/[^/]+)$",  # Already in owner/repo format
     ]
 
     for pattern in patterns:

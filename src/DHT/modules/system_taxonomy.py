@@ -42,12 +42,12 @@ def get_current_platform() -> str:
     system = platform.system()
 
     # Normalize platform names
-    if system == 'Darwin':
-        return 'macos'
-    elif system == 'Linux':
-        return 'linux'
-    elif system == 'Windows':
-        return 'windows'
+    if system == "Darwin":
+        return "macos"
+    elif system == "Linux":
+        return "linux"
+    elif system == "Windows":
+        return "windows"
     else:
         # Return as-is but lowercase for unknown platforms
         return system.lower()
@@ -147,28 +147,23 @@ def get_category_for_platform(category_name: str, platform_name: str = None) -> 
     category = copy.deepcopy(PRACTICAL_TAXONOMY[category_name])
 
     # Handle nested categories (like package_managers)
-    if 'categories' in category:
-        for subcat_name, subcat_data in category['categories'].items():
-            if 'tools' in subcat_data:
-                subcat_data['tools'] = filter_tools_for_platform(
-                    subcat_data['tools'], platform_name
-                )
+    if "categories" in category:
+        for subcat_name, subcat_data in category["categories"].items():
+            if "tools" in subcat_data:
+                subcat_data["tools"] = filter_tools_for_platform(subcat_data["tools"], platform_name)
             # Handle language-specific package managers (different structure)
-            elif subcat_name == 'language' and isinstance(subcat_data, dict):
+            elif subcat_name == "language" and isinstance(subcat_data, dict):
                 # The language subcategory has a different structure:
                 # It has language names as keys instead of 'tools'
                 for lang_name, lang_tools in subcat_data.items():
-                    if lang_name != 'description' and isinstance(lang_tools, list):
+                    if lang_name != "description" and isinstance(lang_tools, list):
                         # Filter list of tools
                         filtered_tools = [
-                            tool for tool in lang_tools
-                            if is_tool_available_on_platform(tool, platform_name)
+                            tool for tool in lang_tools if is_tool_available_on_platform(tool, platform_name)
                         ]
                         subcat_data[lang_name] = filtered_tools
-    elif 'tools' in category:
-        category['tools'] = filter_tools_for_platform(
-            category['tools'], platform_name
-        )
+    elif "tools" in category:
+        category["tools"] = filter_tools_for_platform(category["tools"], platform_name)
 
     return category
 
@@ -185,55 +180,55 @@ def get_tool_fields(category_name: str, tool_name: str) -> list[str]:
         List[str]: List of field names available for the tool
     """
     # For single category names, search directly
-    if '.' not in category_name:
+    if "." not in category_name:
         if category_name in PRACTICAL_TAXONOMY:
             category_data = PRACTICAL_TAXONOMY[category_name]
 
             # Check direct tools
-            if 'tools' in category_data and tool_name in category_data['tools']:
-                return category_data['tools'][tool_name]
+            if "tools" in category_data and tool_name in category_data["tools"]:
+                return category_data["tools"][tool_name]
 
             # Check nested categories
-            if 'categories' in category_data:
-                for subcat_name, subcat_data in category_data['categories'].items():
+            if "categories" in category_data:
+                for subcat_name, subcat_data in category_data["categories"].items():
                     # Check standard subcategory with tools
-                    if isinstance(subcat_data, dict) and 'tools' in subcat_data:
-                        if tool_name in subcat_data['tools']:
-                            return subcat_data['tools'][tool_name]
+                    if isinstance(subcat_data, dict) and "tools" in subcat_data:
+                        if tool_name in subcat_data["tools"]:
+                            return subcat_data["tools"][tool_name]
                     # Check language subcategory structure
-                    elif subcat_name == 'language' and isinstance(subcat_data, dict):
+                    elif subcat_name == "language" and isinstance(subcat_data, dict):
                         for lang_name, lang_tools in subcat_data.items():
-                            if lang_name != 'description' and isinstance(lang_tools, list):
+                            if lang_name != "description" and isinstance(lang_tools, list):
                                 if tool_name in lang_tools:
                                     # For tools in language lists, return standard version field
-                                    return ['version']
+                                    return ["version"]
     else:
         # Handle nested category paths
-        category_parts = category_name.split('.')
+        category_parts = category_name.split(".")
         current_data = PRACTICAL_TAXONOMY
 
         # Navigate to the correct category
         for i, part in enumerate(category_parts):
             if part in current_data:
                 current_data = current_data[part]
-                if 'categories' in current_data and i < len(category_parts) - 1:
-                    current_data = current_data['categories']
+                if "categories" in current_data and i < len(category_parts) - 1:
+                    current_data = current_data["categories"]
             else:
                 return []
 
         # Look for the tool
-        if 'tools' in current_data and tool_name in current_data['tools']:
-            return current_data['tools'][tool_name]
+        if "tools" in current_data and tool_name in current_data["tools"]:
+            return current_data["tools"][tool_name]
 
         # Handle language-specific package managers
         if isinstance(current_data, dict):
             for lang_name, lang_data in current_data.items():
-                if lang_name != 'description':
-                    if isinstance(lang_data, dict) and 'tools' in lang_data and tool_name in lang_data['tools']:
-                        return lang_data['tools'][tool_name]
+                if lang_name != "description":
+                    if isinstance(lang_data, dict) and "tools" in lang_data and tool_name in lang_data["tools"]:
+                        return lang_data["tools"][tool_name]
                     elif isinstance(lang_data, list) and tool_name in lang_data:
                         # For simple lists, return standard fields
-                        return ['version']
+                        return ["version"]
 
     return []
 
@@ -256,19 +251,19 @@ def get_all_tools_for_platform(platform_name: str = None) -> dict[str, list[str]
     for category_name, _category_data in PRACTICAL_TAXONOMY.items():
         filtered_category = get_category_for_platform(category_name, platform_name)
 
-        if 'tools' in filtered_category and filtered_category['tools']:
-            result[category_name] = list(filtered_category['tools'].keys())
+        if "tools" in filtered_category and filtered_category["tools"]:
+            result[category_name] = list(filtered_category["tools"].keys())
 
         # Handle nested categories
-        if 'categories' in filtered_category:
-            for subcat_name, subcat_data in filtered_category['categories'].items():
-                if 'tools' in subcat_data and subcat_data['tools']:
-                    result[f"{category_name}.{subcat_name}"] = list(subcat_data['tools'].keys())
+        if "categories" in filtered_category:
+            for subcat_name, subcat_data in filtered_category["categories"].items():
+                if "tools" in subcat_data and subcat_data["tools"]:
+                    result[f"{category_name}.{subcat_name}"] = list(subcat_data["tools"].keys())
 
                 # Handle language-specific package managers
                 elif isinstance(subcat_data, dict):
                     for lang_name, lang_tools in subcat_data.items():
-                        if lang_name != 'description' and isinstance(lang_tools, list) and lang_tools:
+                        if lang_name != "description" and isinstance(lang_tools, list) and lang_tools:
                             result[f"{category_name}.{subcat_name}.{lang_name}"] = lang_tools
 
     return result
@@ -285,19 +280,19 @@ def find_tool_category(tool_name: str) -> str | None:
         Optional[str]: Category path (e.g., "package_managers.language.python") or None
     """
     for category_name, category_data in PRACTICAL_TAXONOMY.items():
-        if 'tools' in category_data and tool_name in category_data['tools']:
+        if "tools" in category_data and tool_name in category_data["tools"]:
             return category_name
 
         # Handle nested categories
-        if 'categories' in category_data:
-            for subcat_name, subcat_data in category_data['categories'].items():
-                if 'tools' in subcat_data and tool_name in subcat_data['tools']:
+        if "categories" in category_data:
+            for subcat_name, subcat_data in category_data["categories"].items():
+                if "tools" in subcat_data and tool_name in subcat_data["tools"]:
                     return f"{category_name}.{subcat_name}"
 
                 # Handle language-specific package managers
                 elif isinstance(subcat_data, dict):
                     for lang_name, lang_tools in subcat_data.items():
-                        if lang_name != 'description' and isinstance(lang_tools, list):
+                        if lang_name != "description" and isinstance(lang_tools, list):
                             if tool_name in lang_tools:
                                 return f"{category_name}.{subcat_name}.{lang_name}"
 
@@ -324,18 +319,18 @@ def get_relevant_categories(platform_name: str = None) -> dict[str, Any]:
         category_data = get_category_for_platform(category_name, platform_name)
 
         # Remove empty categories
-        if 'tools' in category_data and not category_data['tools']:
+        if "tools" in category_data and not category_data["tools"]:
             # Check if there are subcategories with tools
             has_tools = False
-            if 'categories' in category_data:
-                for subcat in category_data['categories'].values():
-                    if 'tools' in subcat and subcat['tools']:
+            if "categories" in category_data:
+                for subcat in category_data["categories"].values():
+                    if "tools" in subcat and subcat["tools"]:
                         has_tools = True
                         break
                     # Check language-specific tools
                     elif isinstance(subcat, dict):
                         for lang_name, lang_tools in subcat.items():
-                            if lang_name != 'description' and isinstance(lang_tools, list) and lang_tools:
+                            if lang_name != "description" and isinstance(lang_tools, list) and lang_tools:
                                 has_tools = True
                                 break
 
@@ -349,14 +344,14 @@ def get_relevant_categories(platform_name: str = None) -> dict[str, Any]:
 
 # Export public API
 __all__ = [
-    'PRACTICAL_TAXONOMY',
-    'PLATFORM_TOOLS',
-    'get_current_platform',
-    'is_tool_available_on_platform',
-    'filter_tools_for_platform',
-    'get_category_for_platform',
-    'get_tool_fields',
-    'get_all_tools_for_platform',
-    'find_tool_category',
-    'get_relevant_categories',
+    "PRACTICAL_TAXONOMY",
+    "PLATFORM_TOOLS",
+    "get_current_platform",
+    "is_tool_available_on_platform",
+    "filter_tools_for_platform",
+    "get_category_for_platform",
+    "get_tool_fields",
+    "get_all_tools_for_platform",
+    "find_tool_category",
+    "get_relevant_categories",
 ]

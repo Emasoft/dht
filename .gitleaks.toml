@@ -1,8 +1,6 @@
 # Gitleaks configuration for DHT project
 
 title = "DHT Gitleaks Config"
-# Version is optional but helps with tracking changes
-# config-version = "1.0"
 
 # DHT specific paths to exclude
 [allowlist]
@@ -53,21 +51,4 @@ regexes = [
 
   # Placeholder values
   '''(?i)(?:your|my|the).*(?:api|secret|key|token|password)''',
-]
-
-# Additional rules to skip for DHT
-[[rules]]
-id = "generic-api-key"
-# Skip generic API key detection in test files
-paths = [
-  '''^tests/''',
-  '''_test\.py$''',
-  '''test_.*\.py$''',
-]
-
-[[rules]]
-id = "private-key"
-# Skip private key detection in test fixtures
-paths = [
-  '''^tests/fixtures/''',
 ]

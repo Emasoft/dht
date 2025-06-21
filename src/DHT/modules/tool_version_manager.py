@@ -29,15 +29,10 @@ class ToolVersionManager:
     def __init__(self):
         """Initialize the tool version manager."""
         # Critical tools that must match versions exactly
-        self.version_critical_tools = {
-            "python", "pip", "uv", "git", "node", "npm",
-            "black", "ruff", "mypy", "pytest"
-        }
+        self.version_critical_tools = {"python", "pip", "uv", "git", "node", "npm", "black", "ruff", "mypy", "pytest"}
 
         # Tools where behavior compatibility is more important than exact versions
-        self.behavior_compatible_tools = {
-            "curl", "wget", "tar", "zip", "make", "gcc", "clang"
-        }
+        self.behavior_compatible_tools = {"curl", "wget", "tar", "zip", "make", "gcc", "clang"}
 
         # Installation commands by platform
         self.installation_commands = {
@@ -50,7 +45,7 @@ class ToolVersionManager:
                 "black": "uv pip install black",
                 "ruff": "uv pip install ruff",
                 "mypy": "uv pip install mypy",
-                "pytest": "uv pip install pytest"
+                "pytest": "uv pip install pytest",
             },
             "linux": {
                 "git": "apt-get install git",  # Ubuntu/Debian
@@ -61,19 +56,19 @@ class ToolVersionManager:
                 "black": "uv pip install black",
                 "ruff": "uv pip install ruff",
                 "mypy": "uv pip install mypy",
-                "pytest": "uv pip install pytest"
+                "pytest": "uv pip install pytest",
             },
             "windows": {
                 "git": "choco install git",
                 "node": "choco install nodejs",
-                "uv": "powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"",
+                "uv": 'powershell -c "irm https://astral.sh/uv/install.ps1 | iex"',
                 "docker": "choco install docker-desktop",
                 "python": "choco install python --version={version}",
                 "black": "uv pip install black",
                 "ruff": "uv pip install ruff",
                 "mypy": "uv pip install mypy",
-                "pytest": "uv pip install pytest"
-            }
+                "pytest": "uv pip install pytest",
+            },
         }
 
     @task(name="capture_tool_versions")
@@ -106,22 +101,12 @@ class ToolVersionManager:
                 tool_path = shutil.which(version_cmd[0])
                 if tool_path:
                     # Get version
-                    result = subprocess.run(
-                        version_cmd,
-                        capture_output=True,
-                        text=True,
-                        timeout=10
-                    )
+                    result = subprocess.run(version_cmd, capture_output=True, text=True, timeout=10)
 
                     if result.returncode == 0:
-                        version = self.extract_version_from_output(
-                            result.stdout + result.stderr
-                        )
+                        version = self.extract_version_from_output(result.stdout + result.stderr)
                         if version:
-                            tools_info[tool_name] = {
-                                "version": version,
-                                "path": tool_path
-                            }
+                            tools_info[tool_name] = {"version": version, "path": tool_path}
 
             except Exception as e:
                 logger.debug(f"Failed to check {tool_name}: {e}")
@@ -132,10 +117,10 @@ class ToolVersionManager:
         """Extract version number from tool output."""
         # Common version patterns
         patterns = [
-            r'(\d+\.\d+\.\d+)',           # x.y.z
-            r'(\d+\.\d+)',                # x.y
-            r'v(\d+\.\d+\.\d+)',          # vx.y.z
-            r'version (\d+\.\d+\.\d+)',   # version x.y.z
+            r"(\d+\.\d+\.\d+)",  # x.y.z
+            r"(\d+\.\d+)",  # x.y
+            r"v(\d+\.\d+\.\d+)",  # vx.y.z
+            r"version (\d+\.\d+\.\d+)",  # version x.y.z
         ]
 
         for pattern in patterns:
@@ -145,13 +130,7 @@ class ToolVersionManager:
 
         return None
 
-    def compare_versions(
-        self,
-        expected: str,
-        actual: str,
-        tool: str,
-        strict_mode: bool
-    ) -> bool:
+    def compare_versions(self, expected: str, actual: str, tool: str, strict_mode: bool) -> bool:
         """Compare versions with appropriate tolerance."""
         if expected == actual:
             return True
@@ -180,10 +159,7 @@ class ToolVersionManager:
         return not strict_mode
 
     def get_installation_command(
-        self,
-        tool: str,
-        version: str | None = None,
-        platform_name: str | None = None
+        self, tool: str, version: str | None = None, platform_name: str | None = None
     ) -> str | None:
         """Get platform-specific installation command for a tool."""
         if platform_name is None:
@@ -213,10 +189,7 @@ class ToolVersionManager:
 
     @task(name="verify_tool_compatibility")
     def verify_tool_compatibility(
-        self,
-        expected_tools: dict[str, str],
-        actual_tools: dict[str, str],
-        strict_mode: bool = True
+        self, expected_tools: dict[str, str], actual_tools: dict[str, str], strict_mode: bool = True
     ) -> dict[str, dict[str, Any]]:
         """Verify tool compatibility between environments."""
         logger = get_run_logger()
@@ -229,20 +202,14 @@ class ToolVersionManager:
                     "reason": "Tool not installed",
                     "expected": expected_version,
                     "actual": None,
-                    "action": self.get_installation_command(tool, expected_version)
+                    "action": self.get_installation_command(tool, expected_version),
                 }
                 continue
 
             actual_version = actual_tools[tool]
-            compatible = self.compare_versions(
-                expected_version, actual_version, tool, strict_mode
-            )
+            compatible = self.compare_versions(expected_version, actual_version, tool, strict_mode)
 
-            results[tool] = {
-                "compatible": compatible,
-                "expected": expected_version,
-                "actual": actual_version
-            }
+            results[tool] = {"compatible": compatible, "expected": expected_version, "actual": actual_version}
 
             if not compatible:
                 if tool in self.version_critical_tools:
@@ -250,9 +217,7 @@ class ToolVersionManager:
                 else:
                     results[tool]["reason"] = "Version incompatible"
 
-                results[tool]["action"] = self.get_installation_command(
-                    tool, expected_version
-                )
+                results[tool]["action"] = self.get_installation_command(tool, expected_version)
 
         return results
 

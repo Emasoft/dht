@@ -38,10 +38,7 @@ def get_primary_dependencies(analysis_result: dict[str, Any]) -> list[str]:
 
     # Filter to primary/framework dependencies
     primary = []
-    framework_deps = {
-        "django", "flask", "fastapi", "streamlit",
-        "gradio", "uvicorn", "gunicorn", "celery"
-    }
+    framework_deps = {"django", "flask", "fastapi", "streamlit", "gradio", "uvicorn", "gunicorn", "celery"}
 
     for dep in deps:
         dep_lower = dep.lower()
@@ -56,10 +53,7 @@ def detect_ml_frameworks(analysis_result: dict[str, Any]) -> list[str]:
     ml_frameworks = []
     deps = get_all_dependencies(analysis_result)
 
-    framework_names = {
-        "tensorflow", "torch", "pytorch", "keras",
-        "scikit-learn", "sklearn", "xgboost", "lightgbm"
-    }
+    framework_names = {"tensorflow", "torch", "pytorch", "keras", "scikit-learn", "sklearn", "xgboost", "lightgbm"}
 
     for dep in deps:
         dep_lower = dep.lower()
@@ -119,10 +113,7 @@ def has_notebooks(analysis_result: dict[str, Any]) -> bool:
     return False
 
 
-def is_publishable_library(
-    project_type: ProjectType,
-    analysis_result: dict[str, Any]
-) -> bool:
+def is_publishable_library(project_type: ProjectType, analysis_result: dict[str, Any]) -> bool:
     """Check if project is a publishable library."""
     if project_type != ProjectType.LIBRARY:
         return False
@@ -141,10 +132,7 @@ def is_publishable_library(
     return has_pyproject or has_setup_py or has_setup_cfg
 
 
-def extract_markers(
-    analysis_result: dict[str, Any],
-    heuristic_result: dict[str, Any]
-) -> list[str]:
+def extract_markers(analysis_result: dict[str, Any], heuristic_result: dict[str, Any]) -> list[str]:
     """Extract project markers."""
     markers = []
 
@@ -199,9 +187,7 @@ def check_for_react_vue(analysis_result: dict[str, Any]) -> list[ProjectType]:
 
 
 def calculate_confidence_boost(
-    project_type: ProjectType,
-    analysis_result: dict[str, Any],
-    heuristic_result: dict[str, Any]
+    project_type: ProjectType, analysis_result: dict[str, Any], heuristic_result: dict[str, Any]
 ) -> float:
     """Calculate confidence score boost based on markers found."""
     markers = 0
@@ -279,8 +265,7 @@ def calculate_confidence_boost(
 
 
 def detect_project_type(
-    analysis_result: dict[str, Any],
-    heuristic_result: dict[str, Any]
+    analysis_result: dict[str, Any], heuristic_result: dict[str, Any]
 ) -> tuple[ProjectType, list[ProjectType]]:
     """Detect project type from analysis results."""
     detected_types = []
@@ -296,7 +281,7 @@ def detect_project_type(
         "streamlit": ProjectType.STREAMLIT,
         "library": ProjectType.LIBRARY,
         "data_science": ProjectType.DATA_SCIENCE,
-        "generic": ProjectType.GENERIC
+        "generic": ProjectType.GENERIC,
     }
 
     # Check all frameworks that meet minimum confidence
@@ -357,8 +342,9 @@ def detect_project_type(
         detected_web = [t for t in detected_types if t in web_frameworks]
 
         # Django + React/Vue = Full stack
-        if (ProjectType.DJANGO in detected_types and
-            (ProjectType.REACT in detected_types or ProjectType.VUE in detected_types)):
+        if ProjectType.DJANGO in detected_types and (
+            ProjectType.REACT in detected_types or ProjectType.VUE in detected_types
+        ):
             project_type = ProjectType.HYBRID
         # Multiple backend frameworks = Hybrid
         elif len(detected_web) > 1:
@@ -367,10 +353,7 @@ def detect_project_type(
     return project_type, detected_types
 
 
-def determine_category(
-    project_type: ProjectType,
-    detected_types: list[ProjectType]
-) -> ProjectCategory:
+def determine_category(project_type: ProjectType, detected_types: list[ProjectType]) -> ProjectCategory:
     """Determine project category from type."""
     if project_type == ProjectType.HYBRID:
         return ProjectCategory.FULL_STACK

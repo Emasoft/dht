@@ -117,11 +117,7 @@ CMD ["act --help"]
 
 
 @task(name="build_act_container")
-def build_act_container(
-    runtime: str,
-    image_name: str = "dht-act",
-    tag: str = "latest"
-) -> dict[str, Any]:
+def build_act_container(runtime: str, image_name: str = "dht-act", tag: str = "latest") -> dict[str, Any]:
     """Build container image with act pre-installed."""
     logger = get_run_logger()
 
@@ -143,51 +139,33 @@ def build_act_container(
         full_image_name = f"{image_name}:{tag}"
         logger.info(f"Building act container image: {full_image_name}")
 
-        build_cmd = [
-            runtime, "build",
-            "-t", full_image_name,
-            "-f", str(dockerfile_path),
-            tmpdir
-        ]
+        build_cmd = [runtime, "build", "-t", full_image_name, "-f", str(dockerfile_path), tmpdir]
 
         try:
             result = subprocess.run(
                 build_cmd,
                 capture_output=True,
                 text=True,
-                timeout=600  # 10 minutes
+                timeout=600,  # 10 minutes
             )
 
             if result.returncode == 0:
                 logger.info(f"✅ Successfully built {full_image_name}")
-                return {
-                    "success": True,
-                    "image": full_image_name,
-                    "runtime": runtime
-                }
+                return {"success": True, "image": full_image_name, "runtime": runtime}
             else:
                 logger.error(f"Failed to build image: {result.stderr}")
-                return {
-                    "success": False,
-                    "error": result.stderr
-                }
+                return {"success": False, "error": result.stderr}
 
         except subprocess.TimeoutExpired:
             logger.error("Build timed out after 10 minutes")
-            return {
-                "success": False,
-                "error": "Build timeout"
-            }
+            return {"success": False, "error": "Build timeout"}
 
 
 @task(name="check_act_image")
 def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
     """Check if act container image exists."""
     try:
-        result = subprocess.run(
-            [runtime, "image", "exists", image_name],
-            capture_output=True
-        )
+        result = subprocess.run([runtime, "image", "exists", image_name], capture_output=True)
         return result.returncode == 0
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
@@ -223,7 +201,7 @@ class ActContainerRunner:
         job: str | None = None,
         secrets_file: Path | None = None,
         env_file: Path | None = None,
-        verbose: bool = False
+        verbose: bool = False,
     ) -> dict[str, Any]:
         """Run act inside a container."""
         if not self.ensure_image():
@@ -289,34 +267,25 @@ class ActContainerRunner:
                 cwd=str(self.project_path),
                 capture_output=not verbose,
                 text=True,
-                timeout=1800  # 30 minutes
+                timeout=1800,  # 30 minutes
             )
 
             return {
                 "success": result.returncode == 0,
                 "stdout": result.stdout if not verbose else "",
                 "stderr": result.stderr if not verbose else "",
-                "command": " ".join(cmd)
+                "command": " ".join(cmd),
             }
 
         except subprocess.TimeoutExpired:
-            return {
-                "success": False,
-                "error": "Workflow timed out after 30 minutes"
-            }
+            return {"success": False, "error": "Workflow timed out after 30 minutes"}
         except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
+            return {"success": False, "error": str(e)}
 
 
 @flow(name="act_container_workflow")
 def act_container_workflow(
-    project_path: str,
-    event: str = "push",
-    job: str | None = None,
-    runtime: str = "podman"
+    project_path: str, event: str = "push", job: str | None = None, runtime: str = "podman"
 ) -> dict[str, Any]:
     """
     Run GitHub Actions in a fully isolated container.
@@ -346,7 +315,7 @@ def act_container_workflow(
         job=job,
         secrets_file=secrets_file if secrets_file.exists() else None,
         env_file=env_file if env_file.exists() else None,
-        verbose=True
+        verbose=True,
     )
 
     if result["success"]:
@@ -370,12 +339,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    result = act_container_workflow(
-        project_path=args.path,
-        event=args.event,
-        job=args.job,
-        runtime=args.runtime
-    )
+    result = act_container_workflow(project_path=args.path, event=args.event, job=args.job, runtime=args.runtime)
 
     import sys
+
     sys.exit(0 if result["success"] else 1)

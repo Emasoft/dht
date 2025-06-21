@@ -18,7 +18,7 @@ class TestDHTConfig:
         config = DHTConfig()
         assert config.SCHEMA_VERSION == "1.0.0"
         assert config.CONFIG_FILENAME == ".dhtconfig"
-        assert hasattr(config, 'project_analyzer')
+        assert hasattr(config, "project_analyzer")
 
     def test_extract_version(self):
         """Test version extraction from various formats."""
@@ -31,19 +31,17 @@ class TestDHTConfig:
         assert config._extract_version("pytest 7.4.3") == "7.4.3"
         assert config._extract_version("unknown format") == "unknown"
 
-    @patch('DHT.modules.dhtconfig_validation_utils.subprocess.run')
+    @patch("DHT.modules.dhtconfig_validation_utils.subprocess.run")
     def test_generate_validation_info(self, mock_run):
         """Test validation info generation."""
         config = DHTConfig()
 
         # Mock subprocess responses
-        mock_run.return_value = Mock(
-            returncode=0,
-            stdout="black, 23.7.0"
-        )
+        mock_run.return_value = Mock(returncode=0, stdout="black, 23.7.0")
 
         # Create a temporary project with some files
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
 
@@ -74,10 +72,10 @@ class TestDHTConfig:
                 "python": {
                     "runtime": ["requests", "click", "pydantic"],
                     "development": ["pytest", "mypy", "ruff"],
-                    "all": ["requests", "click", "pydantic", "pytest", "mypy", "ruff"]
+                    "all": ["requests", "click", "pydantic", "pytest", "mypy", "ruff"],
                 }
             },
-            "root_path": "/tmp/test_project"
+            "root_path": "/tmp/test_project",
         }
 
         deps = config._extract_dependencies(project_info)
@@ -105,7 +103,7 @@ class TestDHTConfig:
                 "has_dockerfile": True,
                 "has_cmake": True,
                 "has_pytest": True,
-            }
+            },
         }
 
         tools = config._extract_tool_requirements(project_info)
@@ -130,7 +128,7 @@ class TestDHTConfig:
                 "has_setup_py": True,
                 "has_pytest": True,
                 "has_makefile": True,
-            }
+            },
         }
 
         build = config._extract_build_config(project_info)
@@ -145,6 +143,7 @@ class TestDHTConfig:
         config = DHTConfig()
 
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
 
@@ -169,16 +168,9 @@ SECRET_KEY=CHANGE_ME
         """Test deep merge functionality."""
         config = DHTConfig()
 
-        base = {
-            "a": {"b": 1, "c": [1, 2]},
-            "d": "test"
-        }
+        base = {"a": {"b": 1, "c": [1, 2]}, "d": "test"}
 
-        override = {
-            "a": {"b": 2, "c": [3], "e": 4},
-            "d": "updated",
-            "f": "new"
-        }
+        override = {"a": {"b": 2, "c": [3], "e": 4}, "d": "updated", "f": "new"}
 
         config._deep_merge(base, override)
 
@@ -193,21 +185,11 @@ SECRET_KEY=CHANGE_ME
         config = DHTConfig()
 
         base_config = {
-            "dependencies": {
-                "system_packages": []
-            },
+            "dependencies": {"system_packages": []},
             "platform_overrides": {
-                "macos": {
-                    "dependencies": {
-                        "system_packages": [{"name": "xcode-select"}]
-                    }
-                },
-                "linux": {
-                    "dependencies": {
-                        "system_packages": [{"name": "build-essential"}]
-                    }
-                }
-            }
+                "macos": {"dependencies": {"system_packages": [{"name": "xcode-select"}]}},
+                "linux": {"dependencies": {"system_packages": [{"name": "build-essential"}]}},
+            },
         }
 
         # Test macOS merge
@@ -226,16 +208,12 @@ SECRET_KEY=CHANGE_ME
 
         test_config = {
             "version": "1.0.0",
-            "project": {
-                "name": "test",
-                "type": "python"
-            },
-            "python": {
-                "version": "3.10.0"
-            }
+            "project": {"name": "test", "type": "python"},
+            "python": {"version": "3.10.0"},
         }
 
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
 
@@ -257,11 +235,7 @@ SECRET_KEY=CHANGE_ME
         config = DHTConfig()
 
         # Valid config
-        valid_config = {
-            "version": "1.0.0",
-            "project": {"name": "test"},
-            "python": {"version": "3.10.0"}
-        }
+        valid_config = {"version": "1.0.0", "project": {"name": "test"}, "python": {"version": "3.10.0"}}
 
         is_valid, errors = config.validate_config(valid_config)
         assert is_valid
@@ -271,33 +245,27 @@ SECRET_KEY=CHANGE_ME
             assert all("Schema validation error" in error for error in errors)
 
         # Invalid config - missing version
-        invalid_config = {
-            "project": {"name": "test"},
-            "python": {"version": "3.10.0"}
-        }
+        invalid_config = {"project": {"name": "test"}, "python": {"version": "3.10.0"}}
 
         is_valid, errors = config.validate_config(invalid_config)
         assert not is_valid
         assert any("version" in error for error in errors)
 
         # Invalid config - missing python version
-        invalid_config2 = {
-            "version": "1.0.0",
-            "project": {"name": "test"},
-            "python": {}
-        }
+        invalid_config2 = {"version": "1.0.0", "project": {"name": "test"}, "python": {}}
 
         is_valid, errors = config.validate_config(invalid_config2)
         assert not is_valid
         assert any("python.version" in error for error in errors)
 
-    @patch('DHT.modules.project_analyzer.ProjectAnalyzer.analyze_project')
-    @patch('DHT.modules.dhtconfig.diagnostic_reporter_v2.build_system_report')
+    @patch("DHT.modules.project_analyzer.ProjectAnalyzer.analyze_project")
+    @patch("DHT.modules.dhtconfig.diagnostic_reporter_v2.build_system_report")
     def test_generate_from_project_integration(self, mock_system_report, mock_analyze):
         """Test full config generation from project."""
         config = DHTConfig()
 
         import tempfile
+
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
 
@@ -314,7 +282,7 @@ SECRET_KEY=CHANGE_ME
                     "python": {
                         "runtime": ["click", "requests"],
                         "development": ["pytest"],
-                        "all": ["click", "requests", "pytest"]
+                        "all": ["click", "requests", "pytest"],
                     }
                 },
                 "configurations": {
@@ -326,20 +294,13 @@ SECRET_KEY=CHANGE_ME
                 "files_analyzed": 10,
                 "structure": {"has_tests": True},
                 "statistics": {},
-                "project_hash": "abc123"
+                "project_hash": "abc123",
             }
 
             # Mock system report
-            mock_system_report.return_value = {
-                "system": {"platform": "macos"},
-                "tools": {"build_tools": {}}
-            }
+            mock_system_report.return_value = {"system": {"platform": "macos"}, "tools": {"build_tools": {}}}
 
-            result = config.generate_from_project(
-                project_path,
-                include_system_info=True,
-                include_checksums=False
-            )
+            result = config.generate_from_project(project_path, include_system_info=True, include_checksums=False)
 
             # Verify structure
             assert result["version"] == "1.0.0"

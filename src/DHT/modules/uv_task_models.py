@@ -19,15 +19,15 @@ from pathlib import Path
 # Task configuration defaults
 DEFAULT_TIMEOUT = 300  # 5 minutes
 INSTALL_TIMEOUT = 600  # 10 minutes for installations
-BUILD_TIMEOUT = 900    # 15 minutes for builds
+BUILD_TIMEOUT = 900  # 15 minutes for builds
 
 # Memory limits for different operations
 UV_MEMORY_LIMITS = {
-    "version_check": 256,      # MB
-    "list_versions": 512,      # MB
-    "create_venv": 1024,       # MB
-    "install_deps": 2048,      # MB
-    "build_project": 4096,     # MB
+    "version_check": 256,  # MB
+    "list_versions": 512,  # MB
+    "create_venv": 1024,  # MB
+    "install_deps": 2048,  # MB
+    "build_project": 4096,  # MB
 }
 
 # Retry configurations
@@ -36,12 +36,14 @@ RETRY_DELAYS = [1, 2, 5]  # Exponential backoff in seconds
 
 class UVTaskError(Exception):
     """Base exception for UV task errors."""
+
     pass
 
 
 @dataclass
 class UVVersionInfo:
     """UV version information."""
+
     version: str
     path: str
     is_available: bool
@@ -51,6 +53,7 @@ class UVVersionInfo:
 @dataclass
 class PythonVersionInfo:
     """Python version information."""
+
     version: str
     path: str | None = None
     is_default: bool = False
@@ -61,6 +64,7 @@ class PythonVersionInfo:
 @dataclass
 class DependencyResult:
     """Result from dependency operations."""
+
     success: bool
     package: str
     version: str | None = None
@@ -72,6 +76,7 @@ class DependencyResult:
 @dataclass
 class BuildResult:
     """Result from build operations."""
+
     success: bool
     output_dir: Path | None = None
     artifacts: list[str] = None
@@ -87,6 +92,7 @@ class BuildResult:
 @dataclass
 class ScriptResult:
     """Result from script execution."""
+
     success: bool
     return_code: int
     stdout: str

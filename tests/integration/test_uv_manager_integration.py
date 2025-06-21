@@ -80,7 +80,7 @@ build-backend = "hatchling.build"
         parts = result["stdout"].strip().split()
         assert len(parts) >= 2
         version_str = parts[1]  # Version is the second part
-        major, minor = version_str.split('.')[:2]
+        major, minor = version_str.split(".")[:2]
         assert int(major) > 0 or (int(major) == 0 and int(minor) >= 4)
 
     def test_init_new_project(self, uv_manager, temp_project_dir):
@@ -89,10 +89,7 @@ build-backend = "hatchling.build"
         project_path = temp_project_dir / project_name
 
         # Use UV to init a new project
-        result = uv_manager.run_command(
-            ["init", project_name],
-            cwd=temp_project_dir
-        )
+        result = uv_manager.run_command(["init", project_name], cwd=temp_project_dir)
 
         assert result["success"]
         assert project_path.exists()
@@ -102,6 +99,7 @@ build-backend = "hatchling.build"
 
         # Check pyproject.toml has correct structure
         import tomllib
+
         with open(project_path / "pyproject.toml", "rb") as f:
             pyproject = tomllib.load(f)
 
@@ -137,10 +135,7 @@ build-backend = "hatchling.build"
         assert result["success"], f"Sync failed with stderr: {result.get('stderr', '')}"
 
         # Check that dependencies were installed
-        pip_list_result = uv_manager.run_command(
-            ["pip", "list"],
-            cwd=project_path
-        )
+        pip_list_result = uv_manager.run_command(["pip", "list"], cwd=project_path)
         assert pip_list_result["success"]
         assert "requests" in pip_list_result["stdout"]
         assert "click" in pip_list_result["stdout"]
@@ -151,10 +146,7 @@ build-backend = "hatchling.build"
         project_name = "dep-test"
         project_path = temp_project_dir / project_name
 
-        init_result = uv_manager.run_command(
-            ["init", project_name],
-            cwd=temp_project_dir
-        )
+        init_result = uv_manager.run_command(["init", project_name], cwd=temp_project_dir)
         assert init_result["success"]
 
         # Add a dependency
@@ -163,6 +155,7 @@ build-backend = "hatchling.build"
 
         # Check it was added to pyproject.toml
         import tomllib
+
         with open(project_path / "pyproject.toml", "rb") as f:
             pyproject = tomllib.load(f)
 
@@ -220,10 +213,7 @@ if __name__ == "__main__":
         project_path.mkdir()
 
         # Pin Python version
-        pin_result = uv_manager.run_command(
-            ["python", "pin", "3.11"],
-            cwd=project_path
-        )
+        pin_result = uv_manager.run_command(["python", "pin", "3.11"], cwd=project_path)
         assert pin_result["success"]
 
         # Check .python-version file
@@ -245,9 +235,7 @@ if __name__ == "__main__":
 
         # Clone the repository
         clone_result = subprocess.run(
-            ["git", "clone", "--depth", "1", repo_url, str(project_path)],
-            capture_output=True,
-            text=True
+            ["git", "clone", "--depth", "1", repo_url, str(project_path)], capture_output=True, text=True
         )
         if clone_result.returncode != 0:
             pytest.skip(f"Could not clone repo: {clone_result.stderr}")
@@ -256,7 +244,7 @@ if __name__ == "__main__":
         setup_result = uv_manager.setup_project(
             project_path,
             install_deps=True,
-            dev=False  # Don't install dev deps for simpler test
+            dev=False,  # Don't install dev deps for simpler test
         )
 
         # Check the steps that were completed
@@ -290,16 +278,13 @@ if __name__ == "__main__":
         # Check lock file content
         lock_content = lock_result.read_text()
         # UV lock files have a specific format, check for package names
-        assert "name = \"requests\"" in lock_content or "requests" in lock_content
-        assert "name = \"click\"" in lock_content or "click" in lock_content
+        assert 'name = "requests"' in lock_content or "requests" in lock_content
+        assert 'name = "click"' in lock_content or "click" in lock_content
 
         # Create venv before syncing
         venv_path = uv_manager.create_venv(project_path)
         assert venv_path.exists()
 
         # Install from lock file
-        sync_result = uv_manager.run_command(
-            ["sync", "--frozen"],
-            cwd=project_path
-        )
+        sync_result = uv_manager.run_command(["sync", "--frozen"], cwd=project_path)
         assert sync_result["success"], f"Sync failed: {sync_result.get('stderr', '')}"

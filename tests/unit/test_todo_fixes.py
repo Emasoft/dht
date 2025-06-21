@@ -38,31 +38,31 @@ class TestTodoFixes:
             from system_taxonomy import get_relevant_categories
 
             # Test that language package managers are included
-            categories = get_relevant_categories('darwin')  # Test on macOS
+            categories = get_relevant_categories("darwin")  # Test on macOS
 
             # Check that package_managers category exists
-            assert 'package_managers' in categories
+            assert "package_managers" in categories
 
-            pm_category = categories['package_managers']
-            assert 'categories' in pm_category
+            pm_category = categories["package_managers"]
+            assert "categories" in pm_category
 
             # Check that language subcategory is included
-            assert 'language' in pm_category['categories']
+            assert "language" in pm_category["categories"]
 
-            language_pm = pm_category['categories']['language']
+            language_pm = pm_category["categories"]["language"]
 
             # Language subcategory has a different structure
             # Package managers are stored as lists under language names
-            assert 'python' in language_pm
-            assert 'javascript' in language_pm
+            assert "python" in language_pm
+            assert "javascript" in language_pm
 
             # Check that language package managers are present
-            expected_language_pms = ['pip', 'npm', 'cargo', 'gem', 'composer']
+            expected_language_pms = ["pip", "npm", "cargo", "gem", "composer"]
 
             # Collect all package managers from all languages
             all_pms = []
             for lang, pm_list in language_pm.items():
-                if lang != 'description' and isinstance(pm_list, list):
+                if lang != "description" and isinstance(pm_list, list):
                     all_pms.extend(pm_list)
 
             # At least some language package managers should be present
@@ -80,16 +80,16 @@ class TestTodoFixes:
 
             # Test nested category tool lookup
             # pip is in package_managers -> language -> pip
-            fields = get_tool_fields('package_managers', 'pip')
+            fields = get_tool_fields("package_managers", "pip")
 
             # Should find pip fields even though it's in a nested subcategory
             assert len(fields) > 0
-            assert 'version' in fields
+            assert "version" in fields
 
             # Test with a system package manager (also nested)
-            fields = get_tool_fields('package_managers', 'brew')
+            fields = get_tool_fields("package_managers", "brew")
             if fields:  # brew might not be in the taxonomy
-                assert 'version' in fields
+                assert "version" in fields
 
         finally:
             sys.path.pop(0)
@@ -111,14 +111,14 @@ class TestTodoFixes:
         assert "✓ DHT version" in content
 
         # Verify the implementation has proper structure
-        assert "if [[ -z \"$CURRENT_DHT_VERSION\" ]]; then" in content
-        assert "elif [[ \"$CURRENT_DHT_VERSION\" != \"$DHT_VERSION\" ]]; then" in content
+        assert 'if [[ -z "$CURRENT_DHT_VERSION" ]]; then' in content
+        assert 'elif [[ "$CURRENT_DHT_VERSION" != "$DHT_VERSION" ]]; then' in content
 
     def test_no_todos_remain(self):
         """Test that no TODO comments remain in the fixed files."""
         files_to_check = [
             self.src_dir / "modules" / "system_taxonomy.py",
-            self.src_dir / "modules" / "dhtl_regenerate_poc.sh"
+            self.src_dir / "modules" / "dhtl_regenerate_poc.sh",
         ]
 
         # Add diagnostic_reporter_v2.py to the check list
@@ -131,12 +131,12 @@ class TestTodoFixes:
         for file_path in files_to_check:
             if file_path.exists():
                 content = file_path.read_text()
-                lines = content.split('\n')
+                lines = content.split("\n")
 
                 for i, line in enumerate(lines, 1):
-                    if 'TODO:' in line and 'for future upgrades' not in line:
+                    if "TODO:" in line and "for future upgrades" not in line:
                         # Skip the XXXX pattern which is not a TODO
-                        if 'additional_info_XXXX' in line:
+                        if "additional_info_XXXX" in line:
                             continue
                         todos_found.append(f"{file_path.name}:{i}: {line.strip()}")
 

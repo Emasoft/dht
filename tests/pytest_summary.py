@@ -32,9 +32,9 @@ class TestSummaryReporter:
 
     def print_summary(self):
         """Print summary table."""
-        print("\n" + "="*100)
+        print("\n" + "=" * 100)
         print("📊 DHT Test Summary")
-        print("="*100)
+        print("=" * 100)
 
         # Summary stats
         total = passed = failed = skipped = 0
@@ -74,7 +74,7 @@ class TestSummaryReporter:
         print(f"✅ Passed: {passed}")
         print(f"❌ Failed: {failed}")
         print(f"⏩ Skipped: {skipped}")
-        print("="*100)
+        print("=" * 100)
 
         # Write errors to log file
         if self.errors:
@@ -122,10 +122,7 @@ def pytest_sessionfinish(session, exitstatus):
 def pytest_addoption(parser):
     """Add custom options."""
     parser.addoption(
-        "--quiet-summary",
-        action="store_true",
-        default=False,
-        help="Show only summary table without verbose output"
+        "--quiet-summary", action="store_true", default=False, help="Show only summary table without verbose output"
     )
 
 

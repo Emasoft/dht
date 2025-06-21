@@ -94,11 +94,7 @@ def test_dht_command(*args, **kwargs) -> int:
     command = " ".join(test_cmd)
     limits = ResourceLimits(memory_mb=4096, cpu_percent=100, timeout=1800)  # 30 min timeout
 
-    results = guardian_sequential_flow(
-        commands=[command],
-        stop_on_failure=True,
-        default_limits=limits
-    )
+    results = guardian_sequential_flow(commands=[command], stop_on_failure=True, default_limits=limits)
 
     if results and results[0]["returncode"] == 0:
         log_success("✓ All DHT tests passed!")
@@ -175,11 +171,7 @@ def verify_dht_command(*args, **kwargs) -> int:
         # Check Python version
         python_exe = get_venv_executable("python")
         if python_exe:
-            result = subprocess.run(
-                [python_exe, "--version"],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run([python_exe, "--version"], capture_output=True, text=True)
             if result.returncode == 0:
                 log_success(f"✓ Python: {result.stdout.strip()}")
             else:
@@ -266,4 +258,4 @@ def placeholder_function():
 
 
 # Export command functions
-__all__ = ['test_dht_command', 'verify_dht_command', 'placeholder_function']
+__all__ = ["test_dht_command", "verify_dht_command", "placeholder_function"]

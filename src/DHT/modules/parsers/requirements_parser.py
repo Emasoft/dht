@@ -88,9 +88,7 @@ class RequirementsParser(BaseParser):
 
         return result
 
-    def _parse_option_line(
-        self, line: str, options: dict[str, Any], line_num: int
-    ) -> bool:
+    def _parse_option_line(self, line: str, options: dict[str, Any], line_num: int) -> bool:
         """
         Parse pip option lines.
 
@@ -140,9 +138,7 @@ class RequirementsParser(BaseParser):
 
         return False
 
-    def _parse_dependency_line(
-        self, line: str, line_num: int
-    ) -> dict[str, Any] | None:
+    def _parse_dependency_line(self, line: str, line_num: int) -> dict[str, Any] | None:
         """Parse a dependency specification line."""
         # Handle editable installs
         editable = False
@@ -180,9 +176,7 @@ class RequirementsParser(BaseParser):
         )
         return any(line.startswith(prefix) for prefix in url_prefixes)
 
-    def _parse_url_dependency(
-        self, line: str, line_num: int, editable: bool
-    ) -> dict[str, Any]:
+    def _parse_url_dependency(self, line: str, line_num: int, editable: bool) -> dict[str, Any]:
         """Parse URL-based dependency."""
         dep = {"line": line_num, "type": "url", "editable": editable}
 

@@ -29,14 +29,15 @@ IS_UNIX = not IS_WINDOWS
 HAS_PSUTIL = False
 try:
     import psutil
+
     HAS_PSUTIL = True
 except ImportError:
     pass
 
 # Process monitoring settings
 DEFAULT_TIMEOUT_SECONDS = 900  # 15 minutes
-CHECK_INTERVAL_SECONDS = 5     # Check processes every 5 seconds
-HEARTBEAT_TIMEOUT = 60         # Time between heartbeat checks
+CHECK_INTERVAL_SECONDS = 5  # Check processes every 5 seconds
+HEARTBEAT_TIMEOUT = 60  # Time between heartbeat checks
 
 # Directory structure
 GUARDIAN_STATE_DIR = os.path.expanduser("~/.process_guardian")
@@ -47,6 +48,7 @@ HEARTBEAT_FILE = os.path.join(GUARDIAN_STATE_DIR, "heartbeat.json")
 # Queue settings
 MAX_PROCESS_QUEUE_SIZE = 50  # Maximum processes in queue
 
+
 # Calculate system resources based on available memory
 def calculate_system_resources() -> None:
     """Calculate system resources and set appropriate limits."""
@@ -54,8 +56,8 @@ def calculate_system_resources() -> None:
 
     # Default conservative values
     DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
-    MAX_TOTAL_MEMORY_MB = 3072    # 3 GB total (3 processes at 1 GB each)
-    MAX_CONCURRENT_PROCESSES = 3   # Allow 3 concurrent processes by default
+    MAX_TOTAL_MEMORY_MB = 3072  # 3 GB total (3 processes at 1 GB each)
+    MAX_CONCURRENT_PROCESSES = 3  # Allow 3 concurrent processes by default
 
     # Only calculate if psutil is available
     if not HAS_PSUTIL:
@@ -99,8 +101,9 @@ def calculate_system_resources() -> None:
     except Exception:
         # Fall back to conservative defaults if calculation fails
         DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
-        MAX_TOTAL_MEMORY_MB = 3072    # 3 GB total
-        MAX_CONCURRENT_PROCESSES = 3   # 3 concurrent processes
+        MAX_TOTAL_MEMORY_MB = 3072  # 3 GB total
+        MAX_CONCURRENT_PROCESSES = 3  # 3 concurrent processes
+
 
 # Calculate system resources on module import
 calculate_system_resources()
@@ -111,32 +114,24 @@ PROCESS_TYPES = {
     "node": {
         "max_memory_mb": 768,
         "max_concurrent": 2,
-        "priority": 0  # Lower priority (will be queued first)
+        "priority": 0,  # Lower priority (will be queued first)
     },
     # npm has stricter memory limits
-    "npm": {
-        "max_memory_mb": 768,
-        "max_concurrent": 1,
-        "priority": 0
-    },
+    "npm": {"max_memory_mb": 768, "max_concurrent": 1, "priority": 0},
     # V8 process (used by Node.js)
-    "v8": {
-        "max_memory_mb": 768,
-        "max_concurrent": 2,
-        "priority": 0
-    },
+    "v8": {"max_memory_mb": 768, "max_concurrent": 2, "priority": 0},
     # Python processes - typically well-behaved
     "python": {
         "max_memory_mb": DEFAULT_MAX_MEMORY_MB,
         "max_concurrent": MAX_CONCURRENT_PROCESSES,
-        "priority": 5  # Medium priority
+        "priority": 5,  # Medium priority
     },
     # Critical build tools - high priority
     "build": {
         "max_memory_mb": DEFAULT_MAX_MEMORY_MB,
         "max_concurrent": 1,
-        "priority": 10  # High priority
-    }
+        "priority": 10,  # High priority
+    },
 }
 
 # Critical processes that require special monitoring
@@ -157,7 +152,7 @@ CRITICAL_PROCESSES = [
     "flake8",
     "ruff",
     "mypy",
-    "isort"
+    "isort",
 ]
 
 # Resource management flags
@@ -174,8 +169,9 @@ ERROR_MESSAGES = {
     "timeout_exceeded": "Process exceeded timeout limit.",
     "duplicate_process": "Duplicate process detected.",
     "queue_full": "Process queue is full.",
-    "unknown_error": "Unknown error occurred."
+    "unknown_error": "Unknown error occurred.",
 }
+
 
 # Detection functions
 def detect_environment() -> dict[str, Any]:
@@ -191,7 +187,7 @@ def detect_environment() -> dict[str, Any]:
         "max_total_memory_mb": MAX_TOTAL_MEMORY_MB,
         "max_concurrent_processes": MAX_CONCURRENT_PROCESSES,
         "strict_sequential": STRICT_SEQUENTIAL_EXECUTION,
-        "resource_limited": RESOURCE_LIMITED_SYSTEM
+        "resource_limited": RESOURCE_LIMITED_SYSTEM,
     }
 
     # Add CPU and memory info if psutil is available
@@ -205,6 +201,7 @@ def detect_environment() -> dict[str, Any]:
             pass
 
     return env_info
+
 
 # Usage examples for documentation
 USAGE_EXAMPLES = """
@@ -223,7 +220,9 @@ As a CLI tool:
 """
 
 # Print resource allocation on import if in debug mode
-if os.environ.get('DEBUG_PROCESS_GUARDIAN') == '1':
-    print(f"✅ System resources calculated: {MAX_TOTAL_MEMORY_MB}MB total memory, "
-          f"{DEFAULT_MAX_MEMORY_MB}MB default per process, "
-          f"{'strictly sequential execution' if STRICT_SEQUENTIAL_EXECUTION else f'max {MAX_CONCURRENT_PROCESSES} concurrent processes'}")
+if os.environ.get("DEBUG_PROCESS_GUARDIAN") == "1":
+    print(
+        f"✅ System resources calculated: {MAX_TOTAL_MEMORY_MB}MB total memory, "
+        f"{DEFAULT_MAX_MEMORY_MB}MB default per process, "
+        f"{'strictly sequential execution' if STRICT_SEQUENTIAL_EXECUTION else f'max {MAX_CONCURRENT_PROCESSES} concurrent processes'}"
+    )

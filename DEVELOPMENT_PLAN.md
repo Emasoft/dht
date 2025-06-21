@@ -17,7 +17,7 @@
 1. User runs: dhtl init
 2. DHT reads: src/DHT/GITHUB_WORKFLOWS/ubuntu-tests.yml
    Content: paths-ignore: - '{REPO_NAME}/website/**'
-3. DHT replaces: {REPO_NAME} → user-project-name  
+3. DHT replaces: {REPO_NAME} → user-project-name
 4. DHT writes: user-project/.github/workflows/ubuntu-tests.yml
    Content: paths-ignore: - 'user-project-name/website/**'
 5. User gets: Fully customized CI/CD for their project
@@ -57,7 +57,7 @@
 class TemplateRenderer:
     def render_template(self, template_path: Path, variables: dict) -> str:
         """Replace placeholders with actual values"""
-        
+
     def deploy_templates(self, user_project_path: Path, repo_name: str):
         """Deploy all templates to user project"""
 ```
@@ -79,7 +79,7 @@ dhtl init
 1. Analyze project structure
 2. Create .dhtconfig with minimal settings
 3. Deploy GitHub workflows from templates
-4. Deploy git hooks from templates  
+4. Deploy git hooks from templates
 5. Set up Python environment with uv
 6. Install development tools
 ```
@@ -195,13 +195,13 @@ def render_github_workflows(project_config: dict):
     """Render all GitHub workflow templates for user project"""
     template_dir = Path("src/DHT/GITHUB_WORKFLOWS")
     user_workflows_dir = Path(project_config['path']) / ".github" / "workflows"
-    
+
     variables = {
         'REPO_NAME': project_config['name'],
         'REPO_OWNER_OR_ORGANIZATION': project_config['owner'],
         'PYTHON_VERSION': project_config['python']['version'],
     }
-    
+
     for template_file in template_dir.glob("*.yml"):
         rendered_content = render_template(template_file, variables)
         output_file = user_workflows_dir / template_file.name
@@ -238,7 +238,7 @@ def render_github_workflows(project_config: dict):
 - [ ] Templates render correctly with user-specific values
 - [ ] All template placeholders work across different project types
 
-### **Phase 2 Success Criteria**  
+### **Phase 2 Success Criteria**
 - [ ] Auto-detection works for 10+ common project patterns
 - [ ] Cross-platform environment reproduction (Windows, macOS, Linux)
 - [ ] Minimal .dhtconfig contains only non-inferrable settings
@@ -253,7 +253,7 @@ def render_github_workflows(project_config: dict):
 ## 🔄 **NEXT IMMEDIATE ACTIONS**
 
 1. **Design Template Renderer** - Core engine for placeholder substitution
-2. **Implement `dhtl init`** - User project initialization with template deployment  
+2. **Implement `dhtl init`** - User project initialization with template deployment
 3. **Implement `dhtl setup`** - Environment regeneration from .dhtconfig
 4. **Create Template Tests** - Validate template rendering works correctly
 5. **Document Template System** - Guide for adding new templates

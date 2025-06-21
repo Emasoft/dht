@@ -13,14 +13,16 @@ def test_diagnostic_reporter_v2_module():
     """Test that diagnostic_reporter_v2 module can be imported."""
     try:
         from DHT import diagnostic_reporter_v2
-        assert hasattr(diagnostic_reporter_v2, 'build_system_report')
-        assert hasattr(diagnostic_reporter_v2, 'parse_args')
-        assert hasattr(diagnostic_reporter_v2, 'main')
+
+        assert hasattr(diagnostic_reporter_v2, "build_system_report")
+        assert hasattr(diagnostic_reporter_v2, "parse_args")
+        assert hasattr(diagnostic_reporter_v2, "main")
     except ImportError as e:
         pytest.fail(f"Failed to import diagnostic_reporter_v2: {e}")
 
+
 @pytest.mark.unit
-@patch('subprocess.run')
+@patch("subprocess.run")
 def test_build_system_report(mock_subprocess):
     """Test the build_system_report function from diagnostic_reporter_v2."""
     from DHT.diagnostic_reporter_v2 import build_system_report
@@ -69,6 +71,7 @@ def test_build_system_report(mock_subprocess):
     assert "language_runtimes" in tools
     assert "package_managers" in tools
 
+
 @pytest.mark.unit
 def test_diagnostic_cli_registry():
     """Test that diagnostic commands are registered in CLI registry."""
@@ -91,27 +94,17 @@ def test_diagnostic_cli_registry():
     language_runtime_cmds = get_commands_by_category("language_runtimes")
     assert "python" in language_runtime_cmds
 
+
 @pytest.mark.unit
-@patch('DHT.diagnostic_reporter_v2.build_system_report')
+@patch("DHT.diagnostic_reporter_v2.build_system_report")
 def test_diagnostic_main_function(mock_build_report, tmp_path):
     """Test the main function of diagnostic_reporter_v2."""
     from DHT.diagnostic_reporter_v2 import main
 
     # Mock the system report
     mock_report = {
-        "system": {
-            "platform": "darwin",
-            "architecture": "arm64",
-            "hostname": "test-machine"
-        },
-        "tools": {
-            "version_control": {
-                "git": {
-                    "is_installed": True,
-                    "version": "2.39.3"
-                }
-            }
-        }
+        "system": {"platform": "darwin", "architecture": "arm64", "hostname": "test-machine"},
+        "tools": {"version_control": {"git": {"is_installed": True, "version": "2.39.3"}}},
     }
     mock_build_report.return_value = mock_report
 
@@ -119,7 +112,7 @@ def test_diagnostic_main_function(mock_build_report, tmp_path):
     output_file = tmp_path / "test_report.yaml"
 
     # Test with YAML output
-    with patch('sys.argv', ['diagnostic_reporter.py', '--output', str(output_file), '--format', 'yaml']):
+    with patch("sys.argv", ["diagnostic_reporter.py", "--output", str(output_file), "--format", "yaml"]):
         main()
 
     # Verify output file was created
@@ -127,11 +120,13 @@ def test_diagnostic_main_function(mock_build_report, tmp_path):
 
     # Verify YAML content
     import yaml
+
     with open(output_file) as f:
         data = yaml.safe_load(f)
 
     assert data["system"]["platform"] == "darwin"
     assert data["tools"]["version_control"]["git"]["version"] == "2.39.3"
+
 
 @pytest.mark.unit
 def test_diagnostic_taxonomy():
@@ -149,11 +144,12 @@ def test_diagnostic_taxonomy():
         "language_runtimes",
         "package_managers",
         "build_tools",
-        "containers_virtualization"
+        "containers_virtualization",
     ]
 
     for category in expected_categories:
         assert category in TAXONOMY, f"Expected category '{category}' not in taxonomy"
+
 
 @pytest.mark.unit
 def test_diagnostic_output_formats(tmp_path):
@@ -167,13 +163,13 @@ def test_diagnostic_output_formats(tmp_path):
 
     # Test JSON serialization
     json_file = tmp_path / "report.json"
-    with open(json_file, 'w') as f:
+    with open(json_file, "w") as f:
         json.dump(report, f, indent=2)
     assert json_file.exists()
 
     # Test YAML serialization
     yaml_file = tmp_path / "report.yaml"
-    with open(yaml_file, 'w') as f:
+    with open(yaml_file, "w") as f:
         yaml.dump(report, f, default_flow_style=False)
     assert yaml_file.exists()
 

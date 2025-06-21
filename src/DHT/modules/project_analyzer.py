@@ -25,26 +25,26 @@ from DHT.modules.parsers.python_parser import PythonParser
 # Constants for project analysis
 DEFAULT_MAX_DEPTH = 5
 DEFAULT_MAX_FILES = 100
-SKIP_DIRECTORIES = {'venv', 'env', '.venv', '.env', '__pycache__', 'node_modules', '.git', '.tox', '.pytest_cache'}
+SKIP_DIRECTORIES = {"venv", "env", ".venv", ".env", "__pycache__", "node_modules", ".git", ".tox", ".pytest_cache"}
 ENTRY_POINT_NAMES = {"manage.py", "app.py", "main.py", "application.py", "wsgi.py", "asgi.py", "cli.py", "__main__.py"}
 
 # Framework detection patterns
 FRAMEWORK_MODULES = {
-    'django': ['django'],
-    'flask': ['flask'],
-    'fastapi': ['fastapi'],
-    'streamlit': ['streamlit'],
-    'pyramid': ['pyramid'],
-    'bottle': ['bottle'],
-    'tornado': ['tornado'],
-    'aiohttp': ['aiohttp'],
-    'sanic': ['sanic'],
-    'dash': ['dash'],
-    'gradio': ['gradio'],
-    'quart': ['quart'],
-    'starlette': ['starlette'],
-    'falcon': ['falcon'],
-    'cherrypy': ['cherrypy'],
+    "django": ["django"],
+    "flask": ["flask"],
+    "fastapi": ["fastapi"],
+    "streamlit": ["streamlit"],
+    "pyramid": ["pyramid"],
+    "bottle": ["bottle"],
+    "tornado": ["tornado"],
+    "aiohttp": ["aiohttp"],
+    "sanic": ["sanic"],
+    "dash": ["dash"],
+    "gradio": ["gradio"],
+    "quart": ["quart"],
+    "starlette": ["starlette"],
+    "falcon": ["falcon"],
+    "cherrypy": ["cherrypy"],
 }
 
 
@@ -149,9 +149,7 @@ class ProjectAnalyzer:
 
         # Analyze dependencies (simplified)
         if project_type == "python":
-            project_info["dependencies"] = self._analyze_python_dependencies(
-                project_path, found_files
-            )
+            project_info["dependencies"] = self._analyze_python_dependencies(project_path, found_files)
 
         # Add subtypes based on findings
         if "docker" in configs:
@@ -222,32 +220,22 @@ class ProjectAnalyzer:
 
         # Container
         configs["has_dockerfile"] = "Dockerfile" in found_files
-        configs["has_docker_compose"] = any(
-            f in found_files for f in ["docker-compose.yml", "docker-compose.yaml"]
-        )
+        configs["has_docker_compose"] = any(f in found_files for f in ["docker-compose.yml", "docker-compose.yaml"])
 
         # Testing
-        configs["has_pytest"] = any(
-            "pytest" in str(f) or "test" in str(f) for f in found_files
-        )
+        configs["has_pytest"] = any("pytest" in str(f) or "test" in str(f) for f in found_files)
         configs["has_unittest"] = False  # Would need to check file contents
 
         # CI/CD
-        configs["has_ci"] = any(
-            indicator in found_files for indicator in self.project_files["ci"]
-        )
+        configs["has_ci"] = any(indicator in found_files for indicator in self.project_files["ci"])
 
         # Quality tools
         configs["has_pre_commit"] = ".pre-commit-config.yaml" in found_files
-        configs["has_linting"] = any(
-            f in found_files for f in [".flake8", ".pylintrc", "tox.ini"]
-        )
+        configs["has_linting"] = any(f in found_files for f in [".flake8", ".pylintrc", "tox.ini"])
 
         return configs
 
-    def _analyze_python_dependencies(
-        self, project_path: Path, found_files: set[str]
-    ) -> dict[str, Any]:
+    def _analyze_python_dependencies(self, project_path: Path, found_files: set[str]) -> dict[str, Any]:
         """Analyze Python dependencies from various sources."""
         dependencies = {
             "python": {
@@ -273,7 +261,7 @@ class ProjectAnalyzer:
                 except Exception as e:
                     self.logger.error(
                         f"Failed to parse requirements.txt: {type(e).__name__}: {e}",
-                        exc_info=self.logger.isEnabledFor(logging.DEBUG)
+                        exc_info=self.logger.isEnabledFor(logging.DEBUG),
                     )
 
         # Check pyproject.toml
@@ -282,6 +270,7 @@ class ProjectAnalyzer:
             if pyproject_path.exists():
                 try:
                     import tomllib
+
                     with open(pyproject_path, "rb") as f:
                         data = tomllib.load(f)
 
@@ -303,7 +292,7 @@ class ProjectAnalyzer:
                 except Exception as e:
                     self.logger.error(
                         f"Failed to parse pyproject.toml: {type(e).__name__}: {e}",
-                        exc_info=self.logger.isEnabledFor(logging.DEBUG)
+                        exc_info=self.logger.isEnabledFor(logging.DEBUG),
                     )
 
         # Set all dependencies
@@ -339,7 +328,7 @@ class ProjectAnalyzer:
                     if analyzed_count >= max_files:
                         break
 
-                    if py_file.is_file() and not any(part.startswith('.') for part in py_file.parts):
+                    if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts):
                         # Skip hidden directories and common virtual env names
                         if any(skip_dir in py_file.parts for skip_dir in SKIP_DIRECTORIES):
                             continue

@@ -76,9 +76,7 @@ class PackageJsonParser(BaseParser):
             result["author"] = self._parse_person(data["author"])
 
         if "contributors" in data:
-            result["contributors"] = [
-                self._parse_person(p) for p in data["contributors"]
-            ]
+            result["contributors"] = [self._parse_person(p) for p in data["contributors"]]
 
         # Main entry points
         for key in ["main", "module", "browser", "types", "typings", "exports"]:
@@ -140,9 +138,7 @@ class PackageJsonParser(BaseParser):
             # Parse "Name <email> (url)" format
             import re
 
-            match = re.match(
-                r"^([^<\(]+?)(?:\s*<([^>]+)>)?(?:\s*\(([^\)]+)\))?$", person
-            )
+            match = re.match(r"^([^<\(]+?)(?:\s*<([^>]+)>)?(?:\s*\(([^\)]+)\))?$", person)
             if match:
                 name, email, url = match.groups()
                 result = {"name": name.strip()}

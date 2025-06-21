@@ -4,14 +4,14 @@ import sys
 import pytest
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import create_mock_file, mock_bash_script, run_bash_command
 
 
 def test_detect_active_venv(monkeypatch):
     """Test the detect_active_venv function."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
     script_content = f'''#!/bin/bash
     source "{dht_dir}/modules/environment.sh"
     detect_active_venv
@@ -41,10 +41,11 @@ def test_detect_active_venv(monkeypatch):
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 def test_env_command_output(mock_dht_env):
     """Test the env_command function produces expected output."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
     script_content = f'''#!/bin/bash
     # Set up required environment variables
     export DHTL_SESSION_ID="test_session"
@@ -105,6 +106,7 @@ EOF
         # Clean up the temporary script
         os.unlink(script_path)
 
+
 @pytest.mark.skip(reason="setup_environment function was removed - canonical logic is in dhtl_init.sh")
 def test_setup_environment(tmp_path, mock_dht_env):
     """Test the setup_environment function."""
@@ -113,10 +115,14 @@ def test_setup_environment(tmp_path, mock_dht_env):
     os.makedirs(project_root, exist_ok=True)
 
     # Create a pyproject.toml file
-    create_mock_file(project_root, "pyproject.toml", "[build-system]\nrequires = [\"setuptools>=42\"]\nbuild-backend = \"setuptools.build_meta\"\n")
+    create_mock_file(
+        project_root,
+        "pyproject.toml",
+        '[build-system]\nrequires = ["setuptools>=42"]\nbuild-backend = "setuptools.build_meta"\n',
+    )
 
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
     script_content = f'''#!/bin/bash
     source "{dht_dir}/modules/environment.sh"
 

@@ -44,11 +44,7 @@ def commit_command(*args, **kwargs) -> int:
     os.chdir(project_root)
 
     # Check for changes
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
 
     if not result.stdout.strip():
         log_warning("No changes to commit")
@@ -78,11 +74,7 @@ def commit_command(*args, **kwargs) -> int:
 
     if not message:
         # Try to generate a smart commit message
-        result = subprocess.run(
-            ["git", "diff", "--cached", "--name-status"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["git", "diff", "--cached", "--name-status"], capture_output=True, text=True)
 
         if result.stdout:
             # Analyze changes
@@ -108,11 +100,7 @@ def commit_command(*args, **kwargs) -> int:
 
     # Create commit
     log_info(f"Creating commit: {message}")
-    result = subprocess.run(
-        ["git", "commit", "-m", message],
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
 
     if result.returncode == 0:
         log_success("Commit created successfully!")
@@ -134,4 +122,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['commit_command', 'placeholder_command']
+__all__ = ["commit_command", "placeholder_command"]

@@ -270,8 +270,8 @@ uv automatically handles pyproject.toml without any manual configuration. It’s
 
 ### 4. Secure, Deterministic Installs
 
-uv ensures consistent installs for everyone — everyone gets the exact same environment every time, minimizing conflicts.  
-  
+uv ensures consistent installs for everyone — everyone gets the exact same environment every time, minimizing conflicts.
+
 
 ### 5. Cross-Platform Reliability
 
@@ -318,8 +318,8 @@ pip freeze > requirements.txt
 ```
 
 Except...
-  - Maybe you forgot to freeze the new dependency. 
-  - Or your teammate installs something else and forgets to update the file. 
+  - Maybe you forgot to freeze the new dependency.
+  - Or your teammate installs something else and forgets to update the file.
   - Or worse, your continuous integration pipeline breaks because the versions installed aren’t exactly the same across systems.
   - Or your virtual environment is bloated.
   - Or versions have drifted, and you’re stuck debugging a “works on my machine” issue at 2 a.m.
@@ -451,4 +451,3 @@ So go ahead — shake the table break stuff in a clean environment. Try uv. Buil
 Here’s to fewer bugs, cleaner builds, and clearer minds.
 
 ---
-

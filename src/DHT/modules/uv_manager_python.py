@@ -100,7 +100,7 @@ class PythonVersionManager:
                     version_info = {
                         "version": parts[0],
                         "installed": "(installed)" in line,
-                        "path": parts[-1] if "(installed)" in line else None
+                        "path": parts[-1] if "(installed)" in line else None,
                     }
                     versions.append(version_info)
 
@@ -131,9 +131,7 @@ class PythonVersionManager:
         install_result = self.run_command(["python", "install", version])
 
         if not install_result["success"]:
-            raise PythonVersionError(
-                f"Failed to install Python {version}: {install_result['stderr']}"
-            )
+            raise PythonVersionError(f"Failed to install Python {version}: {install_result['stderr']}")
 
         # Find the newly installed Python
         find_result = self.run_command(["python", "find", version])
@@ -143,6 +141,4 @@ class PythonVersionManager:
             self.logger.info(f"Successfully installed Python {version} at {python_path}")
             return python_path
         else:
-            raise PythonVersionError(
-                f"Python {version} was installed but cannot be found"
-            )
+            raise PythonVersionError(f"Python {version} was installed but cannot be found")

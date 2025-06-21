@@ -39,9 +39,7 @@ class ActWorkflowManager:
             True if workflows exist
         """
         return self.workflows_path.exists() and any(
-            f.suffix in ['.yml', '.yaml']
-            for f in self.workflows_path.iterdir()
-            if f.is_file()
+            f.suffix in [".yml", ".yaml"] for f in self.workflows_path.iterdir() if f.is_file()
         )
 
     def get_workflows(self) -> list[WorkflowInfo]:
@@ -60,22 +58,26 @@ class ActWorkflowManager:
                 with open(workflow_file) as f:
                     workflow_data = yaml.safe_load(f)
 
-                workflows.append(WorkflowInfo(
-                    file=workflow_file.name,
-                    name=workflow_data.get("name", workflow_file.stem),
-                    on=workflow_data.get("on", {}),
-                    jobs=list(workflow_data.get("jobs", {}).keys()),
-                    path=str(workflow_file)
-                ))
+                workflows.append(
+                    WorkflowInfo(
+                        file=workflow_file.name,
+                        name=workflow_data.get("name", workflow_file.stem),
+                        on=workflow_data.get("on", {}),
+                        jobs=list(workflow_data.get("jobs", {}).keys()),
+                        path=str(workflow_file),
+                    )
+                )
             except Exception as e:
-                workflows.append(WorkflowInfo(
-                    file=workflow_file.name,
-                    name=workflow_file.stem,
-                    path=str(workflow_file),
-                    on={},
-                    jobs=[],
-                    error=str(e)
-                ))
+                workflows.append(
+                    WorkflowInfo(
+                        file=workflow_file.name,
+                        name=workflow_file.stem,
+                        path=str(workflow_file),
+                        on={},
+                        jobs=[],
+                        error=str(e),
+                    )
+                )
 
         return workflows
 
@@ -85,25 +87,18 @@ class ActWorkflowManager:
         Returns:
             Dictionary with workflows and jobs information
         """
-        result = {
-            "workflows": {},
-            "total_workflows": 0,
-            "total_jobs": 0
-        }
+        result = {"workflows": {}, "total_workflows": 0, "total_jobs": 0}
 
         workflows = self.get_workflows()
 
         for workflow in workflows:
             if workflow.error:
-                result["workflows"][workflow.file] = {
-                    "name": workflow.name,
-                    "error": workflow.error
-                }
+                result["workflows"][workflow.file] = {"name": workflow.name, "error": workflow.error}
             else:
                 result["workflows"][workflow.file] = {
                     "name": workflow.name,
                     "jobs": workflow.jobs,
-                    "triggers": list(workflow.on.keys()) if isinstance(workflow.on, dict) else [workflow.on]
+                    "triggers": list(workflow.on.keys()) if isinstance(workflow.on, dict) else [workflow.on],
                 }
                 result["total_jobs"] += len(workflow.jobs)
 

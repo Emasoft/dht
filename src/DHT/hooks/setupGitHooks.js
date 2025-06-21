@@ -11,10 +11,10 @@ const files = [
 
     # Get the current branch name
     BRANCH_NAME=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
-    
+
     # Remove previously set exclude files
     rm -f .git/info/exclude
-    
+
     # When not in the beta/main branch, add additional files that need to be ignored
     if [ "$BRANCH_NAME" != "beta" ] && [ "$BRANCH_NAME" != "main" ]; then
       cp .git/info/exclude.dist .git/info/exclude

@@ -37,10 +37,7 @@ class ContainerBuildHandler:
             "dockerfile": "Dockerfile",
             "compose_files": self.find_compose_files(),
             "build_args": {},
-            "labels": {
-                "dht.project": self.project_path.name,
-                "dht.builder": "container_build_handler"
-            }
+            "labels": {"dht.project": self.project_path.name, "dht.builder": "container_build_handler"},
         }
 
         config_file = self.container_config_path / "build-config.json"
@@ -59,11 +56,7 @@ class ContainerBuildHandler:
         if self._command_exists("docker"):
             # Check if Docker daemon is running
             try:
-                result = subprocess.run(
-                    ["docker", "info"],
-                    capture_output=True,
-                    timeout=5
-                )
+                result = subprocess.run(["docker", "info"], capture_output=True, timeout=5)
                 if result.returncode == 0:
                     return "docker"
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
@@ -78,11 +71,7 @@ class ContainerBuildHandler:
     def _command_exists(self, cmd: str) -> bool:
         """Check if a command exists."""
         try:
-            subprocess.run(
-                ["which", cmd],
-                capture_output=True,
-                check=True
-            )
+            subprocess.run(["which", cmd], capture_output=True, check=True)
             return True
         except (subprocess.CalledProcessError, FileNotFoundError):
             return False
@@ -95,13 +84,12 @@ class ContainerBuildHandler:
             "compose.yml",
             "compose.yaml",
             "docker-compose.*.yml",
-            "docker-compose.*.yaml"
+            "docker-compose.*.yaml",
         ]
 
         files = []
         for pattern in compose_patterns:
-            files.extend([str(f.relative_to(self.project_path))
-                         for f in self.project_path.glob(pattern)])
+            files.extend([str(f.relative_to(self.project_path)) for f in self.project_path.glob(pattern)])
 
         return sorted(files)
 
@@ -141,18 +129,18 @@ class ContainerBuildHandler:
             "podman": {
                 "macos": "brew install podman",
                 "linux": "sudo apt-get install podman || sudo dnf install podman",
-                "info": "Podman is a daemonless, rootless container engine"
+                "info": "Podman is a daemonless, rootless container engine",
             },
             "docker": {
                 "macos": "Install Docker Desktop from docker.com",
                 "linux": "curl -fsSL https://get.docker.com | sh",
-                "info": "Docker requires a daemon and usually root access"
+                "info": "Docker requires a daemon and usually root access",
             },
             "buildah": {
                 "macos": "brew install buildah",
                 "linux": "sudo apt-get install buildah || sudo dnf install buildah",
-                "info": "Buildah is a tool for building OCI container images"
-            }
+                "info": "Buildah is a tool for building OCI container images",
+            },
         }
 
         return instructions
@@ -163,18 +151,13 @@ class ContainerBuildHandler:
         config_dir.mkdir(exist_ok=True)
 
         # Podman rootless config
-        podman_config = {
-            "containers": {
-                "rootless_networking": "slirp4netns",
-                "cgroup_manager": "cgroupfs"
-            }
-        }
+        podman_config = {"containers": {"rootless_networking": "slirp4netns", "cgroup_manager": "cgroupfs"}}
 
         with open(config_dir / "containers.conf", "w") as f:
             for section, values in podman_config.items():
                 f.write(f"[{section}]\n")
                 for key, value in values.items():
-                    f.write(f"{key} = \"{value}\"\n")
+                    f.write(f'{key} = "{value}"\n')
                 f.write("\n")
 
         # Create storage config for rootless
@@ -182,7 +165,7 @@ class ContainerBuildHandler:
             "storage": {
                 "driver": "overlay",
                 "runroot": str(self.container_config_path / "runroot"),
-                "graphroot": str(self.container_config_path / "storage")
+                "graphroot": str(self.container_config_path / "storage"),
             }
         }
 
@@ -190,7 +173,7 @@ class ContainerBuildHandler:
             for section, values in storage_config.items():
                 f.write(f"[{section}]\n")
                 for key, value in values.items():
-                    f.write(f"{key} = \"{value}\"\n")
+                    f.write(f'{key} = "{value}"\n')
                 f.write("\n")
 
         return config_dir
@@ -224,7 +207,7 @@ def get_container_build_info(project_path: Path) -> dict[str, any]:
             "can_build": False,
             "reason": "No container runtime found",
             "install_instructions": instructions,
-            "recommendation": "Install Podman for rootless container builds"
+            "recommendation": "Install Podman for rootless container builds",
         }
 
     commands = handler.get_build_commands()
@@ -236,7 +219,7 @@ def get_container_build_info(project_path: Path) -> dict[str, any]:
         "commands": commands,
         "config_path": str(handler.container_config_path),
         "compose_files": config["compose_files"],
-        "rootless": builder in ["podman", "buildah"]
+        "rootless": builder in ["podman", "buildah"],
     }
 
 

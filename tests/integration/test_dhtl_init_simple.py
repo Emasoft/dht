@@ -15,11 +15,7 @@ def test_simple_init():
         project_path = Path(tmpdir) / "test-project"
 
         commands = DHTLCommands()
-        result = commands.init(
-            path=str(project_path),
-            name="test-project",
-            python="3.11"
-        )
+        result = commands.init(path=str(project_path), name="test-project", python="3.11")
 
         print(f"Result: {result}")
 

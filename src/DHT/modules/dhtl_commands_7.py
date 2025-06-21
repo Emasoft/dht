@@ -92,12 +92,7 @@ def publish_command(*args, **kwargs) -> int:
             publish_cmd.extend(["--publish-url", "https://test.pypi.org/legacy/"])
 
         # Run with guardian
-        exit_code = run_with_guardian(
-            publish_cmd[0],
-            "uv-publish",
-            mem_limit,
-            *publish_cmd[1:]
-        )
+        exit_code = run_with_guardian(publish_cmd[0], "uv-publish", mem_limit, *publish_cmd[1:])
     elif twine_cmd:
         # Use twine to publish
         log_info("Publishing with twine...")
@@ -111,12 +106,7 @@ def publish_command(*args, **kwargs) -> int:
         publish_cmd.extend(["dist/*"])
 
         # Run with guardian
-        exit_code = run_with_guardian(
-            publish_cmd[0],
-            "twine-upload",
-            mem_limit,
-            *publish_cmd[1:]
-        )
+        exit_code = run_with_guardian(publish_cmd[0], "twine-upload", mem_limit, *publish_cmd[1:])
     else:
         log_error("No publishing tool found (uv or twine)")
         log_info("Install uv or twine: uv pip install twine")
@@ -141,4 +131,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['publish_command', 'placeholder_command']
+__all__ = ["publish_command", "placeholder_command"]

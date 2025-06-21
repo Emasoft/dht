@@ -52,13 +52,11 @@ def clean_command(*args, **kwargs) -> int:
         ".hypothesis",
         ".mypy_cache",
         ".ruff_cache",
-
         # Node.js
         "node_modules",
         "npm-debug.log*",
         "yarn-debug.log*",
         "yarn-error.log*",
-
         # IDE
         ".idea",
         ".vscode",
@@ -67,7 +65,6 @@ def clean_command(*args, **kwargs) -> int:
         "*~",
         ".DS_Store",
         "Thumbs.db",
-
         # Other
         "*.log",
         "*.tmp",
@@ -157,4 +154,4 @@ def placeholder_command(*args, **kwargs) -> int:
 
 
 # Export command functions
-__all__ = ['clean_command', 'placeholder_command']
+__all__ = ["clean_command", "placeholder_command"]

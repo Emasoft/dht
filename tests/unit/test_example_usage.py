@@ -27,8 +27,8 @@ from test_helpers import (
 class TestDHTDiagnosticScenarios:
     """Example tests using mock helpers for diagnostic scenarios."""
 
-    @patch('platform.uname')
-    @patch('psutil.virtual_memory')
+    @patch("platform.uname")
+    @patch("psutil.virtual_memory")
     def test_system_diagnostics_macos(self, mock_vm, mock_platform):
         """Test system diagnostics on macOS."""
         # Use our helper to create proper mocks
@@ -60,7 +60,7 @@ class TestDHTDiagnosticScenarios:
         assert vm.total == 32 * 1024 * 1024 * 1024
         assert vm.percent == 50.0
 
-    @patch('platform.uname')
+    @patch("platform.uname")
     def test_cross_platform_detection(self, mock_platform):
         """Test platform detection across different OSes."""
         test_cases = [
@@ -73,6 +73,7 @@ class TestDHTDiagnosticScenarios:
             mock_platform.return_value = create_platform_uname_mock(system=system)
 
             import platform
+
             assert platform.uname().system == system
 
 
@@ -220,7 +221,7 @@ class TestDHTEnvironmentSetup:
             # Check package metadata
             pyproject = project_path / "pyproject.toml"
             content = pyproject.read_text()
-            assert '[project.scripts]' in content
+            assert "[project.scripts]" in content
             assert 'my_awesome_lib = "my_awesome_lib.cli:main"' in content
 
             # Verify version management

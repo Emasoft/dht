@@ -36,14 +36,12 @@ class EnvironmentValidator:
             "git": self._extract_git_version,
             "node": self._extract_node_version,
             "npm": self._extract_npm_version,
-            "docker": self._extract_docker_version
+            "docker": self._extract_docker_version,
         }
 
     @task(name="verify_python_version")
     def verify_python_version(
-        self,
-        expected_version: str,
-        python_executable: str | None = None
+        self, expected_version: str, python_executable: str | None = None
     ) -> tuple[bool, str, list[str]]:
         """
         Verify Python version matches expected version.
@@ -71,18 +69,13 @@ class EnvironmentValidator:
                 return False, "unknown", ["Could not parse Python version"]
 
             # Compare versions
-            is_match, version_warnings = self._compare_versions(
-                "python", expected_version, actual_version
-            )
+            is_match, version_warnings = self._compare_versions("python", expected_version, actual_version)
             warnings.extend(version_warnings)
 
             if is_match:
                 logger.info(f"Python version verified: {actual_version}")
             else:
-                logger.warning(
-                    f"Python version mismatch: expected {expected_version}, "
-                    f"got {actual_version}"
-                )
+                logger.warning(f"Python version mismatch: expected {expected_version}, got {actual_version}")
 
             return is_match, actual_version, warnings
 
@@ -91,9 +84,7 @@ class EnvironmentValidator:
 
     @task(name="verify_tools")
     def verify_tools(
-        self,
-        expected_tools: dict[str, str],
-        platform_name: str | None = None
+        self, expected_tools: dict[str, str], platform_name: str | None = None
     ) -> dict[str, dict[str, Any]]:
         """
         Verify tool versions match expected versions.
@@ -114,7 +105,7 @@ class EnvironmentValidator:
                     "installed": False,
                     "version": None,
                     "matched": False,
-                    "warning": f"No command mapping for {tool} on this platform"
+                    "warning": f"No command mapping for {tool} on this platform",
                 }
                 continue
 
@@ -126,7 +117,7 @@ class EnvironmentValidator:
                         "installed": False,
                         "version": None,
                         "matched": False,
-                        "warning": f"{tool} not found or returned error"
+                        "warning": f"{tool} not found or returned error",
                     }
                     continue
 
@@ -139,37 +130,28 @@ class EnvironmentValidator:
                         "installed": True,
                         "version": "unknown",
                         "matched": False,
-                        "warning": f"Could not parse {tool} version from output"
+                        "warning": f"Could not parse {tool} version from output",
                     }
                     continue
 
                 # Compare versions
-                is_match, warnings = self._compare_versions(
-                    tool, expected_version, actual_version
-                )
+                is_match, warnings = self._compare_versions(tool, expected_version, actual_version)
 
                 results[tool] = {
                     "installed": True,
                     "version": actual_version,
                     "matched": is_match,
-                    "warnings": warnings
+                    "warnings": warnings,
                 }
 
             except Exception as e:
-                results[tool] = {
-                    "installed": False,
-                    "version": None,
-                    "matched": False,
-                    "error": str(e)
-                }
+                results[tool] = {"installed": False, "version": None, "matched": False, "error": str(e)}
 
         return results
 
     @task(name="verify_python_packages")
     def verify_python_packages(
-        self,
-        expected_packages: dict[str, str],
-        python_executable: str | None = None
+        self, expected_packages: dict[str, str], python_executable: str | None = None
     ) -> dict[str, dict[str, Any]]:
         """Verify Python package versions."""
         logger = get_run_logger()
@@ -188,10 +170,8 @@ class EnvironmentValidator:
                 return results
 
             import json
-            installed_packages = {
-                pkg["name"].lower(): pkg["version"]
-                for pkg in json.loads(result.stdout)
-            }
+
+            installed_packages = {pkg["name"].lower(): pkg["version"] for pkg in json.loads(result.stdout)}
 
         except Exception as e:
             logger.error(f"Error getting installed packages: {e}")
@@ -202,28 +182,20 @@ class EnvironmentValidator:
             package_lower = package.lower()
 
             if package_lower not in installed_packages:
-                results[package] = {
-                    "installed": False,
-                    "version": None,
-                    "matched": False
-                }
+                results[package] = {"installed": False, "version": None, "matched": False}
                 continue
 
             actual_version = installed_packages[package_lower]
 
             # Simple version comparison
             if expected_version == actual_version:
-                results[package] = {
-                    "installed": True,
-                    "version": actual_version,
-                    "matched": True
-                }
+                results[package] = {"installed": True, "version": actual_version, "matched": True}
             else:
                 results[package] = {
                     "installed": True,
                     "version": actual_version,
                     "matched": False,
-                    "expected": expected_version
+                    "expected": expected_version,
                 }
 
         return results
@@ -237,49 +209,49 @@ class EnvironmentValidator:
 
     def _extract_python_version(self, output: str) -> str | None:
         """Extract Python version from output."""
-        match = re.search(r'Python (\d+\.\d+\.\d+)', output)
+        match = re.search(r"Python (\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_pip_version(self, output: str) -> str | None:
         """Extract pip version from output."""
-        match = re.search(r'pip (\d+\.\d+(?:\.\d+)?)', output)
+        match = re.search(r"pip (\d+\.\d+(?:\.\d+)?)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_uv_version(self, output: str) -> str | None:
         """Extract uv version from output."""
-        match = re.search(r'uv (\d+\.\d+\.\d+)', output)
+        match = re.search(r"uv (\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_git_version(self, output: str) -> str | None:
         """Extract git version from output."""
-        match = re.search(r'git version (\d+\.\d+\.\d+)', output)
+        match = re.search(r"git version (\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_node_version(self, output: str) -> str | None:
         """Extract node version from output."""
-        match = re.search(r'v?(\d+\.\d+\.\d+)', output)
+        match = re.search(r"v?(\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_npm_version(self, output: str) -> str | None:
         """Extract npm version from output."""
-        match = re.search(r'(\d+\.\d+\.\d+)', output)
+        match = re.search(r"(\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
 
     def _extract_docker_version(self, output: str) -> str | None:
         """Extract docker version from output."""
-        match = re.search(r'Docker version (\d+\.\d+\.\d+)', output)
+        match = re.search(r"Docker version (\d+\.\d+\.\d+)", output)
         if match:
             return match.group(1)
         return None
@@ -287,11 +259,7 @@ class EnvironmentValidator:
     def _extract_generic_version(self, output: str) -> str | None:
         """Generic version extraction."""
         # Try common patterns
-        patterns = [
-            r'version[:\s]+v?(\d+\.\d+(?:\.\d+)?)',
-            r'v?(\d+\.\d+(?:\.\d+)?)',
-            r'(\d+\.\d+(?:\.\d+)?)'
-        ]
+        patterns = [r"version[:\s]+v?(\d+\.\d+(?:\.\d+)?)", r"v?(\d+\.\d+(?:\.\d+)?)", r"(\d+\.\d+(?:\.\d+)?)"]
 
         for pattern in patterns:
             match = re.search(pattern, output, re.IGNORECASE)
@@ -300,12 +268,7 @@ class EnvironmentValidator:
 
         return None
 
-    def _compare_versions(
-        self,
-        tool: str,
-        expected: str,
-        actual: str
-    ) -> tuple[bool, list[str]]:
+    def _compare_versions(self, tool: str, expected: str, actual: str) -> tuple[bool, list[str]]:
         """
         Compare tool versions with flexibility.
 
@@ -325,39 +288,25 @@ class EnvironmentValidator:
 
             # Check major.minor match for Python
             if tool == "python":
-                if (expected_v.major == actual_v.major and
-                    expected_v.minor == actual_v.minor):
-                    warnings.append(
-                        f"Python patch version differs ({expected} vs {actual}), "
-                        "but major.minor match"
-                    )
+                if expected_v.major == actual_v.major and expected_v.minor == actual_v.minor:
+                    warnings.append(f"Python patch version differs ({expected} vs {actual}), but major.minor match")
                     return True, warnings
 
             # For other tools, warn but allow if actual >= expected
             if actual_v >= expected_v:
-                warnings.append(
-                    f"{tool} version {actual} is newer than expected {expected}"
-                )
+                warnings.append(f"{tool} version {actual} is newer than expected {expected}")
                 return True, warnings
             else:
-                warnings.append(
-                    f"{tool} version {actual} is older than expected {expected}"
-                )
+                warnings.append(f"{tool} version {actual} is older than expected {expected}")
                 return False, warnings
 
         except Exception:
             # Fallback to string comparison
-            warnings.append(
-                f"Could not parse versions for {tool}, "
-                f"expected '{expected}' but got '{actual}'"
-            )
+            warnings.append(f"Could not parse versions for {tool}, expected '{expected}' but got '{actual}'")
             return False, warnings
 
     def verify_configurations(
-        self,
-        target_path: Path,
-        expected_configs: dict[str, str],
-        expected_checksums: dict[str, str]
+        self, target_path: Path, expected_configs: dict[str, str], expected_checksums: dict[str, str]
     ) -> dict[str, Any]:
         """
         Verify configuration files match expected content.
@@ -377,7 +326,7 @@ class EnvironmentValidator:
                 continue
 
             try:
-                actual_content = config_path.read_text(encoding='utf-8')
+                actual_content = config_path.read_text(encoding="utf-8")
 
                 # Check content match
                 if actual_content == expected_content:
@@ -388,6 +337,7 @@ class EnvironmentValidator:
                     # Check if we have checksums to compare
                     if filename in expected_checksums:
                         import hashlib
+
                         actual_checksum = hashlib.sha256(actual_content.encode()).hexdigest()
                         expected_checksum = expected_checksums[filename]
 
@@ -402,10 +352,7 @@ class EnvironmentValidator:
                 verified[filename] = False
                 differences[filename] = f"Read error: {e}"
 
-        return {
-            "verified": verified,
-            "differences": differences
-        }
+        return {"verified": verified, "differences": differences}
 
 
 # Export public API

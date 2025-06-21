@@ -187,24 +187,24 @@ def generate_dockerfile(config: EnvironmentConfig) -> None:
 
     container_config = config.container_config
 
-    dockerfile_content = f'''FROM {container_config["base_image"]}
+    dockerfile_content = f"""FROM {container_config["base_image"]}
 
 # Set working directory
 WORKDIR {container_config["working_dir"]}
 
 # Install system dependencies
-'''
+"""
 
     if container_config["system_packages"]:
         if "ubuntu" in container_config["base_image"] or "debian" in container_config["base_image"]:
-            dockerfile_content += f'''RUN apt-get update && apt-get install -y \\
+            dockerfile_content += f"""RUN apt-get update && apt-get install -y \\
     {" ".join(container_config["system_packages"])} \\
     && rm -rf /var/lib/apt/lists/*
 
-'''
+"""
 
     if config.project_type == "python":
-        dockerfile_content += '''# Copy requirements first for better caching
+        dockerfile_content += """# Copy requirements first for better caching
 COPY requirements.txt* pyproject.toml* uv.lock* ./
 
 # Install Python dependencies
@@ -215,16 +215,16 @@ RUN pip install --no-cache-dir -r requirements.txt || \\
 # Copy project files
 COPY . .
 
-'''
+"""
 
     if container_config.get("exposed_ports"):
         for port in container_config["exposed_ports"]:
-            dockerfile_content += f'EXPOSE {port}\n'
+            dockerfile_content += f"EXPOSE {port}\n"
 
-    dockerfile_content += '''
+    dockerfile_content += """
 # Default command
 CMD ["python", "-m", "your_module"]
-'''
+"""
 
     dockerfile_path = config.project_path / "Dockerfile"
     dockerfile_path.write_text(dockerfile_content)
@@ -285,71 +285,45 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
 
     workflow = {
         "name": "CI",
-        "on": {
-            "push": {"branches": ["main", "develop"]},
-            "pull_request": {"branches": ["main"]}
-        },
+        "on": {"push": {"branches": ["main", "develop"]}, "pull_request": {"branches": ["main"]}},
         "jobs": {
             "test": {
                 "runs-on": "${{ matrix.os }}",
                 "strategy": {
                     "matrix": {
                         "os": ci_config.get("os_matrix", ["ubuntu-latest"]),
-                        "python-version": ci_config.get("python_versions", ["3.11"])
+                        "python-version": ci_config.get("python_versions", ["3.11"]),
                     }
                 },
                 "steps": [
-                    {
-                        "uses": "actions/checkout@v4"
-                    },
+                    {"uses": "actions/checkout@v4"},
                     {
                         "name": "Set up Python ${{ matrix.python-version }}",
                         "uses": "actions/setup-python@v4",
-                        "with": {
-                            "python-version": "${{ matrix.python-version }}"
-                        }
+                        "with": {"python-version": "${{ matrix.python-version }}"},
                     },
-                    {
-                        "name": "Install UV",
-                        "run": "pip install uv"
-                    },
-                    {
-                        "name": "Install dependencies",
-                        "run": "uv sync --all-extras"
-                    }
-                ]
+                    {"name": "Install UV", "run": "pip install uv"},
+                    {"name": "Install dependencies", "run": "uv sync --all-extras"},
+                ],
             }
-        }
+        },
     }
 
     # Add workflow-specific steps
     if "test" in ci_config.get("workflows", []):
-        workflow["jobs"]["test"]["steps"].append({
-            "name": "Run tests",
-            "run": "pytest"
-        })
+        workflow["jobs"]["test"]["steps"].append({"name": "Run tests", "run": "pytest"})
 
     if "lint" in ci_config.get("workflows", []):
-        workflow["jobs"]["test"]["steps"].extend([
-            {
-                "name": "Run linting",
-                "run": "ruff check ."
-            },
-            {
-                "name": "Check formatting",
-                "run": "black --check ."
-            },
-            {
-                "name": "Type checking",
-                "run": "mypy ."
-            }
-        ])
+        workflow["jobs"]["test"]["steps"].extend(
+            [
+                {"name": "Run linting", "run": "ruff check ."},
+                {"name": "Check formatting", "run": "black --check ."},
+                {"name": "Type checking", "run": "mypy ."},
+            ]
+        )
 
     if "build" in ci_config.get("workflows", []):
-        workflow["jobs"]["test"]["steps"].append({
-            "name": "Build package",
-            "run": "uv build"
-        })
+        workflow["jobs"]["test"]["steps"].append({"name": "Build package", "run": "uv build"})
 
     # Ensure .github/workflows directory exists
     workflows_dir = config.project_path / ".github" / "workflows"
@@ -367,28 +341,14 @@ def generate_gitlab_ci(config: EnvironmentConfig) -> None:
 
     gitlab_ci = {
         "stages": ["test", "build", "deploy"],
-        "variables": {
-            "PIP_CACHE_DIR": "$CI_PROJECT_DIR/.cache/pip"
-        },
-        "cache": {
-            "paths": [".cache/pip", ".venv/"]
-        },
+        "variables": {"PIP_CACHE_DIR": "$CI_PROJECT_DIR/.cache/pip"},
+        "cache": {"paths": [".cache/pip", ".venv/"]},
         "test": {
             "stage": "test",
             "image": f"python:{config.python_version or '3.11'}",
-            "before_script": [
-                "pip install uv",
-                "uv venv",
-                "source .venv/bin/activate",
-                "uv sync --all-extras"
-            ],
-            "script": [
-                "pytest",
-                "ruff check .",
-                "black --check .",
-                "mypy ."
-            ]
-        }
+            "before_script": ["pip install uv", "uv venv", "source .venv/bin/activate", "uv sync --all-extras"],
+            "script": ["pytest", "ruff check .", "black --check .", "mypy ."],
+        },
     }
 
     gitlab_ci_file = config.project_path / ".gitlab-ci.yml"
@@ -407,7 +367,7 @@ def generate_env_file(config: EnvironmentConfig) -> None:
         "LOG_LEVEL": "INFO",
         "DATABASE_URL": "postgresql://user:pass@localhost/dbname",
         "SECRET_KEY": "your-secret-key-here",
-        "REDIS_URL": "redis://localhost:6379/0"
+        "REDIS_URL": "redis://localhost:6379/0",
     }
 
     # Merge with config environment variables
@@ -422,7 +382,7 @@ def generate_env_file(config: EnvironmentConfig) -> None:
 
 def generate_makefile(config: EnvironmentConfig) -> None:
     """Generate Makefile with common commands."""
-    makefile_content = '''# Makefile for project automation
+    makefile_content = """# Makefile for project automation
 
 .PHONY: help install test lint format clean build
 
@@ -460,7 +420,7 @@ docker-build:  ## Build Docker image
 
 docker-run:  ## Run Docker container
 \tdocker run -it --rm -p 8000:8000 $(PROJECT_NAME)
-'''
+"""
 
     makefile = config.project_path / "Makefile"
     makefile.write_text(makefile_content)

@@ -65,12 +65,14 @@ class RegexBashParser:
                 else:
                     func_body = "\n".join(func_lines)
 
-                functions.append({
-                    "name": func_name,
-                    "body": func_body,
-                    "line": start_line,
-                    "local_vars": self.utils.extract_local_vars_from_body(func_body),
-                })
+                functions.append(
+                    {
+                        "name": func_name,
+                        "body": func_body,
+                        "line": start_line,
+                        "local_vars": self.utils.extract_local_vars_from_body(func_body),
+                    }
+                )
 
                 # Skip past this function
                 i = j - 1
@@ -89,12 +91,14 @@ class RegexBashParser:
                 var_name = match.group(1)
                 var_value = match.group(2).strip("\"'")
 
-                variables.append({
-                    "name": var_name,
-                    "value": var_value,
-                    "line": line_num,
-                    "type": self.utils.infer_var_type(var_value),
-                })
+                variables.append(
+                    {
+                        "name": var_name,
+                        "value": var_value,
+                        "line": line_num,
+                        "type": self.utils.infer_var_type(var_value),
+                    }
+                )
 
         return variables
 
@@ -108,11 +112,7 @@ class RegexBashParser:
                 var_name = match.group(1)
                 var_value = match.group(2).strip("\"'") if match.group(2) else None
 
-                exports.append({
-                    "name": var_name,
-                    "value": var_value,
-                    "line": line_num
-                })
+                exports.append({"name": var_name, "value": var_value, "line": line_num})
 
         return exports
 
@@ -124,11 +124,13 @@ class RegexBashParser:
             match = re.match(REGEX_PATTERNS["source_statement"], line)
             if match:
                 file_path = match.group(1).strip("\"'")
-                sources.append({
-                    "path": file_path,
-                    "line": line_num,
-                    "resolved": self.utils.resolve_source_path(file_path),
-                })
+                sources.append(
+                    {
+                        "path": file_path,
+                        "line": line_num,
+                        "resolved": self.utils.resolve_source_path(file_path),
+                    }
+                )
 
         return sources
 
@@ -154,15 +156,17 @@ class RegexBashParser:
                         # Extract arguments
                         args = []
                         if len(line) > len(cmd):
-                            args_str = line[len(cmd):].strip()
+                            args_str = line[len(cmd) :].strip()
                             # Simple argument splitting (doesn't handle quotes perfectly)
                             args = args_str.split()
 
-                        commands.append({
-                            "name": cmd,
-                            "line": line_num,
-                            "args": args,
-                        })
+                        commands.append(
+                            {
+                                "name": cmd,
+                                "line": line_num,
+                                "args": args,
+                            }
+                        )
                     break
 
         return commands
@@ -183,10 +187,10 @@ class RegexBashParser:
         }
 
         # Count different structures
-        structures["if_statements"] = len(re.findall(r'\bif\s+', content))
-        structures["for_loops"] = len(re.findall(r'\bfor\s+', content))
-        structures["while_loops"] = len(re.findall(r'\bwhile\s+', content))
-        structures["case_statements"] = len(re.findall(r'\bcase\s+', content))
+        structures["if_statements"] = len(re.findall(r"\bif\s+", content))
+        structures["for_loops"] = len(re.findall(r"\bfor\s+", content))
+        structures["while_loops"] = len(re.findall(r"\bwhile\s+", content))
+        structures["case_statements"] = len(re.findall(r"\bcase\s+", content))
 
         # Count functions (both syntaxes)
         func_count1 = len(re.findall(REGEX_PATTERNS["function_def1"], content, re.MULTILINE))

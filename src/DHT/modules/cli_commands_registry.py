@@ -62,9 +62,9 @@ def get_platform_specific_commands(platform: str | None = None) -> dict[str, dic
 
     for cmd_name, cmd_def in CLI_COMMANDS.items():
         # Check if command has platform restrictions
-        if 'platforms' in cmd_def:
+        if "platforms" in cmd_def:
             # If platform is restricted, check if current platform is allowed
-            if platform in cmd_def['platforms']:
+            if platform in cmd_def["platforms"]:
                 filtered_commands[cmd_name] = cmd_def
         else:
             # No platform restrictions, check with system taxonomy
@@ -91,13 +91,13 @@ def get_commands_by_category(category: str | None) -> dict[str, dict[str, Any]]:
     filtered_commands = {}
 
     for cmd_name, cmd_def in CLI_COMMANDS.items():
-        cmd_category = cmd_def.get('category', '')
+        cmd_category = cmd_def.get("category", "")
 
         # Check for exact match or if command category starts with requested category
-        if cmd_category == category or cmd_category.startswith(category + '.'):
+        if cmd_category == category or cmd_category.startswith(category + "."):
             filtered_commands[cmd_name] = cmd_def
         # Also check if requested category is a subcategory of command category
-        elif category.startswith(cmd_category + '.'):
+        elif category.startswith(cmd_category + "."):
             filtered_commands[cmd_name] = cmd_def
 
     return filtered_commands

@@ -45,7 +45,7 @@ pytest -xvs  # DON'T USE - too verbose!
 # Instead of: find . -name "*.py" -type f
 # Use: find . -name "*.py" -type f | wc -l  # Just count
 
-# Instead of: ls -la 
+# Instead of: ls -la
 # Use: ls | wc -l  # Just count files
 
 # Instead of: cat large_file.py
@@ -88,7 +88,7 @@ os.environ["PREFECT_LOGGING_LEVEL"] = "ERROR"
 ### 6. General Best Practices
 
 1. **Use head/tail**: For long outputs, show only relevant portions
-2. **Summarize results**: Create summary tables instead of full details  
+2. **Summarize results**: Create summary tables instead of full details
 3. **Log to files**: Write verbose output to log files, show only summaries
 4. **Use counts**: Often a count is enough (e.g., "Found 47 Python files")
 5. **Filter output**: Use grep/awk to show only relevant lines

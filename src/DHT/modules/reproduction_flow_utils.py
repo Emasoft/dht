@@ -37,6 +37,7 @@ class ReproductionFlowUtils:
                 self.logger = get_run_logger()
             except Exception:
                 import logging
+
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
@@ -46,7 +47,7 @@ class ReproductionFlowUtils:
         output_dir: Path | None = None,
         include_system_info: bool = True,
         save_snapshot: bool = True,
-        verify_reproduction: bool = True
+        verify_reproduction: bool = True,
     ) -> dict[str, Any]:
         """
         Complete flow for creating reproducible environments.
@@ -72,18 +73,13 @@ class ReproductionFlowUtils:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        results = {
-            "project_path": str(project_path),
-            "timestamp": datetime.now().isoformat(),
-            "steps": []
-        }
+        results = {"project_path": str(project_path), "timestamp": datetime.now().isoformat(), "steps": []}
 
         try:
             # Step 1: Capture environment snapshot
             logger.info("Capturing environment snapshot...")
             snapshot = self.reproducer._capture_environment_snapshot_impl(
-                project_path=project_path,
-                include_system_info=include_system_info
+                project_path=project_path, include_system_info=include_system_info
             )
             results["snapshot_id"] = snapshot.snapshot_id
             results["steps"].append("capture_snapshot")
@@ -92,8 +88,7 @@ class ReproductionFlowUtils:
             if save_snapshot:
                 snapshot_file = output_dir / f"{snapshot.snapshot_id}.json"
                 saved_path = self.reproducer._save_environment_snapshot_impl(
-                    snapshot=snapshot,
-                    output_path=snapshot_file
+                    snapshot=snapshot, output_path=snapshot_file
                 )
                 results["snapshot_file"] = str(saved_path)
                 results["steps"].append("save_snapshot")
@@ -109,7 +104,7 @@ class ReproductionFlowUtils:
                         snapshot=snapshot,
                         target_path=Path(temp_dir) / "verification",
                         strict_mode=False,  # Use lenient mode for verification
-                        auto_install=False  # Don't auto-install during verification
+                        auto_install=False,  # Don't auto-install during verification
                     )
 
                     results["verification"] = {
@@ -117,14 +112,12 @@ class ReproductionFlowUtils:
                         "tools_verified": verification_result.tools_verified,
                         "version_mismatches": verification_result.version_mismatches,
                         "missing_tools": verification_result.missing_tools,
-                        "warnings": verification_result.warnings
+                        "warnings": verification_result.warnings,
                     }
                     results["steps"].append("verify_reproduction")
 
             # Step 4: Generate reproduction guide
-            self.reproducer.artifact_creator.create_reproduction_artifacts(
-                snapshot, results, output_dir
-            )
+            self.reproducer.artifact_creator.create_reproduction_artifacts(snapshot, results, output_dir)
             results["steps"].append("create_artifacts")
 
             results["success"] = True
@@ -136,10 +129,7 @@ class ReproductionFlowUtils:
 
         results["execution_time"] = time.time() - start_time
 
-        logger.info(
-            f"Reproducible environment creation "
-            f"{'completed' if results['success'] else 'failed'}"
-        )
+        logger.info(f"Reproducible environment creation {'completed' if results['success'] else 'failed'}")
         return results
 
 

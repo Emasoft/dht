@@ -36,7 +36,7 @@ class ActCommandBuilder:
         event: str = "push",
         job: str | None = None,
         use_container: bool = False,
-        preferred_method: str | None = None
+        preferred_method: str | None = None,
     ) -> list[str]:
         """Get act command with appropriate options.
 
@@ -128,11 +128,7 @@ class ActCommandBuilder:
         cmd.append("-g")
         return cmd
 
-    def get_dry_run_command(
-        self,
-        event: str = "push",
-        job: str | None = None
-    ) -> list[str]:
+    def get_dry_run_command(self, event: str = "push", job: str | None = None) -> list[str]:
         """Get command for dry run.
 
         Args:

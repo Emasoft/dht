@@ -35,7 +35,7 @@ def get_setup_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
             "suggested": "postgresql",
             "packages": ["psycopg2-binary"],
             "docker_image": "postgres:15-alpine",
-            "env_vars": ["DATABASE_URL", "POSTGRES_PASSWORD"]
+            "env_vars": ["DATABASE_URL", "POSTGRES_PASSWORD"],
         }
 
     # Cache recommendations
@@ -43,7 +43,7 @@ def get_setup_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
         recommendations["cache"] = {
             "suggested": "redis",
             "packages": ["redis", "hiredis"],
-            "docker_image": "redis:7-alpine"
+            "docker_image": "redis:7-alpine",
         }
 
     # Task queue recommendations
@@ -51,7 +51,7 @@ def get_setup_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
         recommendations["task_queue"] = {
             "suggested": "celery",
             "packages": ["celery", "django-celery-beat"],
-            "broker": "redis"
+            "broker": "redis",
         }
 
     # Testing recommendations
@@ -61,27 +61,20 @@ def get_setup_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
     elif analysis.type == ProjectType.FASTAPI:
         test_packages.extend(["pytest-asyncio", "httpx"])
 
-    recommendations["testing"] = {
-        "framework": "pytest",
-        "packages": test_packages
-    }
+    recommendations["testing"] = {"framework": "pytest", "packages": test_packages}
 
     # ML-specific recommendations
     if analysis.category.is_data_related():
         recommendations["ml_tools"] = {
             "experiment_tracking": "mlflow",
             "data_versioning": "dvc",
-            "gpu_support": analysis.category.requires_gpu_support()
+            "gpu_support": analysis.category.requires_gpu_support(),
         }
 
     # Project structure recommendations
     if analysis.type == ProjectType.GENERIC:
         recommendations["project_structure"] = {
-            "actions": [
-                "Choose a project type",
-                "Add framework-specific structure",
-                "Create proper package layout"
-            ]
+            "actions": ["Choose a project type", "Add framework-specific structure", "Create proper package layout"]
         }
 
     # Development tools recommendations
@@ -133,22 +126,19 @@ def get_ci_cd_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
         ci_cd["deployment"] = {
             "platforms": ["Heroku", "Railway", "Fly.io"],
             "containerization": "Docker",
-            "orchestration": "Kubernetes (for scale)"
+            "orchestration": "Kubernetes (for scale)",
         }
     elif analysis.category == ProjectCategory.WEB_FRAMEWORK:
         ci_cd["deployment"] = {
             "platforms": ["Vercel", "Netlify", "Railway"],
-            "static_hosting": "GitHub Pages (for docs)"
+            "static_hosting": "GitHub Pages (for docs)",
         }
 
     # Add release recommendations
     if analysis.is_publishable:
         ci_cd["release"] = {
-            "pypi": {
-                "tools": ["twine", "build"],
-                "workflow": "publish-to-pypi"
-            },
-            "versioning": "semantic-release"
+            "pypi": {"tools": ["twine", "build"], "workflow": "publish-to-pypi"},
+            "versioning": "semantic-release",
         }
 
     return ci_cd
@@ -158,14 +148,7 @@ def get_documentation_recommendations(analysis: ProjectAnalysis) -> dict[str, An
     """Get documentation recommendations."""
     docs = {
         "readme": {
-            "sections": [
-                "Project Description",
-                "Installation",
-                "Usage",
-                "Development",
-                "Contributing",
-                "License"
-            ]
+            "sections": ["Project Description", "Installation", "Usage", "Development", "Contributing", "License"]
         }
     }
 
@@ -173,7 +156,7 @@ def get_documentation_recommendations(analysis: ProjectAnalysis) -> dict[str, An
     if analysis.category in [ProjectCategory.WEB_API, ProjectCategory.WEB_FRAMEWORK]:
         docs["api_docs"] = {
             "tools": ["Sphinx", "MkDocs"],
-            "api_spec": "OpenAPI/Swagger" if analysis.type == ProjectType.FASTAPI else "Django REST Swagger"
+            "api_spec": "OpenAPI/Swagger" if analysis.type == ProjectType.FASTAPI else "Django REST Swagger",
         }
 
     # Add notebook documentation for data science
@@ -181,14 +164,14 @@ def get_documentation_recommendations(analysis: ProjectAnalysis) -> dict[str, An
         docs["notebooks"] = {
             "structure": "docs/notebooks/",
             "naming": "01_data_exploration.ipynb, 02_feature_engineering.ipynb",
-            "tools": ["nbconvert", "jupyter-book"]
+            "tools": ["nbconvert", "jupyter-book"],
         }
 
     # Add docstring recommendations
     docs["docstrings"] = {
         "style": "Google",
         "coverage": "All public functions and classes",
-        "tools": ["pydocstyle", "darglint"]
+        "tools": ["pydocstyle", "darglint"],
     }
 
     return docs

@@ -47,9 +47,7 @@ def get_venv_executable_path(venv_path: Path, executable: str) -> Path:
     elif alt_path.exists():
         return alt_path
     else:
-        raise FileNotFoundError(
-            f"{executable} executable not found in virtual environment: {venv_path}"
-        )
+        raise FileNotFoundError(f"{executable} executable not found in virtual environment: {venv_path}")
 
 
 def get_venv_python_path(venv_path: Path) -> Path:

@@ -13,19 +13,23 @@ This module contains all exception classes used by the UV Manager.
 
 class UVError(Exception):
     """Base exception for UV-related errors."""
+
     pass
 
 
 class UVNotFoundError(UVError):
     """UV executable not found."""
+
     pass
 
 
 class PythonVersionError(UVError):
     """Python version-related error."""
+
     pass
 
 
 class DependencyError(UVError):
     """Dependency resolution error."""
+
     pass

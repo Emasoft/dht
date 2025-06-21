@@ -12,7 +12,6 @@ Python frameworks and project types.
 # - Organized by project type for clarity
 #
 
-
 from DHT.modules.project_analysis_models import ProjectAnalysis
 
 

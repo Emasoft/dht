@@ -67,7 +67,7 @@ PLATFORM_MAPPINGS = {
 }
 ```
 
-**Why it's clever**: 
+**Why it's clever**:
 - Developers think in terms of capabilities ("I need PostgreSQL client")
 - DHT handles platform-specific package names
 - No more README sections for each OS
@@ -141,7 +141,7 @@ DHT treats Python as a **coordinator** for polyglot projects:
 languages:
   node: {version: "18.17.0", installer: "uv tool"}
   rust: {version: "1.70.0", installer: "rustup"}
-  
+
 # Everything runs through Python venv
 $ dhtl run npm build      # Uses venv's node
 $ dhtl run cargo test     # Uses venv's rust
@@ -171,7 +171,7 @@ $ dhtl run cargo test     # Uses venv's rust
 The key insight is that **most environment configuration is inferrable**:
 
 1. **Project structure** reveals framework (Django has manage.py)
-2. **Import statements** reveal dependencies 
+2. **Import statements** reveal dependencies
 3. **File patterns** reveal tools needed
 4. **Code analysis** reveals required services
 

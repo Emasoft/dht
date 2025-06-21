@@ -2,15 +2,15 @@ import os
 import sys
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import mock_bash_script, run_bash_command
 
 
 def test_uv_is_available():
     """Test the uv_is_available function."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -64,16 +64,18 @@ def test_uv_is_available():
         # Clean up the temporary script
         os.unlink(script_path)
         # Clean up test directory if it exists
-        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../test_uv_dir'))
+        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../test_uv_dir"))
         if os.path.exists(test_dir):
             import shutil
+
             shutil.rmtree(test_dir)
+
 
 def test_get_uv_command():
     """Test the get_uv_command function."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -114,7 +116,7 @@ def test_get_uv_command():
 
         # Check the output
         assert "UV_COMMAND=" in result
-        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../test_uv_dir'))
+        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../test_uv_dir"))
         expected_path = f"{test_dir}/.venv/bin/uv"
         assert f"UV_COMMAND={expected_path}" in result
         # After removal, the command should be empty or fallback to global uv
@@ -123,16 +125,18 @@ def test_get_uv_command():
         # Clean up the temporary script
         os.unlink(script_path)
         # Clean up test directory if it exists
-        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../test_uv_dir'))
+        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../test_uv_dir"))
         if os.path.exists(test_dir):
             import shutil
+
             shutil.rmtree(test_dir)
+
 
 def test_uv_create_venv():
     """Test the uv_create_venv function."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables
@@ -208,16 +212,18 @@ def test_uv_create_venv():
         # Clean up the temporary script
         os.unlink(script_path)
         # Clean up test directory if it exists
-        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../test_uv_dir'))
+        test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../test_uv_dir"))
         if os.path.exists(test_dir):
             import shutil
+
             shutil.rmtree(test_dir)
+
 
 def test_uv_command_help():
     """Test the uv_command help function."""
     # Create a script that sources the module and calls the function
-    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/DHT'))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+    dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
     script_content = f'''#!/bin/bash
     # Set up environment variables

@@ -18,28 +18,29 @@ import sys
 
 class Colors:
     """ANSI color codes for terminal output."""
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+
+    HEADER = "\033[95m"
+    BLUE = "\033[94m"
+    CYAN = "\033[96m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
     @staticmethod
     def disable():
         """Disable colors for environments that don't support them."""
-        Colors.HEADER = ''
-        Colors.BLUE = ''
-        Colors.CYAN = ''
-        Colors.GREEN = ''
-        Colors.YELLOW = ''
-        Colors.RED = ''
-        Colors.ENDC = ''
-        Colors.BOLD = ''
-        Colors.UNDERLINE = ''
+        Colors.HEADER = ""
+        Colors.BLUE = ""
+        Colors.CYAN = ""
+        Colors.GREEN = ""
+        Colors.YELLOW = ""
+        Colors.RED = ""
+        Colors.ENDC = ""
+        Colors.BOLD = ""
+        Colors.UNDERLINE = ""
 
     @staticmethod
     def supports_color() -> bool:
@@ -48,14 +49,15 @@ class Colors:
         if not sys.stdout.isatty():
             return False
 
-        term = os.environ.get('TERM', '')
-        if term == 'dumb':
+        term = os.environ.get("TERM", "")
+        if term == "dumb":
             return False
 
         # Windows console might not support ANSI colors
         if sys.platform == "win32" and not os.environ.get("ANSICON"):
             try:
                 import colorama
+
                 colorama.init()
                 return True
             except ImportError:

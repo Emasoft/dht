@@ -33,12 +33,7 @@ class ScriptExecutor:
         self.run_command = run_command_func
 
     @task
-    def run_script(
-        self,
-        project_path: Path,
-        script: str,
-        args: list[str] | None = None
-    ) -> dict[str, Any]:
+    def run_script(self, project_path: Path, script: str, args: list[str] | None = None) -> dict[str, Any]:
         """
         Run a Python script in the project environment.
 
@@ -64,9 +59,4 @@ class ScriptExecutor:
 
         result = self.run_command(cmd_args, cwd=project_path)
 
-        return {
-            "success": result["success"],
-            "script": script,
-            "output": result["stdout"],
-            "error": result["stderr"]
-        }
+        return {"success": result["success"], "script": script, "output": result["stdout"], "error": result["stderr"]}

@@ -51,11 +51,11 @@
 1. Fix the most critical issues first:
    - Project type detector logic
    - Remaining import/path issues
-   
+
 2. Address technical debt:
    - File size violations (requires careful refactoring)
    - Code complexity issues
-   
+
 3. Update test expectations for environment-specific tests:
    - UV availability tests
    - System taxonomy edge cases

@@ -57,12 +57,7 @@ class ActContainerManager:
             ContainerSetupResult with setup information
         """
         result = ContainerSetupResult(
-            success=False,
-            runtime_available=False,
-            runtime=None,
-            socket_path=None,
-            volumes=[],
-            environment={}
+            success=False, runtime_available=False, runtime=None, socket_path=None, volumes=[], environment={}
         )
 
         # Check available container runtimes
@@ -84,9 +79,7 @@ class ActContainerManager:
             if result.runtime == "podman":
                 # Try to start podman service
                 try:
-                    subprocess.run(["podman", "system", "service", "--time=0"],
-                                 capture_output=True,
-                                 background=True)
+                    subprocess.run(["podman", "system", "service", "--time=0"], capture_output=True, background=True)
                 except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
                     result.error = f"Podman socket not found at {socket_path}: {str(e)}"
                     return result
@@ -97,10 +90,7 @@ class ActContainerManager:
         result.socket_path = socket_path
 
         # Setup volumes
-        result.volumes = [
-            f"{self.project_path}:/workspace",
-            f"{socket_path}:/var/run/docker.sock"
-        ]
+        result.volumes = [f"{self.project_path}:/workspace", f"{socket_path}:/var/run/docker.sock"]
 
         # Add cache volumes if they exist
         cache_dir = self.venv_path / "act-cache"
@@ -111,7 +101,7 @@ class ActContainerManager:
         result.environment = {
             "DOCKER_HOST": f"unix://{socket_path}",
             "ACT_CACHE_DIR": "/cache",
-            "WORKSPACE": "/workspace"
+            "WORKSPACE": "/workspace",
         }
 
         result.success = True
@@ -152,10 +142,9 @@ class ActContainerManager:
         cmd.append("nektos/act:latest")
 
         # Add act-specific arguments
-        cmd.extend([
-            "-P", f"{config.platform}={config.runner_image}",
-            "--container-daemon-socket", container_setup.socket_path
-        ])
+        cmd.extend(
+            ["-P", f"{config.platform}={config.runner_image}", "--container-daemon-socket", container_setup.socket_path]
+        )
 
         return cmd
 

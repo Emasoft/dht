@@ -53,9 +53,9 @@ class DHTLauncher:
 
         # Resource limits
         self.default_mem_limit = 2048  # MB
-        self.node_mem_limit = 2048     # MB
-        self.python_mem_limit = 2048   # MB
-        self.timeout = 900             # 15 minutes
+        self.node_mem_limit = 2048  # MB
+        self.python_mem_limit = 2048  # MB
+        self.timeout = 900  # 15 minutes
 
         # Command options
         self.use_guardian = True
@@ -100,9 +100,17 @@ class DHTLauncher:
 
         # Project markers to look for
         markers = [
-            ".git", "package.json", "pyproject.toml", "setup.py",
-            "Cargo.toml", "go.mod", "pom.xml", "build.gradle",
-            "Gemfile", "composer.json", ".dhtconfig"
+            ".git",
+            "package.json",
+            "pyproject.toml",
+            "setup.py",
+            "Cargo.toml",
+            "go.mod",
+            "pom.xml",
+            "build.gradle",
+            "Gemfile",
+            "composer.json",
+            ".dhtconfig",
         ]
 
         # Traverse up looking for markers
@@ -139,10 +147,18 @@ class DHTLauncher:
 
     def display_help(self) -> None:
         """Display help message."""
-        print(f"{Colors.CYAN}╔════════════════════════════════════════════════════════════════════════════╗{Colors.ENDC}")
-        print(f"{Colors.CYAN}║              Development Helper Toolkit Launcher (DHTL) v{self.version}             ║{Colors.ENDC}")
-        print(f"{Colors.CYAN}╚════════════════════════════════════════════════════════════════════════════╝{Colors.ENDC}")
-        print(f"\nUsage: {Colors.BOLD}./dhtl.py [command] [options]{Colors.ENDC}  (or 'dhtl [command]' if installed via pip)")
+        print(
+            f"{Colors.CYAN}╔════════════════════════════════════════════════════════════════════════════╗{Colors.ENDC}"
+        )
+        print(
+            f"{Colors.CYAN}║              Development Helper Toolkit Launcher (DHTL) v{self.version}             ║{Colors.ENDC}"
+        )
+        print(
+            f"{Colors.CYAN}╚════════════════════════════════════════════════════════════════════════════╝{Colors.ENDC}"
+        )
+        print(
+            f"\nUsage: {Colors.BOLD}./dhtl.py [command] [options]{Colors.ENDC}  (or 'dhtl [command]' if installed via pip)"
+        )
         print("\nThis is the main orchestrator for the DHT toolkit.\n")
         print(f"{Colors.BOLD}Available commands:{Colors.ENDC}")
         print("  help, --help     Show this help message")
@@ -192,4 +208,3 @@ class DHTLauncher:
         dispatcher = CommandDispatcher()
         # Let dispatcher handle all commands including help/version
         return dispatcher.dispatch(command, args)
-

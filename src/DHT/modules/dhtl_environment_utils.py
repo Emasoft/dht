@@ -15,4 +15,4 @@ Consolidated environment utilities from converted shell modules.
 # Re-export from common_utils to maintain compatibility
 from .common_utils import detect_platform, find_project_root, find_virtual_env, setup_environment
 
-__all__ = ['find_project_root', 'find_virtual_env', 'detect_platform', 'setup_environment']
+__all__ = ["find_project_root", "find_virtual_env", "detect_platform", "setup_environment"]

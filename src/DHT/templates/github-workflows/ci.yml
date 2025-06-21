@@ -13,27 +13,27 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
-    
+
     - name: Set up Python
       run: uv python install
-    
+
     - name: Install dependencies
       run: uv sync --locked --all-extras --dev
-    
+
     - name: Run linters
       run: |
         uv run ruff check .
         uv run ruff format --check .
-    
+
     - name: Run type checker
       run: uv run mypy .
 
@@ -54,23 +54,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       run: uv python install ${{ matrix.python-version }}
-    
+
     - name: Install dependencies
       run: uv sync --locked --all-extras --dev
-    
+
     - name: Run tests
       run: |
         uv run pytest -v --cov --cov-report=xml --cov-report=term
-    
+
     - name: Upload coverage to Codecov
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
       uses: codecov/codecov-action@v3
@@ -81,25 +81,25 @@ jobs:
   build:
     name: Build distribution
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
-    
+
     - name: Set up Python
       run: uv python install
-    
+
     - name: Build package
       run: uv build
-    
+
     - name: Check package
       run: |
         uv run twine check dist/*
-    
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -109,25 +109,25 @@ jobs:
   docs:
     name: Build documentation
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
-    
+
     - name: Set up Python
       run: uv python install
-    
+
     - name: Install dependencies
       run: uv sync --locked --extra docs
-    
+
     - name: Build docs
       run: |
         uv run mkdocs build
-    
+
     - name: Upload docs
       uses: actions/upload-artifact@v3
       with:

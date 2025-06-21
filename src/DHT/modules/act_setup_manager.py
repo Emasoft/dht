@@ -50,42 +50,28 @@ class ActSetupManager:
             standalone_act_available=False,
             standalone_act_version=None,
             act_available=False,
-            preferred_method=None
+            preferred_method=None,
         )
 
         # Check gh CLI
         if shutil.which("gh"):
             result.gh_cli_available = True
             try:
-                version_output = subprocess.run(
-                    ["gh", "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
+                version_output = subprocess.run(["gh", "--version"], capture_output=True, text=True, check=True)
                 # Parse version from "gh version X.Y.Z (YYYY-MM-DD)"
-                version_line = version_output.stdout.strip().split('\n')[0]
+                version_line = version_output.stdout.strip().split("\n")[0]
                 result.gh_cli_version = version_line.split()[2]
             except (subprocess.CalledProcessError, FileNotFoundError, OSError, IndexError) as e:
                 self.logger.debug(f"Failed to get gh version: {e}")
 
             # Check if act extension is installed
             try:
-                ext_list = subprocess.run(
-                    ["gh", "extension", "list"],
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
+                ext_list = subprocess.run(["gh", "extension", "list"], capture_output=True, text=True, check=True)
                 if "nektos/gh-act" in ext_list.stdout:
                     result.act_extension_installed = True
                     # Try to get version
                     try:
-                        act_version = subprocess.run(
-                            ["gh", "act", "--version"],
-                            capture_output=True,
-                            text=True
-                        )
+                        act_version = subprocess.run(["gh", "act", "--version"], capture_output=True, text=True)
                         if act_version.returncode == 0:
                             result.act_extension_version = act_version.stdout.strip()
                     except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
@@ -97,12 +83,7 @@ class ActSetupManager:
         if shutil.which("act"):
             result.standalone_act_available = True
             try:
-                version_output = subprocess.run(
-                    ["act", "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
+                version_output = subprocess.run(["act", "--version"], capture_output=True, text=True, check=True)
                 result.standalone_act_version = version_output.stdout.strip()
             except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
                 self.logger.debug(f"Failed to get standalone act version: {e}")
@@ -124,10 +105,7 @@ class ActSetupManager:
             True if installation successful
         """
         try:
-            subprocess.run(
-                ["gh", "extension", "install", "nektos/gh-act"],
-                check=True
-            )
+            subprocess.run(["gh", "extension", "install", "nektos/gh-act"], check=True)
             return True
         except subprocess.CalledProcessError:
             return False
@@ -168,23 +146,17 @@ class ActSetupManager:
 
         # Write config
         config_file = self.act_config_path / "act.json"
-        with open(config_file, 'w') as f:
+        with open(config_file, "w") as f:
             json.dump(act_json, f, indent=2)
 
         # Create secrets file template
         secrets_file = self.act_config_path / "secrets"
         if not secrets_file.exists():
-            secrets_file.write_text(
-                "# Add secrets here in KEY=value format\n"
-                "# GITHUB_TOKEN=your_token_here\n"
-            )
+            secrets_file.write_text("# Add secrets here in KEY=value format\n# GITHUB_TOKEN=your_token_here\n")
 
         # Create env file template
         env_file = self.act_config_path / "env"
         if not env_file.exists():
-            env_file.write_text(
-                "# Add environment variables here in KEY=value format\n"
-                "# CI=true\n"
-            )
+            env_file.write_text("# Add environment variables here in KEY=value format\n# CI=true\n")
 
         return self.act_config_path

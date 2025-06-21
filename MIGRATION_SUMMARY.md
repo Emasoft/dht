@@ -3,7 +3,7 @@
 ## What Was Done
 
 ### 1. Complete Replacement of Shell Entry Points
-- **Removed**: `dhtl.sh` and `dhtl.bat` 
+- **Removed**: `dhtl.sh` and `dhtl.bat`
 - **Created**: `dhtl.py` - A pure Python replacement that:
   - Handles all environment setup
   - Works cross-platform (macOS, Linux, Windows)
@@ -12,7 +12,7 @@
 
 ### 2. PyPI Package Structure
 - **Package Name**: `dht-toolkit`
-- **Entry Points**: 
+- **Entry Points**:
   - `dhtl` - Main command
   - `dht` - Alternative alias
 - **Clean Build**: Successfully builds wheel and source distributions

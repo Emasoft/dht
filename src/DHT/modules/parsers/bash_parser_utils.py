@@ -38,13 +38,13 @@ class BashParserUtils:
             return "array"
 
         # Check for command substitution
-        if value.startswith('$(') and value.endswith(')'):
+        if value.startswith("$(") and value.endswith(")"):
             return "command_substitution"
-        if value.startswith('`') and value.endswith('`'):
+        if value.startswith("`") and value.endswith("`"):
             return "command_substitution"
 
         # Check for variable reference
-        if value.startswith('$') and not value.startswith('$('):
+        if value.startswith("$") and not value.startswith("$("):
             return "variable_reference"
 
         # Check for booleans before numbers (since 0 and 1 are both)
@@ -95,19 +95,23 @@ class BashParserUtils:
             path_candidates.append(Path(path))
         else:
             # Relative paths
-            path_candidates.extend([
-                Path(path),
-                Path.cwd() / path,
-                Path.home() / path,
-            ])
+            path_candidates.extend(
+                [
+                    Path(path),
+                    Path.cwd() / path,
+                    Path.home() / path,
+                ]
+            )
 
             # Common bash config locations
             if not path.startswith("."):
-                path_candidates.extend([
-                    Path("/etc") / path,
-                    Path("/usr/share") / path,
-                    Path("/usr/local/share") / path,
-                ])
+                path_candidates.extend(
+                    [
+                        Path("/etc") / path,
+                        Path("/usr/share") / path,
+                        Path("/usr/local/share") / path,
+                    ]
+                )
 
         # Check which paths exist
         for candidate in path_candidates:
@@ -134,14 +138,14 @@ class BashParserUtils:
 
         # Look for command usage
         for cmd in COMMON_COMMANDS:
-            if re.search(rf'\b{cmd}\b', content):
+            if re.search(rf"\b{cmd}\b", content):
                 dependencies["commands"].append(cmd)
 
         # Look for package installation commands
-        apt_pattern = r'apt(?:-get)?\s+install\s+([^\s;|&]+)'
-        yum_pattern = r'yum\s+install\s+([^\s;|&]+)'
-        brew_pattern = r'brew\s+install\s+([^\s;|&]+)'
-        pip_pattern = r'pip\d?\s+install\s+([^\s;|&]+)'
+        apt_pattern = r"apt(?:-get)?\s+install\s+([^\s;|&]+)"
+        yum_pattern = r"yum\s+install\s+([^\s;|&]+)"
+        brew_pattern = r"brew\s+install\s+([^\s;|&]+)"
+        pip_pattern = r"pip\d?\s+install\s+([^\s;|&]+)"
 
         for pattern in [apt_pattern, yum_pattern, brew_pattern, pip_pattern]:
             for match in re.finditer(pattern, content):
@@ -163,22 +167,26 @@ class BashParserUtils:
             # Check for comments
             if line.strip().startswith("#"):
                 comment_text = line.strip()[1:].strip()
-                comments.append({
-                    "text": comment_text,
-                    "line": line_num,
-                    "is_shebang": line.strip().startswith("#!"),
-                })
+                comments.append(
+                    {
+                        "text": comment_text,
+                        "line": line_num,
+                        "is_shebang": line.strip().startswith("#!"),
+                    }
+                )
             else:
                 # Check for inline comments
                 if "#" in line and not self._is_in_string(line, line.index("#")):
                     comment_start = line.index("#")
-                    comment_text = line[comment_start + 1:].strip()
-                    comments.append({
-                        "text": comment_text,
-                        "line": line_num,
-                        "is_shebang": False,
-                        "is_inline": True,
-                    })
+                    comment_text = line[comment_start + 1 :].strip()
+                    comments.append(
+                        {
+                            "text": comment_text,
+                            "line": line_num,
+                            "is_shebang": False,
+                            "is_inline": True,
+                        }
+                    )
 
         return comments
 

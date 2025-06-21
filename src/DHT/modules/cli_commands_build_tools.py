@@ -15,109 +15,99 @@ from typing import Any
 
 BUILD_TOOLS_COMMANDS: dict[str, dict[str, Any]] = {
     # Build Tools
-    'make': {
-        'commands': {
-            'version': 'make --version',
-            'features': 'make -p -f/dev/null | grep FEATURES',
+    "make": {
+        "commands": {
+            "version": "make --version",
+            "features": "make -p -f/dev/null | grep FEATURES",
         },
-        'category': 'build_tools',
-        'format': 'auto'
+        "category": "build_tools",
+        "format": "auto",
     },
-
-    'cmake': {
-        'commands': {
-            'version': 'cmake --version',
-            'generators': 'cmake --help | grep "Generators"',
-            'system_info': 'cmake --system-information',
+    "cmake": {
+        "commands": {
+            "version": "cmake --version",
+            "generators": 'cmake --help | grep "Generators"',
+            "system_info": "cmake --system-information",
         },
-        'category': 'build_tools',
-        'format': 'auto'
+        "category": "build_tools",
+        "format": "auto",
     },
-
-    'ninja': {
-        'commands': {
-            'version': 'ninja --version',
+    "ninja": {
+        "commands": {
+            "version": "ninja --version",
         },
-        'category': 'build_tools',
-        'format': 'auto'
+        "category": "build_tools",
+        "format": "auto",
     },
-
-    'bazel': {
-        'commands': {
-            'version': 'bazel --version',
-            'info': 'bazel info',
+    "bazel": {
+        "commands": {
+            "version": "bazel --version",
+            "info": "bazel info",
         },
-        'category': 'build_tools',
-        'format': 'auto'
+        "category": "build_tools",
+        "format": "auto",
     },
-
     # Compilers
-    'gcc': {
-        'commands': {
-            'version': 'gcc --version',
-            'target': 'gcc -dumpmachine',
-            'search_dirs': 'gcc -print-search-dirs',
+    "gcc": {
+        "commands": {
+            "version": "gcc --version",
+            "target": "gcc -dumpmachine",
+            "search_dirs": "gcc -print-search-dirs",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'g++': {
-        'commands': {
-            'version': 'g++ --version',
-            'target': 'g++ -dumpmachine',
-            'search_dirs': 'g++ -print-search-dirs',
+    "g++": {
+        "commands": {
+            "version": "g++ --version",
+            "target": "g++ -dumpmachine",
+            "search_dirs": "g++ -print-search-dirs",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'clang': {
-        'commands': {
-            'version': 'clang --version',
-            'target': 'clang -print-target-triple',
-            'resource_dir': 'clang -print-resource-dir',
+    "clang": {
+        "commands": {
+            "version": "clang --version",
+            "target": "clang -print-target-triple",
+            "resource_dir": "clang -print-resource-dir",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'clang++': {
-        'commands': {
-            'version': 'clang++ --version',
-            'target': 'clang++ -print-target-triple',
-            'resource_dir': 'clang++ -print-resource-dir',
+    "clang++": {
+        "commands": {
+            "version": "clang++ --version",
+            "target": "clang++ -print-target-triple",
+            "resource_dir": "clang++ -print-resource-dir",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'rustc': {
-        'commands': {
-            'version': 'rustc --version',
-            'host': 'rustc --print host',
-            'target_list': 'rustc --print target-list',
+    "rustc": {
+        "commands": {
+            "version": "rustc --version",
+            "host": "rustc --print host",
+            "target_list": "rustc --print target-list",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'javac': {
-        'commands': {
-            'version': 'javac -version 2>&1',
-            'help': 'javac -help',
+    "javac": {
+        "commands": {
+            "version": "javac -version 2>&1",
+            "help": "javac -help",
         },
-        'category': 'compilers',
-        'format': 'auto'
+        "category": "compilers",
+        "format": "auto",
     },
-
-    'msvc': {
-        'commands': {
-            'version': 'cl.exe 2>&1 | head -n 1',
-            'help': 'cl.exe /? 2>&1',
+    "msvc": {
+        "commands": {
+            "version": "cl.exe 2>&1 | head -n 1",
+            "help": "cl.exe /? 2>&1",
         },
-        'category': 'compilers',
-        'platforms': ['windows'],
-        'format': 'auto'
+        "category": "compilers",
+        "platforms": ["windows"],
+        "format": "auto",
     },
 }

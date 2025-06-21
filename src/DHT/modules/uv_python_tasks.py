@@ -45,13 +45,13 @@ def check_uv_available() -> dict[str, Any]:
             logger.warning("UV not found in PATH or common locations")
             return {
                 "available": False,
-                "error": "UV not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh"
+                "error": "UV not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh",
             }
 
         # Get UV version
         result = run_with_guardian(
             command=[str(uv_path), "--version"],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30),
         )
 
         if result.return_code == 0:
@@ -60,24 +60,13 @@ def check_uv_available() -> dict[str, Any]:
             version_match = re.search(r"uv\s+(\d+\.\d+\.\d+)", version_output)
             version = version_match.group(1) if version_match else "unknown"
 
-            return {
-                "available": True,
-                "version": version,
-                "path": str(uv_path),
-                "output": version_output
-            }
+            return {"available": True, "version": version, "path": str(uv_path), "output": version_output}
         else:
-            return {
-                "available": False,
-                "error": f"UV check failed: {result.stderr}"
-            }
+            return {"available": False, "error": f"UV check failed: {result.stderr}"}
 
     except Exception as e:
         logger.error(f"Error checking UV availability: {e}")
-        return {
-            "available": False,
-            "error": str(e)
-        }
+        return {"available": False, "error": str(e)}
 
 
 @task(
@@ -121,6 +110,7 @@ def detect_python_version(project_path: Path) -> str | None:
     if pyproject_file.exists():
         try:
             import tomllib
+
             with open(pyproject_file, "rb") as f:
                 data = tomllib.load(f)
 
@@ -174,7 +164,7 @@ def list_python_versions() -> list[dict[str, Any]]:
         # Run uv python list
         result = run_with_guardian(
             command=[str(uv_path), "python", "list", "--all-versions"],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["list_versions"], timeout=60)
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["list_versions"], timeout=60),
         )
 
         if result.return_code != 0:
@@ -192,7 +182,7 @@ def list_python_versions() -> list[dict[str, Any]]:
                 version_info = {
                     "version": parts[0],
                     "installed": "<download available>" not in line,
-                    "source": "uv-managed" if "cpython" in parts[0] else "system"
+                    "source": "uv-managed" if "cpython" in parts[0] else "system",
                 }
                 versions.append(version_info)
 
@@ -233,7 +223,7 @@ def ensure_python_version(version: str) -> Path:
         # Try to find the Python version
         find_result = run_with_guardian(
             command=[str(uv_path), "python", "find", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30),
         )
 
         if find_result.return_code == 0:
@@ -246,7 +236,7 @@ def ensure_python_version(version: str) -> Path:
         logger.info(f"Installing Python {version}...")
         install_result = run_with_guardian(
             command=[str(uv_path), "python", "install", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=300)
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=300),
         )
 
         if install_result.return_code != 0:
@@ -255,7 +245,7 @@ def ensure_python_version(version: str) -> Path:
         # Find the installed Python
         find_result = run_with_guardian(
             command=[str(uv_path), "python", "find", version],
-            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30)
+            limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["version_check"], timeout=30),
         )
 
         if find_result.return_code == 0:

@@ -17,4 +17,4 @@ from .dhtl_guardian_1 import run_with_guardian
 from .dhtl_guardian_2 import ensure_process_guardian_running
 
 # Re-export for compatibility
-__all__ = ['run_with_guardian', 'ensure_process_guardian_running']
+__all__ = ["run_with_guardian", "ensure_process_guardian_running"]

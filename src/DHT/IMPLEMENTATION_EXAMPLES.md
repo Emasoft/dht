@@ -346,25 +346,25 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.11.7"]  # From .dhtconfig
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install DHT
       run: |
         curl -sSL https://dht.dev/install.sh | bash
         echo "$HOME/.dht/bin" >> $GITHUB_PATH
-    
+
     - name: Regenerate environment
       run: |
         dhtl regenerate
         dhtl validate-env
-    
+
     - name: Run tests
       run: |
         source .venv/bin/activate || .venv\Scripts\activate
         dhtl test
-    
+
     - name: Upload coverage
       run: |
         source .venv/bin/activate || .venv\Scripts\activate
@@ -399,7 +399,7 @@ DHT improves projects without breaking them:
 ### 4. **Minimal Configuration**
 .dhtconfig only stores what's absolutely necessary:
 - ❌ NOT: Python packages (in pyproject.toml)
-- ❌ NOT: Tool versions (in pyproject.toml) 
+- ❌ NOT: Tool versions (in pyproject.toml)
 - ✅ YES: Platform-specific system packages
 - ✅ YES: Multi-language tool versions
 - ✅ YES: Environment checksums
@@ -415,7 +415,7 @@ $ dhtl regenerate
 ⚠️ Environment differs from expected:
   - Expected: pandas==2.0.3
   - Found: pandas==2.1.0
-  
+
 Run 'dhtl fix-env' to resolve
 ```
 

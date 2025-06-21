@@ -30,11 +30,12 @@ class TestCriticalFixes:
         for file_path in [utils_file, dhtl_utils_file]:
             if file_path.exists():
                 content = file_path.read_text()
-                if re.search(r'^\s*lint_command\s*\(\s*\)\s*\{', content, re.MULTILINE):
+                if re.search(r"^\s*lint_command\s*\(\s*\)\s*\{", content, re.MULTILINE):
                     duplicates.append(file_path.name)
 
-        assert len(duplicates) <= 1, \
+        assert len(duplicates) <= 1, (
             f"lint_command defined in multiple files: {duplicates}. Should only be in one file."
+        )
 
     def test_github_workflows_are_templates(self):
         """Test that GitHub workflow template files have proper placeholders."""
@@ -52,8 +53,9 @@ class TestCriticalFixes:
                 template_files.append(workflow_file.name)
 
         # Most workflow files should be templates with placeholders
-        assert len(template_files) > 0, \
+        assert len(template_files) > 0, (
             "GitHub workflow template files should contain {REPO_NAME} placeholders for user project generation"
+        )
 
     def test_precommit_config_is_template(self):
         """Test that pre-commit config is a proper template."""
@@ -64,14 +66,13 @@ class TestCriticalFixes:
 
         content = precommit_file.read_text()
         # This should be a TEMPLATE with placeholders for user projects
-        assert "{REPO_NAME}" in content, \
-            "Pre-commit config should contain {REPO_NAME} placeholder as it's a template"
+        assert "{REPO_NAME}" in content, "Pre-commit config should contain {REPO_NAME} placeholder as it's a template"
 
     def test_our_test_files_dont_use_real_placeholders(self):
         """Test that our test files use escaped or example placeholders."""
         test_files = [
             self.project_root / "tests" / "unit" / "test_template_files.py",
-            self.project_root / "tests" / "unit" / "test_comprehensive_verification.py"
+            self.project_root / "tests" / "unit" / "test_comprehensive_verification.py",
         ]
 
         for test_file in test_files:
@@ -79,5 +80,4 @@ class TestCriticalFixes:
                 content = test_file.read_text()
                 # These should be in strings as examples, not actual placeholders
                 raw_placeholders = re.findall(r'(?<!")(\{REPO_NAME\})(?!")', content)
-                assert len(raw_placeholders) == 0, \
-                    f"{test_file.name} has unescaped placeholders: {raw_placeholders}"
+                assert len(raw_placeholders) == 0, f"{test_file.name} has unescaped placeholders: {raw_placeholders}"

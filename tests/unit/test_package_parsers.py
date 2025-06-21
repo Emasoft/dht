@@ -57,15 +57,10 @@ pandas
                 {"name": "flask", "version": ">=2.0.0", "line": 4},
                 {"name": "django", "version": "<4.0", "line": 5},
                 {"name": "numpy", "version": "~=1.21.0", "line": 6},
-                {"name": "pandas", "version": None, "line": 7}
+                {"name": "pandas", "version": None, "line": 7},
             ],
-            "comments": [
-                {"text": "This is a comment", "line": 2}
-            ],
-            "file_metadata": {
-                "name": "requirements.txt",
-                "format": "requirements"
-            }
+            "comments": [{"text": "This is a comment", "line": 2}],
+            "file_metadata": {"name": "requirements.txt", "format": "requirements"},
         }
 
         assert len(result["dependencies"]) == len(expected["dependencies"])
@@ -88,18 +83,8 @@ celery[redis]>=5.0
         # result = parser.parse_file(req_file)
 
         expected_deps = [
-            {
-                "name": "requests",
-                "version": "==2.28.0",
-                "extras": ["security", "socks"],
-                "line": 2
-            },
-            {
-                "name": "celery",
-                "version": ">=5.0",
-                "extras": ["redis"],
-                "line": 3
-            }
+            {"name": "requests", "version": "==2.28.0", "extras": ["security", "socks"], "line": 2},
+            {"name": "celery", "version": ">=5.0", "extras": ["redis"], "line": 3},
         ]
 
         # assert result["dependencies"][0]["extras"] == expected_deps[0]["extras"]
@@ -118,21 +103,9 @@ https://files.pythonhosted.org/packages/source/p/package/package-1.0.tar.gz
         # result = parser.parse_file(req_file)
 
         expected_deps = [
-            {
-                "name": "mypackage",
-                "url": "git+https://github.com/user/repo.git@v1.0",
-                "vcs": "git",
-                "line": 2
-            },
-            {
-                "url": "https://files.pythonhosted.org/packages/source/p/package/package-1.0.tar.gz",
-                "line": 3
-            },
-            {
-                "path": "./local/path",
-                "editable": True,
-                "line": 4
-            }
+            {"name": "mypackage", "url": "git+https://github.com/user/repo.git@v1.0", "vcs": "git", "line": 2},
+            {"url": "https://files.pythonhosted.org/packages/source/p/package/package-1.0.tar.gz", "line": 3},
+            {"path": "./local/path", "editable": True, "line": 4},
         ]
 
         # assert len(result["dependencies"]) == 3
@@ -157,7 +130,7 @@ numpy==1.21.0
             "index_url": "https://pypi.org/simple",
             "extra_index_urls": ["https://test.pypi.org/simple"],
             "includes": ["other-requirements.txt"],
-            "trusted_hosts": ["pypi.org"]
+            "trusted_hosts": ["pypi.org"],
         }
 
         # assert result["options"] == expected_options
@@ -203,19 +176,11 @@ build-backend = "setuptools.build_meta"
                 "version": "0.1.0",
                 "description": "A sample project",
                 "requires_python": ">=3.8",
-                "dependencies": ["requests>=2.28", "click~=8.0"]
+                "dependencies": ["requests>=2.28", "click~=8.0"],
             },
-            "optional_dependencies": {
-                "dev": ["pytest>=7.0", "black"],
-                "docs": ["sphinx"]
-            },
-            "scripts": {
-                "mycommand": "myproject.cli:main"
-            },
-            "build_system": {
-                "requires": ["setuptools>=61", "wheel"],
-                "backend": "setuptools.build_meta"
-            }
+            "optional_dependencies": {"dev": ["pytest>=7.0", "black"], "docs": ["sphinx"]},
+            "scripts": {"mycommand": "myproject.cli:main"},
+            "build_system": {"requires": ["setuptools>=61", "wheel"], "backend": "setuptools.build_meta"},
         }
 
         assert result["project"]["name"] == expected["project"]["name"]
@@ -290,7 +255,7 @@ class TestSetupParser:
 
     def test_parse_setup_py(self, tmp_path):
         """Test parsing a setup.py file."""
-        content = '''
+        content = """
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
@@ -325,7 +290,7 @@ setup(
         ],
     },
 )
-'''
+"""
         setup_file = tmp_path / "setup.py"
         setup_file.write_text(content)
 
@@ -338,14 +303,9 @@ setup(
             "author": "John Doe",
             "author_email": "john@example.com",
             "install_requires": ["requests>=2.25.0", "click>=7.0"],
-            "extras_require": {
-                "dev": ["pytest>=6.0", "black"],
-                "docs": ["sphinx>=4.0"]
-            },
+            "extras_require": {"dev": ["pytest>=6.0", "black"], "docs": ["sphinx>=4.0"]},
             "python_requires": ">=3.7",
-            "entry_points": {
-                "console_scripts": ["mycommand=mypackage.cli:main"]
-            }
+            "entry_points": {"console_scripts": ["mycommand=mypackage.cli:main"]},
         }
 
         # assert result["name"] == expected["name"]
@@ -402,23 +362,10 @@ class TestPackageJsonParser:
             "version": "1.0.0",
             "description": "My Node.js app",
             "main": "index.js",
-            "scripts": {
-                "start": "node index.js",
-                "test": "jest",
-                "build": "webpack"
-            },
-            "dependencies": {
-                "express": "^4.18.0",
-                "lodash": "~4.17.21"
-            },
-            "devDependencies": {
-                "jest": "^29.0.0",
-                "webpack": "^5.0.0"
-            },
-            "engines": {
-                "node": ">=14.0.0",
-                "npm": ">=6.0.0"
-            }
+            "scripts": {"start": "node index.js", "test": "jest", "build": "webpack"},
+            "dependencies": {"express": "^4.18.0", "lodash": "~4.17.21"},
+            "devDependencies": {"jest": "^29.0.0", "webpack": "^5.0.0"},
+            "engines": {"node": ">=14.0.0", "npm": ">=6.0.0"},
         }
 
         package_file = tmp_path / "package.json"
@@ -439,13 +386,8 @@ class TestPackageJsonParser:
         content = {
             "name": "monorepo",
             "private": True,
-            "workspaces": [
-                "packages/*",
-                "apps/*"
-            ],
-            "devDependencies": {
-                "lerna": "^6.0.0"
-            }
+            "workspaces": ["packages/*", "apps/*"],
+            "devDependencies": {"lerna": "^6.0.0"},
         }
 
         package_file = tmp_path / "package.json"
@@ -496,23 +438,14 @@ json = ["serde/json"]
         # result = parser.parse_file(cargo_file)
 
         expected = {
-            "package": {
-                "name": "my-rust-app",
-                "version": "0.1.0",
-                "edition": "2021"
-            },
+            "package": {"name": "my-rust-app", "version": "0.1.0", "edition": "2021"},
             "dependencies": {
                 "serde": {"version": "1.0", "features": ["derive"]},
                 "tokio": {"version": "1.0", "features": ["full"]},
-                "reqwest": "0.11"
+                "reqwest": "0.11",
             },
-            "dev_dependencies": {
-                "mockito": "0.31"
-            },
-            "features": {
-                "default": ["json"],
-                "json": ["serde/json"]
-            }
+            "dev_dependencies": {"mockito": "0.31"},
+            "features": {"default": ["json"], "json": ["serde/json"]},
         }
 
         # assert result["package"]["name"] == "my-rust-app"
@@ -556,19 +489,13 @@ exclude github.com/bad/package v1.0.0
             "require": [
                 {"path": "github.com/gin-gonic/gin", "version": "v1.9.0"},
                 {"path": "github.com/go-sql-driver/mysql", "version": "v1.7.0"},
-                {"path": "golang.org/x/crypto", "version": "v0.6.0"}
+                {"path": "golang.org/x/crypto", "version": "v0.6.0"},
             ],
             "indirect": [
                 {"path": "github.com/bytedance/sonic", "version": "v1.8.0"},
-                {"path": "github.com/chenzhuoyu/base64x", "version": "v0.0.0-20221115062448-fe3a3abad311"}
+                {"path": "github.com/chenzhuoyu/base64x", "version": "v0.0.0-20221115062448-fe3a3abad311"},
             ],
-            "replace": [
-                {
-                    "old": "github.com/broken/package",
-                    "new": "github.com/fixed/package",
-                    "version": "v1.0.0"
-                }
-            ]
+            "replace": [{"old": "github.com/broken/package", "new": "github.com/fixed/package", "version": "v1.0.0"}],
         }
 
         # assert result["module"] == expected["module"]
@@ -614,13 +541,13 @@ gem 'bootsnap', '>= 1.4.4', require: false
             "gems": [
                 {"name": "rails", "version": "~> 7.0.4"},
                 {"name": "pg", "version": ">= 0.18, < 2.0"},
-                {"name": "puma", "version": "~> 5.0"}
+                {"name": "puma", "version": "~> 5.0"},
             ],
             "groups": {
                 "development": ["web-console", "listen"],
                 "test": ["rspec-rails"],
-                "development,test": ["byebug", "rspec-rails"]
-            }
+                "development,test": ["byebug", "rspec-rails"],
+            },
         }
 
         # assert result["ruby_version"] == "3.1.0"
@@ -685,24 +612,11 @@ class TestMavenParser:
             "groupId": "com.example",
             "artifactId": "my-app",
             "version": "1.0.0",
-            "properties": {
-                "maven.compiler.source": "11",
-                "maven.compiler.target": "11",
-                "spring.version": "5.3.23"
-            },
+            "properties": {"maven.compiler.source": "11", "maven.compiler.target": "11", "spring.version": "5.3.23"},
             "dependencies": [
-                {
-                    "groupId": "org.springframework",
-                    "artifactId": "spring-core",
-                    "version": "${spring.version}"
-                },
-                {
-                    "groupId": "junit",
-                    "artifactId": "junit",
-                    "version": "4.13.2",
-                    "scope": "test"
-                }
-            ]
+                {"groupId": "org.springframework", "artifactId": "spring-core", "version": "${spring.version}"},
+                {"groupId": "junit", "artifactId": "junit", "version": "4.13.2", "scope": "test"},
+            ],
         }
 
         # assert result["artifactId"] == "my-app"
@@ -750,7 +664,7 @@ test {
             "plugins": [
                 {"id": "java"},
                 {"id": "org.springframework.boot", "version": "2.7.5"},
-                {"id": "io.spring.dependency-management", "version": "1.0.15.RELEASE"}
+                {"id": "io.spring.dependency-management", "version": "1.0.15.RELEASE"},
             ],
             "group": "com.example",
             "version": "0.0.1-SNAPSHOT",
@@ -759,11 +673,11 @@ test {
             "dependencies": {
                 "implementation": [
                     "org.springframework.boot:spring-boot-starter-web",
-                    "org.springframework.boot:spring-boot-starter-data-jpa"
+                    "org.springframework.boot:spring-boot-starter-data-jpa",
                 ],
                 "runtimeOnly": ["com.h2database:h2"],
-                "testImplementation": ["org.springframework.boot:spring-boot-starter-test"]
-            }
+                "testImplementation": ["org.springframework.boot:spring-boot-starter-test"],
+            },
         }
 
         # assert result["group"] == "com.example"
@@ -824,8 +738,10 @@ class TestParserUtilities:
             ("==1.2.3", {"operator": "==", "version": "1.2.3"}),
             (">=2.0", {"operator": ">=", "version": "2.0"}),
             ("~=1.4.0", {"operator": "~=", "version": "1.4.0"}),
-            ("<3.0,>=2.0", {"constraints": [{"operator": "<", "version": "3.0"},
-                                           {"operator": ">=", "version": "2.0"}]}),
+            (
+                "<3.0,>=2.0",
+                {"constraints": [{"operator": "<", "version": "3.0"}, {"operator": ">=", "version": "2.0"}]},
+            ),
             ("^1.2.3", {"operator": "^", "version": "1.2.3"}),  # npm style
             ("~1.2.3", {"operator": "~", "version": "1.2.3"}),  # npm style
         ]
@@ -841,11 +757,9 @@ class TestParserUtilities:
             ("Django", "python", "django"),
             ("Flask-RESTful", "python", "flask-restful"),
             ("typing_extensions", "python", "typing-extensions"),
-
             # npm packages are case-sensitive
             ("@angular/core", "npm", "@angular/core"),
             ("lodash.debounce", "npm", "lodash.debounce"),
-
             # Maven uses groupId:artifactId
             ("org.springframework:spring-core", "maven", "org.springframework:spring-core"),
         ]

@@ -4,7 +4,7 @@
 - **Total Tests**: ~407 (unit) + ~25 (integration) = ~432 tests
 - **Unit Tests Status**: Mixed (many passed, some failures)
 - **Integration Tests Status**: All failing due to missing fixtures
-- **Key Issues**: 
+- **Key Issues**:
   1. Old test files testing shell scripts that no longer exist
   2. Integration tests missing fixtures
   3. Some module implementation issues
@@ -15,7 +15,7 @@
 1. **Parser Tests** (100% passing)
    - Bash parser: All 16 tests passing
    - Package parsers: All 20 tests passing
-   
+
 2. **CLI Registry Tests** (100% passing)
    - Command structure: All tests passing
    - Platform filtering: All tests passing
@@ -84,7 +84,7 @@
 ### Medium Priority
 1. **DHT Config Test**
    - Fix project name extraction issue
-   
+
 2. **Python Migration Test**
    - Update UV function name from `install_uv` to `find_uv_executable`
 

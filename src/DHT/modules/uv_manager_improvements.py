@@ -12,6 +12,7 @@ from typing import Any
 
 class UVNotFoundError(Exception):
     """Raised when UV is not found on the system."""
+
     pass
 
 
@@ -46,7 +47,7 @@ class UVManagerImproved:
         cwd: Path | None = None,
         timeout: int = 300,  # 5 minutes default
         capture_output: bool = True,
-        check: bool = True
+        check: bool = True,
     ) -> dict[str, Any]:
         """
         Run UV command with proper timeout handling.
@@ -68,19 +69,14 @@ class UVManagerImproved:
 
         try:
             result = subprocess.run(
-                cmd,
-                cwd=cwd,
-                capture_output=capture_output,
-                text=True,
-                check=check,
-                timeout=timeout
+                cmd, cwd=cwd, capture_output=capture_output, text=True, check=check, timeout=timeout
             )
 
             return {
                 "stdout": result.stdout if capture_output else "",
                 "stderr": result.stderr if capture_output else "",
                 "returncode": result.returncode,
-                "success": result.returncode == 0
+                "success": result.returncode == 0,
             }
 
         except subprocess.TimeoutExpired as e:
@@ -89,7 +85,7 @@ class UVManagerImproved:
                 "stderr": f"Command timed out after {timeout} seconds",
                 "returncode": -1,
                 "success": False,
-                "error": "timeout"
+                "error": "timeout",
             }
         except subprocess.CalledProcessError as e:
             return {
@@ -97,14 +93,10 @@ class UVManagerImproved:
                 "stderr": e.stderr if capture_output else "",
                 "returncode": e.returncode,
                 "success": False,
-                "error": str(e)
+                "error": str(e),
             }
 
-    def _setup_python_environment(
-        self,
-        project_path: Path,
-        python_version: str | None = None
-    ) -> dict[str, Any]:
+    def _setup_python_environment(self, project_path: Path, python_version: str | None = None) -> dict[str, Any]:
         """
         Setup Python environment (extracted from setup_project).
 
@@ -128,26 +120,14 @@ class UVManagerImproved:
             try:
                 python_path = self.ensure_python_version(python_version)
                 result["python_path"] = str(python_path)
-                result["steps"].append({
-                    "step": "ensure_python",
-                    "success": True,
-                    "version": python_version
-                })
+                result["steps"].append({"step": "ensure_python", "success": True, "version": python_version})
             except Exception as e:
-                result["steps"].append({
-                    "step": "ensure_python",
-                    "success": False,
-                    "error": str(e)
-                })
+                result["steps"].append({"step": "ensure_python", "success": False, "error": str(e)})
                 result["success"] = False
 
         return result
 
-    def _create_project_venv(
-        self,
-        project_path: Path,
-        python_version: str | None = None
-    ) -> dict[str, Any]:
+    def _create_project_venv(self, project_path: Path, python_version: str | None = None) -> dict[str, Any]:
         """
         Create virtual environment (extracted from setup_project).
 
@@ -163,17 +143,9 @@ class UVManagerImproved:
         try:
             venv_path = self.create_venv(project_path, python_version)
             result["venv_path"] = str(venv_path)
-            result["steps"].append({
-                "step": "create_venv",
-                "success": True,
-                "path": str(venv_path)
-            })
+            result["steps"].append({"step": "create_venv", "success": True, "path": str(venv_path)})
         except Exception as e:
-            result["steps"].append({
-                "step": "create_venv",
-                "success": False,
-                "error": str(e)
-            })
+            result["steps"].append({"step": "create_venv", "success": False, "error": str(e)})
             result["success"] = False
 
         return result

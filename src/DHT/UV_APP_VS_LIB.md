@@ -200,7 +200,7 @@ uv init --app my-webapp
 cd my-webapp
 dhtl setup
 
-# Create a library  
+# Create a library
 uv init --lib my-package
 cd my-package
 dhtl setup

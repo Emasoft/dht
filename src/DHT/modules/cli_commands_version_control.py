@@ -13,35 +13,33 @@ This module contains CLI command definitions for version control tools.
 from typing import Any
 
 VERSION_CONTROL_COMMANDS: dict[str, dict[str, Any]] = {
-    'git': {
-        'commands': {
-            'version': 'git --version',
-            'config_user_name': 'git config --global user.name',
-            'config_user_email': 'git config --global user.email',
-            'remote_origin': 'git remote get-url origin 2>&1',
-            'current_branch': 'git rev-parse --abbrev-ref HEAD 2>&1',
-            'status': 'git status --porcelain',
+    "git": {
+        "commands": {
+            "version": "git --version",
+            "config_user_name": "git config --global user.name",
+            "config_user_email": "git config --global user.email",
+            "remote_origin": "git remote get-url origin 2>&1",
+            "current_branch": "git rev-parse --abbrev-ref HEAD 2>&1",
+            "status": "git status --porcelain",
         },
-        'category': 'version_control',
-        'format': 'auto'
+        "category": "version_control",
+        "format": "auto",
     },
-
-    'hg': {
-        'commands': {
-            'version': 'hg --version',
-            'config': 'hg config',
-            'paths': 'hg paths',
+    "hg": {
+        "commands": {
+            "version": "hg --version",
+            "config": "hg config",
+            "paths": "hg paths",
         },
-        'category': 'version_control',
-        'format': 'auto'
+        "category": "version_control",
+        "format": "auto",
     },
-
-    'svn': {
-        'commands': {
-            'version': 'svn --version --quiet',
-            'info': 'svn info',
+    "svn": {
+        "commands": {
+            "version": "svn --version --quiet",
+            "info": "svn info",
         },
-        'category': 'version_control',
-        'format': 'auto'
+        "category": "version_control",
+        "format": "auto",
     },
 }

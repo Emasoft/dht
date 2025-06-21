@@ -17,6 +17,7 @@ from enum import Enum
 
 class ProjectType(Enum):
     """Enumeration of supported project types."""
+
     GENERIC = "generic"
     DJANGO = "django"
     DJANGO_REST = "django_rest_framework"
@@ -35,6 +36,7 @@ class ProjectType(Enum):
 
 class ProjectCategory(Enum):
     """High-level project categories."""
+
     UNKNOWN = "unknown"
     WEB_FRAMEWORK = "web_framework"
     WEB_API = "web_api"
@@ -46,26 +48,15 @@ class ProjectCategory(Enum):
 
     def is_web_related(self) -> bool:
         """Check if category is web-related."""
-        return self in {
-            self.WEB_FRAMEWORK,
-            self.WEB_API,
-            self.FULL_STACK
-        }
+        return self in {self.WEB_FRAMEWORK, self.WEB_API, self.FULL_STACK}
 
     def is_data_related(self) -> bool:
         """Check if category is data-related."""
-        return self in {
-            self.MACHINE_LEARNING,
-            self.DATA_ANALYSIS
-        }
+        return self in {self.MACHINE_LEARNING, self.DATA_ANALYSIS}
 
     def requires_database(self) -> bool:
         """Check if category typically requires a database."""
-        return self in {
-            self.WEB_FRAMEWORK,
-            self.WEB_API,
-            self.FULL_STACK
-        }
+        return self in {self.WEB_FRAMEWORK, self.WEB_API, self.FULL_STACK}
 
     def requires_gpu_support(self) -> bool:
         """Check if category might need GPU support."""

@@ -21,7 +21,7 @@ from DHT.modules.parsers.bash_parser import BashParser
 
 def create_test_script():
     """Create a test bash script with various elements."""
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
 # Test script for bash parser
 
 # Global variables
@@ -80,7 +80,7 @@ case "$1" in
         echo "Stopping..."
         ;;
 esac
-'''
+"""
     return script_content
 
 
@@ -93,7 +93,7 @@ def test_bash_parser():
     parser = BashParser()
 
     # Create a temporary test file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
         f.write(create_test_script())
         test_file = Path(f.name)
 
@@ -112,40 +112,40 @@ def test_bash_parser():
 
         # Functions
         print(f"\n📦 Functions found: {len(result.get('functions', []))}")
-        for func in result.get('functions', []):
+        for func in result.get("functions", []):
             print(f"  - {func['name']} (line {func.get('line', 'N/A')})")
-            if 'local_vars' in func:
+            if "local_vars" in func:
                 print(f"    Local variables: {', '.join(func['local_vars'])}")
 
         # Variables
         print(f"\n📊 Variables found: {len(result.get('variables', []))}")
-        for var in result.get('variables', []):
+        for var in result.get("variables", []):
             print(f"  - {var['name']} = {var['value']} (type: {var.get('type', 'unknown')})")
 
         # Exports
         print(f"\n🌍 Exports found: {len(result.get('exports', []))}")
-        for exp in result.get('exports', []):
+        for exp in result.get("exports", []):
             print(f"  - {exp['name']} = {exp.get('value', '(no value)')}")
 
         # Sourced files
         print(f"\n📁 Sourced files: {len(result.get('sourced_files', []))}")
-        for src in result.get('sourced_files', []):
+        for src in result.get("sourced_files", []):
             print(f"  - {src['path']} (line {src['line']})")
 
         # Commands
         print(f"\n🔧 Commands found: {len(result.get('commands', []))}")
-        unique_commands = {cmd['name'] for cmd in result.get('commands', []) if 'name' in cmd}
+        unique_commands = {cmd["name"] for cmd in result.get("commands", []) if "name" in cmd}
         print(f"  Unique commands: {', '.join(sorted(unique_commands))}")
 
         # Dependencies
         print(f"\n📦 External dependencies: {len(result.get('dependencies', []))}")
-        if result.get('dependencies'):
+        if result.get("dependencies"):
             print(f"  {', '.join(result['dependencies'])}")
 
         # Control structures
-        if 'control_structures' in result:
+        if "control_structures" in result:
             print("\n🔄 Control structures:")
-            for struct, count in result['control_structures'].items():
+            for struct, count in result["control_structures"].items():
                 if count > 0:
                     print(f"  - {struct}: {count}")
 
@@ -156,7 +156,7 @@ def test_bash_parser():
 
         # Save full results as JSON for inspection
         output_file = Path("bash_parser_test_results.json")
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             json.dump(result, f, indent=2, default=str)
         print(f"\n💾 Full results saved to: {output_file}")
 
@@ -165,6 +165,7 @@ def test_bash_parser():
     except Exception as e:
         print(f"❌ Exception during parsing: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -179,10 +180,12 @@ def test_tree_sitter_availability():
 
     try:
         import tree_sitter
+
         print("✅ tree-sitter module is available")
 
         try:
             import tree_sitter_bash
+
             print("✅ tree-sitter-bash module is available")
 
             # Test if we can create a parser

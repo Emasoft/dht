@@ -61,11 +61,7 @@ class UVManager:
         self.venv_manager = VirtualEnvironmentManager(self.run_command)
         self.deps_manager = DependencyManager(self.run_command)
         self.script_executor = ScriptExecutor(self.run_command)
-        self.workflow_manager = ProjectWorkflowManager(
-            self.python_manager,
-            self.venv_manager,
-            self.deps_manager
-        )
+        self.workflow_manager = ProjectWorkflowManager(self.python_manager, self.venv_manager, self.deps_manager)
 
     @property
     def is_available(self) -> bool:
@@ -78,7 +74,7 @@ class UVManager:
         cwd: Path | None = None,
         capture_output: bool = True,
         check: bool = True,
-        timeout: int = 300  # 5 minutes default
+        timeout: int = 300,  # 5 minutes default
     ) -> dict[str, Any]:
         """
         Run UV command and return structured output.
@@ -99,14 +95,7 @@ class UVManager:
         if not self.is_available:
             raise UVNotFoundError("UV is not available. Please install UV first.")
 
-        return run_uv_command(
-            self.uv_path,
-            args,
-            cwd=cwd,
-            capture_output=capture_output,
-            check=check,
-            timeout=timeout
-        )
+        return run_uv_command(self.uv_path, args, cwd=cwd, capture_output=capture_output, check=check, timeout=timeout)
 
     # Delegate to Python version manager
     def detect_python_version(self, project_path: Path) -> str | None:
@@ -122,12 +111,7 @@ class UVManager:
         return self.python_manager.ensure_python_version(version)
 
     # Delegate to virtual environment manager
-    def create_venv(
-        self,
-        project_path: Path,
-        python_version: str | None = None,
-        venv_path: Path | None = None
-    ) -> Path:
+    def create_venv(self, project_path: Path, python_version: str | None = None, venv_path: Path | None = None) -> Path:
         """Create virtual environment for project."""
         return self.venv_manager.create_venv(project_path, python_version, venv_path)
 
@@ -137,23 +121,17 @@ class UVManager:
         project_path: Path,
         requirements_file: Path | None = None,
         dev: bool = False,
-        extras: list[str] | None = None
+        extras: list[str] | None = None,
     ) -> dict[str, Any]:
         """Install project dependencies."""
-        return self.deps_manager.install_dependencies(
-            project_path, requirements_file, dev, extras
-        )
+        return self.deps_manager.install_dependencies(project_path, requirements_file, dev, extras)
 
     def generate_lock_file(self, project_path: Path) -> Path:
         """Generate uv.lock file for reproducible installs."""
         return self.deps_manager.generate_lock_file(project_path)
 
     def add_dependency(
-        self,
-        project_path: Path,
-        package: str,
-        dev: bool = False,
-        extras: list[str] | None = None
+        self, project_path: Path, package: str, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:
         """Add a dependency to the project."""
         return self.deps_manager.add_dependency(project_path, package, dev, extras)
@@ -167,27 +145,16 @@ class UVManager:
         return self.deps_manager.check_outdated(project_path)
 
     # Delegate to script executor
-    def run_script(
-        self,
-        project_path: Path,
-        script: str,
-        args: list[str] | None = None
-    ) -> dict[str, Any]:
+    def run_script(self, project_path: Path, script: str, args: list[str] | None = None) -> dict[str, Any]:
         """Run a Python script in the project environment."""
         return self.script_executor.run_script(project_path, script, args)
 
     # Delegate to workflow manager
     def setup_project(
-        self,
-        project_path: Path,
-        python_version: str | None = None,
-        install_deps: bool = True,
-        dev: bool = False
+        self, project_path: Path, python_version: str | None = None, install_deps: bool = True, dev: bool = False
     ) -> dict[str, Any]:
         """Complete project setup flow."""
-        return self.workflow_manager.setup_project(
-            project_path, python_version, install_deps, dev
-        )
+        return self.workflow_manager.setup_project(project_path, python_version, install_deps, dev)
 
     # Utility methods
     def _load_toml(self, file_path: Path) -> dict[str, Any]:

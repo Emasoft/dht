@@ -19,6 +19,7 @@ from typing import Any
 @dataclass
 class ActConfig:
     """Configuration for act runner."""
+
     runner_image: str = "catthehacker/ubuntu:act-latest"
     platform: str = "ubuntu-latest"
     container_runtime: str = "podman"  # Prefer podman for rootless
@@ -32,6 +33,7 @@ class ActConfig:
 @dataclass
 class WorkflowInfo:
     """Information about a GitHub workflow."""
+
     file: str
     name: str
     path: str
@@ -43,6 +45,7 @@ class WorkflowInfo:
 @dataclass
 class LintResult:
     """Result from linting a workflow."""
+
     success: bool
     errors: list[dict[str, Any]]
     warnings: list[dict[str, Any]]
@@ -52,6 +55,7 @@ class LintResult:
 @dataclass
 class ActCheckResult:
     """Result from checking act availability."""
+
     gh_cli_available: bool
     gh_cli_version: str | None
     act_extension_installed: bool
@@ -65,6 +69,7 @@ class ActCheckResult:
 @dataclass
 class ContainerSetupResult:
     """Result from container environment setup."""
+
     success: bool
     runtime_available: bool
     runtime: str | None

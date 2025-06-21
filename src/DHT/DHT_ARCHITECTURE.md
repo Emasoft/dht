@@ -52,13 +52,13 @@ version: "1.0"
 # Project metadata (only if not in pyproject.toml)
 project:
   type: "web-api"  # Overrides auto-detection if needed
-  
+
 # Python configuration (only if special requirements)
 python:
   # UV will handle version from .python-version or pyproject.toml
   # Only specify here if there are special constraints
   system_packages: ["libpq-dev", "gcc"]  # System deps not auto-detectable
-  
+
 # Multi-language support
 languages:
   node:
@@ -66,22 +66,22 @@ languages:
     package_manager: "pnpm"  # If not standard npm
   rust:
     toolchain: "stable"
-    
+
 # Docker configuration hints
 docker:
   base_image_variant: "slim"  # Override default detection
   exposed_ports: [8000, 8080]  # If not detectable from code
-  
+
 # CI/CD preferences
 ci:
   providers: ["github", "gitlab"]  # Which CI systems to generate for
   coverage_threshold: 80
-  
+
 # Development tools configuration
 tools:
   formatter: "ruff"  # Override default black
   test_runner: "pytest"  # Override if using unittest
-  
+
 # Secrets hints (names only, never values)
 required_secrets:
   - OPENAI_API_KEY
@@ -116,7 +116,7 @@ When setting up a project (clone/fork/extract), DHT will:
    ```bash
    # Node.js projects
    uv run npm install
-   
+
    # Rust components
    uv run cargo build
    ```
@@ -173,7 +173,7 @@ DHT running on Python 3.10 can manage 3.11+ projects because:
    ```bash
    # DHT runs on 3.10
    python --version  # 3.10.x
-   
+
    # But can create 3.13 project env
    uv python install 3.13
    uv venv --python 3.13
@@ -229,7 +229,7 @@ The `dhtl dockerize` command will:
    # Multi-stage build
    FROM python:3.11-slim as builder
    # ... dependencies
-   
+
    FROM python:3.11-slim
    # ... optimized runtime
    ```

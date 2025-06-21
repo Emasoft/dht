@@ -59,12 +59,9 @@ def check_test_resources() -> dict[str, Any]:
             "memory": {
                 "available_mb": round(available_mb, 2),
                 "total_mb": round(total_mb, 2),
-                "percent_used": vm.percent
+                "percent_used": vm.percent,
             },
-            "cpu": {
-                "count": cpu_count,
-                "percent_used": cpu_percent
-            }
+            "cpu": {"count": cpu_count, "percent_used": cpu_percent},
         }
 
         if not has_resources:
@@ -80,10 +77,7 @@ def check_test_resources() -> dict[str, Any]:
 
 
 @task(name="discover-tests")
-def discover_tests(
-    project_root: Path,
-    test_pattern: str | None = None
-) -> dict[str, Any]:
+def discover_tests(project_root: Path, test_pattern: str | None = None) -> dict[str, Any]:
     """
     Discover tests in the project.
 
@@ -108,8 +102,7 @@ def discover_tests(
     test_files.extend(project_root.glob("*_test.py"))
 
     # Check for specific test frameworks
-    has_pytest = (project_root / "pytest.ini").exists() or \
-                 (project_root / "pyproject.toml").exists()
+    has_pytest = (project_root / "pytest.ini").exists() or (project_root / "pyproject.toml").exists()
     has_unittest = any(f.name == "test_*.py" for f in test_files)
 
     # Count test files
@@ -128,7 +121,7 @@ def discover_tests(
         "has_pytest": has_pytest,
         "has_unittest": has_unittest,
         "test_pattern": test_pattern,
-        "framework": "pytest" if has_pytest else "unittest"
+        "framework": "pytest" if has_pytest else "unittest",
     }
 
     logger.info(f"Found {len(all_test_files)} test files in {len(test_dirs)} directories")
@@ -145,7 +138,7 @@ def prepare_test_command(
     verbose: bool = False,
     coverage: bool = False,
     parallel: bool = False,
-    timeout: int | None = None
+    timeout: int | None = None,
 ) -> list[str]:
     """
     Prepare the test command based on discovery information.
@@ -229,7 +222,7 @@ def run_tests(
     cmd_parts: list[str],
     project_root: Path,
     memory_limit_mb: int | None = None,
-    timeout_seconds: int = 900  # 15 minutes default
+    timeout_seconds: int = 900,  # 15 minutes default
 ) -> dict[str, Any]:
     """
     Run tests with resource limits.
@@ -249,16 +242,12 @@ def run_tests(
     guardian_config = GuardianConfig(
         memory_limit_mb=memory_limit_mb or default_limits["memory_limit_mb"],
         timeout_seconds=timeout_seconds,
-        check_interval=1.0
+        check_interval=1.0,
     )
 
     start_time = time.time()
 
-    result = run_with_guardian(
-        cmd_parts,
-        config=guardian_config,
-        cwd=str(project_root)
-    )
+    result = run_with_guardian(cmd_parts, config=guardian_config, cwd=str(project_root))
 
     execution_time = time.time() - start_time
 
@@ -272,10 +261,7 @@ def run_tests(
         "stdout": result.stdout,
         "stderr": result.stderr,
         "summary": test_summary,
-        "resource_info": {
-            "memory_limit_mb": memory_limit_mb,
-            "peak_memory_mb": result.peak_memory_mb
-        }
+        "resource_info": {"memory_limit_mb": memory_limit_mb, "peak_memory_mb": result.peak_memory_mb},
     }
 
 
@@ -292,14 +278,7 @@ def parse_test_output(stdout: str, stderr: str) -> dict[str, Any]:
         Dictionary with test summary
     """
     output = stdout + "\n" + stderr
-    summary = {
-        "total": 0,
-        "passed": 0,
-        "failed": 0,
-        "skipped": 0,
-        "errors": 0,
-        "warnings": 0
-    }
+    summary = {"total": 0, "passed": 0, "failed": 0, "skipped": 0, "errors": 0, "warnings": 0}
 
     # Try to parse pytest output
     pytest_pattern = r"(\d+) passed(?:, (\d+) skipped)?(?:, (\d+) failed)?(?:, (\d+) error)?"
@@ -309,8 +288,7 @@ def parse_test_output(stdout: str, stderr: str) -> dict[str, Any]:
         summary["skipped"] = int(match.group(2) or 0)
         summary["failed"] = int(match.group(3) or 0)
         summary["errors"] = int(match.group(4) or 0)
-        summary["total"] = sum([summary["passed"], summary["failed"],
-                               summary["skipped"], summary["errors"]])
+        summary["total"] = sum([summary["passed"], summary["failed"], summary["skipped"], summary["errors"]])
         return summary
 
     # Try to parse unittest output
@@ -332,10 +310,7 @@ def parse_test_output(stdout: str, stderr: str) -> dict[str, Any]:
 
 
 @task(name="generate-coverage-report")
-def generate_coverage_report(
-    project_root: Path,
-    venv_path: Path
-) -> dict[str, Any]:
+def generate_coverage_report(project_root: Path, venv_path: Path) -> dict[str, Any]:
     """
     Generate coverage report if coverage was enabled.
 
@@ -360,12 +335,7 @@ def generate_coverage_report(
 
     # Generate report
     cmd = [str(python_path), "-m", "coverage", "report"]
-    result = subprocess.run(
-        cmd,
-        cwd=str(project_root),
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(cmd, cwd=str(project_root), capture_output=True, text=True)
 
     # Parse coverage percentage
     coverage_percent = None
@@ -378,18 +348,10 @@ def generate_coverage_report(
                 except ValueError:
                     pass
 
-    return {
-        "has_coverage": True,
-        "coverage_percent": coverage_percent,
-        "report": result.stdout
-    }
+    return {"has_coverage": True, "coverage_percent": coverage_percent, "report": result.stdout}
 
 
-@flow(
-    name="test-command",
-    description="Run project tests with resource management",
-    retries=1
-)
+@flow(name="test-command", description="Run project tests with resource management", retries=1)
 def test_command_flow(
     project_path: str | None = None,
     test_pattern: str | None = None,
@@ -397,7 +359,7 @@ def test_command_flow(
     coverage: bool = False,
     parallel: bool = False,
     timeout: int | None = None,
-    memory_limit_mb: int = 2048
+    memory_limit_mb: int = 2048,
 ) -> dict[str, Any]:
     """
     Main flow for running project tests.
@@ -443,11 +405,7 @@ def test_command_flow(
 
     if discovery_info["test_files_count"] == 0:
         logger.warning("No test files found")
-        return {
-            "success": True,
-            "message": "No tests found to run",
-            "discovery": discovery_info
-        }
+        return {"success": True, "message": "No tests found to run", "discovery": discovery_info}
 
     # Prepare test command
     cmd_parts = prepare_test_command(
@@ -457,15 +415,12 @@ def test_command_flow(
         verbose=verbose,
         coverage=coverage,
         parallel=parallel,
-        timeout=timeout
+        timeout=timeout,
     )
 
     # Run tests
     test_result = run_tests(
-        cmd_parts=cmd_parts,
-        project_root=project_root,
-        memory_limit_mb=memory_limit_mb,
-        timeout_seconds=timeout or 900
+        cmd_parts=cmd_parts, project_root=project_root, memory_limit_mb=memory_limit_mb, timeout_seconds=timeout or 900
     )
 
     # Generate coverage report if requested
@@ -480,7 +435,7 @@ def test_command_flow(
         "resources": resources,
         "discovery": discovery_info,
         "test_result": test_result,
-        "coverage": coverage_info
+        "coverage": coverage_info,
     }
 
     # Log summary
@@ -528,7 +483,7 @@ if __name__ == "__main__":
         coverage=args.coverage,
         parallel=args.parallel,
         timeout=args.timeout,
-        memory_limit_mb=args.memory_limit
+        memory_limit_mb=args.memory_limit,
     )
 
     sys.exit(0 if result["success"] else 1)

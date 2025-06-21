@@ -7,7 +7,7 @@ Created comprehensive tests for the `system_taxonomy` module following Test-Driv
 
 ### 1. Platform Detection Tests (4 tests)
 - `test_get_current_platform_macos` - Verifies Darwin → macos normalization
-- `test_get_current_platform_linux` - Verifies Linux → linux normalization  
+- `test_get_current_platform_linux` - Verifies Linux → linux normalization
 - `test_get_current_platform_windows` - Verifies Windows → windows normalization
 - `test_get_current_platform_unknown` - Tests handling of unknown platforms
 

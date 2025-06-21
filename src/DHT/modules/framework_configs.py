@@ -128,14 +128,12 @@ class FrameworkConfig:
             django_config = cls._configs[ProjectType.DJANGO].copy()
             django_config.update(base_config)
             # Merge dependencies
-            django_config["core_dependencies"] = list(set(
-                django_config.get("core_dependencies", []) +
-                base_config.get("core_dependencies", [])
-            ))
-            django_config["test_dependencies"] = list(set(
-                django_config.get("test_dependencies", []) +
-                base_config.get("test_dependencies", [])
-            ))
-            return type('FrameworkConfig', (), django_config)()
+            django_config["core_dependencies"] = list(
+                set(django_config.get("core_dependencies", []) + base_config.get("core_dependencies", []))
+            )
+            django_config["test_dependencies"] = list(
+                set(django_config.get("test_dependencies", []) + base_config.get("test_dependencies", []))
+            )
+            return type("FrameworkConfig", (), django_config)()
 
-        return type('FrameworkConfig', (), base_config)()
+        return type("FrameworkConfig", (), base_config)()

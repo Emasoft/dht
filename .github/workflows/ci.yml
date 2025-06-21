@@ -141,7 +141,7 @@ jobs:
     name: Super Linter (Optional)
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run-super-linter == 'true' }}
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -154,19 +154,19 @@ jobs:
         VALIDATE_ALL_CODEBASE: false
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BRANCH: main
-        
+
         # Use our Python tools config
         PYTHON_BLACK_CONFIG_FILE: pyproject.toml
         PYTHON_RUFF_CONFIG_FILE: pyproject.toml
         PYTHON_MYPY_CONFIG_FILE: pyproject.toml
-        
+
         # Quick mode - only essential linters
         VALIDATE_PYTHON_BLACK: true
         VALIDATE_PYTHON_RUFF: true
         VALIDATE_YAML: true
         VALIDATE_GITHUB_ACTIONS: true
         VALIDATE_BASH: true
-        
+
         # Minimal output
         SUPPRESS_POSSUM: true
         LOG_LEVEL: WARN

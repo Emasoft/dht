@@ -5,7 +5,7 @@ import sys
 import pytest
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import create_mock_file
 
 
@@ -19,7 +19,7 @@ def test_test_command_with_pytest_script(mock_project_with_venv):
         """
 def test_example():
     assert True
-"""
+""",
     )
 
     # Create a mock pytest script that just prints the command arguments
@@ -74,17 +74,13 @@ fi
     dhtl_path.chmod(0o755)
 
     # Run the test command
-    result = subprocess.run(
-        ["./dhtl.sh", "test"],
-        cwd=mock_project_with_venv,
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["./dhtl.sh", "test"], cwd=mock_project_with_venv, capture_output=True, text=True)
 
     # Check the output
     assert result.returncode == 0
     assert "Running pytest" in result.stdout
     assert "-xvs" in result.stdout
+
 
 @pytest.mark.integration
 def test_test_command_with_fast_option(mock_project_with_venv):
@@ -96,7 +92,7 @@ def test_test_command_with_fast_option(mock_project_with_venv):
         """
 def test_example():
     assert True
-"""
+""",
     )
 
     # Create a mock pytest script that just prints the command arguments
@@ -167,12 +163,7 @@ fi
     dhtl_path.chmod(0o755)
 
     # Run the test command with --fast option
-    result = subprocess.run(
-        ["./dhtl.sh", "test", "--fast"],
-        cwd=mock_project_with_venv,
-        capture_output=True,
-        text=True
-    )
+    result = subprocess.run(["./dhtl.sh", "test", "--fast"], cwd=mock_project_with_venv, capture_output=True, text=True)
 
     # Check the output
     assert result.returncode == 0

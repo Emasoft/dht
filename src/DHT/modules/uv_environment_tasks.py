@@ -32,9 +32,7 @@ from DHT.modules.uv_task_utils import find_uv_executable, get_logger
     retry_delay_seconds=RETRY_DELAYS,
 )
 def create_virtual_environment(
-    project_path: Path,
-    python_version: str | None = None,
-    force: bool = False
+    project_path: Path, python_version: str | None = None, force: bool = False
 ) -> dict[str, Any]:
     """
     Create a virtual environment for the project.
@@ -58,11 +56,7 @@ def create_virtual_environment(
     # Check if venv already exists
     if venv_path.exists() and not force:
         logger.info(f"Virtual environment already exists at {venv_path}")
-        return {
-            "created": False,
-            "path": str(venv_path),
-            "message": "Virtual environment already exists"
-        }
+        return {"created": False, "path": str(venv_path), "message": "Virtual environment already exists"}
 
     try:
         # Build UV venv command
@@ -82,7 +76,7 @@ def create_virtual_environment(
         result = run_with_guardian(
             command=cmd,
             limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["create_venv"], timeout=DEFAULT_TIMEOUT),
-            cwd=str(project_path)
+            cwd=str(project_path),
         )
 
         if result.return_code != 0:
@@ -90,27 +84,16 @@ def create_virtual_environment(
 
         logger.info("Virtual environment created successfully")
 
-        return {
-            "created": True,
-            "path": str(venv_path),
-            "python_version": python_version,
-            "output": result.stdout
-        }
+        return {"created": True, "path": str(venv_path), "python_version": python_version, "output": result.stdout}
 
     except Exception as e:
         logger.error(f"Error creating virtual environment: {e}")
         raise UVTaskError(f"Failed to create virtual environment: {e}")
 
 
-@flow(
-    name="setup_project_environment",
-    description="Complete project environment setup with UV"
-)
+@flow(name="setup_project_environment", description="Complete project environment setup with UV")
 def setup_project_environment(
-    project_path: Path,
-    python_version: str | None = None,
-    install_deps: bool = True,
-    force_recreate: bool = False
+    project_path: Path, python_version: str | None = None, install_deps: bool = True, force_recreate: bool = False
 ) -> dict[str, Any]:
     """
     Complete project environment setup flow.
@@ -131,11 +114,7 @@ def setup_project_environment(
         Dict with setup results
     """
     logger = get_logger()
-    results = {
-        "success": False,
-        "steps": {},
-        "errors": []
-    }
+    results = {"success": False, "steps": {}, "errors": []}
 
     try:
         # Check UV availability
@@ -151,6 +130,7 @@ def setup_project_environment(
             python_version = detect_python_version(project_path)
             if not python_version:
                 import sys
+
                 python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
                 logger.info(f"Using current Python version: {python_version}")
 
@@ -161,11 +141,7 @@ def setup_project_environment(
         results["steps"]["python_path"] = str(python_path)
 
         # Create virtual environment
-        venv_result = create_virtual_environment(
-            project_path,
-            python_version=python_version,
-            force=force_recreate
-        )
+        venv_result = create_virtual_environment(project_path, python_version=python_version, force=force_recreate)
         results["steps"]["venv_creation"] = venv_result
 
         # Install dependencies
@@ -182,23 +158,23 @@ def setup_project_environment(
 # Project Environment Setup Summary
 
 ## UV Version
-- Available: {uv_check['available']}
-- Version: {uv_check.get('version', 'N/A')}
+- Available: {uv_check["available"]}
+- Version: {uv_check.get("version", "N/A")}
 
 ## Python Configuration
 - Version: {python_version}
 - Path: {python_path}
 
 ## Virtual Environment
-- Created: {venv_result.get('created', False)}
-- Path: {venv_result.get('path', 'N/A')}
+- Created: {venv_result.get("created", False)}
+- Path: {venv_result.get("path", "N/A")}
 
 ## Dependencies
-- Installed: {results['steps'].get('dependencies', {}).get('success', False)}
+- Installed: {results["steps"].get("dependencies", {}).get("success", False)}
 
 ## Status
-Setup completed {'successfully' if results['success'] else 'with errors'}
-"""
+Setup completed {"successfully" if results["success"] else "with errors"}
+""",
         )
 
     except Exception as e:

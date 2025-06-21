@@ -31,9 +31,9 @@ def cli():
 
 
 @cli.command()
-@click.option('--name', default='dht-guardian', help='Deployment name')
-@click.option('--interval', type=int, help='Run interval in seconds')
-@click.option('--cron', help='Cron schedule')
+@click.option("--name", default="dht-guardian", help="Deployment name")
+@click.option("--interval", type=int, help="Run interval in seconds")
+@click.option("--cron", help="Cron schedule")
 def start(name: str, interval: int | None, cron: str | None):
     """Start the Prefect guardian server"""
     click.echo("Starting Prefect guardian server...")
@@ -45,7 +45,7 @@ def start(name: str, interval: int | None, cron: str | None):
     seq_deployment = guardian_sequential_flow.to_deployment(
         name=f"{name}-sequential",
         description="Sequential command execution with resource limits",
-        tags=["dht", "guardian", "sequential"]
+        tags=["dht", "guardian", "sequential"],
     )
 
     if interval:
@@ -57,9 +57,7 @@ def start(name: str, interval: int | None, cron: str | None):
 
     # Batch deployment
     batch_deployment = guardian_batch_flow.to_deployment(
-        name=f"{name}-batch",
-        description="Batch command execution with parallelism",
-        tags=["dht", "guardian", "batch"]
+        name=f"{name}-batch", description="Batch command execution with parallelism", tags=["dht", "guardian", "batch"]
     )
 
     deployments.append(batch_deployment)
@@ -90,7 +88,7 @@ def status():
             async with get_client() as client:
                 # Check for deployments
                 deployments = await client.read_deployments()
-                guardian_deployments = [d for d in deployments if 'guardian' in d.tags]
+                guardian_deployments = [d for d in deployments if "guardian" in d.tags]
 
                 if guardian_deployments:
                     click.echo(f"Guardian server is running with {len(guardian_deployments)} deployments:")
@@ -101,7 +99,7 @@ def status():
 
                 # Check recent flows
                 flows = await client.read_flows()
-                guardian_flows = [f for f in flows if 'guardian' in f.name]
+                guardian_flows = [f for f in flows if "guardian" in f.name]
 
                 if guardian_flows:
                     click.echo(f"\nRegistered guardian flows: {len(guardian_flows)}")
@@ -116,17 +114,17 @@ def status():
 
 
 @cli.command()
-@click.argument('commands', nargs=-1, required=False)
-@click.option('--file', '-f', type=click.Path(exists=True), help='File containing commands')
-@click.option('--sequential', '-s', is_flag=True, default=True, help='Run commands sequentially')
-@click.option('--batch', '-b', type=int, help='Run commands in batches')
-@click.option('--memory', '-m', type=int, default=2048, help='Memory limit in MB')
-@click.option('--timeout', '-t', type=int, default=900, help='Timeout in seconds')
-@click.option('--cpu', type=int, default=80, help='CPU limit percentage')
-@click.option('--output', '-o', type=click.Path(), help='Output file for results')
-@click.option('--json', 'output_json', is_flag=True, help='Output results as JSON')
-@click.option('--stop-on-failure', is_flag=True, default=True, help='Stop on first failure')
-@click.option('--deployment', '-d', help='Run via deployment instead of directly')
+@click.argument("commands", nargs=-1, required=False)
+@click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")
+@click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")
+@click.option("--batch", "-b", type=int, help="Run commands in batches")
+@click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")
+@click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")
+@click.option("--cpu", type=int, default=80, help="CPU limit percentage")
+@click.option("--output", "-o", type=click.Path(), help="Output file for results")
+@click.option("--json", "output_json", is_flag=True, help="Output results as JSON")
+@click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")
+@click.option("--deployment", "-d", help="Run via deployment instead of directly")
 def run(
     commands: tuple,
     file: str | None,
@@ -138,7 +136,7 @@ def run(
     output: str | None,
     output_json: bool,
     stop_on_failure: bool,
-    deployment: str | None
+    deployment: str | None,
 ):
     """Run commands through the guardian"""
 
@@ -159,11 +157,7 @@ def run(
         sys.exit(1)
 
     # Create resource limits
-    limits = ResourceLimits(
-        memory_mb=memory,
-        cpu_percent=cpu,
-        timeout=timeout
-    )
+    limits = ResourceLimits(memory_mb=memory, cpu_percent=cpu, timeout=timeout)
 
     click.echo(f"Running {len(command_list)} commands with limits: memory={memory}MB, timeout={timeout}s")
 
@@ -173,28 +167,16 @@ def run(
             click.echo(f"Running via deployment: {deployment}")
             run_deployment(
                 name=f"{deployment}/guardian-sequential" if sequential else f"{deployment}/guardian-batch",
-                parameters={
-                    "commands": command_list,
-                    "default_limits": limits,
-                    "stop_on_failure": stop_on_failure
-                }
+                parameters={"commands": command_list, "default_limits": limits, "stop_on_failure": stop_on_failure},
             )
         else:
             # Run directly
             if batch:
                 click.echo(f"Running in batch mode (batch_size={batch})")
-                results = guardian_batch_flow(
-                    command_list,
-                    batch_size=batch,
-                    default_limits=limits
-                )
+                results = guardian_batch_flow(command_list, batch_size=batch, default_limits=limits)
             else:
                 click.echo("Running in sequential mode")
-                results = guardian_sequential_flow(
-                    command_list,
-                    stop_on_failure=stop_on_failure,
-                    default_limits=limits
-                )
+                results = guardian_sequential_flow(command_list, stop_on_failure=stop_on_failure, default_limits=limits)
 
             # Display results
             successful = sum(1 for r in results if r.get("returncode") == 0)
@@ -215,7 +197,7 @@ def run(
             if output:
                 output_path = Path(output)
                 if output_json:
-                    with open(output_path, 'w') as f:
+                    with open(output_path, "w") as f:
                         json.dump(results, f, indent=2, default=str)
                 else:
                     save_results(results, output_path)
@@ -230,39 +212,27 @@ def run(
 
 
 @cli.command()
-@click.option('--format', type=click.Choice(['yaml', 'json']), default='yaml', help='Output format')
+@click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")
 def example(format: str):
     """Show example command file"""
 
     example_data = {
         "commands": [
             "echo 'Simple command'",
-            {
-                "command": "python -c 'import time; time.sleep(2); print(\"Done\")'",
-                "timeout": 5,
-                "memory_mb": 512
-            },
-            {
-                "command": "ls -la",
-                "working_dir": "/tmp"
-            },
-            {
-                "command": "env | grep PATH",
-                "env": {
-                    "CUSTOM_VAR": "test_value"
-                }
-            }
+            {"command": "python -c 'import time; time.sleep(2); print(\"Done\")'", "timeout": 5, "memory_mb": 512},
+            {"command": "ls -la", "working_dir": "/tmp"},
+            {"command": "env | grep PATH", "env": {"CUSTOM_VAR": "test_value"}},
         ]
     }
 
-    if format == 'json':
+    if format == "json":
         click.echo(json.dumps(example_data, indent=2))
     else:
         click.echo(yaml.dump(example_data, default_flow_style=False))
 
 
 @cli.command()
-@click.argument('result_file', type=click.Path(exists=True))
+@click.argument("result_file", type=click.Path(exists=True))
 def show_results(result_file: str):
     """Display results from a previous run"""
 
@@ -270,7 +240,7 @@ def show_results(result_file: str):
 
     try:
         with open(result_path) as f:
-            if result_path.suffix == '.json':
+            if result_path.suffix == ".json":
                 data = json.load(f)
             else:
                 data = yaml.safe_load(f)
@@ -280,14 +250,14 @@ def show_results(result_file: str):
         click.echo(f"Successful: {data.get('successful', 0)}")
         click.echo(f"Failed: {data.get('failed', 0)}")
 
-        if 'results' in data:
+        if "results" in data:
             click.echo("\nCommand results:")
-            for i, result in enumerate(data['results'], 1):
-                status = "✓" if result.get('returncode') == 0 else "✗"
-                duration = result.get('duration', 0)
+            for i, result in enumerate(data["results"], 1):
+                status = "✓" if result.get("returncode") == 0 else "✗"
+                duration = result.get("duration", 0)
                 click.echo(f"{i}. {status} {result.get('command', 'Unknown')} ({duration:.2f}s)")
 
-                if result.get('returncode') != 0 and result.get('stderr'):
+                if result.get("returncode") != 0 and result.get("stderr"):
                     click.echo(f"   Error: {result['stderr'][:100]}...")
 
     except Exception as e:
@@ -298,11 +268,12 @@ def show_results(result_file: str):
 def parse_args():
     """Parse command line arguments for compatibility with shell script interface."""
     import argparse
-    parser = argparse.ArgumentParser(description='DHT Guardian - Resource-limited command execution')
-    parser.add_argument('command', nargs='+', help='Command to execute')
-    parser.add_argument('--memory', type=int, default=2048, help='Memory limit in MB')
-    parser.add_argument('--timeout', type=int, default=900, help='Timeout in seconds')
-    parser.add_argument('--cpu', type=int, default=80, help='CPU limit percentage')
+
+    parser = argparse.ArgumentParser(description="DHT Guardian - Resource-limited command execution")
+    parser.add_argument("command", nargs="+", help="Command to execute")
+    parser.add_argument("--memory", type=int, default=2048, help="Memory limit in MB")
+    parser.add_argument("--timeout", type=int, default=900, help="Timeout in seconds")
+    parser.add_argument("--cpu", type=int, default=80, help="CPU limit percentage")
     return parser.parse_args()
 
 
@@ -311,18 +282,14 @@ def main():
     from .guardian_prefect import ResourceLimits, run_with_guardian
 
     # If running as Click app
-    if len(sys.argv) > 1 and sys.argv[1] in ['start', 'run', 'example', 'show-results']:
+    if len(sys.argv) > 1 and sys.argv[1] in ["start", "run", "example", "show-results"]:
         return cli()
 
     # Otherwise, parse as simple command execution (shell script compatibility)
     args = parse_args()
 
     # Create resource limits
-    limits = ResourceLimits(
-        memory_mb=args.memory,
-        cpu_percent=args.cpu,
-        timeout=args.timeout
-    )
+    limits = ResourceLimits(memory_mb=args.memory, cpu_percent=args.cpu, timeout=args.timeout)
 
     # Run the command
     result = run_with_guardian(args.command, limits=limits)

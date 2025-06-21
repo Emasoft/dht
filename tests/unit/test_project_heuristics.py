@@ -14,7 +14,6 @@ and configuration suggestions.
 # - Added tests for code quality analysis
 # - Added integration tests with project analyzer output
 
-
 import pytest
 
 from DHT.modules.project_heuristics import FRAMEWORK_PATTERNS, IMPORT_TO_SYSTEM_DEPS, ProjectHeuristics
@@ -34,40 +33,13 @@ class TestProjectHeuristics:
         return {
             "project_type": "python",
             "file_analysis": {
-                "manage.py": {
-                    "imports": [
-                        {"module": "django.core.management"},
-                        {"module": "os"},
-                        {"module": "sys"}
-                    ]
-                },
-                "myapp/settings.py": {
-                    "imports": [
-                        {"module": "django.conf"},
-                        {"module": "pathlib"}
-                    ]
-                },
-                "myapp/urls.py": {
-                    "imports": [
-                        {"module": "django.urls"},
-                        {"module": "django.contrib"}
-                    ]
-                },
-                "myapp/models.py": {
-                    "imports": [
-                        {"module": "django.db.models"}
-                    ]
-                }
+                "manage.py": {"imports": [{"module": "django.core.management"}, {"module": "os"}, {"module": "sys"}]},
+                "myapp/settings.py": {"imports": [{"module": "django.conf"}, {"module": "pathlib"}]},
+                "myapp/urls.py": {"imports": [{"module": "django.urls"}, {"module": "django.contrib"}]},
+                "myapp/models.py": {"imports": [{"module": "django.db.models"}]},
             },
-            "structure": {
-                "has_tests": True,
-                "entry_points": ["manage.py"]
-            },
-            "dependencies": {
-                "python": {
-                    "all": ["django", "psycopg2", "redis", "celery"]
-                }
-            }
+            "structure": {"has_tests": True, "entry_points": ["manage.py"]},
+            "dependencies": {"python": {"all": ["django", "psycopg2", "redis", "celery"]}},
         }
 
     @pytest.fixture
@@ -77,33 +49,18 @@ class TestProjectHeuristics:
             "project_type": "python",
             "file_analysis": {
                 "app.py": {
-                    "imports": [
-                        {"module": "flask"},
-                        {"module": "flask.Flask"},
-                        {"module": "flask_sqlalchemy"}
-                    ],
+                    "imports": [{"module": "flask"}, {"module": "flask.Flask"}, {"module": "flask_sqlalchemy"}],
                     "functions": [
                         {"name": "create_app", "has_type_hints": True},
-                        {"name": "index", "has_type_hints": False}
-                    ]
+                        {"name": "index", "has_type_hints": False},
+                    ],
                 },
-                "models.py": {
-                    "imports": [
-                        {"module": "sqlalchemy"}
-                    ]
-                },
+                "models.py": {"imports": [{"module": "sqlalchemy"}]},
                 "templates/index.html": {},
-                "static/style.css": {}
+                "static/style.css": {},
             },
-            "structure": {
-                "has_tests": False,
-                "entry_points": ["app.py"]
-            },
-            "dependencies": {
-                "python": {
-                    "all": ["flask", "flask-sqlalchemy", "flask-migrate"]
-                }
-            }
+            "structure": {"has_tests": False, "entry_points": ["app.py"]},
+            "dependencies": {"python": {"all": ["flask", "flask-sqlalchemy", "flask-migrate"]}},
         }
 
     @pytest.fixture
@@ -117,28 +74,17 @@ class TestProjectHeuristics:
                         {"module": "fastapi"},
                         {"module": "fastapi.FastAPI"},
                         {"module": "pydantic"},
-                        {"module": "uvicorn"}
+                        {"module": "uvicorn"},
                     ],
                     "functions": [
                         {"name": "read_root", "has_type_hints": True},
-                        {"name": "create_item", "has_type_hints": True}
-                    ]
+                        {"name": "create_item", "has_type_hints": True},
+                    ],
                 },
-                "routers/users.py": {
-                    "imports": [
-                        {"module": "fastapi.APIRouter"}
-                    ]
-                },
-                "models/user.py": {
-                    "imports": [
-                        {"module": "pydantic.BaseModel"}
-                    ]
-                }
+                "routers/users.py": {"imports": [{"module": "fastapi.APIRouter"}]},
+                "models/user.py": {"imports": [{"module": "pydantic.BaseModel"}]},
             },
-            "structure": {
-                "has_tests": True,
-                "entry_points": ["main.py"]
-            }
+            "structure": {"has_tests": True, "entry_points": ["main.py"]},
         }
 
     @pytest.fixture
@@ -154,19 +100,12 @@ class TestProjectHeuristics:
                         {"module": "numpy"},
                         {"module": "sklearn.model_selection"},
                         {"module": "tensorflow"},
-                        {"module": "matplotlib.pyplot"}
+                        {"module": "matplotlib.pyplot"},
                     ]
                 },
-                "src/preprocess.py": {
-                    "imports": [
-                        {"module": "cv2"},
-                        {"module": "PIL.Image"}
-                    ]
-                }
+                "src/preprocess.py": {"imports": [{"module": "cv2"}, {"module": "PIL.Image"}]},
             },
-            "structure": {
-                "has_tests": True
-            }
+            "structure": {"has_tests": True},
         }
 
     def test_detect_django_project(self, heuristics, django_analysis_result):
@@ -219,12 +158,8 @@ class TestProjectHeuristics:
         """Test generic project detection when no framework matches."""
         generic_result = {
             "project_type": "python",
-            "file_analysis": {
-                "script.py": {
-                    "imports": [{"module": "os"}, {"module": "sys"}]
-                }
-            },
-            "structure": {}
+            "file_analysis": {"script.py": {"imports": [{"module": "os"}, {"module": "sys"}]}},
+            "structure": {},
         }
 
         result = heuristics.detect_project_type(generic_result)
@@ -317,10 +252,8 @@ class TestProjectHeuristics:
             "file_analysis": {
                 ".pre-commit-config.yaml": {},
                 "pyproject.toml": {},
-                "tests/test_main.py": {
-                    "imports": [{"module": "pytest"}]
-                }
-            }
+                "tests/test_main.py": {"imports": [{"module": "pytest"}]},
+            },
         }
 
         result = heuristics.analyze_code_quality(analysis_with_configs)
@@ -354,24 +287,12 @@ class TestProjectHeuristics:
         complex_project = {
             "project_type": "python",
             "file_analysis": {
-                "app.py": {
-                    "imports": [
-                        {"module": "click"},
-                        {"module": "sqlalchemy"},
-                        {"module": "asyncio"}
-                    ]
-                },
-                "tests/test_app.py": {
-                    "imports": [{"module": "pytest"}]
-                },
+                "app.py": {"imports": [{"module": "click"}, {"module": "sqlalchemy"}, {"module": "asyncio"}]},
+                "tests/test_app.py": {"imports": [{"module": "pytest"}]},
                 "Dockerfile": {},
-                "setup.py": {}
+                "setup.py": {},
             },
-            "dependencies": {
-                "python": {
-                    "all": ["click", "sqlalchemy", "pytest", "asyncio"]
-                }
-            }
+            "dependencies": {"python": {"all": ["click", "sqlalchemy", "pytest", "asyncio"]}},
         }
 
         result = heuristics.detect_project_type(complex_project)
@@ -386,12 +307,7 @@ class TestProjectHeuristics:
 
     def test_empty_project_handling(self, heuristics):
         """Test handling of empty or minimal projects."""
-        empty_project = {
-            "project_type": "unknown",
-            "file_analysis": {},
-            "structure": {},
-            "dependencies": {}
-        }
+        empty_project = {"project_type": "unknown", "file_analysis": {}, "structure": {}, "dependencies": {}}
 
         # Should not crash
         project_type = heuristics.detect_project_type(empty_project)
@@ -413,13 +329,11 @@ class TestFrameworkPatterns:
         required_fields = {"files", "imports", "structure_hints", "config_files"}
 
         for framework, patterns in FRAMEWORK_PATTERNS.items():
-            assert required_fields.issubset(patterns.keys()), \
-                f"Framework {framework} missing required fields"
+            assert required_fields.issubset(patterns.keys()), f"Framework {framework} missing required fields"
 
             # All fields should be lists
             for field in required_fields:
-                assert isinstance(patterns[field], list), \
-                    f"Framework {framework} field {field} should be a list"
+                assert isinstance(patterns[field], list), f"Framework {framework} field {field} should be a list"
 
     def test_import_to_system_deps_validity(self):
         """Test that system dependency mappings are valid."""

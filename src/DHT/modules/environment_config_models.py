@@ -20,6 +20,7 @@ from typing import Any
 @dataclass
 class EnvironmentConfig:
     """Configuration for a development environment."""
+
     project_path: Path
     project_type: str
     python_version: str | None = None
@@ -40,6 +41,7 @@ class EnvironmentConfig:
 @dataclass
 class ConfigurationResult:
     """Result of environment configuration."""
+
     success: bool
     config: EnvironmentConfig
     steps_completed: list[str] = field(default_factory=list)

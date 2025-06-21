@@ -50,9 +50,7 @@ class BaseParser(ABC):
             try:
                 self._init_tree_sitter(language)
             except Exception as e:
-                self.logger.warning(
-                    f"Failed to initialize tree-sitter for {language}: {e}"
-                )
+                self.logger.warning(f"Failed to initialize tree-sitter for {language}: {e}")
 
     def _init_tree_sitter(self, language: str):
         """Initialize tree-sitter parser for the given language"""
@@ -70,16 +68,12 @@ class BaseParser(ABC):
                     self.parser = tree_sitter.Parser()
                     self.parser.set_language(Language)
                     self.language_obj = Language
-                    self.logger.info(
-                        f"Initialized tree-sitter for {language} from {lib_path}"
-                    )
+                    self.logger.info(f"Initialized tree-sitter for {language} from {lib_path}")
                     return
                 except Exception as e:
                     self.logger.debug(f"Failed to load {language} from {lib_path}: {e}")
 
-        raise RuntimeError(
-            f"Could not find tree-sitter language library for {language}"
-        )
+        raise RuntimeError(f"Could not find tree-sitter language library for {language}")
 
     @abstractmethod
     def parse_file(self, file_path: Path) -> dict[str, Any]:
@@ -273,9 +267,7 @@ class BaseParser(ABC):
         try:
             import toml
         except ImportError:
-            raise ImportError(
-                "toml package required for TOML parsing. Install with: pip install toml"
-            )
+            raise ImportError("toml package required for TOML parsing. Install with: pip install toml")
 
         try:
             with open(file_path) as f:

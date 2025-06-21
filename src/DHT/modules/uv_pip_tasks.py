@@ -29,10 +29,7 @@ from DHT.modules.uv_task_utils import find_uv_executable, get_logger
     retries=3,
     retry_delay_seconds=exponential_backoff(backoff_factor=2),
 )
-def pip_install_requirements(
-    project_path: Path,
-    requirements_file: Path
-) -> dict[str, Any]:
+def pip_install_requirements(project_path: Path, requirements_file: Path) -> dict[str, Any]:
     """
     Install from requirements file using uv pip.
 
@@ -54,14 +51,14 @@ def pip_install_requirements(
     result = run_with_guardian(
         command=args,
         limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-        cwd=str(project_path)
+        cwd=str(project_path),
     )
 
     return {
         "success": result.return_code == 0,
         "method": "uv pip install -r",
         "requirements_file": str(requirements_file),
-        "message": result.stdout if result.return_code == 0 else result.stderr
+        "message": result.stdout if result.return_code == 0 else result.stderr,
     }
 
 
@@ -71,11 +68,7 @@ def pip_install_requirements(
     retries=3,
     retry_delay_seconds=exponential_backoff(backoff_factor=2),
 )
-def pip_install_project(
-    project_path: Path,
-    dev: bool = False,
-    extras: list[str] | None = None
-) -> dict[str, Any]:
+def pip_install_project(project_path: Path, dev: bool = False, extras: list[str] | None = None) -> dict[str, Any]:
     """
     Install project with optional extras.
 
@@ -105,15 +98,11 @@ def pip_install_project(
     result = run_with_guardian(
         command=args,
         limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-        cwd=str(project_path)
+        cwd=str(project_path),
     )
 
     if result.return_code != 0:
-        return {
-            "success": False,
-            "method": "uv pip install -e",
-            "message": result.stderr
-        }
+        return {"success": False, "method": "uv pip install -e", "message": result.stderr}
 
     # Install dev dependencies if requested
     if dev:
@@ -132,9 +121,9 @@ def pip_install_project(
 
                 # Check for dev dependencies in various locations
                 dev_deps = (
-                    data.get("project", {}).get("optional-dependencies", {}).get("dev", []) or
-                    data.get("dependency-groups", {}).get("dev", []) or
-                    data.get("tool", {}).get("pdm", {}).get("dev-dependencies", {})
+                    data.get("project", {}).get("optional-dependencies", {}).get("dev", [])
+                    or data.get("dependency-groups", {}).get("dev", [])
+                    or data.get("tool", {}).get("pdm", {}).get("dev-dependencies", {})
                 )
 
                 if dev_deps:
@@ -142,7 +131,7 @@ def pip_install_project(
                     dev_result = run_with_guardian(
                         command=[str(uv_path), "pip", "install", "-e", ".[dev]"],
                         limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=INSTALL_TIMEOUT),
-                        cwd=str(project_path)
+                        cwd=str(project_path),
                     )
 
                     if dev_result.return_code != 0:
@@ -152,13 +141,9 @@ def pip_install_project(
                             run_with_guardian(
                                 command=[str(uv_path), "pip", "install", dep],
                                 limits=ResourceLimits(memory_mb=UV_MEMORY_LIMITS["install_deps"], timeout=300),
-                                cwd=str(project_path)
+                                cwd=str(project_path),
                             )
         except Exception as e:
             logger.warning(f"Could not install dev dependencies: {e}")
 
-    return {
-        "success": True,
-        "method": "uv pip install -e",
-        "message": "Dependencies installed successfully"
-    }
+    return {"success": True, "method": "uv pip install -e", "message": "Dependencies installed successfully"}
