@@ -23,7 +23,7 @@ class DependencyExtractor:
 
     def extract_dependencies(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract dependencies from project analysis."""
-        deps = {
+        deps: dict[str, Any] = {
             "python_packages": [],
             "lock_files": {},
             "system_packages": []

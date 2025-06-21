@@ -38,9 +38,8 @@ except ImportError:
         from .. import diagnostic_reporter_v2
         from . import project_analyzer
     except ImportError:
-        # Try direct import (when modules are in path)
-        import diagnostic_reporter_v2
-        import project_analyzer
+        # Try direct import (when modules are in path) - already imported above
+        pass
 
 # Import extracted modules
 from DHT.modules.dhtconfig_build_extractor import BuildConfigExtractor
@@ -96,9 +95,9 @@ class DHTConfig:
         """Extract build config from project info (backward compatibility)."""
         return self.build_extractor.extract_build_config(project_info)
 
-    def _extract_environment_vars(self, project_info: dict[str, Any]) -> dict[str, Any]:
-        """Extract environment variables from project info (backward compatibility)."""
-        return self.env_extractor.extract_environment_vars(project_info)
+    def _extract_environment_vars(self, project_path: Path) -> dict[str, Any]:
+        """Extract environment variables from project path (backward compatibility)."""
+        return self.env_extractor.extract_environment_vars(project_path)
 
     def _deep_merge(self, base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
         """Deep merge dictionaries (backward compatibility)."""

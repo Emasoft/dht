@@ -46,12 +46,21 @@ class FmtCommand:
             Result dictionary
         """
         # Import format command to avoid circular imports
-        from ..utils import format_command as format_func
+        from ..utils import FormatCommand
 
         self.logger.info("Running fmt command (delegating to format)")
 
-        # Delegate to format with same arguments
-        return format_func(**kwargs)
+        # Create format command instance and run it
+        format_cmd = FormatCommand()
+        result_code = format_cmd.run()
+        
+        # Convert result to dictionary format
+        success = result_code == 0
+        return {
+            "success": success,
+            "message": "Code formatted successfully" if success else "Formatting failed",
+            "return_code": result_code
+        }
 
 
 # Module-level function for command registry

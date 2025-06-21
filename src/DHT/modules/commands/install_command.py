@@ -66,16 +66,19 @@ class InstallCommand:
         Returns:
             Result dictionary
         """
-        # Import setup command to avoid circular imports
+        # Import setup command and UV manager to avoid circular imports
         from ..dhtl_commands_setup import SetupCommand
+        from ..uv_manager import UVManager
 
         self.logger.info("Running install command (delegating to setup)")
 
-        # Create setup command instance
+        # Create setup command instance and UV manager
         setup_cmd = SetupCommand()
+        uv_manager = UVManager()
 
         # Delegate to setup with same arguments
-        return setup_cmd.execute(
+        return setup_cmd.setup(
+            uv_manager=uv_manager,
             path=path,
             python=python,
             dev=dev,
@@ -85,7 +88,6 @@ class InstallCommand:
             editable=editable,
             index_url=index_url,
             install_pre_commit=install_pre_commit,
-            **kwargs,
         )
 
 

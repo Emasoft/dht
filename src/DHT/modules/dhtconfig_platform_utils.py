@@ -100,20 +100,25 @@ class PlatformUtils:
                     merged[section] = {}
 
                 # Deep merge
-                self._deep_merge(merged[section], overrides)
+                merged[section] = self._deep_merge(merged[section], overrides)
 
         return merged
 
-    def _deep_merge(self, base: dict[str, Any], override: dict[str, Any]) -> None:
-        """Deep merge override into base dictionary."""
+    def _deep_merge(self, base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+        """Deep merge override into base dictionary and return the result."""
+        import copy
+        result = copy.deepcopy(base)
+        
         for key, value in override.items():
-            if key in base and isinstance(base[key], dict) and isinstance(value, dict):
-                self._deep_merge(base[key], value)
-            elif key in base and isinstance(base[key], list) and isinstance(value, list):
+            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                result[key] = self._deep_merge(result[key], value)
+            elif key in result and isinstance(result[key], list) and isinstance(value, list):
                 # Extend lists
-                base[key].extend(value)
+                result[key] = result[key] + value
             else:
-                base[key] = value
+                result[key] = value
+        
+        return result
 
 
 # Export public API

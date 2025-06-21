@@ -81,7 +81,7 @@ class ValidationUtils:
 
         return version_output.split()[0] if version_output else "unknown"
 
-    def validate_config(self, config: dict[str, Any], schema: dict[str, Any] = None) -> tuple[bool, list[str]]:
+    def validate_config(self, config: dict[str, Any], schema: dict[str, Any] | None = None) -> tuple[bool, list[str]]:
         """
         Validate configuration against schema.
 

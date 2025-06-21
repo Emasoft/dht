@@ -20,7 +20,7 @@ class ToolRequirementsExtractor:
 
     def extract_tool_requirements(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract tool requirements from project analysis."""
-        tools = {
+        tools: dict[str, list[str]] = {
             "required": [],
             "optional": []
         }
