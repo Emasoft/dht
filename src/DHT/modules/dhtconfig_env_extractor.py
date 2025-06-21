@@ -23,10 +23,7 @@ class EnvironmentVariablesExtractor:
 
     def extract_environment_vars(self, project_path: Path) -> dict[str, Any]:
         """Extract environment variables from project."""
-        env = {
-            "required": {},
-            "optional": {}
-        }
+        env = {"required": {}, "optional": {}}
 
         # Check for .env files
         for env_file in DHTConfigConstants.ENV_FILES:
@@ -36,8 +33,8 @@ class EnvironmentVariablesExtractor:
                     with open(env_path) as f:
                         for line in f:
                             line = line.strip()
-                            if line and not line.startswith('#') and '=' in line:
-                                key, value = line.split('=', 1)
+                            if line and not line.startswith("#") and "=" in line:
+                                key, value = line.split("=", 1)
                                 key = key.strip()
                                 value = value.strip().strip('"').strip("'")
 

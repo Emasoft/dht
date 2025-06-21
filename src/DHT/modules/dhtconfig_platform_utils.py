@@ -20,11 +20,7 @@ from typing import Any
 class PlatformUtils:
     """Handles platform-specific configuration operations."""
 
-    def generate_platform_overrides(
-        self,
-        project_info: dict[str, Any],
-        system_info: dict[str, Any]
-    ) -> dict[str, Any]:
+    def generate_platform_overrides(self, project_info: dict[str, Any], system_info: dict[str, Any]) -> dict[str, Any]:
         """Generate platform-specific configuration overrides."""
         overrides = {}
 
@@ -58,20 +54,12 @@ class PlatformUtils:
                         {"name": "visualstudio2019buildtools"},
                     ]
                 },
-                "environment": {
-                    "required": {
-                        "PYTHONIOENCODING": "utf-8"
-                    }
-                }
+                "environment": {"required": {"PYTHONIOENCODING": "utf-8"}},
             }
 
         return overrides
 
-    def merge_platform_config(
-        self,
-        base_config: dict[str, Any],
-        platform_name: str | None = None
-    ) -> dict[str, Any]:
+    def merge_platform_config(self, base_config: dict[str, Any], platform_name: str | None = None) -> dict[str, Any]:
         """
         Merge platform-specific overrides into base configuration.
 
@@ -107,8 +95,9 @@ class PlatformUtils:
     def _deep_merge(self, base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
         """Deep merge override into base dictionary and return the result."""
         import copy
+
         result = copy.deepcopy(base)
-        
+
         for key, value in override.items():
             if key in result and isinstance(result[key], dict) and isinstance(value, dict):
                 result[key] = self._deep_merge(result[key], value)
@@ -117,7 +106,7 @@ class PlatformUtils:
                 result[key] = result[key] + value
             else:
                 result[key] = value
-        
+
         return result
 
 

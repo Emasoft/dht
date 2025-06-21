@@ -26,37 +26,18 @@ if HAS_YAML:
 
 def main():
     """CLI interface for dhtconfig operations."""
-    parser = argparse.ArgumentParser(
-        description="DHT Configuration Generator and Manager"
-    )
+    parser = argparse.ArgumentParser(description="DHT Configuration Generator and Manager")
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
     # Generate command
     gen_parser = subparsers.add_parser("generate", help="Generate .dhtconfig from project")
     gen_parser.add_argument(
-        "project_path",
-        type=Path,
-        nargs="?",
-        default=Path.cwd(),
-        help="Project path (default: current directory)"
+        "project_path", type=Path, nargs="?", default=Path.cwd(), help="Project path (default: current directory)"
     )
-    gen_parser.add_argument(
-        "--format",
-        choices=["yaml", "json"],
-        default="yaml",
-        help="Output format (default: yaml)"
-    )
-    gen_parser.add_argument(
-        "--no-system-info",
-        action="store_true",
-        help="Skip system information collection"
-    )
-    gen_parser.add_argument(
-        "--no-checksums",
-        action="store_true",
-        help="Skip checksum generation"
-    )
+    gen_parser.add_argument("--format", choices=["yaml", "json"], default="yaml", help="Output format (default: yaml)")
+    gen_parser.add_argument("--no-system-info", action="store_true", help="Skip system information collection")
+    gen_parser.add_argument("--no-checksums", action="store_true", help="Skip checksum generation")
 
     # Validate command
     val_parser = subparsers.add_parser("validate", help="Validate .dhtconfig file")
@@ -65,7 +46,7 @@ def main():
         type=Path,
         nargs="?",
         default=Path.cwd() / ".dhtconfig",
-        help="Config file path (default: ./.dhtconfig)"
+        help="Config file path (default: ./.dhtconfig)",
     )
 
     # Show command
@@ -75,12 +56,10 @@ def main():
         type=Path,
         nargs="?",
         default=Path.cwd() / ".dhtconfig",
-        help="Config file path (default: ./.dhtconfig)"
+        help="Config file path (default: ./.dhtconfig)",
     )
     show_parser.add_argument(
-        "--platform",
-        choices=["macos", "linux", "windows"],
-        help="Platform to show (default: current)"
+        "--platform", choices=["macos", "linux", "windows"], help="Platform to show (default: current)"
     )
 
     args = parser.parse_args()
@@ -95,16 +74,10 @@ def main():
         print(f"Generating .dhtconfig for {args.project_path}...")
 
         config = dht_config.generate_from_project(
-            args.project_path,
-            include_system_info=not args.no_system_info,
-            include_checksums=not args.no_checksums
+            args.project_path, include_system_info=not args.no_system_info, include_checksums=not args.no_checksums
         )
 
-        config_path = dht_config.save_config(
-            config,
-            args.project_path,
-            format=args.format
-        )
+        config_path = dht_config.save_config(config, args.project_path, format=args.format)
 
         print(f"Configuration saved to: {config_path}")
 

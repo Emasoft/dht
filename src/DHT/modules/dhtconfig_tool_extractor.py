@@ -20,10 +20,7 @@ class ToolRequirementsExtractor:
 
     def extract_tool_requirements(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract tool requirements from project analysis."""
-        tools: dict[str, list[str]] = {
-            "required": [],
-            "optional": []
-        }
+        tools: dict[str, list[str]] = {"required": [], "optional": []}
 
         # Add tools based on project configuration files
         configs = project_info.get("configurations", {})
@@ -41,26 +38,27 @@ class ToolRequirementsExtractor:
 
         # Python tools
         if project_info.get("project_type") == "python":
-            tools["required"].extend([
-                {"name": "pip"},
-                {"name": "setuptools"},
-                {"name": "wheel"},
-            ])
+            tools["required"].extend(
+                [
+                    {"name": "pip"},
+                    {"name": "setuptools"},
+                    {"name": "wheel"},
+                ]
+            )
 
             # Optional Python tools
-            tools["optional"].extend([
-                {"name": "pytest", "purpose": "Running tests"},
-                {"name": "mypy", "purpose": "Type checking"},
-                {"name": "ruff", "purpose": "Linting and formatting"},
-                {"name": "black", "purpose": "Code formatting"},
-            ])
+            tools["optional"].extend(
+                [
+                    {"name": "pytest", "purpose": "Running tests"},
+                    {"name": "mypy", "purpose": "Type checking"},
+                    {"name": "ruff", "purpose": "Linting and formatting"},
+                    {"name": "black", "purpose": "Code formatting"},
+                ]
+            )
 
         # Container tools
         if configs.get("has_dockerfile"):
-            tools["optional"].append({
-                "name": "docker",
-                "purpose": "Container builds"
-            })
+            tools["optional"].append({"name": "docker", "purpose": "Container builds"})
 
         return tools
 

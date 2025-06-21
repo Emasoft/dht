@@ -104,10 +104,7 @@ class DHTConfig:
         return self.platform_utils._deep_merge(base, overlay)
 
     def generate_from_project(
-        self,
-        project_path: Path,
-        include_system_info: bool = True,
-        include_checksums: bool = True
+        self, project_path: Path, include_system_info: bool = True, include_checksums: bool = True
     ) -> dict[str, Any]:
         """
         Generate .dhtconfig from project analysis.
@@ -144,7 +141,7 @@ class DHTConfig:
                 "implementation": platform.python_implementation().lower(),
                 "virtual_env": {
                     "name": ".venv",
-                }
+                },
             },
             "dependencies": self.dependency_extractor.extract_dependencies(project_info),
             "tools": self.tool_extractor.extract_tool_requirements(project_info),
@@ -155,27 +152,17 @@ class DHTConfig:
         # Add platform-specific overrides if we detect differences
         if include_system_info:
             system_info = diagnostic_reporter_v2.build_system_report(
-                include_system_info=True,
-                categories=["build_tools", "compilers", "package_managers"]
+                include_system_info=True, categories=["build_tools", "compilers", "package_managers"]
             )
-            config["platform_overrides"] = self.platform_utils.generate_platform_overrides(
-                project_info, system_info
-            )
+            config["platform_overrides"] = self.platform_utils.generate_platform_overrides(project_info, system_info)
 
         # Add validation checksums
         if include_checksums:
-            config["validation"] = self.validation_utils.generate_validation_info(
-                project_path, project_info
-            )
+            config["validation"] = self.validation_utils.generate_validation_info(project_path, project_info)
 
         return config
 
-    def save_config(
-        self,
-        config: dict[str, Any],
-        project_path: Path,
-        format: str = "yaml"
-    ) -> Path:
+    def save_config(self, config: dict[str, Any], project_path: Path, format: str = "yaml") -> Path:
         """
         Save configuration to .dhtconfig file.
 
@@ -217,11 +204,7 @@ class DHTConfig:
         """
         return self.validation_utils.validate_config(config, self.schema)
 
-    def merge_platform_config(
-        self,
-        base_config: dict[str, Any],
-        platform_name: str | None = None
-    ) -> dict[str, Any]:
+    def merge_platform_config(self, base_config: dict[str, Any], platform_name: str | None = None) -> dict[str, Any]:
         """
         Merge platform-specific overrides into base configuration.
 

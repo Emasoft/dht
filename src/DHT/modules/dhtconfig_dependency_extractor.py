@@ -23,11 +23,7 @@ class DependencyExtractor:
 
     def extract_dependencies(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract dependencies from project analysis."""
-        deps: dict[str, Any] = {
-            "python_packages": [],
-            "lock_files": {},
-            "system_packages": []
-        }
+        deps: dict[str, Any] = {"python_packages": [], "lock_files": {}, "system_packages": []}
 
         # Extract Python dependencies
         if "dependencies" in project_info:
@@ -40,26 +36,32 @@ class DependencyExtractor:
                 if isinstance(python_deps, dict):
                     # project_analyzer returns a dict with 'runtime', 'development', 'all'
                     for dep_name in python_deps.get("runtime", []):
-                        deps["python_packages"].append({
-                            "name": dep_name,
-                            "version": "*",
-                            "extras": [],
-                        })
+                        deps["python_packages"].append(
+                            {
+                                "name": dep_name,
+                                "version": "*",
+                                "extras": [],
+                            }
+                        )
                 elif isinstance(python_deps, list):
                     # Handle list format
                     for dep in python_deps:
                         if isinstance(dep, dict):
-                            deps["python_packages"].append({
-                                "name": dep["name"],
-                                "version": dep.get("version", "*"),
-                                "extras": dep.get("extras", []),
-                            })
+                            deps["python_packages"].append(
+                                {
+                                    "name": dep["name"],
+                                    "version": dep.get("version", "*"),
+                                    "extras": dep.get("extras", []),
+                                }
+                            )
                         elif isinstance(dep, str):
-                            deps["python_packages"].append({
-                                "name": dep,
-                                "version": "*",
-                                "extras": [],
-                            })
+                            deps["python_packages"].append(
+                                {
+                                    "name": dep,
+                                    "version": "*",
+                                    "extras": [],
+                                }
+                            )
 
         # Check for lock files in the project directory
         project_path = Path(project_info.get("root_path", "."))
@@ -72,11 +74,13 @@ class DependencyExtractor:
         # Extract system packages based on project type
         if project_info.get("project_type") == "python":
             # Common Python development system packages
-            deps["system_packages"].extend([
-                {"name": "python3-dev", "platform": "linux"},
-                {"name": "build-essential", "platform": "linux"},
-                {"name": "xcode-select", "platform": "macos"},
-            ])
+            deps["system_packages"].extend(
+                [
+                    {"name": "python3-dev", "platform": "linux"},
+                    {"name": "build-essential", "platform": "linux"},
+                    {"name": "xcode-select", "platform": "macos"},
+                ]
+            )
 
         return deps
 

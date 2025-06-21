@@ -25,12 +25,7 @@ if HAS_YAML:
 class ConfigIOUtils:
     """Handles I/O operations for DHT configuration files."""
 
-    def save_config(
-        self,
-        config: dict[str, Any],
-        project_path: Path,
-        format: str = "yaml"
-    ) -> Path:
+    def save_config(self, config: dict[str, Any], project_path: Path, format: str = "yaml") -> Path:
         """
         Save configuration to .dhtconfig file.
 
@@ -45,17 +40,10 @@ class ConfigIOUtils:
         config_path = project_path / DHTConfigConstants.CONFIG_FILENAME
 
         if format == "yaml" and HAS_YAML:
-            with open(config_path, 'w') as f:
-                yaml.dump(
-                    config,
-                    f,
-                    default_flow_style=False,
-                    sort_keys=False,
-                    allow_unicode=True,
-                    width=120
-                )
+            with open(config_path, "w") as f:
+                yaml.dump(config, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
         else:
-            with open(config_path, 'w') as f:
+            with open(config_path, "w") as f:
                 json.dump(config, f, indent=2, sort_keys=False)
 
         return config_path

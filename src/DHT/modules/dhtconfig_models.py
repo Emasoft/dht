@@ -17,12 +17,14 @@ from typing import Any
 
 try:
     import yaml
+
     HAS_YAML = True
 except ImportError:
     HAS_YAML = False
 
 try:
-    import jsonschema
+    import jsonschema as _jsonschema
+
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False
@@ -82,14 +84,10 @@ class SchemaLoader:
                 return yaml.safe_load(f)
         except Exception as e:
             import sys
+
             print(f"Warning: Failed to load schema: {e}", file=sys.stderr)
             return None
 
 
 # Export public API
-__all__ = [
-    "DHTConfigConstants",
-    "SchemaLoader",
-    "HAS_YAML",
-    "HAS_JSONSCHEMA"
-]
+__all__ = ["DHTConfigConstants", "SchemaLoader", "HAS_YAML", "HAS_JSONSCHEMA"]

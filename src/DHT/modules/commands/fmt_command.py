@@ -53,13 +53,13 @@ class FmtCommand:
         # Create format command instance and run it
         format_cmd = FormatCommand()
         result_code = format_cmd.run()
-        
+
         # Convert result to dictionary format
         success = result_code == 0
         return {
             "success": success,
             "message": "Code formatted successfully" if success else "Formatting failed",
-            "return_code": result_code
+            "return_code": result_code,
         }
 
 
