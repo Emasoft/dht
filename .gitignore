@@ -12,3 +12,7 @@ wheels/
 
 # Dynamically downloaded dependencies
 tree-sitter-bash/
+
+# UV generated requirements files (managed by pre-commit)
+requirements.txt
+requirements-dev.txt

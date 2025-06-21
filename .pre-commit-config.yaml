@@ -15,14 +15,19 @@ repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.7.13
     hooks:
-      # Compile requirements
-      - id: pip-compile
-        args: [pyproject.toml, -o, requirements.txt]
-        files: pyproject.toml
       # Ensure uv.lock is up-to-date
       - id: uv-lock
         args: [--locked]
         files: pyproject.toml
+      # Export requirements for compatibility
+      - id: uv-export
+        args: [--frozen, --no-hashes, --output-file=requirements.txt]
+        files: pyproject.toml|uv.lock
+      # Export dev requirements
+      - id: uv-export
+        name: Export dev requirements
+        args: [--frozen, --no-hashes, --all-extras, --output-file=requirements-dev.txt]
+        files: pyproject.toml|uv.lock
 
   # Ruff for linting and formatting
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -53,7 +58,7 @@ repos:
 
   # YAML linting
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         args: [--strict, -c, .yamllint.yml]
@@ -69,7 +74,7 @@ repos:
 
   # Actionlint for GitHub Actions
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.5
+    rev: v1.7.7
     hooks:
       - id: actionlint
 
