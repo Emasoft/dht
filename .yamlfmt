@@ -1,4 +1,6 @@
-# .yamlfmt
+# .yamlfmt - Configuration for GitHub Actions workflow files only
+# This configuration is specifically for formatting .github/workflows/*.yml files
+# Other YAML files in the project may use different formatting styles
 formatter:
   type: basic
   indent: 2                               # GitHub Actions convention: 2 spaces
