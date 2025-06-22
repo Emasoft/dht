@@ -20,8 +20,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from DHT.modules.parsers.bash_parser import BashParser
 

@@ -77,8 +77,6 @@ jobs:
       run: |
         echo "❌ Dependency issues found! Please fix them before merging."
         echo "Run 'uv run deptry src' locally to see the issues."
-        echo "❌ Dependency issues found! Please fix them before merging."
-        echo "Run 'uv run deptry src' locally to see the issues."
 
   code-quality:
     name: Code quality checks
@@ -131,8 +129,6 @@ jobs:
 
     - name: Verify lock file is up-to-date
       run: |
-        echo "Verifying uv.lock is up-to-date..."
-        uv lock --locked
         echo "Verifying uv.lock is up-to-date..."
         uv lock --locked
 

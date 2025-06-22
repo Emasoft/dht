@@ -20,7 +20,7 @@ def test_guardian_prefect_module():
     try:
         import sys
 
-        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
         from modules import guardian_prefect
 
         assert hasattr(guardian_prefect, "GuardianResult")
@@ -35,7 +35,7 @@ def test_guardian_prefect_module():
 @pytest.mark.unit
 def test_resource_limits_class():
     """Test ResourceLimits class."""
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import ResourceLimits
 
     # Test default values
@@ -54,7 +54,7 @@ def test_resource_limits_class():
 @pytest.mark.unit
 def test_guardian_result_dataclass():
     """Test GuardianResult dataclass."""
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import GuardianResult
 
     # Test successful result
@@ -91,7 +91,7 @@ def test_guardian_result_dataclass():
 @pytest.mark.unit
 def test_check_system_resources():
     """Test check_system_resources function exists and has correct structure."""
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import check_system_resources
 
     # Check that it's a Prefect task
@@ -108,7 +108,7 @@ def test_check_system_resources():
 @pytest.mark.unit
 def test_run_with_guardian_success():
     """Test run_with_guardian with successful execution."""
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from unittest.mock import patch
 
     from DHT.modules.guardian_prefect import GuardianResult, ResourceLimits, run_with_guardian
@@ -141,7 +141,7 @@ def test_dhtl_guardian_prefect_module():
     try:
         import sys
 
-        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
         from modules import dhtl_guardian_prefect
 
         # This module should provide a Python interface for the guardian
@@ -155,7 +155,7 @@ def test_dhtl_guardian_prefect_module():
 @patch("sys.argv", ["guardian", "echo", "test"])
 def test_guardian_cli_interface():
     """Test the guardian CLI interface."""
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from unittest.mock import patch
 
     from DHT.modules.dhtl_guardian_prefect import main
