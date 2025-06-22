@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 """Test the uv_is_available function.
 
 Copyright (c) 2024 Emasoft (Emanuele Sabetta)
