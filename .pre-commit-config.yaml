@@ -52,7 +52,7 @@ repos:
   rev: v0.17.1
   hooks:
   - id: yamlfmt
-    exclude: ^(tree-sitter-bash/|node_modules/|src/DHT/GITHUB_WORKFLOWS/)
+    files: ^\.github/.*\.ya?ml$
 
 - repo: https://github.com/adrienverge/yamllint
   rev: v1.37.1
