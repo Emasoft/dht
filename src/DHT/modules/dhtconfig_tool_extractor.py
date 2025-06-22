@@ -27,7 +27,7 @@ class ToolRequirementsExtractor:
 
     def extract_tool_requirements(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract tool requirements from project analysis."""
-        tools: dict[str, list[str]] = {"required": [], "optional": []}
+        tools: dict[str, list[dict[str, str]]] = {"required": [], "optional": []}
 
         # Add tools based on project configuration files
         configs = project_info.get("configurations", {})

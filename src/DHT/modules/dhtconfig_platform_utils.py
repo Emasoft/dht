@@ -29,7 +29,7 @@ class PlatformUtils:
 
     def generate_platform_overrides(self, project_info: dict[str, Any], system_info: dict[str, Any]) -> dict[str, Any]:
         """Generate platform-specific configuration overrides."""
-        overrides = {}
+        overrides: dict[str, Any] = {}
 
         current_platform = platform.system().lower()
         if current_platform == "darwin":

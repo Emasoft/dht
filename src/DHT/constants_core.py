@@ -55,16 +55,16 @@ HEARTBEAT_FILE = os.path.join(GUARDIAN_STATE_DIR, "heartbeat.json")
 # Queue settings
 MAX_PROCESS_QUEUE_SIZE = 50  # Maximum processes in queue
 
+# Initialize global variables with default values
+DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
+MAX_TOTAL_MEMORY_MB = 3072  # 3 GB total (3 processes at 1 GB each)
+MAX_CONCURRENT_PROCESSES = 3  # Allow 3 concurrent processes by default
+
 
 # Calculate system resources based on available memory
 def calculate_system_resources() -> None:
     """Calculate system resources and set appropriate limits."""
     global MAX_TOTAL_MEMORY_MB, DEFAULT_MAX_MEMORY_MB, MAX_CONCURRENT_PROCESSES, HAS_PSUTIL
-
-    # Default conservative values
-    DEFAULT_MAX_MEMORY_MB = 1024  # 1 GB per process
-    MAX_TOTAL_MEMORY_MB = 3072  # 3 GB total (3 processes at 1 GB each)
-    MAX_CONCURRENT_PROCESSES = 3  # Allow 3 concurrent processes by default
 
     # Only calculate if psutil is available
     if not HAS_PSUTIL:

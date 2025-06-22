@@ -20,7 +20,7 @@ class BuildConfigExtractor:
 
     def extract_build_config(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract build configuration from project analysis."""
-        build = {"pre_install": [], "post_install": [], "build_commands": [], "test_commands": []}
+        build: dict[str, list[str]] = {"pre_install": [], "post_install": [], "build_commands": [], "test_commands": []}
 
         configs = project_info.get("configurations", {})
 

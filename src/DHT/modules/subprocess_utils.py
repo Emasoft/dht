@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 class ProcessError(Exception):
     """Base exception for subprocess errors."""
 
-    def __init__(self, message: str, command: list[str], **kwargs):
+    def __init__(self, message: str, command: list[str], **kwargs: Any) -> None:
         """Initialize process error with command context."""
         super().__init__(message)
         self.command = command
@@ -66,7 +66,7 @@ class ProcessNotFoundError(ProcessError):
 class ProcessExecutionError(ProcessError):
     """Raised when process exits with non-zero status."""
 
-    def __init__(self, message: str, command: list[str], returncode: int, **kwargs):
+    def __init__(self, message: str, command: list[str], returncode: int, **kwargs: Any) -> None:
         """Initialize with return code."""
         super().__init__(message, command, **kwargs)
         self.returncode = returncode
@@ -78,7 +78,7 @@ class ProcessExecutionError(ProcessError):
 class CommandTimeoutError(ProcessError):
     """Raised when command execution times out."""
 
-    def __init__(self, message: str, command: list[str], timeout: float, **kwargs):
+    def __init__(self, message: str, command: list[str], timeout: float, **kwargs: Any) -> None:
         """Initialize with timeout value."""
         super().__init__(message, command, **kwargs)
         self.timeout = timeout
@@ -250,6 +250,7 @@ def run_subprocess(
 
     # Log command (with masking)
     if log_command:
+        logged_command: list[str] | str
         if sensitive_args and isinstance(command, list):
             logged_command = mask_sensitive_args(command, sensitive_args)
         else:
@@ -271,7 +272,7 @@ def run_subprocess(
     for attempt in range(retry_count + 1):
         try:
             # Setup process options
-            popen_kwargs = {
+            popen_kwargs: dict[str, Any] = {
                 "cwd": cwd,
                 "env": process_env,
                 "stdout": subprocess.PIPE if capture_output else None,
@@ -283,7 +284,7 @@ def run_subprocess(
             # Add process group creation for better cleanup
             if create_process_group and hasattr(os, "setpgrp"):
                 popen_kwargs["preexec_fn"] = os.setpgrp
-            elif create_process_group and sys.platform == "win32":
+            elif create_process_group and sys.platform == "win32" and hasattr(subprocess, "CREATE_NEW_PROCESS_GROUP"):
                 popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
 
             # Set resource limits if specified

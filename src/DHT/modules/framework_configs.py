@@ -27,7 +27,7 @@ from DHT.modules.project_type_enums import ProjectType
 class FrameworkConfig:
     """Framework-specific configuration templates."""
 
-    _configs = {
+    _configs: dict[ProjectType, dict[str, Any]] = {
         ProjectType.DJANGO: {
             "name": "Django",
             "core_dependencies": ["django"],
@@ -132,7 +132,7 @@ class FrameworkConfig:
 
         # Handle inheritance (e.g., DRF inherits from Django)
         if project_type == ProjectType.DJANGO_REST:
-            django_config = cls._configs[ProjectType.DJANGO].copy()
+            django_config = cls._configs.get(ProjectType.DJANGO, {}).copy()
             django_config.update(base_config)
             # Merge dependencies
             django_config["core_dependencies"] = list(
@@ -141,6 +141,6 @@ class FrameworkConfig:
             django_config["test_dependencies"] = list(
                 set(django_config.get("test_dependencies", []) + base_config.get("test_dependencies", []))
             )
-            return type("FrameworkConfig", (), django_config)()
+            return django_config
 
-        return type("FrameworkConfig", (), base_config)()
+        return base_config.copy() if base_config else {}

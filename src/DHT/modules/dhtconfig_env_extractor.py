@@ -30,7 +30,7 @@ class EnvironmentVariablesExtractor:
 
     def extract_environment_vars(self, project_path: Path) -> dict[str, Any]:
         """Extract environment variables from project."""
-        env = {"required": {}, "optional": {}}
+        env: dict[str, dict[str, str]] = {"required": {}, "optional": {}}
 
         # Check for .env files
         for env_file in DHTConfigConstants.ENV_FILES:

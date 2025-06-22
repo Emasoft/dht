@@ -67,17 +67,17 @@ def merge_taxonomies() -> dict[str, Any]:
         Dict containing the complete practical taxonomy
     """
     # Merge the two taxonomy parts
-    complete_taxonomy = {}
+    complete_taxonomy: dict[str, Any] = {}
     complete_taxonomy.update(PRACTICAL_TAXONOMY_PART1)
     complete_taxonomy.update(PRACTICAL_TAXONOMY_PART2)
     return complete_taxonomy
 
 
 # Create the complete PRACTICAL_TAXONOMY by merging parts
-PRACTICAL_TAXONOMY = merge_taxonomies()
+PRACTICAL_TAXONOMY: dict[str, Any] = merge_taxonomies()
 
 
-def is_tool_available_on_platform(tool_name: str, platform_name: str = None) -> bool:
+def is_tool_available_on_platform(tool_name: str, platform_name: str | None = None) -> bool:
     """
     Check if a tool is available on the given platform.
 
@@ -111,7 +111,7 @@ def is_tool_available_on_platform(tool_name: str, platform_name: str = None) -> 
     return True
 
 
-def filter_tools_for_platform(tools: dict[str, Any], platform_name: str = None) -> dict[str, Any]:
+def filter_tools_for_platform(tools: dict[str, Any], platform_name: str | None = None) -> dict[str, Any]:
     """
     Filter a tools dictionary to only include tools available on the platform.
 
@@ -133,7 +133,7 @@ def filter_tools_for_platform(tools: dict[str, Any], platform_name: str = None) 
     return filtered
 
 
-def get_category_for_platform(category_name: str, platform_name: str = None) -> dict[str, Any]:
+def get_category_for_platform(category_name: str, platform_name: str | None = None) -> dict[str, Any]:
     """
     Get a category filtered for the given platform.
 
@@ -239,7 +239,7 @@ def get_tool_fields(category_name: str, tool_name: str) -> list[str]:
     return []
 
 
-def get_all_tools_for_platform(platform_name: str = None) -> dict[str, list[str]]:
+def get_all_tools_for_platform(platform_name: str | None = None) -> dict[str, list[str]]:
     """
     Get all tools available on the given platform, organized by category.
 
@@ -305,7 +305,7 @@ def find_tool_category(tool_name: str) -> str | None:
     return None
 
 
-def get_relevant_categories(platform_name: str = None) -> dict[str, Any]:
+def get_relevant_categories(platform_name: str | None = None) -> dict[str, Any]:
     """
     Get all categories relevant to the given platform, with tools filtered.
 

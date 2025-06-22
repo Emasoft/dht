@@ -137,7 +137,7 @@ class BashParserUtils:
 
     def extract_dependencies_from_content(self, content: str) -> dict[str, list[str]]:
         """Extract potential dependencies from script content."""
-        dependencies = {
+        dependencies: dict[str, list[str]] = {
             "commands": [],
             "packages": [],
             "files": [],
