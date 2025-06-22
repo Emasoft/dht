@@ -125,6 +125,25 @@ DHT aims to be a comprehensive development automation tool that enables develope
 
 The goal is to eliminate repetitive setup tasks and provide intelligent project analysis that adapts to any codebase structure.
 
+
+## GITHUB WORKFLOWS AFTER PUSHING
+After commit and pushing the project to github, always check if the push passed the github actions and checks.
+Wait few seconds, according to the average time needed for the lint and tests to run, then use the following commands to retrieve the last logs of the last actions:
+```
+gh run list --limit <..max number of recent actions logs to list...>
+gh run view <... run number ...> --log-failed
+```
+Example:
+```
+> gh run list --limit 10
+> mkdir -p ./logs && gh run view 15801201757 --log-failed > ./logs/15801201757.log
+etc..
+
+```
+Then examine the log files saved in the ./logs/ subdir. Think ultrahard to find the causes. Use actionlint, yamllint and act to test and verify the workflows issues. Then report the issues causing the failings.
+
+
+
 ## Common Development Commands
 
 - Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.

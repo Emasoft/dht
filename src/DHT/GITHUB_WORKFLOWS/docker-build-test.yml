@@ -25,61 +25,61 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3
 
     - name: Login to DockerHub
-      if: ${{ github.event_name != 'pull_request' }}
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: Build Docker images (PR)
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./docker/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: false
-        target: {REPO_NAME}
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: false
+          target: {REPO_NAME}
 
     - name: Build Docker images (Push)
-      if: ${{ github.event_name != 'pull_request' }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./docker/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}:dev
-        target: {REPO_NAME}
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}:dev
+          target: {REPO_NAME}
 
     - name: Build Docker full image (PR)
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./docker/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: false
-        target: {REPO_NAME}-full
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: false
+          target: {REPO_NAME}-full
 
     - name: Build Docker full image (Push)
-      if: ${{ github.event_name != 'pull_request' }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./docker/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}-full:dev
-        target: {REPO_NAME}-full
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}-full:dev
+          target: {REPO_NAME}-full

@@ -29,6 +29,13 @@ jobs:
       - name: Get installed {REPO_NAME} version
         id: installed_version
         run: |
+        set -x # Enable debugging output
+        {REPO_NAME}_version_output=$({REPO_NAME} --version)
+        if [ $? -ne 0 ]; then
+        echo "Error: '{REPO_NAME} --version' command failed."
+        exit 1
+        fi
+        echo "Raw {REPO_NAME} --version output: ${REPO_NAME}_version_output"
           set -x # Enable debugging output
           {REPO_NAME}_version_output=$({REPO_NAME} --version)
           if [ $? -ne 0 ]; then
@@ -57,6 +64,12 @@ jobs:
       - name: Get latest tag
         id: latest_tag
         run: |
+        set -x # Enable debugging output
+        # Fetch all tags from remote just in case
+        git fetch --tags origin main
+        # Get the latest tag that strictly matches vX.Y.Z (no suffixes like .dev)
+        # List all tags, sort by version descending, filter for exact pattern, take the first one
+        latest_tag=$(git tag --sort=-v:refname | grep -P '^v\d+\.\d+\.\d+$' | head -n 1)
           set -x # Enable debugging output
           # Fetch all tags from remote just in case
           git fetch --tags origin main
@@ -77,6 +90,13 @@ jobs:
 
       - name: Compare versions
         run: |
+        echo "Installed version: ${{ steps.installed_version.outputs.version }}"
+        echo "Latest tag version: ${{ steps.latest_tag.outputs.tag }}"
+        if [ "${{ steps.installed_version.outputs.version }}" != "${{ steps.latest_tag.outputs.tag }}" ]; then
+        echo "Error: Installed {REPO_NAME} version (${{ steps.installed_version.outputs.version }}) does not match the latest tag (${{ steps.latest_tag.outputs.tag }})."
+        exit 1
+        fi
+        echo "Versions match."
           echo "Installed version: ${{ steps.installed_version.outputs.version }}"
           echo "Latest tag version: ${{ steps.latest_tag.outputs.tag }}"
           if [ "${{ steps.installed_version.outputs.version }}" != "${{ steps.latest_tag.outputs.tag }}" ]; then

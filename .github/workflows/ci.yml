@@ -67,10 +67,14 @@ jobs:
       run: |
         echo "Running deptry dependency analysis..."
         uv run deptry src --config pyproject.toml
+        echo "Running deptry dependency analysis..."
+        uv run deptry src --config pyproject.toml
 
     - name: Check for dependency issues
       if: failure()
       run: |
+        echo "❌ Dependency issues found! Please fix them before merging."
+        echo "Run 'uv run deptry src' locally to see the issues."
         echo "❌ Dependency issues found! Please fix them before merging."
         echo "Run 'uv run deptry src' locally to see the issues."
 
@@ -98,14 +102,20 @@ jobs:
       run: |
         echo "Running ruff linter..."
         uv run ruff check src/ tests/ --output-format=github
+        echo "Running ruff linter..."
+        uv run ruff check src/ tests/ --output-format=github
 
     - name: Check code formatting
       run: |
         echo "Checking code formatting with ruff..."
         uv run ruff format --check src/ tests/
+        echo "Checking code formatting with ruff..."
+        uv run ruff format --check src/ tests/
 
     - name: Run mypy type checker
       run: |
+        echo "Running mypy type checker..."
+        uv run mypy src/DHT/ --show-error-codes --pretty
         echo "Running mypy type checker..."
         uv run mypy src/DHT/ --show-error-codes --pretty
 
@@ -127,9 +137,17 @@ jobs:
       run: |
         echo "Verifying uv.lock is up-to-date..."
         uv lock --locked
+        echo "Verifying uv.lock is up-to-date..."
+        uv lock --locked
 
     - name: Check for lock file changes
       run: |
+        if git diff --exit-code uv.lock; then
+        echo "✅ Lock file is up-to-date"
+        else
+        echo "❌ Lock file is out of date! Run 'uv lock' locally and commit the changes."
+        exit 1
+        fi
         if git diff --exit-code uv.lock; then
           echo "✅ Lock file is up-to-date"
         else

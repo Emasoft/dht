@@ -69,7 +69,7 @@ jobs:
 
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
         path: |
@@ -78,7 +78,7 @@ jobs:
           pytest-report.xml
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dht-dist-${{ matrix.os }}-${{ matrix.python-version }}
         path: dist/
@@ -105,7 +105,7 @@ jobs:
       run: uv pip install coverage[toml]
 
     - name: Download all coverage reports
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: coverage-reports
 
@@ -116,7 +116,7 @@ jobs:
         uv run coverage html
 
     - name: Upload combined coverage
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: combined-coverage-report
         path: htmlcov/

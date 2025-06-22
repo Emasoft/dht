@@ -5,13 +5,13 @@ extends: default
 rules:
   # Line length
   line-length:
-    max: 120
+    max: 180
     level: warning
 
   # Indentation
   indentation:
     spaces: 2
-    indent-sequences: true
+    indent-sequences: false
 
   # Comments
   comments:
