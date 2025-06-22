@@ -95,7 +95,7 @@ def install_dependencies(project_path: Path, extras: list[str] | None = None, de
 
     except Exception as e:
         logger.error(f"Error installing dependencies: {e}")
-        raise UVTaskError(f"Failed to install dependencies: {e}")
+        raise UVTaskError(f"Failed to install dependencies: {e}") from e
 
 
 @task(
@@ -142,7 +142,7 @@ def sync_dependencies(project_path: Path, frozen: bool = True) -> dict[str, Any]
 
     except Exception as e:
         logger.error(f"Error syncing dependencies: {e}")
-        raise UVTaskError(f"Failed to sync dependencies: {e}")
+        raise UVTaskError(f"Failed to sync dependencies: {e}") from e
 
 
 @task(
@@ -188,7 +188,7 @@ def generate_lock_file(project_path: Path) -> dict[str, Any]:
 
     except Exception as e:
         logger.error(f"Error generating lock file: {e}")
-        raise UVTaskError(f"Failed to generate lock file: {e}")
+        raise UVTaskError(f"Failed to generate lock file: {e}") from e
 
 
 @task(
@@ -257,7 +257,7 @@ def add_dependency(
 
     except Exception as e:
         logger.error(f"Error adding dependency: {e}")
-        raise UVTaskError(f"Failed to add dependency {package}: {e}")
+        raise UVTaskError(f"Failed to add dependency {package}: {e}") from e
 
 
 @task(
@@ -303,4 +303,4 @@ def remove_dependency(project_path: Path, package: str) -> dict[str, Any]:
 
     except Exception as e:
         logger.error(f"Error removing dependency: {e}")
-        raise UVTaskError(f"Failed to remove dependency {package}: {e}")
+        raise UVTaskError(f"Failed to remove dependency {package}: {e}") from e

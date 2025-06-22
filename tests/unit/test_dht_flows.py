@@ -29,7 +29,6 @@ try:
     # Try relative import first (when run as module)
     from .test_helpers import (
         cleanup_temporary_project,
-        create_platform_uname_mock,
         create_psutil_virtual_memory_mock,
         create_temporary_project,
     )

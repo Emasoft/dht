@@ -198,7 +198,7 @@ def run_uv_command(
         )
     except ProcessNotFoundError as e:
         # Convert to UV-specific error
-        raise UVNotFoundError(f"UV executable not found: {e}")
+        raise UVNotFoundError(f"UV executable not found: {e}") from e
     except CommandTimeoutError as e:
         # Re-raise with UV context
         logger.error(f"UV command timed out: {e}")

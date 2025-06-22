@@ -95,7 +95,7 @@ def create_virtual_environment(
 
     except Exception as e:
         logger.error(f"Error creating virtual environment: {e}")
-        raise UVTaskError(f"Failed to create virtual environment: {e}")
+        raise UVTaskError(f"Failed to create virtual environment: {e}") from e
 
 
 @flow(name="setup_project_environment", description="Complete project environment setup with UV")

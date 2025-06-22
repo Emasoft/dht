@@ -198,7 +198,7 @@ def list_python_versions() -> list[dict[str, Any]]:
 
     except Exception as e:
         logger.error(f"Error listing Python versions: {e}")
-        raise UVTaskError(f"Failed to list Python versions: {e}")
+        raise UVTaskError(f"Failed to list Python versions: {e}") from e
 
 
 @task(
@@ -265,4 +265,4 @@ def ensure_python_version(version: str) -> Path:
 
     except Exception as e:
         logger.error(f"Error ensuring Python version: {e}")
-        raise UVTaskError(f"Failed to ensure Python {version}: {e}")
+        raise UVTaskError(f"Failed to ensure Python {version}: {e}") from e

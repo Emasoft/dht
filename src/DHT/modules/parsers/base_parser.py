@@ -71,10 +71,10 @@ class BaseParser(ABC):
         for lib_path in lib_paths:
             if lib_path.exists():
                 try:
-                    Language = tree_sitter.Language(str(lib_path), language)
+                    language_obj = tree_sitter.Language(str(lib_path), language)
                     self.parser = tree_sitter.Parser()
-                    self.parser.set_language(Language)
-                    self.language_obj = Language
+                    self.parser.set_language(language_obj)
+                    self.language_obj = language_obj
                     self.logger.info(f"Initialized tree-sitter for {language} from {lib_path}")
                     return
                 except Exception as e:
@@ -257,7 +257,7 @@ class BaseParser(ABC):
             with open(file_path) as f:
                 return json.load(f)
         except Exception as e:
-            raise ValueError(f"Failed to parse JSON from {file_path}: {e}")
+            raise ValueError(f"Failed to parse JSON from {file_path}: {e}") from e
 
     @staticmethod
     def load_yaml(file_path: Path) -> dict[str, Any]:
@@ -266,21 +266,21 @@ class BaseParser(ABC):
             with open(file_path) as f:
                 return yaml.safe_load(f) or {}
         except Exception as e:
-            raise ValueError(f"Failed to parse YAML from {file_path}: {e}")
+            raise ValueError(f"Failed to parse YAML from {file_path}: {e}") from e
 
     @staticmethod
     def load_toml(file_path: Path) -> dict[str, Any]:
         """Load and parse TOML file"""
         try:
             import toml
-        except ImportError:
-            raise ImportError("toml package required for TOML parsing. Install with: pip install toml")
+        except ImportError as e:
+            raise ImportError("toml package required for TOML parsing. Install with: pip install toml") from e
 
         try:
             with open(file_path) as f:
                 return toml.load(f)
         except Exception as e:
-            raise ValueError(f"Failed to parse TOML from {file_path}: {e}")
+            raise ValueError(f"Failed to parse TOML from {file_path}: {e}") from e
 
     def get_file_metadata(self, file_path: Path) -> dict[str, Any]:
         """

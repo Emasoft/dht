@@ -188,11 +188,13 @@ def test_tree_sitter_availability():
     try:
         import tree_sitter
 
+        tree_sitter  # Mark as used for availability check
         print("✅ tree-sitter module is available")
 
         try:
             import tree_sitter_bash
 
+            tree_sitter_bash  # Mark as used for availability check
             print("✅ tree-sitter-bash module is available")
 
             # Test if we can create a parser

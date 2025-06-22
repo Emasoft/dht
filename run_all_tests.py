@@ -33,7 +33,7 @@ def run_pytest_json(test_path):
     try:
         with open("/tmp/pytest_report.json") as f:
             return json.load(f)
-    except:
+    except (FileNotFoundError, json.JSONDecodeError):
         return None
 
 

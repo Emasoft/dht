@@ -137,7 +137,7 @@ def build_language_library(project_root):
             print(f"✅ Language library already exists at {lib_path}")
             # Validate that it works
             try:
-                Language = tree_sitter.Language(str(lib_path), "bash")
+                language = tree_sitter.Language(str(lib_path), "bash")
                 print("✅ Successfully loaded Bash language from existing library")
                 return True
             except Exception:
@@ -177,7 +177,7 @@ def build_language_library(project_root):
 
         # Validate the built library
         try:
-            Language = tree_sitter.Language(str(lib_path), "bash")
+            language = tree_sitter.Language(str(lib_path), "bash")
             print("✅ Successfully built and loaded Bash language library")
             return True
         except Exception as e:
@@ -198,10 +198,10 @@ def test_bash_parsing(project_root):
         import tree_sitter
 
         lib_path = project_root / "build" / "languages.so"
-        Language = tree_sitter.Language(str(lib_path), "bash")
+        language = tree_sitter.Language(str(lib_path), "bash")
 
         parser = tree_sitter.Parser()
-        parser.set_language(Language)
+        parser.set_language(language)
 
         # Sample bash function to parse
         bash_code = """

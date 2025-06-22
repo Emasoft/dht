@@ -166,8 +166,8 @@ def prepare_test_command(
     # Base python command
     try:
         python_path = get_venv_python_path(venv_path)
-    except FileNotFoundError:
-        raise RuntimeError("Python executable not found in virtual environment")
+    except FileNotFoundError as e:
+        raise RuntimeError("Python executable not found in virtual environment") from e
 
     cmd_parts = [str(python_path), "-m"]
 

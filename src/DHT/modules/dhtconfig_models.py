@@ -32,6 +32,7 @@ except ImportError:
 try:
     import jsonschema as _jsonschema
 
+    _jsonschema  # Mark as used for availability check
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False

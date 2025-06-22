@@ -44,7 +44,7 @@ def fix_imports_in_file(filepath):
 
     for pattern, replacement, *flags in replacements:
         if flags:
-            content = re.sub(pattern, replacement, content, *flags)
+            content = re.sub(pattern, replacement, content, count=flags[0] if flags else 0)
         else:
             content = re.sub(pattern, replacement, content)
 

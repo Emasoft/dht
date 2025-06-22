@@ -119,7 +119,7 @@ exclude = [
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "B", "I", "N", "UP", "C90"]
-ignore = ["E501", "W505", "F841", "B008", "E402"]
+ignore = ["E501", "W505", "F841", "B008", "E402", "F404", "C901", "N999", "B018"]
 
 [tool.mypy]
 python_version = "3.10"

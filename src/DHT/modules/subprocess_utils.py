@@ -339,7 +339,7 @@ def run_subprocess(
                 # Success - return result
                 return result
 
-            except subprocess.TimeoutExpired:
+            except subprocess.TimeoutExpired as e:
                 # Kill the process
                 process.kill()
                 process.wait()
@@ -348,9 +348,9 @@ def run_subprocess(
                     command if isinstance(command, list) else [command],
                     timeout,
                     cwd=cwd,
-                )
+                ) from e
 
-            except KeyboardInterrupt:
+            except KeyboardInterrupt as e:
                 # Handle interrupt
                 process.terminate()
                 process.wait()
@@ -359,7 +359,7 @@ def run_subprocess(
                     command if isinstance(command, list) else [command],
                     signal.SIGINT,
                     cwd=cwd,
-                )
+                ) from e
 
             finally:
                 # Unregister from context
@@ -389,7 +389,7 @@ def run_subprocess(
 
             # No more retries
             if check:
-                raise last_error
+                raise last_error from e
             else:
                 return {
                     "stdout": last_error.stdout,
@@ -411,7 +411,7 @@ def run_subprocess(
             if error_handler:
                 return error_handler(last_error, {"command": command, "attempt": attempt})
 
-            raise last_error
+            raise last_error from e
 
         except (CommandTimeoutError, ProcessInterruptedError):
             # Re-raise these without retry
@@ -429,7 +429,7 @@ def run_subprocess(
                 command if isinstance(command, list) else [command],
                 cwd=cwd,
                 error_type=type(e).__name__,
-            )
+            ) from e
 
     # Should not reach here
     raise last_error or ProcessError(
