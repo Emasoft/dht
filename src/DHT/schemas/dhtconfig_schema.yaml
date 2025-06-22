@@ -20,9 +20,9 @@ title: "DHT Configuration Schema"
 description: "Schema for .dhtconfig files that define project environment requirements"
 type: "object"
 required:
-  - "version"
-  - "project"
-  - "python"
+- "version"
+- "project"
+- "python"
 additionalProperties: false
 
 properties:

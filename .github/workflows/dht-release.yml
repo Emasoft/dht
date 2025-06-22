@@ -141,23 +141,23 @@ jobs:
         tag: v${{ github.event.inputs.version }}
         name: DHT v${{ github.event.inputs.version }}
         body: |
-            # DHT v${{ github.event.inputs.version }}
+          # DHT v${{ github.event.inputs.version }}
 
-            ## What's Changed
+          ## What's Changed
 
-            <!-- Add release notes here -->
+          <!-- Add release notes here -->
 
-            ## Installation
+          ## Installation
 
-            ```bash
-            pip install dht==${{ github.event.inputs.version }}
-            ```
+          ```bash
+          pip install dht==${{ github.event.inputs.version }}
+          ```
 
-            Or using uv:
+          Or using uv:
 
-            ```bash
-            uv pip install dht==${{ github.event.inputs.version }}
-            ```
+          ```bash
+          uv pip install dht==${{ github.event.inputs.version }}
+          ```
         artifacts: "dist/*"
         draft: true
         prerelease: false

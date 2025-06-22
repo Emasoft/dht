@@ -37,7 +37,7 @@ jobs:
         pre-commit run --all-files --show-diff-on-failure
 
     - name: Run additional Python linters
-      run: |
+      run: |-
         source .venv/bin/activate
         # Run ruff with more comprehensive checks
         ruff check src/ tests/ --statistics

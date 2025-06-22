@@ -38,9 +38,10 @@ rules:
   document-start:
     present: false
 
-ignore: |
+ignore: |-
   .venv/
   node_modules/
   tree-sitter-bash/
   dist/
   build/
+  system_diagnostic.yaml

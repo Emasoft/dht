@@ -2,9 +2,9 @@ name: DHT Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   UV_CACHE_DIR: /tmp/.uv-cache

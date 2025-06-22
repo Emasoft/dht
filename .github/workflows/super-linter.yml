@@ -2,9 +2,9 @@ name: Super Linter
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   workflow_dispatch:
     inputs:
       all-files:
@@ -137,7 +137,7 @@ jobs:
 
     steps:
     - name: Summary
-      run: |
+      run: |-
         if [ "${{ needs.super-lint.result }}" == "success" ]; then
           echo "✅ Super Linter passed all checks!"
         else

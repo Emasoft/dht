@@ -1,0 +1,13 @@
+# .yamlfmt
+formatter:
+  type: basic
+  indent: 2                               # GitHub Actions convention: 2 spaces
+  line_ending: lf                         # Use LF line endings
+  retain_line_breaks: true                # Preserve user-intentional line breaks
+  disallow_anchors: false                 # Allow YAML anchors
+  max_line_length: 180                    # Match yamllint's line length
+  scan_folded_as_literal: false           # Don't change folded scalars
+  indentless_arrays: true                 # Match yamllint: sequences not indented
+  drop_merge_tag: false                   # Keep merge tags
+  pad_line_comments: 2                    # Two spaces before line comments (yamllint requirement)
+  trim_trailing_whitespace: true          # Clean up messy trailing whitespace

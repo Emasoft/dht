@@ -4,9 +4,7 @@ successful: 2
 failed: 1
 results:
 - returncode: 0
-  stdout: '''Hello from Prefect Guardian''
-
-    '
+  stdout: '''Hello from Prefect Guardian'' #magic___^_^___line '
   stderr: ''
   killed: false
   reason: null
@@ -23,8 +21,7 @@ results:
   command: sleep 2
 - returncode: 1
   stdout: ''
-  stderr: "  File \"<string>\", line 1\n    'print(\"Python\n    ^\nSyntaxError: unterminated\
-    \ string literal (detected at line 1)\n"
+  stderr: "  File \"<string>\", line 1\n    'print(\"Python\n    ^\nSyntaxError: unterminated string literal (detected at line 1)\n"
   killed: false
   reason: null
   peak_memory_mb: 0.140625

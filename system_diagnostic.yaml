@@ -53,8 +53,7 @@ tools:
     java:
       is_installed: true
       version:
-        data: java version "23.0.1" 2024-10-15 Java(TM) SE Runtime Environment (build 23.0.1+11-39) Java HotSpot(TM) 64-Bit
-          Server VM (build 23.0.1+11-39, mixed mode, sharing)
+        data: java version "23.0.1" 2024-10-15 Java(TM) SE Runtime Environment (build 23.0.1+11-39) Java HotSpot(TM) 64-Bit Server VM (build 23.0.1+11-39, mixed mode, sharing)
       home:
         data: java.home = /Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home
       vendor:
@@ -165,8 +164,7 @@ tools:
         additional_info_0005: PARTICULAR PURPOSE.
         additional_info_0006: ''
       features:
-        data: TERM_FEATURES = T3LrMSc7UUw9Ts3BFGsSyHNoSxF .FEATURES := target-specific order-only second-expansion else-if
-          archives jobserver check-symlink
+        data: TERM_FEATURES = T3LrMSc7UUw9Ts3BFGsSyHNoSxF .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
     jest:
       is_installed: false
     mocha:
@@ -186,18 +184,13 @@ tools:
     mkdocs:
       is_installed: true
       version:
-        data: mkdocs, version 1.6.1 from /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/mkdocs
-          (Python 3.13)
+        data: mkdocs, version 1.6.1 from /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/mkdocs (Python 3.13)
       help:
-        Usage: 'mkdocs [OPTIONS] COMMAND [ARGS]...
-
-          MkDocs - Project documentation with Markdown.'
-        Options: -V, --version         Show the version and exit. -q, --quiet           Silence warnings -v, --verbose         Enable
-          verbose output --color / --no-color  Force enable or disable color and wrapping for the output. Default is auto-detect.
-          -h, --help            Show this message and exit.
-        Commands: build      Build the MkDocs documentation. get-deps   Show required PyPI packages inferred from plugins
-          in... gh-deploy  Deploy your documentation to GitHub Pages. new        Create a new MkDocs project. serve      Run
-          the builtin development server.
+        Usage: 'mkdocs [OPTIONS] COMMAND [ARGS]... #magic___^_^___line MkDocs - Project documentation with Markdown.'
+        Options: -V, --version         Show the version and exit. -q, --quiet           Silence warnings -v, --verbose         Enable verbose output --color / --no-color  Force enable
+          or disable color and wrapping for the output. Default is auto-detect. -h, --help            Show this message and exit.
+        Commands: build      Build the MkDocs documentation. get-deps   Show required PyPI packages inferred from plugins in... gh-deploy  Deploy your documentation to GitHub Pages.
+          new        Create a new MkDocs project. serve      Run the builtin development server.
     cmake:
       is_installed: true
       version:
@@ -208,8 +201,7 @@ tools:
         additional_info_0001: Generators
       system_info:
         avoid_ctest_truncation_of_output: CTEST_FULL_OUTPUT
-        ? ''
-        : ================================================================
+        '': ================================================================
         cmake_static_library_prefix: = "lib"
         cmake_static_library_suffix: = ".a"
         cmake_shared_library_prefix: = "lib"
@@ -267,21 +259,18 @@ tools:
         cmake_c_flags_minsizerel: = "-Os -DNDEBUG"
         cmake_c_flags_release: = "-O3 -DNDEBUG"
         cmake_c_flags_relwithdebinfo: = "-O2 -g -DNDEBUG"
-        cmake_cxx_create_shared_library: = "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        cmake_cxx_create_shared_module: = "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
-        cmake_c_create_shared_library: = "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        cmake_c_create_shared_module: = "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_C_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        cmake_cxx_create_shared_library: = "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME>
+          <OBJECTS> <LINK_LIBRARIES>"
+        cmake_cxx_create_shared_module: = "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        cmake_c_create_shared_library: = "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME>
+          <OBJECTS> <LINK_LIBRARIES>"
+        cmake_c_create_shared_module: = "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_C_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
         cmake_cxx_create_static_library: = ""
         cmake_c_create_static_library: = ""
         cmake_cxx_compile_object: = "<CMAKE_CXX_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -o <OBJECT> -c <SOURCE>"
         cmake_c_compile_object: = "<CMAKE_C_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -o <OBJECT> -c <SOURCE>"
         cmake_c_link_executable: = "<CMAKE_C_COMPILER> <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
-        cmake_cxx_link_executable: = "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET>
-          <LINK_LIBRARIES>"
+        cmake_cxx_link_executable: = "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
         cmake_c11_extension_compile_option_std: gnu11"
         cmake_c11_standard_compile_option_std: c11"
         cmake_c17_extension_compile_option_std: gnu17"
@@ -400,8 +389,7 @@ tools:
         additional_info_0031: CMAKE_COLOR_MAKEFILE "ON"
         additional_info_0032: CMAKE_COMMAND "/opt/homebrew/bin/cmake"
         additional_info_0033: CMAKE_CPACK_COMMAND "/opt/homebrew/bin/cpack"
-        additional_info_0034: CMAKE_CREATE_TEXT_STUBS "<CMAKE_TAPI> stubify -isysroot <CMAKE_OSX_SYSROOT> -o <TARGET_IMPLIB>
-          <TARGET>"
+        additional_info_0034: CMAKE_CREATE_TEXT_STUBS "<CMAKE_TAPI> stubify -isysroot <CMAKE_OSX_SYSROOT> -o <TARGET_IMPLIB> <TARGET>"
         additional_info_0035: CMAKE_CROSSCOMPILING "FALSE"
         additional_info_0036: CMAKE_CTEST_COMMAND "/opt/homebrew/bin/ctest"
         additional_info_0037: CMAKE_CURRENT_BINARY_DIR "/Users/emanuelesabetta/Code/DHT/dht/__cmake_systeminformation"
@@ -741,16 +729,14 @@ tools:
         additional_info_0371: CMAKE_CXX_COMPILE_OPTIONS_USE_PCH "-Xclang;-include-pch;-Xclang;<PCH_FILE>;-Xclang;-include;-Xclang;<PCH_HEADER>"
         additional_info_0372: CMAKE_CXX_COMPILE_OPTIONS_VISIBILITY_INLINES_HIDDEN "-fvisibility-inlines-hidden"
         additional_info_0373: CMAKE_CXX_COMPILE_OPTIONS_WARNING_AS_ERROR "-Werror"
-        additional_info_0374: CMAKE_CXX_CREATE_ASSEMBLY_SOURCE "<CMAKE_CXX_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -S <SOURCE>
-          -o <ASSEMBLY_SOURCE>"
-        additional_info_0375: CMAKE_CXX_CREATE_MACOSX_FRAMEWORK "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0376: CMAKE_CXX_CREATE_PREPROCESSED_SOURCE "<CMAKE_CXX_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE>
-          > <PREPROCESSED_SOURCE>"
-        additional_info_0377: CMAKE_CXX_CREATE_SHARED_LIBRARY "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0378: CMAKE_CXX_CREATE_SHARED_MODULE "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0374: CMAKE_CXX_CREATE_ASSEMBLY_SOURCE "<CMAKE_CXX_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -S <SOURCE> -o <ASSEMBLY_SOURCE>"
+        additional_info_0375: CMAKE_CXX_CREATE_MACOSX_FRAMEWORK "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0376: CMAKE_CXX_CREATE_PREPROCESSED_SOURCE "<CMAKE_CXX_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE> > <PREPROCESSED_SOURCE>"
+        additional_info_0377: CMAKE_CXX_CREATE_SHARED_LIBRARY "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0378: CMAKE_CXX_CREATE_SHARED_MODULE "<CMAKE_CXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS>
+          <LINK_LIBRARIES>"
         additional_info_0379: CMAKE_CXX_DEPENDS_USE_COMPILER "TRUE"
         additional_info_0380: CMAKE_CXX_DEPFILE_FORMAT "gcc"
         additional_info_0381: CMAKE_CXX_EXTENSIONS_COMPUTED_DEFAULT "ON"
@@ -781,8 +767,7 @@ tools:
         additional_info_0406: CMAKE_CXX_LINKER_PREFERENCE "30"
         additional_info_0407: CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES "1"
         additional_info_0408: CMAKE_CXX_LINKER_WRAPPER_FLAG "-Xlinker; "
-        additional_info_0409: CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS>
-          <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
+        additional_info_0409: CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
         additional_info_0410: CMAKE_CXX_LINK_FLAGS "-Wl,-search_paths_first -Wl,-headerpad_max_install_names"
         additional_info_0411: CMAKE_CXX_LINK_LIBRARY_USING_FRAMEWORK "-framework <LIBRARY>"
         additional_info_0412: CMAKE_CXX_LINK_LIBRARY_USING_FRAMEWORK_SUPPORTED "TRUE"
@@ -1127,16 +1112,13 @@ tools:
         additional_info_0751: CMAKE_C_COMPILE_OPTIONS_PIE "-fPIE"
         additional_info_0752: CMAKE_C_COMPILE_OPTIONS_USE_PCH "-Xclang;-include-pch;-Xclang;<PCH_FILE>;-Xclang;-include;-Xclang;<PCH_HEADER>"
         additional_info_0753: CMAKE_C_COMPILE_OPTIONS_WARNING_AS_ERROR "-Werror"
-        additional_info_0754: CMAKE_C_CREATE_ASSEMBLY_SOURCE "<CMAKE_C_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -S <SOURCE>
-          -o <ASSEMBLY_SOURCE>"
-        additional_info_0755: CMAKE_C_CREATE_MACOSX_FRAMEWORK "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0756: CMAKE_C_CREATE_PREPROCESSED_SOURCE "<CMAKE_C_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE>
-          > <PREPROCESSED_SOURCE>"
-        additional_info_0757: CMAKE_C_CREATE_SHARED_LIBRARY "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0758: CMAKE_C_CREATE_SHARED_MODULE "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_C_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0754: CMAKE_C_CREATE_ASSEMBLY_SOURCE "<CMAKE_C_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -S <SOURCE> -o <ASSEMBLY_SOURCE>"
+        additional_info_0755: CMAKE_C_CREATE_MACOSX_FRAMEWORK "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0756: CMAKE_C_CREATE_PREPROCESSED_SOURCE "<CMAKE_C_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE> > <PREPROCESSED_SOURCE>"
+        additional_info_0757: CMAKE_C_CREATE_SHARED_LIBRARY "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0758: CMAKE_C_CREATE_SHARED_MODULE "<CMAKE_C_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_C_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
         additional_info_0759: CMAKE_C_DEPENDS_USE_COMPILER "TRUE"
         additional_info_0760: CMAKE_C_DEPFILE_FORMAT "gcc"
         additional_info_0761: CMAKE_C_EXTENSIONS_COMPUTED_DEFAULT "ON"
@@ -1164,8 +1146,7 @@ tools:
         additional_info_0783: CMAKE_C_LINKER_INFORMATION_LOADED "1"
         additional_info_0784: CMAKE_C_LINKER_PREFERENCE "10"
         additional_info_0785: CMAKE_C_LINKER_WRAPPER_FLAG "-Xlinker; "
-        additional_info_0786: CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>
-          -o <TARGET> <LINK_LIBRARIES>"
+        additional_info_0786: CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
         additional_info_0787: CMAKE_C_LINK_FLAGS "-Wl,-search_paths_first -Wl,-headerpad_max_install_names"
         additional_info_0788: CMAKE_C_LINK_LIBRARY_USING_FRAMEWORK "-framework <LIBRARY>"
         additional_info_0789: CMAKE_C_LINK_LIBRARY_USING_FRAMEWORK_SUPPORTED "TRUE"
@@ -1216,12 +1197,12 @@ tools:
         additional_info_0834: CMAKE_FIND_LIBRARY_PREFIXES "lib"
         additional_info_0835: CMAKE_FIND_LIBRARY_SUFFIXES ".tbd;.dylib;.so;.a"
         additional_info_0836: CMAKE_FIND_PACKAGE_REDIRECTS_DIR "/Users/emanuelesabetta/Code/DHT/dht/__cmake_systeminformation/CMakeFiles/pkgRedirects"
-        additional_info_0837: CMAKE_Fortran_CREATE_MACOSX_FRAMEWORK "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0838: CMAKE_Fortran_CREATE_SHARED_LIBRARY "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0839: CMAKE_Fortran_CREATE_SHARED_MODULE "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_Fortran_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0837: CMAKE_Fortran_CREATE_MACOSX_FRAMEWORK "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS> <LINK_FLAGS> -o <TARGET>
+          <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0838: CMAKE_Fortran_CREATE_SHARED_LIBRARY "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_Fortran_FLAGS> <LINK_FLAGS> -o <TARGET>
+          <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0839: CMAKE_Fortran_CREATE_SHARED_MODULE "<CMAKE_Fortran_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_Fortran_FLAGS> <LINK_FLAGS> -o <TARGET>
+          <OBJECTS> <LINK_LIBRARIES>"
         additional_info_0840: CMAKE_Fortran_FRAMEWORK_SEARCH_FLAG "-F"
         additional_info_0841: CMAKE_GENERATOR "Unix Makefiles"
         additional_info_0842: CMAKE_GENERATOR_INSTANCE ""
@@ -1278,22 +1259,22 @@ tools:
         additional_info_0893: CMAKE_MT ""
         additional_info_0894: CMAKE_NM "/usr/bin/nm"
         additional_info_0895: CMAKE_OBJCOPY "CMAKE_OBJCOPY-NOTFOUND"
-        additional_info_0896: CMAKE_OBJCXX_CREATE_MACOSX_FRAMEWORK "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJCXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0897: CMAKE_OBJCXX_CREATE_SHARED_LIBRARY "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJCXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0898: CMAKE_OBJCXX_CREATE_SHARED_MODULE "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_OBJCXX_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0896: CMAKE_OBJCXX_CREATE_MACOSX_FRAMEWORK "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJCXX_FLAGS> <LINK_FLAGS> -o <TARGET>
+          <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0897: CMAKE_OBJCXX_CREATE_SHARED_LIBRARY "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJCXX_FLAGS> <LINK_FLAGS> -o <TARGET>
+          <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0898: CMAKE_OBJCXX_CREATE_SHARED_MODULE "<CMAKE_OBJCXX_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_OBJCXX_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS>
+          <LINK_LIBRARIES>"
         additional_info_0899: CMAKE_OBJCXX_FRAMEWORK_SEARCH_FLAG "-F"
         additional_info_0900: CMAKE_OBJCXX_LINK_FLAGS "-Wl,-search_paths_first -Wl,-headerpad_max_install_names"
         additional_info_0901: CMAKE_OBJCXX_OSX_COMPATIBILITY_VERSION_FLAG "-compatibility_version "
         additional_info_0902: CMAKE_OBJCXX_OSX_CURRENT_VERSION_FLAG "-current_version "
-        additional_info_0903: CMAKE_OBJC_CREATE_MACOSX_FRAMEWORK "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJC_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0904: CMAKE_OBJC_CREATE_SHARED_LIBRARY "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJC_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <SONAME_FLAG> <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
-        additional_info_0905: CMAKE_OBJC_CREATE_SHARED_MODULE "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_OBJC_FLAGS>
-          <LINK_FLAGS> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0903: CMAKE_OBJC_CREATE_MACOSX_FRAMEWORK "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJC_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0904: CMAKE_OBJC_CREATE_SHARED_LIBRARY "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_OBJC_FLAGS> <LINK_FLAGS> -o <TARGET> <SONAME_FLAG>
+          <TARGET_INSTALLNAME_DIR><TARGET_SONAME> <OBJECTS> <LINK_LIBRARIES>"
+        additional_info_0905: CMAKE_OBJC_CREATE_SHARED_MODULE "<CMAKE_OBJC_COMPILER> <LANGUAGE_COMPILE_FLAGS> <CMAKE_SHARED_MODULE_CREATE_OBJC_FLAGS> <LINK_FLAGS> -o <TARGET> <OBJECTS>
+          <LINK_LIBRARIES>"
         additional_info_0906: CMAKE_OBJC_FRAMEWORK_SEARCH_FLAG "-F"
         additional_info_0907: CMAKE_OBJC_LINK_FLAGS "-Wl,-search_paths_first -Wl,-headerpad_max_install_names"
         additional_info_0908: CMAKE_OBJC_OSX_COMPATIBILITY_VERSION_FLAG "-compatibility_version "
@@ -1741,27 +1722,22 @@ tools:
         pytest_mark_asyncio: mark the test as a coroutine, it will be run using an asyncio event loop
         pytest_mark_anyio: mark the (coroutine function) test to be run asynchronously via anyio.
         pytest_mark_filterwarnings_warning: add a warning filter to the given test. see https://docs.pytest.org/en/stable/how-to/capture-warnings.html#pytest-mark-filterwarnings
-        pytest_mark_skip_reason_none: 'skip the given test function with an optional reason. Example: skip(reason="no way
-          of currently testing this") skips the test.'
-        pytest_mark_skipif_condition_reason: 'skip the given test function if any of the conditions evaluate to True. Example:
-          skipif(sys.platform == ''win32'') skips the test if we are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif'
-        pytest_mark_xfail_condition_reason_run_true_raises_none_strict_xfail_strict: mark the test function as an expected
-          failure if any of the conditions evaluate to True. Optionally specify a reason for better reporting and run=False
-          if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them
-          in raises, and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
-        pytest_mark_parametrize_argnames_argvalues: 'call a test function multiple times passing in different arguments in
-          turn. argvalues generally needs to be a list of values if argnames specifies only one name or a list of tuples of
-          values if argnames specifies multiple names. Example: @parametrize(''arg1'', [1,2]) would lead to two calls of the
-          decorated test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html
-          for more info and examples.'
+        pytest_mark_skip_reason_none: 'skip the given test function with an optional reason. Example: skip(reason="no way of currently testing this") skips the test.'
+        pytest_mark_skipif_condition_reason: 'skip the given test function if any of the conditions evaluate to True. Example: skipif(sys.platform == ''win32'') skips the test if we
+          are on the win32 platform. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-skipif'
+        pytest_mark_xfail_condition_reason_run_true_raises_none_strict_xfail_strict: mark the test function as an expected failure if any of the conditions evaluate to True. Optionally
+          specify a reason for better reporting and run=False if you don't even want to execute the test function. If only specific exception(s) are expected, you can list them in raises,
+          and if the test fails in other ways, it will be reported as a true failure. See https://docs.pytest.org/en/stable/reference/reference.html#pytest-mark-xfail
+        pytest_mark_parametrize_argnames_argvalues: 'call a test function multiple times passing in different arguments in turn. argvalues generally needs to be a list of values if argnames
+          specifies only one name or a list of tuples of values if argnames specifies multiple names. Example: @parametrize(''arg1'', [1,2]) would lead to two calls of the decorated
+          test function, one with arg1=1 and another with arg1=2.see https://docs.pytest.org/en/stable/how-to/parametrize.html for more info and examples.'
         pytest_mark_usefixtures_fixturename1_fixturename2: mark tests as needing all of the specified fixtures. see https://docs.pytest.org/en/stable/explanation/fixtures.html#usefixtures
-        pytest_mark_tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as
-          early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True) instead.
-        pytest_mark_trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as
-          late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True) instead.
+        pytest_mark_tryfirst: mark a hook implementation function such that the plugin machinery will try to call it first/as early as possible. DEPRECATED, use @pytest.hookimpl(tryfirst=True)
+          instead.
+        pytest_mark_trylast: mark a hook implementation function such that the plugin machinery will try to call it last/as late as possible. DEPRECATED, use @pytest.hookimpl(trylast=True)
+          instead.
       fixtures:
-        ? ''
-        : =========================== no tests ran in 0.81s =============================
+        '': =========================== no tests ran in 0.81s =============================
         rootdir: /Users/emanuelesabetta/Code/DHT/dht
         configfile: pyproject.toml
         plugins: anyio-4.9.0, asyncio-1.0.0
