@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+framework_configs.py - Framework-specific configuration templates  This module contains configuration templates and metadata for various Python frameworks supported by DHT.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 framework_configs.py - Framework-specific configuration templates
 
 This module contains configuration templates and metadata for various

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_installer.py - Environment installation and setup  This module handles Python environment installation and package management.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_installer.py - Environment installation and setup
 
 This module handles Python environment installation and package management.

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Custom pytest plugin for concise test reporting.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Custom pytest plugin for concise test reporting.
 """
 
 from collections import defaultdict

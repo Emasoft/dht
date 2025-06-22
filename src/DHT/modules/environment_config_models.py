@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_config_models.py - Data models for environment configuration  This module contains the data models used by the environment configurator.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_config_models.py - Data models for environment configuration
 
 This module contains the data models used by the environment configurator.

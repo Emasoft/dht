@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_commands_utils.py - Shared utilities for dhtl commands  This module contains utilities shared by multiple dhtl command modules.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_commands_utils.py - Shared utilities for dhtl commands
 
 This module contains utilities shared by multiple dhtl command modules.

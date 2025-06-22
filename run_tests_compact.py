@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Compact test runner for DHT - reduces output to avoid token limits.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Compact test runner for DHT - reduces output to avoid token limits.
 """
 
 import os

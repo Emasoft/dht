@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+project_type_detection_helpers.py - Helper functions for project type detection  This module contains helper functions used by the ProjectTypeDetector class for analyzing projects and extracting information.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 project_type_detection_helpers.py - Helper functions for project type detection
 
 This module contains helper functions used by the ProjectTypeDetector class

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+project_type_enums.py - Project type and category enumerations  This module contains the enumerations for project types and categories used throughout the DHT project type detection system.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 project_type_enums.py - Project type and category enumerations
 
 This module contains the enumerations for project types and categories

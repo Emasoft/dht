@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Unit tests for dhtconfig module.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """Unit tests for dhtconfig module."""
 

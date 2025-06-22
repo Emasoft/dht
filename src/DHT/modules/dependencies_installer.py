@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dependencies_installer.py - Project dependencies installation  This module handles installation of project dependencies from lock files during environment reproduction.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dependencies_installer.py - Project dependencies installation
 
 This module handles installation of project dependencies from lock files

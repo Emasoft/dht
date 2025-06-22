@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_script_tasks.py - Script execution tasks for UV  This module contains Prefect tasks for running Python scripts with UV.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_script_tasks.py - Script execution tasks for UV
 
 This module contains Prefect tasks for running Python scripts with UV.

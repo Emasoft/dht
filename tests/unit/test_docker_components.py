@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Unit tests for Docker-related components.  Tests individual components of the container deployment system.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Unit tests for Docker-related components.
 
 Tests individual components of the container deployment system.

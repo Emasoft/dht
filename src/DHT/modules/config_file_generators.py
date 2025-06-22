@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+config_file_generators.py - Configuration file generators for development tools  This module generates configuration files for various development tools.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 config_file_generators.py - Configuration file generators for development tools
 
 This module generates configuration files for various development tools.

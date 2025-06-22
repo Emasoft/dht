@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+cli_commands_language_runtimes.py - Language runtime CLI commands  This module contains CLI command definitions for language runtimes.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 cli_commands_language_runtimes.py - Language runtime CLI commands
 
 This module contains CLI command definitions for language runtimes.

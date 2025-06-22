@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+project_type_detector.py - Comprehensive project type detection and configuration system  This module provides advanced project type detection, configuration generation, and setup recommendations for various Python frameworks and project types.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 project_type_detector.py - Comprehensive project type detection and configuration system
 
 This module provides advanced project type detection, configuration generation,

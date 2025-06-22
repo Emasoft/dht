@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtconfig_models.py - Data models for DHT configuration  This module contains data models and constants used by the DHT configuration system.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtconfig_models.py - Data models for DHT configuration
 
 This module contains data models and constants used by the DHT configuration system.

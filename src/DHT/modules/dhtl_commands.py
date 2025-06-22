@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_commands.py - Implementation of dhtl CLI commands using UV  This module implements the main dhtl commands (init, setup, build, sync) following UV documentation best practices.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_commands.py - Implementation of dhtl CLI commands using UV
 
 This module implements the main dhtl commands (init, setup, build, sync)

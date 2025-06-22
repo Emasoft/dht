@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+requirements_parser.py - Parser for Python requirements files  Handles parsing of: - requirements.txt - requirements.in (pip-tools) - constraints.txt - Various pip options and formats
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 requirements_parser.py - Parser for Python requirements files
 
 Handles parsing of:

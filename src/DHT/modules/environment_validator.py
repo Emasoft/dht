@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_validator.py - Environment validation and verification utilities  This module provides utilities for validating and verifying that environments match expected configurations and dependencies.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_validator.py - Environment validation and verification utilities
 
 This module provides utilities for validating and verifying that environments

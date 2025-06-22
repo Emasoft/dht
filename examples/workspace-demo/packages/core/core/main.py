@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Core module main functionality.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Core module main functionality."""
 
 import sys

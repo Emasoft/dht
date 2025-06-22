@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+lock_file_manager.py - Lock file generation and management  This module handles the creation, parsing, and management of lock files for deterministic dependency resolution.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 lock_file_manager.py - Lock file generation and management
 
 This module handles the creation, parsing, and management of lock files

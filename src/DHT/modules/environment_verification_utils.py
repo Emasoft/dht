@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_verification_utils.py - Utilities for environment verification  This module contains utilities for verifying environment compatibility including platform, Python version, and tool version verification.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_verification_utils.py - Utilities for environment verification
 
 This module contains utilities for verifying environment compatibility

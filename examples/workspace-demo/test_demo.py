@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Test script to verify workspace demo functionality.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Test script to verify workspace demo functionality."""
 
 import sys

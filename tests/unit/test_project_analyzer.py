@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Test suite for the project analyzer.  Tests the comprehensive project analysis functionality that: - Detects project types and structures - Analyzes dependencies across all files - Creates project metadata - Integrates with all parsers
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Test suite for the project analyzer.
 
 Tests the comprehensive project analysis functionality that:

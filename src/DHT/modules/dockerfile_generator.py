@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Dockerfile Generator Module.  Analyzes Python projects and generates appropriate Dockerfiles based on project type, dependencies, and requirements.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Dockerfile Generator Module.
 
 Analyzes Python projects and generates appropriate Dockerfiles

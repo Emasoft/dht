@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Test to verify Django project detection is working correctly after the fix.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Test to verify Django project detection is working correctly after the fix.
 """
 
 import tempfile

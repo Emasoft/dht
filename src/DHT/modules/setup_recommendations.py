@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+setup_recommendations.py - Project setup recommendations  This module provides recommendations for setting up different types of projects, including database, cache, testing, and tool configurations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 setup_recommendations.py - Project setup recommendations
 
 This module provides recommendations for setting up different types of projects,

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+reproduction_flow_utils.py - Utilities for reproduction flow orchestration  This module contains utilities for orchestrating the complete environment reproduction flow including snapshot creation, saving, and verification.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 reproduction_flow_utils.py - Utilities for reproduction flow orchestration
 
 This module contains utilities for orchestrating the complete environment

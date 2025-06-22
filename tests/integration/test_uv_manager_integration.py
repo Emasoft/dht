@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Integration tests for UV manager using real UV installation and GitHub repos.  These tests require UV to be installed and network access for cloning repos.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Integration tests for UV manager using real UV installation and GitHub repos.
 
 These tests require UV to be installed and network access for cloning repos.

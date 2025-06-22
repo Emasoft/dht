@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+platform_normalizer.py - Platform normalization and abstraction utilities  This module handles platform-specific differences and provides normalized interfaces for cross-platform compatibility.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 platform_normalizer.py - Platform normalization and abstraction utilities
 
 This module handles platform-specific differences and provides normalized

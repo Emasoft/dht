@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtconfig_env_extractor.py - Environment variables extraction for DHT configuration  This module handles extraction of environment variables from project files.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtconfig_env_extractor.py - Environment variables extraction for DHT configuration
 
 This module handles extraction of environment variables from project files.

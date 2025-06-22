@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtconfig_cli.py - CLI interface for DHT configuration  This module provides the command-line interface for dhtconfig operations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtconfig_cli.py - CLI interface for DHT configuration
 
 This module provides the command-line interface for dhtconfig operations.

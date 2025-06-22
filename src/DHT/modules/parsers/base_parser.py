@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+base_parser.py - Base class for all DHT file parsers  This module provides the abstract base class for all language and file parsers. It includes Prefect integration for task-based parallel processing.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 base_parser.py - Base class for all DHT file parsers
 
 This module provides the abstract base class for all language and file parsers.

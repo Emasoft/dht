@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager_python.py - Python version management for UV Manager  This module contains Python version detection and management functionality.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager_python.py - Python version management for UV Manager
 
 This module contains Python version detection and management functionality.

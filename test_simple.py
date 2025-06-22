@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Simple test runner with compact output to avoid token limits.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Simple test runner with compact output to avoid token limits.
 """
 
 import re

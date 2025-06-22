@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_commands_setup.py - Implementation of dhtl setup command  This module implements the setup command functionality extracted from dhtl_commands.py
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_commands_setup.py - Implementation of dhtl setup command
 
 This module implements the setup command functionality extracted from dhtl_commands.py

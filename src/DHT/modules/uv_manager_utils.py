@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager_utils.py - Utility functions for UV Manager  This module contains utility functions used by the UV Manager.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager_utils.py - Utility functions for UV Manager
 
 This module contains utility functions used by the UV Manager.

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Additional tests to reach 100% coverage for Docker deployment modules.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Additional tests to reach 100% coverage for Docker deployment modules.
 """
 
 from pathlib import Path

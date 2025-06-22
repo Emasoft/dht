@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+cli_commands_version_control.py - Version control CLI commands  This module contains CLI command definitions for version control tools.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 cli_commands_version_control.py - Version control CLI commands
 
 This module contains CLI command definitions for version control tools.

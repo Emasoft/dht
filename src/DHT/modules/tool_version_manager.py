@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+tool_version_manager.py - Tool version management and comparison  This module handles tool version extraction, comparison, and installation suggestions for cross-platform environment reproduction.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 tool_version_manager.py - Tool version management and comparison
 
 This module handles tool version extraction, comparison, and installation

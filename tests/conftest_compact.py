@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Pytest configuration to reduce output verbosity.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Pytest configuration to reduce output verbosity.
 """
 
 import logging

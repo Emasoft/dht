@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_pip_tasks.py - Pip-specific tasks for UV  This module contains Prefect tasks for UV pip operations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_pip_tasks.py - Pip-specific tasks for UV
 
 This module contains Prefect tasks for UV pip operations.

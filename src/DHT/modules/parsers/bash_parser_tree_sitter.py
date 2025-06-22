@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+bash_parser_tree_sitter.py - Tree-sitter based parsing for Bash scripts  This module contains all tree-sitter specific parsing functionality for Bash scripts.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 bash_parser_tree_sitter.py - Tree-sitter based parsing for Bash scripts
 
 This module contains all tree-sitter specific parsing functionality for Bash scripts.

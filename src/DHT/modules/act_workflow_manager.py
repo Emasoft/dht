@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+act_workflow_manager.py - GitHub workflow discovery and management  This module handles discovery, parsing, and management of GitHub Actions workflows.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 act_workflow_manager.py - GitHub workflow discovery and management
 
 This module handles discovery, parsing, and management of GitHub Actions workflows.

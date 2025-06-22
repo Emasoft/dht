@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+cli_commands_devops.py - DevOps tool CLI commands  This module contains CLI command definitions for containers, virtualization, and cloud tools.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 cli_commands_devops.py - DevOps tool CLI commands
 
 This module contains CLI command definitions for containers, virtualization,

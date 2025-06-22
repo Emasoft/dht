@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+project_analysis_models.py - Data models for project analysis  This module contains the data classes used for project analysis results and validation.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 project_analysis_models.py - Data models for project analysis
 
 This module contains the data classes used for project analysis results

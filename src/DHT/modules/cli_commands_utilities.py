@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+cli_commands_utilities.py - Utility tool CLI commands  This module contains CLI command definitions for various utility tools including network tools, system tools, archive managers, testing tools, and more.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 cli_commands_utilities.py - Utility tool CLI commands
 
 This module contains CLI command definitions for various utility tools including

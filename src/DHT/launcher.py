@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+DHT Launcher Class.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted DHTLauncher class from dhtl.py for modularity

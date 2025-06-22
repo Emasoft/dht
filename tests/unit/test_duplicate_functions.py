@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test for duplicate function definitions in shell scripts.  This test ensures that functions are not duplicated across different shell script modules, which could cause conflicts and confusion.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Test for duplicate function definitions in shell scripts.

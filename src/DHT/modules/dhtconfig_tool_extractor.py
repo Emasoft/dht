@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtconfig_tool_extractor.py - Tool requirements extraction for DHT configuration  This module handles extraction of tool requirements from project analysis.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtconfig_tool_extractor.py - Tool requirements extraction for DHT configuration
 
 This module handles extraction of tool requirements from project analysis.

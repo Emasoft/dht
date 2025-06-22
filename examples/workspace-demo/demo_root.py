@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Root project demo script.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Root project demo script."""
 
 from pathlib import Path

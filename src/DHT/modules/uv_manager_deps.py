@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager_deps.py - Dependency management for UV Manager  This module contains dependency installation, management, and lock file operations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager_deps.py - Dependency management for UV Manager
 
 This module contains dependency installation, management, and lock file operations.

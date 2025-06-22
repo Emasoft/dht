@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+python_parser.py - Python file parser using AST  This module provides comprehensive Python file parsing using the built-in AST module. It extracts imports, functions, classes, and dependencies from Python source files.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 python_parser.py - Python file parser using AST
 
 This module provides comprehensive Python file parsing using the built-in AST module.

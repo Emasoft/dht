@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+test_bash_parser.py - Test the Bash parser implementation  This script tests the bash_parser module to ensure it can: 1. Parse bash scripts using tree-sitter 2. Extract functions, variables, exports, and other elements 3. Fall back to regex parsing when tree-sitter is not available
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 test_bash_parser.py - Test the Bash parser implementation
 
 This script tests the bash_parser module to ensure it can:

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager.py - UV package manager integration for DHT  This module provides a comprehensive interface to UV (ultra-fast Python package manager) for DHT's environment management, dependency resolution, and project configuration.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager.py - UV package manager integration for DHT
 
 This module provides a comprehensive interface to UV (ultra-fast Python package manager)

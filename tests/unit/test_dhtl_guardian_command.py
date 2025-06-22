@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test for DHT guardian functionality - updated for Python/Prefect migration.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """Test for DHT guardian functionality - updated for Python/Prefect migration."""
 

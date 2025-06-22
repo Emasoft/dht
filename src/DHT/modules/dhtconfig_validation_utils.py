@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtconfig_validation_utils.py - Validation utilities for DHT configuration  This module handles validation info generation and config validation.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtconfig_validation_utils.py - Validation utilities for DHT configuration
 
 This module handles validation info generation and config validation.

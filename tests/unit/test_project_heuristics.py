@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Test suite for project heuristics module.  Tests intelligent project type detection, system dependency inference, and configuration suggestions.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Test suite for project heuristics module.
 
 Tests intelligent project type detection, system dependency inference,

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Test suite for package file parsers.  Tests various package file formats including: - requirements.txt and requirements.in - pyproject.toml - setup.py and setup.cfg - package.json - Cargo.toml
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Test suite for package file parsers.
 
 Tests various package file formats including:

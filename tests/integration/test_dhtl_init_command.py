@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Integration tests for dhtl init command.  Tests the dhtl init command using real UV and following TDD principles.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Integration tests for dhtl init command.
 
 Tests the dhtl init command using real UV and following TDD principles.

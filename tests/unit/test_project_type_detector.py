@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Test suite for project type detection system.  Tests comprehensive project type detection, configuration generation, and framework-specific setup recommendations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Test suite for project type detection system.
 
 Tests comprehensive project type detection, configuration generation,

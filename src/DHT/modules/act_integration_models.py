@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+act_integration_models.py - Data models for act integration  This module contains data models and structures used by the act integration system.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 act_integration_models.py - Data models for act integration
 
 This module contains data models and structures used by the act integration system.

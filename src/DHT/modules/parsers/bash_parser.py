@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+bash_parser.py - Bash script parser using tree-sitter  This module provides comprehensive Bash script parsing using tree-sitter. It extracts functions, variables, sourced files, and commands from shell scripts.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 bash_parser.py - Bash script parser using tree-sitter
 
 This module provides comprehensive Bash script parsing using tree-sitter.

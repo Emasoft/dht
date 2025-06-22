@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Integration tests for dhtl deploy_project_in_container command.  Tests the container deployment functionality using TDD principles.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Integration tests for dhtl deploy_project_in_container command.
 
 Tests the container deployment functionality using TDD principles.

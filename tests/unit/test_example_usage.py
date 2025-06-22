@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Example test module demonstrating test_helpers.py usage.  This shows how to use the test helpers in actual test scenarios.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Example demonstrating test_helpers.py usage in real tests

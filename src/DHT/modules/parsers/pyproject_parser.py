@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+pyproject_parser.py - Parser for pyproject.toml files  Handles parsing of: - PEP 517/518 build system configuration - PEP 621 project metadata - Poetry configuration - UV configuration - Tool-specific settings
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 pyproject_parser.py - Parser for pyproject.toml files
 
 Handles parsing of:

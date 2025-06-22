@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+config_generators.py - Configuration file generators for different project types  This module contains functions to generate configuration files for various Python frameworks and project types.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 config_generators.py - Configuration file generators for different project types
 
 This module contains functions to generate configuration files for various

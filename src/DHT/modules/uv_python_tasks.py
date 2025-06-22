@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_python_tasks.py - Python version management tasks for UV  This module contains Prefect tasks for managing Python versions with UV.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_python_tasks.py - Python version management tasks for UV
 
 This module contains Prefect tasks for managing Python versions with UV.

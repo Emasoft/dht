@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_task_models.py - Data models and constants for UV Prefect tasks  This module contains data models, constants, and configurations used by UV Prefect tasks.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_task_models.py - Data models and constants for UV Prefect tasks
 
 This module contains data models, constants, and configurations used by

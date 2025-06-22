@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Container Test Runner Module.  Executes tests within Docker containers and formats results for pytest, Playwright, and Puppeteer test frameworks.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Container Test Runner Module.
 
 Executes tests within Docker containers and formats results

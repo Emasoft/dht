@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Run all tests and generate a comprehensive summary.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Run all tests and generate a comprehensive summary."""
 
 import json

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_capture_utils.py - Utilities for capturing environment details  This module contains utilities for capturing various aspects of the development environment including Python packages, system tools, and environment variables.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_capture_utils.py - Utilities for capturing environment details
 
 This module contains utilities for capturing various aspects of the

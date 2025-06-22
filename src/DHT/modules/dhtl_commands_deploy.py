@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_commands_deploy.py - Implementation of dhtl deploy_project_in_container command  This module implements the deploy command functionality extracted from dhtl_commands.py
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_commands_deploy.py - Implementation of dhtl deploy_project_in_container command
 
 This module implements the deploy command functionality extracted from dhtl_commands.py

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_snapshot_io.py - Environment snapshot I/O operations  This module handles saving and loading of environment snapshots to/from various formats (JSON, YAML).
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_snapshot_io.py - Environment snapshot I/O operations
 
 This module handles saving and loading of environment snapshots to/from

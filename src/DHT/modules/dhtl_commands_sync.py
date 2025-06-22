@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_commands_sync.py - Implementation of dhtl sync command  This module implements the sync command functionality extracted from dhtl_commands.py
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_commands_sync.py - Implementation of dhtl sync command
 
 This module implements the sync command functionality extracted from dhtl_commands.py

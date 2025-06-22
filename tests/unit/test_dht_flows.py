@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test suite for DHT Prefect flows.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial test suite for DHT Prefect flows

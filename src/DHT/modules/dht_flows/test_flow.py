@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test Command Flow - Prefect implementation of test execution.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial implementation of test_command as a Prefect flow

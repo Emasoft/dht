@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+"""
+Test Dhtl Cli module.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 import subprocess
 from pathlib import Path
 

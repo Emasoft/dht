@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Development Helper Toolkit (DHT).  A universal development automation tool that provides standardized workflows, environment management, and project automation across different platforms and project types.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Development Helper Toolkit (DHT).

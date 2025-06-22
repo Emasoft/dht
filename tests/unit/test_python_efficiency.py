@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test Python script efficiency and modularity.  This test verifies that Python scripts in the DHT project follow efficiency and modularity best practices as outlined in CLAUDE.md.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Test Python script efficiency and modularity.

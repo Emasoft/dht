@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Tests for the Python implementation of dhtl.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Tests for the Python implementation of dhtl."""
 
 import subprocess

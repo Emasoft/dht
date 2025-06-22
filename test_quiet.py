@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Quiet test runner that produces minimal output to avoid token limits.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Quiet test runner that produces minimal output to avoid token limits.
 """
 
 import os

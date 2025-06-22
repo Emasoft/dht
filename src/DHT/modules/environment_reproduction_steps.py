@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_reproduction_steps.py - Generate platform-specific reproduction steps  This module generates detailed reproduction steps based on the environment snapshot and target platform.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_reproduction_steps.py - Generate platform-specific reproduction steps
 
 This module generates detailed reproduction steps based on the environment

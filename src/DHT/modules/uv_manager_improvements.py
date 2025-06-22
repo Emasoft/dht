@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Improvements and refactoring suggestions for uv_manager.py  This file contains improved code snippets that address the issues found.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Improvements and refactoring suggestions for uv_manager.py
 
 This file contains improved code snippets that address the issues found.

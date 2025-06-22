@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+test_bash_parser.py - Unit tests for the Bash parser  This module tests the bash_parser module following TDD principles. Tests are written first to define the expected behavior, then the implementation will be created to make these tests pass.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 test_bash_parser.py - Unit tests for the Bash parser
 
 This module tests the bash_parser module following TDD principles.

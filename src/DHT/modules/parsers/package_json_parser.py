@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+package_json_parser.py - Parser for Node.js package.json files  Handles parsing of: - Standard npm/yarn package.json - Dependencies and devDependencies - Scripts and engines - Workspaces (monorepo support)
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 package_json_parser.py - Parser for Node.js package.json files
 
 Handles parsing of:

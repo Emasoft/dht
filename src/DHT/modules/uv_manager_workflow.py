@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager_workflow.py - Project setup workflow for UV Manager  This module contains the project setup workflow and related operations.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager_workflow.py - Project setup workflow for UV Manager
 
 This module contains the project setup workflow and related operations.

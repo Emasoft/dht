@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+cli_commands_package_managers.py - Package manager CLI commands  This module contains CLI command definitions for package managers, both language-specific and system package managers.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 cli_commands_package_managers.py - Package manager CLI commands
 
 This module contains CLI command definitions for package managers,

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_project_templates.py - Project template content for dhtl commands  This module contains templates for project files like .gitignore, LICENSE, etc.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_project_templates.py - Project template content for dhtl commands
 
 This module contains templates for project files like .gitignore, LICENSE, etc.

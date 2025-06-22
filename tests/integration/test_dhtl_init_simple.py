@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Simple test for dhtl init to debug issues.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
+Simple test for dhtl init to debug issues.
 """
 
 import tempfile

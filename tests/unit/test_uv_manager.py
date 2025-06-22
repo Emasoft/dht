@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Test suite for UV manager integration.  Tests the UV package manager integration including: - Python version detection and management - Virtual environment creation - Dependency installation and resolution - Lock file generation
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Test suite for UV manager integration.
 
 Tests the UV package manager integration including:

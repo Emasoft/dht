@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_manager_exceptions.py - Exception classes for UV Manager  This module contains all exception classes used by the UV Manager.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_manager_exceptions.py - Exception classes for UV Manager
 
 This module contains all exception classes used by the UV Manager.

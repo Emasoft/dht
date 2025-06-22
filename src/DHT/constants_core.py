@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Constants and configuration for Process Guardian  This module defines all constants and configuration settings used by the Process Guardian system, including: - Default timeout values - Memory limits - Process type configurations - Critical process definitions
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 Constants and configuration for Process Guardian
 
 This module defines all constants and configuration settings used by the

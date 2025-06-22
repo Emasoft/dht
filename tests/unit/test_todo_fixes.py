@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test that all TODO fixes have been properly implemented.  This test verifies that: - include_secrets functionality works in diagnostic reporters - system_taxonomy handles nested categories and language package managers - dhtl_regenerate_poc.sh has version check implemented
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Test that all TODO fixes have been properly implemented.

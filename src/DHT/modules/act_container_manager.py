@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+act_container_manager.py - Container management for act integration  This module handles container runtime detection, setup, and management for running act in containerized environments.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 act_container_manager.py - Container management for act integration
 
 This module handles container runtime detection, setup, and management

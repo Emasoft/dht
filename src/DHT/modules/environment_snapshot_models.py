@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+environment_snapshot_models.py - Data models for environment snapshots  This module contains the data models used by the environment reproducer.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 environment_snapshot_models.py - Data models for environment snapshots
 
 This module contains the data models used by the environment reproducer.

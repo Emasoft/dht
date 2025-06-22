@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test Bolt compatibility features in DHT.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Initial test file for Bolt compatibility commands

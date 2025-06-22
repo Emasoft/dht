@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+dhtl_guardian_prefect.py - CLI interface for Prefect-based guardian  This provides a command-line interface for the Prefect guardian, compatible with the existing dhtl guardian command structure.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 dhtl_guardian_prefect.py - CLI interface for Prefect-based guardian
 
 This provides a command-line interface for the Prefect guardian,

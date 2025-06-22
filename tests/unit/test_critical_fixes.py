@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test for critical fixes identified in comprehensive verification. This uses TDD to identify and fix critical issues.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Test for critical fixes identified in comprehensive verification.

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+reproduction_artifacts.py - Create Prefect artifacts for environment reproduction  This module handles creation of artifacts and documentation for environment reproduction workflows.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 reproduction_artifacts.py - Create Prefect artifacts for environment reproduction
 
 This module handles creation of artifacts and documentation for environment

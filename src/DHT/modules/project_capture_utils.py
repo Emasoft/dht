@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+project_capture_utils.py - Utilities for capturing project information  This module contains utilities for capturing project-specific information including configuration files, lock files, and project metadata.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 project_capture_utils.py - Utilities for capturing project information
 
 This module contains utilities for capturing project-specific information

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+bash_parser_models.py - Data models and constants for Bash parser  This module contains data models, constants, and common patterns used by the Bash parser.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 bash_parser_models.py - Data models and constants for Bash parser
 
 This module contains data models, constants, and common patterns used by the Bash parser.

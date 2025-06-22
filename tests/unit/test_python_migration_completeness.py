@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Comprehensive test to verify Python/Prefect migration completeness.  This test replaces the individual shell script tests (test_dhtl_utils.py, test_dhtl_uv.py, etc.) and verifies that all required functionality has been properly migrated to Python modules.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Comprehensive test to verify Python/Prefect migration completeness.

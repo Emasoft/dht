@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+Web application using workspace packages.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
 """Web application using workspace packages."""
 
 from pathlib import Path

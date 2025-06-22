@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Dhtl Environment 3 module.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Python replacement for dhtl_environment_3.sh

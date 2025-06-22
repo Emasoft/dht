@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+guardian_prefect.py - Prefect-based process management for DHT  This module replaces the shell-based guardian with a Prefect-based implementation that provides better resource management, error handling, and task orchestration.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 guardian_prefect.py - Prefect-based process management for DHT
 
 This module replaces the shell-based guardian with a Prefect-based implementation

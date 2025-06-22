@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+setup_tree_sitter.py - Set up tree-sitter with Bash grammar for the project  This script ensures that: 1. tree-sitter Python package is installed 2. tree-sitter-bash grammar is cloned and properly configured 3. A compiled language library is built and ready for use  Usage:
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 setup_tree_sitter.py - Set up tree-sitter with Bash grammar for the project
 
 This script ensures that:

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Workspace Command module.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Create workspace command module for single workspace member operations

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+uv_task_utils.py - Utility functions for UV Prefect tasks  This module contains utility functions used by UV Prefect tasks.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
+
+"""
 uv_task_utils.py - Utility functions for UV Prefect tasks
 
 This module contains utility functions used by UV Prefect tasks.

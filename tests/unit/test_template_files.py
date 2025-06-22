@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Test template files for syntax errors and proper functionality.  This test verifies that files containing template placeholders are either: 1. Properly configured with actual values 2. Not executed as Python modules (and thus safe to have placeholders) 3. Removed if unused by DHT
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
+"""
 
 """
 Test template files for syntax errors and proper functionality.
