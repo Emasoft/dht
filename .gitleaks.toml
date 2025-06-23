@@ -8,6 +8,7 @@ description = "Global allowlist for DHT"
 # Allowed email pattern - specifically for Emasoft
 regexes = [
   '''713559\+Emasoft@users\.noreply\.github\.com''',
+  '''POSTGRES_PASSWORD=postgres''',
 ]
 
 # Paths to exclude from scanning
@@ -42,9 +43,18 @@ paths = [
   '''yarn\.lock''',
   '''pnpm-lock\.yaml''',
 
-  # Test fixtures
+  # Test files and fixtures
+  '''tests/''',
+  '''test_.*\.py$''',
+  '''.*_test\.py$''',
   '''tests/fixtures''',
   '''tests/data''',
+  '''tests/integration/fixtures''',
+
+  # Documentation
+  '''DOCS_DEV''',
+  '''docs''',
+  '''.*\.md$''',
 
   # IDE
   '''\.idea''',
