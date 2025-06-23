@@ -35,6 +35,7 @@ Key Features:
 from __future__ import annotations
 
 import hashlib
+import logging
 import platform
 import sys
 import tempfile
@@ -67,13 +68,13 @@ from DHT.modules.tool_version_manager import ToolVersionManager
 class EnvironmentReproducer:
     """Deterministic environment reproduction system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the environment reproducer."""
-        self.logger = None
-        self.configurator = EnvironmentConfigurator()
-        self.lock_manager = LockFileManager()
+        self.logger: logging.Logger | None = None
+        self.configurator = EnvironmentConfigurator()  # type: ignore[no-untyped-call]
+        self.lock_manager = LockFileManager()  # type: ignore[no-untyped-call]
         self.validator = EnvironmentValidator()
-        self.tool_manager = ToolVersionManager()
+        self.tool_manager = ToolVersionManager()  # type: ignore[no-untyped-call]
         self.snapshot_io = EnvironmentSnapshotIO()
 
         # Use tool manager's categorization
@@ -84,19 +85,17 @@ class EnvironmentReproducer:
         self.artifact_creator = ReproductionArtifactCreator(self.version_critical_tools)
         self.steps_generator = ReproductionStepsGenerator(self.version_critical_tools)
         self.deps_installer = DependenciesInstaller()
-        self.env_capture_utils = EnvironmentCaptureUtils()
-        self.project_capture_utils = ProjectCaptureUtils()
-        self.env_verification_utils = EnvironmentVerificationUtils()
-        self.flow_utils = ReproductionFlowUtils(self)
+        self.env_capture_utils = EnvironmentCaptureUtils()  # type: ignore[no-untyped-call]
+        self.project_capture_utils = ProjectCaptureUtils()  # type: ignore[no-untyped-call]
+        self.env_verification_utils = EnvironmentVerificationUtils()  # type: ignore[no-untyped-call]
+        self.flow_utils = ReproductionFlowUtils(self)  # type: ignore[no-untyped-call]
 
-    def _get_logger(self):
+    def _get_logger(self) -> logging.Logger:
         """Get logger with fallback."""
         if self.logger is None:
             try:
                 self.logger = get_run_logger()
             except Exception:
-                import logging
-
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
@@ -155,7 +154,7 @@ class EnvironmentReproducer:
         logger.info(f"Environment snapshot captured: {snapshot_id}")
         return snapshot
 
-    @task(name="capture_environment_snapshot", description="Capture complete environment snapshot for reproduction")
+    @task(name="capture_environment_snapshot", description="Capture complete environment snapshot for reproduction")  # type: ignore[misc]
     def capture_environment_snapshot(
         self, project_path: Path | None = None, include_system_info: bool = True, include_configs: bool = True
     ) -> EnvironmentSnapshot:
@@ -169,7 +168,7 @@ class EnvironmentReproducer:
         random_suffix = hashlib.md5(str(datetime.now()).encode()).hexdigest()[:8]
         return f"dht_{platform_short}_{timestamp}_{random_suffix}"
 
-    def _capture_system_tools(self, snapshot: EnvironmentSnapshot):
+    def _capture_system_tools(self, snapshot: EnvironmentSnapshot) -> None:
         """Capture system tool versions."""
         logger = self._get_logger()
 
@@ -238,7 +237,7 @@ class EnvironmentReproducer:
 
         return result
 
-    @task(name="reproduce_environment", description="Reproduce environment from snapshot")
+    @task(name="reproduce_environment", description="Reproduce environment from snapshot")  # type: ignore[misc]
     def reproduce_environment(
         self,
         snapshot: EnvironmentSnapshot,
@@ -251,7 +250,7 @@ class EnvironmentReproducer:
 
     def _reproduce_project_environment(
         self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path, auto_install: bool
-    ):
+    ) -> None:
         """Reproduce the project environment."""
         logger = self._get_logger()
 
@@ -287,7 +286,9 @@ class EnvironmentReproducer:
             logger.error(f"Failed to reproduce project environment: {e}")
             result.actions_failed.append(f"project_reproduction_error: {str(e)}")
 
-    def _verify_configurations(self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path):
+    def _verify_configurations(
+        self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path
+    ) -> None:
         """Verify configuration files match the snapshot."""
         # Use validator to verify configurations
         config_results = self.validator.verify_configurations(target_path, snapshot.config_files, snapshot.checksums)
@@ -299,16 +300,21 @@ class EnvironmentReproducer:
         self, snapshot: EnvironmentSnapshot, output_path: Path, format: str = "json"
     ) -> Path:
         """Save environment snapshot to file."""
-        return self.snapshot_io.save_snapshot(snapshot, output_path, format)
+        saved_path = self.snapshot_io.save_snapshot(snapshot, output_path, format)
+        return Path(saved_path) if not isinstance(saved_path, Path) else saved_path
 
-    @task(name="save_environment_snapshot", description="Save environment snapshot to file")
+    @task(name="save_environment_snapshot", description="Save environment snapshot to file")  # type: ignore[misc]
     def save_environment_snapshot(self, snapshot: EnvironmentSnapshot, output_path: Path, format: str = "json") -> Path:
         """Prefect task wrapper for save_environment_snapshot."""
         return self._save_environment_snapshot_impl(snapshot, output_path, format)
 
     def load_environment_snapshot(self, snapshot_path: Path) -> EnvironmentSnapshot:
         """Load environment snapshot from file."""
-        return self.snapshot_io.load_snapshot(snapshot_path)
+        snapshot = self.snapshot_io.load_snapshot(snapshot_path)
+        # Ensure we return an EnvironmentSnapshot instance
+        if not isinstance(snapshot, EnvironmentSnapshot):
+            raise TypeError(f"Expected EnvironmentSnapshot, got {type(snapshot)}")
+        return snapshot
 
     def _create_reproducible_environment_impl(
         self,
@@ -344,7 +350,11 @@ class EnvironmentReproducer:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        results = {"project_path": str(project_path), "timestamp": datetime.now().isoformat(), "steps": []}
+        results: dict[str, Any] = {
+            "project_path": str(project_path),
+            "timestamp": datetime.now().isoformat(),
+            "steps": [],
+        }
 
         try:
             # Step 1: Capture environment snapshot
@@ -401,7 +411,7 @@ class EnvironmentReproducer:
         logger.info(f"Reproducible environment creation {'completed' if results['success'] else 'failed'}")
         return results
 
-    @flow(name="create_reproducible_environment", description="Complete flow for creating reproducible environments")
+    @flow(name="create_reproducible_environment", description="Complete flow for creating reproducible environments")  # type: ignore[misc]
     def create_reproducible_environment(
         self,
         project_path: Path,
