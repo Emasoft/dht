@@ -16,9 +16,10 @@ compatible with the existing dhtl guardian command structure.
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 import click
-import yaml
+import yaml  # type: ignore[import-untyped]
 from prefect import serve
 from prefect.deployments import run_deployment
 
@@ -31,17 +32,17 @@ from .guardian_prefect import (
 )
 
 
-@click.group()
-def cli():
+@click.group()  # type: ignore[misc]
+def cli() -> None:
     """DHT Guardian - Prefect-based process management"""
     pass
 
 
-@cli.command()
-@click.option("--name", default="dht-guardian", help="Deployment name")
-@click.option("--interval", type=int, help="Run interval in seconds")
-@click.option("--cron", help="Cron schedule")
-def start(name: str, interval: int | None, cron: str | None):
+@cli.command()  # type: ignore[misc]
+@click.option("--name", default="dht-guardian", help="Deployment name")  # type: ignore[misc]
+@click.option("--interval", type=int, help="Run interval in seconds")  # type: ignore[misc]
+@click.option("--cron", help="Cron schedule")  # type: ignore[misc]
+def start(name: str, interval: int | None, cron: str | None) -> None:
     """Start the Prefect guardian server"""
     click.echo("Starting Prefect guardian server...")
 
@@ -74,8 +75,8 @@ def start(name: str, interval: int | None, cron: str | None):
     serve(*deployments)
 
 
-@cli.command()
-def stop():
+@cli.command()  # type: ignore[misc]
+def stop() -> None:
     """Stop the Prefect guardian server"""
     click.echo("Stopping Prefect guardian server...")
     # In production, this would properly shut down the Prefect server
@@ -83,15 +84,15 @@ def stop():
     click.echo("Guardian server stopped")
 
 
-@cli.command()
-def status():
+@cli.command()  # type: ignore[misc]
+def status() -> None:
     """Check guardian server status"""
     try:
         import asyncio
 
         from prefect.client import get_client
 
-        async def check_status():
+        async def check_status() -> None:
             async with get_client() as client:
                 # Check for deployments
                 deployments = await client.read_deployments()
@@ -120,20 +121,20 @@ def status():
         click.echo("Guardian server may not be running")
 
 
-@cli.command()
-@click.argument("commands", nargs=-1, required=False)
-@click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")
-@click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")
-@click.option("--batch", "-b", type=int, help="Run commands in batches")
-@click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")
-@click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")
-@click.option("--cpu", type=int, default=80, help="CPU limit percentage")
-@click.option("--output", "-o", type=click.Path(), help="Output file for results")
-@click.option("--json", "output_json", is_flag=True, help="Output results as JSON")
-@click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")
-@click.option("--deployment", "-d", help="Run via deployment instead of directly")
+@cli.command()  # type: ignore[misc]
+@click.argument("commands", nargs=-1, required=False)  # type: ignore[misc]
+@click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")  # type: ignore[misc]
+@click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")  # type: ignore[misc]
+@click.option("--batch", "-b", type=int, help="Run commands in batches")  # type: ignore[misc]
+@click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")  # type: ignore[misc]
+@click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")  # type: ignore[misc]
+@click.option("--cpu", type=int, default=80, help="CPU limit percentage")  # type: ignore[misc]
+@click.option("--output", "-o", type=click.Path(), help="Output file for results")  # type: ignore[misc]
+@click.option("--json", "output_json", is_flag=True, help="Output results as JSON")  # type: ignore[misc]
+@click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")  # type: ignore[misc]
+@click.option("--deployment", "-d", help="Run via deployment instead of directly")  # type: ignore[misc]
 def run(
-    commands: tuple,
+    commands: tuple[str, ...],
     file: str | None,
     sequential: bool,
     batch: int | None,
@@ -144,11 +145,11 @@ def run(
     output_json: bool,
     stop_on_failure: bool,
     deployment: str | None,
-):
+) -> None:
     """Run commands through the guardian"""
 
     # Collect commands
-    command_list = []
+    command_list: list[str | dict[str, Any]] = []
 
     if file:
         try:
@@ -218,12 +219,12 @@ def run(
         sys.exit(1)
 
 
-@cli.command()
-@click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")
-def example(format: str):
+@cli.command()  # type: ignore[misc]
+@click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")  # type: ignore[misc]
+def example(format: str) -> None:
     """Show example command file"""
 
-    example_data = {
+    example_data: dict[str, Any] = {
         "commands": [
             "echo 'Simple command'",
             {"command": "python -c 'import time; time.sleep(2); print(\"Done\")'", "timeout": 5, "memory_mb": 512},
@@ -238,9 +239,9 @@ def example(format: str):
         click.echo(yaml.dump(example_data, default_flow_style=False))
 
 
-@cli.command()
-@click.argument("result_file", type=click.Path(exists=True))
-def show_results(result_file: str):
+@cli.command()  # type: ignore[misc]
+@click.argument("result_file", type=click.Path(exists=True))  # type: ignore[misc]
+def show_results(result_file: str) -> None:
     """Display results from a previous run"""
 
     result_path = Path(result_file)
@@ -248,7 +249,7 @@ def show_results(result_file: str):
     try:
         with open(result_path) as f:
             if result_path.suffix == ".json":
-                data = json.load(f)
+                data: dict[str, Any] = json.load(f)
             else:
                 data = yaml.safe_load(f)
 
@@ -272,7 +273,7 @@ def show_results(result_file: str):
         sys.exit(1)
 
 
-def parse_args():
+def parse_args() -> Any:
     """Parse command line arguments for compatibility with shell script interface."""
     import argparse
 
@@ -284,13 +285,13 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> int:
     """Main entry point for shell script compatibility."""
     from .guardian_prefect import ResourceLimits, run_with_guardian
 
     # If running as Click app
     if len(sys.argv) > 1 and sys.argv[1] in ["start", "run", "example", "show-results"]:
-        return cli()
+        return cli()  # type: ignore[no-any-return]
 
     # Otherwise, parse as simple command execution (shell script compatibility)
     args = parse_args()
