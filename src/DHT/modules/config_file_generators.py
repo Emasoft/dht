@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 
 def generate_ruff_config(project_path: Path) -> None:

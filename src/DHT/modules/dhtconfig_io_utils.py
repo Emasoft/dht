@@ -26,7 +26,7 @@ from typing import Any
 from DHT.modules.dhtconfig_models import HAS_YAML, DHTConfigConstants
 
 if HAS_YAML:
-    import yaml
+    import yaml  # type: ignore[import-untyped]
 
 
 class ConfigIOUtils:
