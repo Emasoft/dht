@@ -36,7 +36,7 @@ from typing import Any
 from unittest.mock import MagicMock
 
 # Platform uname mock that matches the actual structure
-PlatformUname = namedtuple("uname_result", ["system", "node", "release", "version", "machine", "processor"])
+PlatformUname = namedtuple("PlatformUname", ["system", "node", "release", "version", "machine", "processor"])
 
 
 def create_platform_uname_mock(

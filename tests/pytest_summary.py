@@ -22,7 +22,7 @@ class TestSummaryReporter:
         self.results: dict[str, list[tuple[str, str, float]]] = defaultdict(list)
         self.errors: dict[str, str] = {}
 
-    def add_result(self, nodeid: str, outcome: str, duration: float, error: str = None):
+    def add_result(self, nodeid: str, outcome: str, duration: float, error: str | None = None):
         """Add a test result."""
         # Parse nodeid to get file and test name
         parts = nodeid.split("::")

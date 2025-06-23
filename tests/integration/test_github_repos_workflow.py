@@ -84,7 +84,7 @@ class TestGitHubReposWorkflow:
     @pytest.fixture(scope="class")
     def test_dir(self, tmp_path_factory) -> Path:
         """Create temporary test directory."""
-        test_dir = tmp_path_factory.mktemp("github_repos_test")
+        test_dir: Path = tmp_path_factory.mktemp("github_repos_test")
         return test_dir
 
     @pytest.fixture(scope="class", autouse=True)
@@ -100,7 +100,7 @@ class TestGitHubReposWorkflow:
         os.chdir(original_dir)
 
     def run_dhtl_command(
-        self, dhtl_path: Path, command: str, args: list[str] = None, timeout: int = 300
+        self, dhtl_path: Path, command: str, args: list[str] | None = None, timeout: int = 300
     ) -> tuple[bool, str, float]:
         """
         Run a dhtl command and capture output.
