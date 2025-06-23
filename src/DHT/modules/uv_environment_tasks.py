@@ -130,7 +130,7 @@ def setup_project_environment(
         results["steps"]["uv_check"] = uv_check
 
         if not uv_check["available"]:
-            results["errors"].append("UV not available")
+            results["errors"].append("UV not available")  # type: ignore[attr-defined]
             return results
 
         # Detect or ensure Python version
@@ -178,7 +178,7 @@ def setup_project_environment(
 - Path: {venv_result.get("path", "N/A")}
 
 ## Dependencies
-- Installed: {results["steps"].get("dependencies", {}).get("success", False)}
+- Installed: {results["steps"].get("dependencies", {}).get("success", False)}  # type: ignore[attr-defined]
 
 ## Status
 Setup completed {"successfully" if results["success"] else "with errors"}
@@ -187,6 +187,6 @@ Setup completed {"successfully" if results["success"] else "with errors"}
 
     except Exception as e:
         logger.error(f"Setup failed: {e}")
-        results["errors"].append(str(e))
+        results["errors"].append(str(e))  # type: ignore[attr-defined]
 
     return results

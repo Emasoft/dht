@@ -180,7 +180,7 @@ def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
 class ActContainerRunner:
     """Runs act inside containers for complete isolation."""
 
-    def __init__(self, project_path: Path, runtime: str = "podman"):
+    def __init__(self, project_path: Path, runtime: str = "podman") -> None:
         self.project_path = Path(project_path).resolve()
         self.runtime = runtime
         self.image_name = "dht-act:latest"

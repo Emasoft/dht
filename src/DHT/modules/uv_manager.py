@@ -21,7 +21,7 @@ for DHT's environment management, dependency resolution, and project configurati
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from DHT.modules.uv_manager_deps import DependencyManager
 
@@ -58,7 +58,7 @@ class UVManager:
     - Lock file generation and validation
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
         self.uv_path = find_uv_executable(self.logger)
         self._min_uv_version = "0.4.0"  # Minimum required UV version
@@ -118,12 +118,12 @@ class UVManager:
 
     def ensure_python_version(self, version: str) -> Path:
         """Ensure specific Python version is available."""
-        return self.python_manager.ensure_python_version(version)
+        return cast(Path, self.python_manager.ensure_python_version(version))
 
     # Delegate to virtual environment manager
     def create_venv(self, project_path: Path, python_version: str | None = None, venv_path: Path | None = None) -> Path:
         """Create virtual environment for project."""
-        return self.venv_manager.create_venv(project_path, python_version, venv_path)
+        return cast(Path, self.venv_manager.create_venv(project_path, python_version, venv_path))
 
     # Delegate to dependency manager
     def install_dependencies(
@@ -138,7 +138,7 @@ class UVManager:
 
     def generate_lock_file(self, project_path: Path) -> Path:
         """Generate uv.lock file for reproducible installs."""
-        return self.deps_manager.generate_lock_file(project_path)
+        return cast(Path, self.deps_manager.generate_lock_file(project_path))
 
     def add_dependency(
         self, project_path: Path, package: str, dev: bool = False, extras: list[str] | None = None

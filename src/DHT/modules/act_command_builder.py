@@ -20,7 +20,7 @@ from DHT.modules.act_integration_models import ActConfig
 class ActCommandBuilder:
     """Builds act commands with appropriate options."""
 
-    def __init__(self, project_path: Path, config: ActConfig):
+    def __init__(self, project_path: Path, config: ActConfig) -> None:
         """Initialize command builder.
 
         Args:

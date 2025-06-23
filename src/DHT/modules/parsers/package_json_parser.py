@@ -37,7 +37,7 @@ class PackageJsonParser(BaseParser):
     - Repository and author information
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
     def parse_file(self, file_path: Path) -> dict[str, Any]:

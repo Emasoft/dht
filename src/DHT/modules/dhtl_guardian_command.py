@@ -60,7 +60,7 @@ def guardian_command(*args, **kwargs) -> int:
         return 1
 
 
-def show_guardian_help():
+def show_guardian_help() -> None:
     """Show guardian command help."""
     print("""
 Guardian Command - Process resource management

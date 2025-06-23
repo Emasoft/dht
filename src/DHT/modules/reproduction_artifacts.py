@@ -32,11 +32,13 @@ from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
 class ReproductionArtifactCreator:
     """Creates artifacts for environment reproduction."""
 
-    def __init__(self, version_critical_tools: set):
+    def __init__(self, version_critical_tools: set[Any]) -> None:
         """Initialize the artifact creator."""
         self.version_critical_tools = version_critical_tools
 
-    def create_reproduction_artifacts(self, snapshot: EnvironmentSnapshot, results: dict[str, Any], output_dir: Path):
+    def create_reproduction_artifacts(
+        self, snapshot: EnvironmentSnapshot, results: dict[str, Any], output_dir: Path
+    ) -> None:
         """Create Prefect artifacts with reproduction information."""
         # Create reproduction guide markdown
         guide = self._generate_reproduction_guide(snapshot, results)

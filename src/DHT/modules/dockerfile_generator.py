@@ -25,7 +25,7 @@ import logging
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 try:
     import tomllib  # Python 3.11+
@@ -46,7 +46,7 @@ class ProjectType(Enum):
 class DockerfileGenerator:
     """Generates Dockerfiles based on project analysis."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize DockerfileGenerator."""
         self.logger = logging.getLogger(__name__)
         self.templates = self._init_templates()
@@ -465,7 +465,7 @@ CMD {cmd}
 
         # Generate new Dockerfile
         project_info = self.analyze_project(project_path)
-        return self.generate_dockerfile(project_info)
+        return cast(str, self.generate_dockerfile(project_info))
 
     @task
     def generate_dockerfile(

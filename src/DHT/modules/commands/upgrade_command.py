@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 class UpgradeCommand:
     """Upgrade command implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize upgrade command."""
         self.logger = logging.getLogger(__name__)
 

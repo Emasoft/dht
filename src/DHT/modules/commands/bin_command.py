@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class BinCommand:
     """Bin command implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize bin command."""
         self.logger = logging.getLogger(__name__)
 

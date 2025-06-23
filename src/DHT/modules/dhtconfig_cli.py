@@ -28,7 +28,7 @@ if HAS_YAML:
     import yaml
 
 
-def main():
+def main() -> None:
     """CLI interface for dhtconfig operations."""
     parser = argparse.ArgumentParser(description="DHT Configuration Generator and Manager")
 

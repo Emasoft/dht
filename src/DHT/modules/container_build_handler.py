@@ -20,12 +20,12 @@ from pathlib import Path
 class ContainerBuildHandler:
     """Handles container builds for DHT projects."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         self.project_path = Path(project_path)
         self.venv_path = self.project_path / ".venv"
         self.container_config_path = self.venv_path / "dht-container"
 
-    def setup_container_config(self):
+    def setup_container_config(self) -> None:
         """Set up project-local container configuration."""
         self.container_config_path.mkdir(parents=True, exist_ok=True)
 
@@ -145,7 +145,7 @@ class ContainerBuildHandler:
 
         return instructions
 
-    def create_rootless_config(self):
+    def create_rootless_config(self) -> None:
         """Create configuration for rootless container builds."""
         config_dir = self.container_config_path / "rootless"
         config_dir.mkdir(exist_ok=True)

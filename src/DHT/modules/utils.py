@@ -68,7 +68,7 @@ def check_command_args(args: list[str]) -> tuple[list[str], dict[str, Any]]:
 class FormatCommand:
     """Handler for the format command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the format command handler."""
         # Get memory limit from environment
         self.python_mem_limit = int(os.environ.get("PYTHON_MEM_LIMIT", "2048"))

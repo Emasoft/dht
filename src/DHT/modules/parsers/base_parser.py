@@ -42,7 +42,7 @@ class BaseParser(ABC):
     - Error handling and logging
     """
 
-    def __init__(self, language: str | None = None):
+    def __init__(self, language: str | None = None) -> None:
         """
         Initialize the parser.
 
@@ -59,7 +59,7 @@ class BaseParser(ABC):
             except Exception as e:
                 self.logger.warning(f"Failed to initialize tree-sitter for {language}: {e}")
 
-    def _init_tree_sitter(self, language: str):
+    def _init_tree_sitter(self, language: str) -> None:
         """Initialize tree-sitter parser for the given language"""
         # Look for compiled language library
         lib_paths = [
@@ -73,7 +73,7 @@ class BaseParser(ABC):
                 try:
                     language_obj = tree_sitter.Language(str(lib_path), language)
                     self.parser = tree_sitter.Parser()
-                    self.parser.set_language(language_obj)
+                    self.parser.set_language(language_obj)  # type: ignore[attr-defined]
                     self.language_obj = language_obj
                     self.logger.info(f"Initialized tree-sitter for {language} from {lib_path}")
                     return

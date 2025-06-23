@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 environment_verification_utils.py - Utilities for environment verification  This module contains utilities for verifying environment compatibility including platform, Python version, and tool version verification.
 
@@ -37,12 +39,12 @@ from DHT.modules.uv_prefect_tasks import check_uv_available, ensure_python_versi
 class EnvironmentVerificationUtils:
     """Utilities for verifying environment compatibility."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize environment verification utilities."""
         self.logger = None
         self.tool_manager = ToolVersionManager()
 
-    def _get_logger(self):
+    def _get_logger(self) -> None:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -53,7 +55,7 @@ class EnvironmentVerificationUtils:
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    def verify_platform_compatibility(self, snapshot: EnvironmentSnapshot, result: ReproductionResult):
+    def verify_platform_compatibility(self, snapshot: EnvironmentSnapshot, result: ReproductionResult) -> None:
         """Verify platform compatibility."""
         is_compatible, warnings = verify_platform_compatibility(snapshot.platform, platform.system().lower())
 
@@ -64,7 +66,9 @@ class EnvironmentVerificationUtils:
                 f"Platform incompatibility: {snapshot.platform} -> {platform.system().lower()}"
             )
 
-    def verify_python_version(self, snapshot: EnvironmentSnapshot, result: ReproductionResult, auto_install: bool):
+    def verify_python_version(
+        self, snapshot: EnvironmentSnapshot, result: ReproductionResult, auto_install: bool
+    ) -> None:
         """Verify Python version compatibility."""
         current_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
         expected_version = snapshot.python_version
@@ -93,7 +97,7 @@ class EnvironmentVerificationUtils:
                         f"Python version mismatch: need {expected_version}, have {current_version}"
                     )
 
-    def _install_python_version(self, snapshot: EnvironmentSnapshot, result: ReproductionResult):
+    def _install_python_version(self, snapshot: EnvironmentSnapshot, result: ReproductionResult) -> None:
         """Attempt to install the required Python version."""
         logger = self._get_logger()
 
@@ -162,7 +166,7 @@ class EnvironmentVerificationUtils:
                 result.tools_verified[tool] = False
                 result.warnings.append(f"Error checking {tool}: {e}")
 
-    def _install_tool(self, tool: str, version: str, result: ReproductionResult):
+    def _install_tool(self, tool: str, version: str, result: ReproductionResult) -> Any:
         """Attempt to install a missing tool."""
         logger = self._get_logger()
 

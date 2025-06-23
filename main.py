@@ -7,7 +7,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """
 
 
-def main():
+def main() -> None:
     print("Hello from dht!")
 
 

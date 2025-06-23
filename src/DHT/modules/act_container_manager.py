@@ -28,7 +28,7 @@ from DHT.modules.act_integration_models import ActConfig, ContainerSetupResult
 class ActContainerManager:
     """Manages container environments for act."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         """Initialize container manager.
 
         Args:

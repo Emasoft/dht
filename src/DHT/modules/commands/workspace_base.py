@@ -38,7 +38,7 @@ class WorkspaceBase:
     # Default timeout in seconds (30 minutes as per CLAUDE.md)
     DEFAULT_TIMEOUT = 1800  # 30 minutes
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize workspace base."""
         self.logger = logging.getLogger(__name__)
 

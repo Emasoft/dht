@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any, cast
+
 """
 environment_capture_utils.py - Utilities for capturing environment details  This module contains utilities for capturing various aspects of the development environment including Python packages, system tools, and environment variables.
 
@@ -37,11 +39,11 @@ from DHT.modules.uv_prefect_tasks import check_uv_available
 class EnvironmentCaptureUtils:
     """Utilities for capturing environment details."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize environment capture utilities."""
         self.logger = None
 
-    def _get_logger(self):
+    def _get_logger(self) -> None:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -66,13 +68,13 @@ class EnvironmentCaptureUtils:
                 with open(pyproject_path, "rb") as f:
                     data = tomllib.load(f)
 
-                return data.get("project", {}).get("version", "unknown")
+                return cast(str, data.get("project", {}).get("version", "unknown"))
         except Exception:
             pass
 
         return "development"
 
-    def capture_python_packages(self, snapshot: EnvironmentSnapshot):
+    def capture_python_packages(self, snapshot: EnvironmentSnapshot) -> Any:
         """Capture Python package information."""
         logger = self._get_logger()
 
@@ -108,7 +110,7 @@ class EnvironmentCaptureUtils:
         except Exception as e:
             logger.debug(f"UV package listing failed: {e}")
 
-    def capture_environment_variables(self, snapshot: EnvironmentSnapshot):
+    def capture_environment_variables(self, snapshot: EnvironmentSnapshot) -> None:
         """Capture relevant environment variables."""
         # Important environment variables for development
         important_vars = {

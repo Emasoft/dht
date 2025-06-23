@@ -12,14 +12,14 @@ import sys
 from pathlib import Path
 
 
-def hello():
+def hello() -> str:
     """Simple hello world function."""
     print("🎯 Hello from demo-core package!")
     print(f"Running from: {Path(__file__).parent.parent}")
-    return 0
+    return "Hello"
 
 
-def info():
+def info() -> None:
     """Display information about the core package."""
     print("📦 Demo Core Package Information")
     print("=" * 40)

@@ -44,7 +44,7 @@ class BashParser(BaseParser):
     - Control structures
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the Bash parser."""
         self.logger = logging.getLogger(__name__)
         self.utils = BashParserUtils()

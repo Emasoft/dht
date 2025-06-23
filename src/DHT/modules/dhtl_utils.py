@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from typing import Any
+
 """
 Dhtl Utils module.
 
@@ -70,7 +72,7 @@ def file_exists_in_tree(directory: str, filename: str, max_depth: int = 4) -> bo
 class LintCommand:
     """Handler for the lint command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the lint command handler."""
         # Import these here to avoid circular imports
         from .dhtl_environment_utils import find_project_root, find_virtual_env
@@ -114,7 +116,7 @@ class LintCommand:
         else:
             return self._run_individual_linters(project_root, tools)
 
-    def _check_tools(self, project_root: Path, venv_bin_path: Path, venv_scripts_path: Path) -> dict:
+    def _check_tools(self, project_root: Path, venv_bin_path: Path, venv_scripts_path: Path) -> dict[str, Any]:
         """Check which linting tools are available."""
         tools = {
             "use_precommit": False,
@@ -217,7 +219,7 @@ class LintCommand:
             log_success("Pre-commit checks passed successfully.")
             return 0
 
-    def _run_individual_linters(self, project_root: Path, tools: dict) -> int:
+    def _run_individual_linters(self, project_root: Path, tools: dict[str, Any]) -> int:
         """Run individual linters if pre-commit wasn't used."""
         log_info("No pre-commit config found or pre-commit command unavailable. Running individual linters...")
 

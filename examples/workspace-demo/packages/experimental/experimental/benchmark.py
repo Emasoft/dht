@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 
-def run():
+def run() -> None:
     """Run performance benchmarks."""
     print("⚡ Experimental Benchmark Suite")
     print("=" * 40)
@@ -31,7 +31,7 @@ def run():
 
     print(f"\nRunning from: {Path(__file__).parent.parent}")
     print("\n🏁 Benchmarks complete!")
-    return 0
+    return
 
 
 if __name__ == "__main__":

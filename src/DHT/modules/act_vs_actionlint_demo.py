@@ -67,7 +67,7 @@ jobs:
 """
 
 
-def demo_actionlint_vs_act():
+def demo_actionlint_vs_act() -> None:
     """Demonstrate the difference between actionlint and act."""
 
     console.print(
@@ -165,7 +165,7 @@ def demo_actionlint_vs_act():
         )
 
 
-def show_dht_usage():
+def show_dht_usage() -> None:
     """Show how DHT uses both tools."""
     console.print("\n[bold cyan]🔧 DHT Integration:[/bold cyan]\n")
 

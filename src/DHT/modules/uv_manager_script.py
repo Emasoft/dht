@@ -30,7 +30,7 @@ from prefect import task
 class ScriptExecutor:
     """Manages script execution for UV."""
 
-    def __init__(self, run_command_func):
+    def __init__(self, run_command_func) -> None:
         """
         Initialize script executor.
 

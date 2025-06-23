@@ -17,7 +17,7 @@ import sys
 from collections import defaultdict
 
 
-def main():
+def main() -> int:
     """Run tests with compact table output."""
     args = sys.argv[1:] if len(sys.argv) > 1 else []
 

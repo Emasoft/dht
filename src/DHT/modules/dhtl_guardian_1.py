@@ -27,7 +27,7 @@ from .dhtl_error_handling import log_error, log_info
 class ProcessGuardian:
     """Process guardian for resource management."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the process guardian."""
         self.default_mem_limit = int(os.environ.get("DEFAULT_MEM_LIMIT", "2048"))
 

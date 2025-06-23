@@ -31,7 +31,7 @@ from prefect import flow
 class ProjectWorkflowManager:
     """Manages project setup workflows for UV."""
 
-    def __init__(self, python_manager, venv_manager, deps_manager):
+    def __init__(self, python_manager, venv_manager, deps_manager) -> None:
         """
         Initialize project workflow manager.
 
@@ -148,6 +148,6 @@ class ProjectWorkflowManager:
         self._generate_lock_if_needed(project_path, results)
 
         # Set overall success
-        results["success"] = all(step.get("success", False) for step in results["steps"]) if results["steps"] else True
+        results["success"] = all(step.get("success", False) for step in results["steps"]) if results["steps"] else True  # type: ignore[attr-defined]
 
         return results

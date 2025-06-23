@@ -39,7 +39,7 @@ except ImportError:
 __version__ = "1.0.0"
 
 
-def main(argv=None):
+def main(argv=None) -> None:
     """Main entry point for DHT."""
     if argv is None:
         argv = sys.argv
@@ -78,7 +78,7 @@ def main(argv=None):
         command_args = remaining[1:]
 
     # Run the command
-    return launcher.run_command(command, command_args)
+    return launcher.run_command(command, command_args)  # type: ignore[return-value]
 
 
 if __name__ == "__main__":

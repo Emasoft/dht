@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class CheckCommand:
     """Check command implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize check command."""
         self.logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ class CheckCommand:
                 text=True,
                 check=False,  # Don't raise on non-zero exit
                 timeout=600,  # 10 minutes timeout
-                env={**subprocess.os.environ, **env},
+                env={**subprocess.os.environ, **env},  # type: ignore[attr-defined]
             )
 
             # Mypy returns 0 for success, 1 for errors found, 2 for issues

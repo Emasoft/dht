@@ -259,7 +259,7 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
     }
 
 
-def main():
+def main() -> None:
     """CLI interface for universal build."""
     import argparse
 

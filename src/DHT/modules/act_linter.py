@@ -27,7 +27,7 @@ from typing import Any
 class ActLinter:
     """Handles linting of GitHub Actions workflows."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         """Initialize linter.
 
         Args:
@@ -123,7 +123,7 @@ class ActLinter:
 
         if not self._check_docker_available():
             result["success"] = False
-            result["errors"].append("Docker is not available")
+            result["errors"].append("Docker is not available")  # type: ignore[attr-defined]
             return result
 
         # Create temporary directory for Docker mount
@@ -136,7 +136,7 @@ class ActLinter:
             workflow_files = list(self.workflows_path.glob("*.y*ml"))
             for wf in workflow_files:
                 (tmp_workflows / wf.name).write_text(wf.read_text())
-                result["linted_files"].append(wf.name)
+                result["linted_files"].append(wf.name)  # type: ignore[attr-defined]
 
             # Build Docker command
             cmd = ["docker", "run", "--rm", "-v", f"{tmp_path}:/work", "-w", "/work", f"rhysd/actionlint:{tag}"]
@@ -152,11 +152,11 @@ class ActLinter:
                     self._parse_actionlint_output(proc.stdout, result)
 
                 if proc.stderr:
-                    result["warnings"].append(f"Docker stderr: {proc.stderr}")
+                    result["warnings"].append(f"Docker stderr: {proc.stderr}")  # type: ignore[attr-defined]
 
             except Exception as e:
                 result["success"] = False
-                result["errors"].append(f"Docker execution failed: {str(e)}")
+                result["errors"].append(f"Docker execution failed: {str(e)}")  # type: ignore[attr-defined]
 
         return result
 

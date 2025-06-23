@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from typing import Any
+
 """
 DHT Common Utilities Module.
 
@@ -149,7 +151,7 @@ def get_venv_executable(name: str, project_root: Path | None = None) -> str | No
     return shutil.which(name)
 
 
-def setup_environment() -> dict:
+def setup_environment() -> dict[str, Any]:
     """
     Set up common environment variables.
 

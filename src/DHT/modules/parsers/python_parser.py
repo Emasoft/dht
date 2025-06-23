@@ -33,7 +33,7 @@ class PythonParser(BaseParser):
     - Docstrings and comments
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.logger = logging.getLogger(__name__)
 
@@ -320,7 +320,7 @@ class PythonParser(BaseParser):
         """Extract module-level variables"""
         variables = []
 
-        for node in tree.body:
+        for node in tree.body:  # type: ignore[attr-defined]
             if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
                 variables.append(
                     {

@@ -29,7 +29,7 @@ from DHT.modules.act_integration_models import ActCheckResult, ActConfig
 class ActSetupManager:
     """Manages act installation and setup."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         """Initialize setup manager.
 
         Args:

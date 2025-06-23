@@ -25,7 +25,7 @@ from DHT.modules.uv_manager_exceptions import UVError
 class VirtualEnvironmentManager:
     """Manages virtual environment operations for UV."""
 
-    def __init__(self, run_command_func):
+    def __init__(self, run_command_func) -> None:
         """
         Initialize virtual environment manager.
 

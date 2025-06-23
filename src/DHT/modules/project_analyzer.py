@@ -58,7 +58,7 @@ FRAMEWORK_MODULES = {
 class ProjectAnalyzer:
     """Basic project analyzer for DHT configuration generation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize project analyzer."""
         self.logger = logging.getLogger(__name__)
         self.python_parser = PythonParser()

@@ -20,7 +20,7 @@ It provides a registry for all DHT commands and dispatches them appropriately.
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 # Import the command registry
 from .command_registry import CommandRegistry
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class CommandDispatcher:
     """Central command dispatcher for DHT."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the command dispatcher."""
         # Use the command registry
         self.registry = CommandRegistry()
@@ -50,7 +50,7 @@ class CommandDispatcher:
         """Dispatch a command with arguments."""
         if command not in self.commands:
             # Unknown command - try to run it as a script
-            self.logger.info(f"Unknown command '{command}', attempting to run as script")
+            self.logger.info(f"Unknown command '{command}', attempting to run as script")  # type: ignore[attr-defined]
             # Pass to run command
             if "run" in self.commands:
                 run_handler = self.commands["run"]["handler"]
@@ -119,7 +119,7 @@ class CommandDispatcher:
                         return 0 if result else 1
                 else:
                     # Other bound methods - call with args list
-                    return handler(args) if args else handler()
+                    return cast(int, handler(args) if args else handler())
             else:
                 # Regular functions
                 # Check if function expects no arguments
@@ -128,10 +128,10 @@ class CommandDispatcher:
                 sig = inspect.signature(handler)
                 if not sig.parameters:
                     # Function takes no arguments
-                    return handler()
+                    return cast(int, handler())
                 else:
                     # Function takes arguments
-                    return handler(args) if args else handler()
+                    return cast(int, handler(args) if args else handler())
 
         except KeyboardInterrupt:
             print("\n⚠️  Interrupted by user")

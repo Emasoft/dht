@@ -40,7 +40,7 @@ from .bash_parser_utils import BashParserUtils
 class TreeSitterBashParser:
     """Tree-sitter based parser for Bash scripts."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize tree-sitter parser."""
         self.logger = logging.getLogger(__name__)
         self.parser = None

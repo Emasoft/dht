@@ -36,7 +36,7 @@ class Colors:
     UNDERLINE = "\033[4m"
 
     @staticmethod
-    def disable():
+    def disable() -> None:
         """Disable colors for environments that don't support them."""
         Colors.HEADER = ""
         Colors.BLUE = ""

@@ -37,7 +37,7 @@ def run_pytest_json(test_path):
         return None
 
 
-def run_tests_summary():
+def run_tests_summary() -> None:
     """Run all tests and generate summary."""
     test_dir = Path("DHT/tests/unit")
 

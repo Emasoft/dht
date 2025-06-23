@@ -30,7 +30,7 @@ from .bash_parser_utils import BashParserUtils
 class RegexBashParser:
     """Regex-based fallback parser for Bash scripts."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize regex parser."""
         self.utils = BashParserUtils()
 

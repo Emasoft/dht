@@ -28,7 +28,7 @@ from DHT.modules.uv_manager import UVManager
 class BuildCommand:
     """Implementation of dhtl build command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize build command."""
         self.logger = logging.getLogger(__name__)
 

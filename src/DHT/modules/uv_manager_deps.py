@@ -33,7 +33,7 @@ from DHT.modules.uv_manager_utils import load_toml
 class DependencyManager:
     """Manages dependency operations for UV."""
 
-    def __init__(self, run_command_func):
+    def __init__(self, run_command_func) -> None:
         """
         Initialize dependency manager.
 

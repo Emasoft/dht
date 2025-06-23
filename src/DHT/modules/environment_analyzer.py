@@ -33,7 +33,7 @@ from DHT.modules.project_analyzer import ProjectAnalyzer
 class EnvironmentAnalyzer:
     """Analyzes project environment and determines requirements."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the environment analyzer."""
         self.analyzer = ProjectAnalyzer()
 

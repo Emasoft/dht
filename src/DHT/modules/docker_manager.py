@@ -43,7 +43,7 @@ class DockerError(Exception):
 class DockerManager:
     """Manages Docker operations for container deployment."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize DockerManager."""
         self.logger = logging.getLogger(__name__)
         self._client = None

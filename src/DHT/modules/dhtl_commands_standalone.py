@@ -29,7 +29,7 @@ from .dhtl_error_handling import log_error, log_info, log_warning
 from .guardian_prefect import ResourceLimits, guardian_sequential_flow
 
 
-def _normalize_args(args, kwargs):
+def _normalize_args(args, kwargs) -> None:
     """Normalize arguments to handle both list and *args calling conventions.
 
     Args:
@@ -40,11 +40,11 @@ def _normalize_args(args, kwargs):
         list: Normalized list of arguments
     """
     if args is None:
-        return []
+        return []  # type: ignore[return-value]
     elif not isinstance(args, list):
         # If called with *args, convert to list
-        return [args] + list(kwargs.get("args", []))
-    return args
+        return [args] + list(kwargs.get("args", []))  # type: ignore[return-value]
+    return args  # type: ignore[return-value]
 
 
 def python_command(args=None, **kwargs) -> int:

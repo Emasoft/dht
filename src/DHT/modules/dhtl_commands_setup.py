@@ -45,7 +45,7 @@ from DHT.modules.uv_manager_exceptions import UVError
 class SetupCommand:
     """Implementation of dhtl setup command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize setup command."""
         self.logger = logging.getLogger(__name__)
 

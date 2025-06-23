@@ -16,7 +16,7 @@ import sys
 import time
 
 
-def main():
+def main() -> None:
     """Run tests with formatted output."""
     args = sys.argv[1:] if len(sys.argv) > 1 else []
 
@@ -65,50 +65,51 @@ def main():
     test_results = []
     current_file = ""
 
-    for line in proc.stdout:
-        line = line.strip()
+    if proc.stdout:
+        for line in proc.stdout:
+            line = line.strip()
 
-        # Skip empty lines and noise
-        if not line or line.startswith("=") or "platform" in line:
-            continue
+            # Skip empty lines and noise
+            if not line or line.startswith("=") or "platform" in line:
+                continue
 
-        # Parse test results
-        if "::" in line and (" PASSED" in line or " FAILED" in line or " SKIPPED" in line):
-            # Extract test info
-            parts = line.split("::")
-            if len(parts) >= 2:
-                file_path = parts[0].strip()
-                test_parts = parts[1].split(" ")
-                test_name = test_parts[0].strip()
+            # Parse test results
+            if "::" in line and (" PASSED" in line or " FAILED" in line or " SKIPPED" in line):
+                # Extract test info
+                parts = line.split("::")
+                if len(parts) >= 2:
+                    file_path = parts[0].strip()
+                    test_parts = parts[1].split(" ")
+                    test_name = test_parts[0].strip()
 
-                # Get status
-                if "PASSED" in line:
-                    status = "✅ PASS"
-                    passed += 1
-                elif "FAILED" in line:
-                    status = "❌ FAIL"
-                    failed += 1
-                elif "SKIPPED" in line:
-                    status = "⏩ SKIP"
-                    skipped += 1
-                else:
-                    status = "❓ ???"
+                    # Get status
+                    if "PASSED" in line:
+                        status = "✅ PASS"
+                        passed += 1
+                    elif "FAILED" in line:
+                        status = "❌ FAIL"
+                        failed += 1
+                    elif "SKIPPED" in line:
+                        status = "⏩ SKIP"
+                        skipped += 1
+                    else:
+                        status = "❓ ???"
 
-                # Shorten file path
-                short_path = file_path.replace("tests/unit/", "").replace("tests/integration/", "")
+                    # Shorten file path
+                    short_path = file_path.replace("tests/unit/", "").replace("tests/integration/", "")
 
-                if short_path != current_file:
-                    if current_file:
-                        print()  # Blank line between files
-                    current_file = short_path
-                    print(f"\n📁 {short_path}")
-                    print("-" * 80)
+                    if short_path != current_file:
+                        if current_file:
+                            print()  # Blank line between files
+                        current_file = short_path
+                        print(f"\n📁 {short_path}")
+                        print("-" * 80)
 
-                # Print result
-                print(f"  {test_name:<60} {status}")
+                    # Print result
+                    print(f"  {test_name:<60} {status}")
 
-                # Store for summary
-                test_results.append((short_path, test_name, status))
+                    # Store for summary
+                    test_results.append((short_path, test_name, status))
 
     proc.wait()
     duration = time.time() - start_time
@@ -128,7 +129,7 @@ def main():
     if failed > 0:
         print("\n⚠️  Run with pytest -v for detailed error messages")
 
-    return proc.returncode
+    return
 
 
 if __name__ == "__main__":

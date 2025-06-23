@@ -35,7 +35,7 @@ from DHT.modules.uv_manager import UVManager
 class SyncCommand:
     """Implementation of dhtl sync command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize sync command."""
         self.logger = logging.getLogger(__name__)
 

@@ -56,7 +56,7 @@ def workflows_command(*args, **kwargs) -> int:
         return 1
 
 
-def show_workflows_help():
+def show_workflows_help() -> None:
     """Show workflows command help."""
     print("""
 Workflows Command - GitHub Actions management

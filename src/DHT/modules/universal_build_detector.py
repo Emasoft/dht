@@ -12,7 +12,7 @@ Detects project type and returns appropriate build commands.
 """
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -24,15 +24,15 @@ class BuildConfig:
     build_tool: str
     build_commands: list[str]
     artifacts_path: str | None = None
-    pre_build_commands: list[str] = None
-    post_build_commands: list[str] = None
+    pre_build_commands: list[str] = field(default_factory=list)
+    post_build_commands: list[str] = field(default_factory=list)
     notes: str = ""
 
 
 class UniversalBuildDetector:
     """Detects project type and provides build configuration."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         self.project_path = Path(project_path)
 
     def detect_build_config(self) -> BuildConfig | None:
@@ -401,7 +401,7 @@ class UniversalBuildDetector:
         }
 
 
-def main():
+def main() -> None:
     """Test the build detector."""
     import sys
 

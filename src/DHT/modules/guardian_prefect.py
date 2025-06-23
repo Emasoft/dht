@@ -64,7 +64,7 @@ class GuardianResult:
 class ResourceLimits:
     """Resource limits configuration for backward compatibility."""
 
-    def __init__(self, memory_mb: int = 2048, cpu_percent: int = 80, timeout: int = 900):
+    def __init__(self, memory_mb: int = 2048, cpu_percent: int = 80, timeout: int = 900) -> None:
         self.memory_mb = memory_mb
         self.cpu_percent = cpu_percent
         self.timeout = timeout
@@ -260,7 +260,7 @@ def monitor_process(process: subprocess.Popen, limits: Any) -> dict[str, int | s
         raise
 
 
-def kill_process_tree(pid: int):
+def kill_process_tree(pid: int) -> None:
     """Kill a process and all its children"""
     try:
         parent = psutil.Process(pid)
@@ -353,7 +353,7 @@ def run_with_guardian(
 
 @flow(name="guardian-sequential", description="Run commands sequentially with resource management")
 def guardian_sequential_flow(
-    commands: list[str | dict[str, any]], stop_on_failure: bool = True, default_limits: Any | None = None
+    commands: list[str | dict[str, Any]], stop_on_failure: bool = True, default_limits: Any | None = None
 ) -> list[dict[str, int | str | float]]:
     """Process commands sequentially with resource management"""
     logger = get_run_logger()
@@ -411,7 +411,7 @@ def guardian_sequential_flow(
 
 @flow(name="guardian-batch", description="Run commands in parallel batches")
 def guardian_batch_flow(
-    commands: list[str | dict[str, any]], batch_size: int = 5, default_limits: Any | None = None
+    commands: list[str | dict[str, Any]], batch_size: int = 5, default_limits: Any | None = None
 ) -> list[dict[str, int | str | float]]:
     """Process commands in parallel batches"""
     logger = get_run_logger()
@@ -441,7 +441,7 @@ def guardian_batch_flow(
                 command = cmd.get("command")
 
                 class CustomLimits:
-                    def __init__(self, memory_mb, cpu_percent, timeout):
+                    def __init__(self, memory_mb, cpu_percent, timeout) -> None:
                         self.memory_mb = memory_mb
                         self.cpu_percent = cpu_percent
                         self.timeout = timeout
@@ -477,7 +477,7 @@ def guardian_batch_flow(
 
 
 @task(name="save-results", description="Save execution results to file")
-def save_results(results: list[dict], output_path: Path):
+def save_results(results: list[dict], output_path: Path) -> None:
     """Save execution results to YAML file"""
     logger = get_run_logger()
 

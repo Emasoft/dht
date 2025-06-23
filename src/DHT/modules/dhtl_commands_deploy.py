@@ -37,7 +37,7 @@ from DHT.modules.dockerfile_generator import DockerfileGenerator
 class DeployCommand:
     """Implementation of dhtl deploy_project_in_container command."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize deploy command."""
         self.logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ class DeployCommand:
 
         project_path = Path(project_path).resolve()
 
-        if not project_path.exists():
+        if not project_path.exists():  # type: ignore[attr-defined]
             return {"success": False, "error": f"Project path does not exist: {project_path}"}
 
         # Initialize components
@@ -96,7 +96,7 @@ class DeployCommand:
                 project_info["python_version"] = python_version
 
             # Generate image tag
-            project_name = project_info.get("name", project_path.name)
+            project_name = project_info.get("name", project_path.name)  # type: ignore[attr-defined]
             image_tag = f"dht-{project_name}:latest"
             container_name = f"dht-{project_name}-container"
 

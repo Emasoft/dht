@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class FmtCommand:
     """Fmt command implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize fmt command."""
         self.logger = logging.getLogger(__name__)
 

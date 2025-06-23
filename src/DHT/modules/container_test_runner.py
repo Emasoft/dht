@@ -44,7 +44,7 @@ class TestFramework(Enum):
 class ContainerTestRunner:
     """Runs tests in Docker containers and formats results."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize ContainerTestRunner."""
         self.logger = logging.getLogger(__name__)
         self.docker_manager = DockerManager()

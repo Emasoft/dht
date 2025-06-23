@@ -27,7 +27,7 @@ from DHT.modules.act_integration_models import WorkflowInfo
 class ActWorkflowManager:
     """Manages GitHub Actions workflows."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         """Initialize workflow manager.
 
         Args:

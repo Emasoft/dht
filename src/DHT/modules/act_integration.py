@@ -51,7 +51,7 @@ except ImportError:
 class ActIntegration:
     """Integrates act with DHT for local GitHub Actions testing."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path) -> None:
         self.project_path = Path(project_path).resolve()
         self.workflows_path = self.project_path / ".github" / "workflows"
         self.venv_path = self.project_path / ".venv"
@@ -200,7 +200,7 @@ def setup_act_environment(project_path: Path, config: ActConfig | None = None) -
 
     # Install gh extension if available and not installed
     availability = integration.check_act_available()
-    if not availability["gh_extension"] and availability.get("gh_available"):
+    if not availability["gh_extension"] and availability.get("gh_available"):  # type: ignore[attr-defined]
         logger.info("Installing gh act extension...")
         if integration.install_gh_act_extension():
             logger.info("✅ gh act extension installed")
@@ -309,7 +309,7 @@ def act_workflow_flow(
     console.print(
         Panel.fit(
             f"🎬 DHT Act Integration\n"
-            f"📁 Project: {project_path.name}\n"
+            f"📁 Project: {project_path.name}\n"  # type: ignore[attr-defined]
             f"🎯 Event: {event}\n\n"
             f"[dim]Act runs workflows locally, simulating GitHub Actions.\n"
             f"For syntax validation only, use --lint with actionlint.[/dim]",
@@ -432,7 +432,7 @@ def act_workflow_flow(
     return result
 
 
-def main():
+def main() -> None:
     """CLI interface for act integration."""
     import argparse
 

@@ -45,17 +45,17 @@ logger = logging.getLogger(__name__)
 class CommandRunner:
     """Common runner for all DHT commands using Prefect."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the command runner."""
         self.logger = logging.getLogger(__name__)
         self._setup_signal_handlers()
         self._active_threads = set()
         self._cleanup_lock = threading.Lock()
 
-    def _setup_signal_handlers(self):
+    def _setup_signal_handlers(self) -> None:
         """Set up signal handlers for graceful shutdown."""
 
-        def signal_handler(signum, frame):
+        def signal_handler(signum, frame) -> None:
             self.logger.info(f"Received signal {signum}, initiating graceful shutdown...")
             self._cleanup_resources()
             sys.exit(0)
@@ -63,7 +63,7 @@ class CommandRunner:
         signal.signal(signal.SIGINT, signal_handler)
         signal.signal(signal.SIGTERM, signal_handler)
 
-    def _cleanup_resources(self):
+    def _cleanup_resources(self) -> None:
         """Clean up resources to prevent leaks."""
         with self._cleanup_lock:
             # Terminate active threads
@@ -76,7 +76,7 @@ class CommandRunner:
             # Clean up any temporary files
             self._cleanup_temp_files()
 
-    def _cleanup_temp_files(self):
+    def _cleanup_temp_files(self) -> None:
         """Clean up temporary files created during execution."""
         temp_patterns = [".dht_tmp_*", ".pytest_cache", "__pycache__", "*.pyc", ".coverage*"]
 
@@ -94,7 +94,7 @@ class CommandRunner:
                     self.logger.debug(f"Failed to clean up {path}: {e}")
 
     @contextmanager
-    def _resource_guard(self, command_name: str):
+    def _resource_guard(self, command_name: str) -> None:
         """Context manager to ensure resource cleanup."""
         # Record start state
         start_memory = psutil.Process().memory_info().rss / 1024 / 1024  # MB

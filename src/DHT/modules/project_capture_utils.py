@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 project_capture_utils.py - Utilities for capturing project information  This module contains utilities for capturing project-specific information including configuration files, lock files, and project metadata.
 
@@ -34,13 +36,13 @@ from DHT.modules.lock_file_manager import LockFileManager
 class ProjectCaptureUtils:
     """Utilities for capturing project information."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize project capture utilities."""
         self.logger = None
         self.configurator = EnvironmentConfigurator()
         self.lock_manager = LockFileManager()
 
-    def _get_logger(self):
+    def _get_logger(self) -> None:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -51,7 +53,7 @@ class ProjectCaptureUtils:
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    def capture_project_info(self, snapshot: EnvironmentSnapshot, project_path: Path, include_configs: bool):
+    def capture_project_info(self, snapshot: EnvironmentSnapshot, project_path: Path, include_configs: bool) -> None:
         """Capture project-specific information."""
         logger = self._get_logger()
 
@@ -76,7 +78,7 @@ class ProjectCaptureUtils:
         if include_configs:
             self._capture_config_files(snapshot, project_path)
 
-    def _capture_lock_files(self, snapshot: EnvironmentSnapshot, project_path: Path):
+    def _capture_lock_files(self, snapshot: EnvironmentSnapshot, project_path: Path) -> None:
         """Capture project lock files."""
         logger = self._get_logger()
 
@@ -89,7 +91,7 @@ class ProjectCaptureUtils:
         except Exception as e:
             logger.warning(f"Failed to capture lock files: {e}")
 
-    def _capture_config_files(self, snapshot: EnvironmentSnapshot, project_path: Path):
+    def _capture_config_files(self, snapshot: EnvironmentSnapshot, project_path: Path) -> Any:
         """Capture project configuration files."""
         logger = self._get_logger()
 

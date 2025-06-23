@@ -46,7 +46,7 @@ class LockFileInfo:
 class LockFileManager:
     """Manages lock files for reproducible environments."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the lock file manager."""
         self.supported_formats = {
             "uv.lock": self._parse_uv_lock,

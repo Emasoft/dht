@@ -64,7 +64,7 @@ class DHTConfig:
     Handles .dhtconfig file generation, parsing, and validation.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize DHTConfig handler."""
         self.schema = SchemaLoader.load_schema()
         self.project_analyzer = project_analyzer.ProjectAnalyzer()

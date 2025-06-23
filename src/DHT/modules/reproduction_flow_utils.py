@@ -33,12 +33,12 @@ from prefect import get_run_logger
 class ReproductionFlowUtils:
     """Utilities for orchestrating reproduction flows."""
 
-    def __init__(self, reproducer):
+    def __init__(self, reproducer) -> None:
         """Initialize flow utilities with reference to main reproducer."""
         self.reproducer = reproducer
         self.logger = None
 
-    def _get_logger(self):
+    def _get_logger(self) -> None:
         """Get logger with fallback."""
         if self.logger is None:
             try:

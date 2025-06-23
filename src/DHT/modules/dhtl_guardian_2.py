@@ -31,7 +31,7 @@ from .dhtl_error_handling import log_error, log_info, log_warning
 class AdvancedProcessGuardian:
     """Advanced process guardian with monitoring capabilities."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the advanced process guardian."""
         self.default_mem_limit = int(os.environ.get("DEFAULT_MEM_LIMIT", "2048"))
         self.monitoring = False

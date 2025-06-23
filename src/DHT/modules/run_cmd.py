@@ -47,7 +47,7 @@ def get_windows_parent_process_name():
         return None
 
 
-def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.encoding):
+def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.encoding) -> None:
     if verbose:
         print("Using run_cmd_subprocess:", command)
 
@@ -89,12 +89,12 @@ def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.enc
             output.append(chunk)  # Store the chunk for later use
 
         process.wait()
-        return process.returncode, "".join(output)
+        return process.returncode, "".join(output)  # type: ignore[return-value]
     except Exception as e:
-        return 1, str(e)
+        return 1, str(e)  # type: ignore[return-value]
 
 
-def run_cmd_pexpect(command, verbose=False, cwd=None):
+def run_cmd_pexpect(command, verbose=False, cwd=None) -> None:
     """
     Run a shell command interactively using pexpect, capturing all output.
 
@@ -133,8 +133,8 @@ def run_cmd_pexpect(command, verbose=False, cwd=None):
 
         # Wait for the command to finish and get the exit status
         child.close()
-        return child.exitstatus, output.getvalue().decode("utf-8", errors="replace")
+        return child.exitstatus, output.getvalue().decode("utf-8", errors="replace")  # type: ignore[return-value]
 
     except (pexpect.ExceptionPexpect, TypeError, ValueError) as e:
         error_msg = f"Error running command {command}: {e}"
-        return 1, error_msg
+        return 1, error_msg  # type: ignore[return-value]

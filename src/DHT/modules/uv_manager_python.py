@@ -33,7 +33,7 @@ from DHT.modules.uv_manager_utils import extract_min_version, load_toml
 class PythonVersionManager:
     """Manages Python version operations for UV."""
 
-    def __init__(self, run_command_func):
+    def __init__(self, run_command_func) -> None:
         """
         Initialize Python version manager.
 

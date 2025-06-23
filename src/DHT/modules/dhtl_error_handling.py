@@ -62,7 +62,7 @@ class Colors:
     RESET = "\033[0m"
 
     @classmethod
-    def disable(cls):
+    def disable(cls) -> None:
         """Disable colors for non-terminal output."""
         cls.RED = ""
         cls.GREEN = ""
@@ -80,7 +80,7 @@ if not sys.stdout.isatty():
 class DHTErrorHandler:
     """Main error handler class for DHT."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the error handler."""
         self.temp_files: list[str] = []
         self.temp_dirs: list[str] = []

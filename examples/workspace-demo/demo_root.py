@@ -11,7 +11,7 @@ Licensed under the MIT License. See LICENSE file for details.
 from pathlib import Path
 
 
-def main():
+def main() -> None:
     """Main function for root project demonstration."""
     print("🏠 Demo Root Project")
     print("=" * 40)
@@ -27,7 +27,7 @@ def main():
     print(f"\nRoot location: {Path(__file__).parent}")
     print("\nUse workspace commands to run scripts across members!")
 
-    return 0
+    return
 
 
 if __name__ == "__main__":

@@ -34,7 +34,7 @@ from prefect import get_run_logger, task
 class ToolVersionManager:
     """Manages tool versions for environment reproduction."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the tool version manager."""
         # Critical tools that must match versions exactly
         self.version_critical_tools = {"python", "pip", "uv", "git", "node", "npm", "black", "ruff", "mypy", "pytest"}

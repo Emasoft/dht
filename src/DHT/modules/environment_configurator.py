@@ -29,7 +29,7 @@ and platform capabilities.
 
 
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import flow, get_run_logger, task
 
@@ -63,7 +63,7 @@ from DHT.modules.project_file_generators import (
 class EnvironmentConfigurator:
     """Intelligent environment configurator using system information tree."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the environment configurator."""
         self.logger = None
         self.analyzer = ProjectAnalyzer()
@@ -74,7 +74,7 @@ class EnvironmentConfigurator:
         self.system_package_mappings = SYSTEM_PACKAGE_MAPPINGS
         self.tool_configs = TOOL_CONFIGS
 
-    def _get_logger(self):
+    def _get_logger(self) -> None:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -334,13 +334,13 @@ class EnvironmentConfigurator:
 
     def _install_python_environment(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Delegate to environment installer."""
-        return self.installer.install_python_environment(config, result)
+        return cast(bool, self.installer.install_python_environment(config, result))
 
     def _install_with_pip(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """Delegate to environment installer."""
         return self.installer._install_with_pip(config, result)
 
-    def _install_additional_packages(self, project_path: Path, packages: list[str]):
+    def _install_additional_packages(self, project_path: Path, packages: list[str]) -> None:
         """Delegate to environment installer."""
         self.installer._install_additional_packages(project_path, packages)
 
