@@ -47,7 +47,7 @@ class EnvironmentAnalyzer:
             "pre-commit": {"config_files": [".pre-commit-config.yaml"], "command": "pre-commit"},
         }
 
-    @task(name="analyze_environment_requirements", description="Analyze project and determine environment requirements")
+    @task(name="analyze_environment_requirements", description="Analyze project and determine environment requirements")  # type: ignore[misc]
     def analyze_environment_requirements(
         self, project_path: Path, custom_requirements: dict[str, Any] | None = None
     ) -> dict[str, Any]:
@@ -101,7 +101,7 @@ class EnvironmentAnalyzer:
 
     def _detect_tools_from_project(self, project_path: Path, project_info: dict[str, Any]) -> list[str]:
         """Detect tools already configured in the project."""
-        detected = []
+        detected: list[Any] = []
 
         # Check for Python tools in pyproject.toml
         pyproject = project_path / "pyproject.toml"
@@ -146,7 +146,7 @@ class EnvironmentAnalyzer:
 
     def _recommend_tools(self, project_info: dict[str, Any]) -> list[str]:
         """Recommend tools based on project type and structure."""
-        recommended = []
+        recommended: list[Any] = []
         project_type = project_info.get("project_type", "unknown")
 
         if project_type == "python":
@@ -171,7 +171,7 @@ class EnvironmentAnalyzer:
 
     def _determine_system_requirements(self, project_info: dict[str, Any]) -> list[str]:
         """Determine system-level package requirements."""
-        requirements = []
+        requirements: list[Any] = []
         project_type = project_info.get("project_type", "unknown")
         configs = project_info.get("configurations", {})
 

@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """Integration tests for dhtl sync command."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,11 +20,11 @@ class TestDHTLSyncCommand:
     """Test cases for dhtl sync command."""
 
     @pytest.fixture
-    def commands(self):
+    def commands(self) -> Any:
         """Create DHTLCommands instance."""
         return DHTLCommands()
 
-    def test_sync_basic_project(self, commands, tmp_path):
+    def test_sync_basic_project(self, commands, tmp_path) -> Any:
         """Test syncing dependencies for a basic project."""
         # Create project directory
         project_dir = tmp_path / "test-project"
@@ -50,7 +51,7 @@ class TestDHTLSyncCommand:
         assert "lock_file" in result
         assert Path(result["lock_file"]).exists()
 
-    def test_sync_with_locked_dependencies(self, commands, tmp_path):
+    def test_sync_with_locked_dependencies(self, commands, tmp_path) -> Any:
         """Test syncing with locked dependencies."""
         # Create project
         project_dir = tmp_path / "locked-project"
@@ -76,7 +77,7 @@ class TestDHTLSyncCommand:
         # Lock file should not have been modified
         assert lock_file.stat().st_mtime == lock_mtime
 
-    def test_sync_with_dev_dependencies(self, commands, tmp_path):
+    def test_sync_with_dev_dependencies(self, commands, tmp_path) -> Any:
         """Test syncing with development dependencies."""
         # Create project
         project_dir = tmp_path / "dev-project"
@@ -109,7 +110,7 @@ dev = [
         assert result["installed"] > 3  # At least pytest, black, ruff + their deps
         assert result.get("dev_dependencies_installed", False)
 
-    def test_sync_without_dev_dependencies(self, commands, tmp_path):
+    def test_sync_without_dev_dependencies(self, commands, tmp_path) -> Any:
         """Test syncing without development dependencies."""
         # Create project with dev deps
         project_dir = tmp_path / "no-dev-project"
@@ -137,7 +138,7 @@ dev = ["pytest>=7.0.0", "black>=23.0.0"]
         # Should only install requests and deps, not pytest/black
         assert not result.get("dev_dependencies_installed", False)
 
-    def test_sync_with_extras(self, commands, tmp_path):
+    def test_sync_with_extras(self, commands, tmp_path) -> Any:
         """Test syncing with extra dependency groups."""
         # Create project
         project_dir = tmp_path / "extras-project"
@@ -166,7 +167,7 @@ docs = ["sphinx>=5.0.0", "sphinx-rtd-theme>=1.0.0"]
         assert "extras" in result
         assert set(result["extras"]) == {"test", "docs"}
 
-    def test_sync_with_upgrade(self, commands, tmp_path):
+    def test_sync_with_upgrade(self, commands, tmp_path) -> Any:
         """Test syncing with dependency upgrade."""
         # Create project
         project_dir = tmp_path / "upgrade-project"
@@ -194,7 +195,7 @@ docs = ["sphinx>=5.0.0", "sphinx-rtd-theme>=1.0.0"]
         assert result2["success"]
         assert result2.get("upgraded", False)
 
-    def test_sync_nonexistent_project(self, commands, tmp_path):
+    def test_sync_nonexistent_project(self, commands, tmp_path) -> Any:
         """Test syncing a nonexistent project."""
         # Try to sync nonexistent project
         fake_dir = tmp_path / "nonexistent"
@@ -205,7 +206,7 @@ docs = ["sphinx>=5.0.0", "sphinx-rtd-theme>=1.0.0"]
         assert "error" in result
         assert "not found" in result["error"].lower() or "does not exist" in result["error"].lower()
 
-    def test_sync_project_without_pyproject(self, commands, tmp_path):
+    def test_sync_project_without_pyproject(self, commands, tmp_path) -> Any:
         """Test syncing project without pyproject.toml."""
         # Create directory without pyproject.toml
         project_dir = tmp_path / "no-pyproject"
@@ -218,7 +219,7 @@ docs = ["sphinx>=5.0.0", "sphinx-rtd-theme>=1.0.0"]
         assert not result["success"]
         assert "pyproject.toml" in result["error"]
 
-    def test_sync_updates_lock_file(self, commands, tmp_path):
+    def test_sync_updates_lock_file(self, commands, tmp_path) -> Any:
         """Test that sync updates the lock file when dependencies change."""
         # Create and initialize project
         project_dir = tmp_path / "lock-update-test"

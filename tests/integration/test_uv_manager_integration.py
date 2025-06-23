@@ -23,6 +23,7 @@ import subprocess
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -72,13 +73,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 """
 
-    def test_uv_is_available(self, uv_manager):
+    def test_uv_is_available(self, uv_manager) -> Any:
         """Test that UV is properly detected and available."""
         assert uv_manager.is_available
         assert uv_manager.uv_path is not None
         assert uv_manager.uv_path.exists()
 
-    def test_uv_version_check(self, uv_manager):
+    def test_uv_version_check(self, uv_manager) -> Any:
         """Test UV version meets minimum requirements."""
         result = uv_manager.run_command(["--version"])
         assert result["success"]
@@ -90,7 +91,7 @@ build-backend = "hatchling.build"
         major, minor = version_str.split(".")[:2]
         assert int(major) > 0 or (int(major) == 0 and int(minor) >= 4)
 
-    def test_init_new_project(self, uv_manager, temp_project_dir):
+    def test_init_new_project(self, uv_manager, temp_project_dir) -> Any:
         """Test initializing a new Python project with UV."""
         project_name = "test-init-project"
         project_path = temp_project_dir / project_name
@@ -114,7 +115,7 @@ build-backend = "hatchling.build"
         assert pyproject["project"]["name"] == project_name
         assert "dependencies" in pyproject["project"]
 
-    def test_create_venv_and_sync(self, uv_manager, temp_project_dir, sample_pyproject_toml):
+    def test_create_venv_and_sync(self, uv_manager, temp_project_dir, sample_pyproject_toml) -> Any:
         """Test creating virtual environment and syncing dependencies."""
         # Create a project with pyproject.toml
         project_path = temp_project_dir / "sync-test"
@@ -147,7 +148,7 @@ build-backend = "hatchling.build"
         assert "requests" in pip_list_result["stdout"]
         assert "click" in pip_list_result["stdout"]
 
-    def test_add_and_remove_dependency(self, uv_manager, temp_project_dir):
+    def test_add_and_remove_dependency(self, uv_manager, temp_project_dir) -> Any:
         """Test adding and removing dependencies with UV."""
         # Init a new project
         project_name = "dep-test"
@@ -180,7 +181,7 @@ build-backend = "hatchling.build"
         deps = pyproject["project"].get("dependencies", [])
         assert not any("httpx" in dep for dep in deps)
 
-    def test_build_project(self, uv_manager, temp_project_dir, sample_pyproject_toml):
+    def test_build_project(self, uv_manager, temp_project_dir, sample_pyproject_toml) -> Any:
         """Test building a Python project with UV."""
         # Create a project
         project_path = temp_project_dir / "build-test"
@@ -195,7 +196,7 @@ build-backend = "hatchling.build"
         src_dir.mkdir()
         (src_dir / "__init__.py").write_text('__version__ = "0.1.0"')
         (src_dir / "main.py").write_text('''
-def hello():
+def hello() -> Any:
     """Say hello."""
     return "Hello from test project!"
 
@@ -214,7 +215,7 @@ if __name__ == "__main__":
         assert len(wheels) == 1
         assert "test_project-0.1.0" in wheels[0].name
 
-    def test_python_version_management(self, uv_manager, temp_project_dir):
+    def test_python_version_management(self, uv_manager, temp_project_dir) -> Any:
         """Test Python version detection and pinning."""
         project_path = temp_project_dir / "version-test"
         project_path.mkdir()
@@ -233,7 +234,7 @@ if __name__ == "__main__":
         assert detected_version == "3.11"
 
     @pytest.mark.slow
-    def test_clone_and_setup_real_github_repo(self, uv_manager, temp_project_dir):
+    def test_clone_and_setup_real_github_repo(self, uv_manager, temp_project_dir) -> Any:
         """Test cloning and setting up a real GitHub Python project."""
         # Use a small, simple Python project
         repo_url = "https://github.com/psf/peps.git"
@@ -265,7 +266,7 @@ if __name__ == "__main__":
             venv_path = project_path / ".venv"
             assert venv_path.exists()
 
-    def test_lock_file_generation(self, uv_manager, temp_project_dir, sample_pyproject_toml):
+    def test_lock_file_generation(self, uv_manager, temp_project_dir, sample_pyproject_toml) -> Any:
         """Test generating and using lock files for reproducible builds."""
         project_path = temp_project_dir / "lock-test"
         project_path.mkdir()

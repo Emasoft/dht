@@ -9,13 +9,14 @@ Licensed under the MIT License. See LICENSE file for details.
 """Test for DHT diagnostics functionality - updated for Python/Prefect migration."""
 
 import json
+from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
 
 
 # Test the Python diagnostic reporter directly
-def test_diagnostic_reporter_v2_module():
+def test_diagnostic_reporter_v2_module() -> Any:
     """Test that diagnostic_reporter_v2 module can be imported."""
     try:
         from DHT import diagnostic_reporter_v2
@@ -29,12 +30,12 @@ def test_diagnostic_reporter_v2_module():
 
 @pytest.mark.unit
 @patch("subprocess.run")
-def test_build_system_report(mock_subprocess):
+def test_build_system_report(mock_subprocess) -> Any:
     """Test the build_system_report function from diagnostic_reporter_v2."""
     from DHT.diagnostic_reporter_v2 import build_system_report
 
     # Mock subprocess responses
-    def mock_run(*args, **kwargs):
+    def mock_run(*args, **kwargs) -> Any:
         cmd = args[0] if isinstance(args[0], list) else args[0].split()
         result = Mock()
         result.returncode = 0
@@ -79,7 +80,7 @@ def test_build_system_report(mock_subprocess):
 
 
 @pytest.mark.unit
-def test_diagnostic_cli_registry():
+def test_diagnostic_cli_registry() -> Any:
     """Test that diagnostic commands are registered in CLI registry."""
     from DHT.modules.cli_commands_registry import CLI_COMMANDS, get_commands_by_category
 
@@ -103,7 +104,7 @@ def test_diagnostic_cli_registry():
 
 @pytest.mark.unit
 @patch("DHT.diagnostic_reporter_v2.build_system_report")
-def test_diagnostic_main_function(mock_build_report, tmp_path):
+def test_diagnostic_main_function(mock_build_report, tmp_path) -> Any:
     """Test the main function of diagnostic_reporter_v2."""
     from DHT.diagnostic_reporter_v2 import main
 
@@ -135,7 +136,7 @@ def test_diagnostic_main_function(mock_build_report, tmp_path):
 
 
 @pytest.mark.unit
-def test_diagnostic_taxonomy():
+def test_diagnostic_taxonomy() -> Any:
     """Test that system taxonomy is properly structured."""
     from DHT.modules.system_taxonomy import PRACTICAL_TAXONOMY as TAXONOMY
 
@@ -158,7 +159,7 @@ def test_diagnostic_taxonomy():
 
 
 @pytest.mark.unit
-def test_diagnostic_output_formats(tmp_path):
+def test_diagnostic_output_formats(tmp_path) -> Any:
     """Test different output formats for diagnostics."""
     import yaml
 

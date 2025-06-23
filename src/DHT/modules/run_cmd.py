@@ -11,12 +11,13 @@ import platform
 import subprocess
 import sys
 from io import BytesIO
+from typing import Any
 
 import pexpect
 import psutil
 
 
-def run_cmd(command, verbose=False, error_print=None, cwd=None):
+def run_cmd(command, verbose=False, error_print=None, cwd=None) -> Any:
     try:
         if sys.stdin.isatty() and hasattr(pexpect, "spawn") and platform.system() != "Windows":
             return run_cmd_pexpect(command, verbose, cwd)
@@ -31,7 +32,7 @@ def run_cmd(command, verbose=False, error_print=None, cwd=None):
         return 1, error_message
 
 
-def get_windows_parent_process_name():
+def get_windows_parent_process_name() -> str | None:
     try:
         current_process = psutil.Process()
         while True:
@@ -40,7 +41,7 @@ def get_windows_parent_process_name():
                 break
             parent_name = parent.name().lower()
             if parent_name in ["powershell.exe", "cmd.exe"]:
-                return parent_name
+                return str(parent_name) if parent_name else None
             current_process = parent
         return None
     except Exception:
@@ -80,7 +81,7 @@ def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.enc
             cwd=cwd,
         )
 
-        output = []
+        output: list[Any] = []
         while True:
             chunk = process.stdout.read(1)
             if not chunk:
@@ -107,7 +108,7 @@ def run_cmd_pexpect(command, verbose=False, cwd=None) -> None:
 
     output = BytesIO()
 
-    def output_callback(b):
+    def output_callback(b) -> Any:
         output.write(b)
         return b
 

@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 
-def run_tests_compact(test_path=None, pattern=None):
+def run_tests_compact(test_path: str | None = None, pattern: str | None = None) -> int:
     """Run tests with minimal output."""
     # Base pytest command
     cmd = [
@@ -82,4 +82,5 @@ if __name__ == "__main__":
         if args:
             test_path = args[0]
 
-    sys.exit(run_tests_compact(test_path, pattern))
+    exit_code = run_tests_compact(test_path, pattern)
+    sys.exit(exit_code)

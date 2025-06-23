@@ -23,6 +23,7 @@ import shutil
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -46,7 +47,7 @@ class TestDhtlInitCommand:
         """Check if UV is available."""
         return shutil.which("uv") is not None
 
-    def test_init_new_project_basic(self, temp_dir, uv_available):
+    def test_init_new_project_basic(self, temp_dir, uv_available) -> Any:
         """Test initializing a new Python project with basic settings."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -87,7 +88,7 @@ class TestDhtlInitCommand:
         python_version = (project_path / ".python-version").read_text().strip()
         assert python_version == "3.11"
 
-    def test_init_with_package_structure(self, temp_dir, uv_available):
+    def test_init_with_package_structure(self, temp_dir, uv_available) -> Any:
         """Test initializing a project as a package (not just scripts)."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -122,7 +123,7 @@ class TestDhtlInitCommand:
         assert pyproject["build-system"]["requires"] == ["hatchling"]
         assert pyproject["build-system"]["build-backend"] == "hatchling.build"
 
-    def test_init_with_dev_dependencies(self, temp_dir, uv_available):
+    def test_init_with_dev_dependencies(self, temp_dir, uv_available) -> Any:
         """Test initializing with common development dependencies."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -156,7 +157,7 @@ class TestDhtlInitCommand:
         assert any("mypy" in dep for dep in dev_deps)
         assert any("black" in dep for dep in dev_deps)
 
-    def test_init_existing_directory(self, temp_dir, uv_available):
+    def test_init_existing_directory(self, temp_dir, uv_available) -> Any:
         """Test initializing in an existing directory."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -183,7 +184,7 @@ class TestDhtlInitCommand:
         assert (project_path / "pyproject.toml").exists()
         assert (project_path / ".python-version").exists()
 
-    def test_init_with_author_info(self, temp_dir, uv_available):
+    def test_init_with_author_info(self, temp_dir, uv_available) -> Any:
         """Test initializing with author information."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -210,7 +211,7 @@ class TestDhtlInitCommand:
         assert authors[0]["name"] == "Test Author"
         assert authors[0]["email"] == "test@example.com"
 
-    def test_init_with_license(self, temp_dir, uv_available):
+    def test_init_with_license(self, temp_dir, uv_available) -> Any:
         """Test initializing with license selection."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -235,7 +236,7 @@ class TestDhtlInitCommand:
         # Verify LICENSE file exists
         assert (project_path / "LICENSE").exists()
 
-    def test_init_idempotent(self, temp_dir, uv_available):
+    def test_init_idempotent(self, temp_dir, uv_available) -> Any:
         """Test that init is idempotent (safe to run multiple times)."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -265,7 +266,7 @@ class TestDhtlInitCommand:
         # Verify custom content is preserved
         assert "## Custom Section" in readme_path.read_text()
 
-    def test_init_with_github_actions(self, temp_dir, uv_available):
+    def test_init_with_github_actions(self, temp_dir, uv_available) -> Any:
         """Test initializing with GitHub Actions CI/CD."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -295,7 +296,7 @@ class TestDhtlInitCommand:
         assert "uv sync" in workflow_content
         assert "uv run pytest" in workflow_content
 
-    def test_init_from_requirements_txt(self, temp_dir, uv_available):
+    def test_init_from_requirements_txt(self, temp_dir, uv_available) -> Any:
         """Test initializing from existing requirements.txt."""
         if not uv_available:
             pytest.skip("UV is not installed")

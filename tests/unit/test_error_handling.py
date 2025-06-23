@@ -8,6 +8,7 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import os
 import sys
+from typing import Any
 
 import pytest
 
@@ -21,7 +22,7 @@ pytestmark = pytest.mark.skip(
 )
 
 
-def test_log_error():
+def test_log_error() -> Any:
     """Test the log_error function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash
@@ -66,7 +67,7 @@ def test_log_error():
         os.unlink(script_path)
 
 
-def test_log_warning():
+def test_log_warning() -> Any:
     """Test the log_warning function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash
@@ -99,7 +100,7 @@ def test_log_warning():
         os.unlink(script_path)
 
 
-def test_check_dependency():
+def test_check_dependency() -> Any:
     """Test the check_dependency function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash
@@ -142,7 +143,7 @@ def test_check_dependency():
         os.unlink(script_path)
 
 
-def test_validate_argument():
+def test_validate_argument() -> Any:
     """Test the validate_argument function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash
@@ -185,7 +186,7 @@ def test_validate_argument():
         os.unlink(script_path)
 
 
-def test_check_file():
+def test_check_file() -> Any:
     """Test the check_file function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash
@@ -235,7 +236,7 @@ def test_check_file():
         os.unlink(script_path)
 
 
-def test_create_temp_file():
+def test_create_temp_file() -> Any:
     """Test the create_temp_file function."""
     # Create a script that sources the module and calls the function
     script_content = """#!/bin/bash

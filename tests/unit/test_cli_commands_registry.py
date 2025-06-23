@@ -34,6 +34,7 @@ the registry behaves correctly in production environments.
 
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -48,7 +49,7 @@ class TestCommandStructure:
     """Test suite for command definition structure validation"""
 
     @pytest.mark.unit
-    def test_all_commands_have_required_fields(self):
+    def test_all_commands_have_required_fields(self) -> Any:
         """Test that all commands have required fields"""
         # All commands must have 'commands' dict and 'category'
         for cmd_name, cmd_def in cli_commands_registry.CLI_COMMANDS.items():
@@ -58,7 +59,7 @@ class TestCommandStructure:
             assert len(cmd_def["commands"]) > 0, f"{cmd_name} has empty commands dict"
 
     @pytest.mark.unit
-    def test_command_format_specifications(self):
+    def test_command_format_specifications(self) -> Any:
         """Test that format specifications are valid when present"""
         valid_formats = ["json", "auto", "yaml", "xml", "csv", "text"]
 
@@ -67,7 +68,7 @@ class TestCommandStructure:
                 assert cmd_def["format"] in valid_formats, f"{cmd_name} has invalid format: {cmd_def['format']}"
 
     @pytest.mark.unit
-    def test_command_platforms_field(self):
+    def test_command_platforms_field(self) -> Any:
         """Test that platform restrictions are properly specified"""
         valid_platforms = ["macos", "linux", "windows"]
 
@@ -78,7 +79,7 @@ class TestCommandStructure:
                     assert platform in valid_platforms, f"{cmd_name} has invalid platform: {platform}"
 
     @pytest.mark.unit
-    def test_command_category_hierarchy(self):
+    def test_command_category_hierarchy(self) -> Any:
         """Test that categories follow expected hierarchy"""
         # Get all unique categories
         categories = set()
@@ -109,7 +110,7 @@ class TestPlatformFiltering:
 
     @pytest.mark.unit
     @patch("DHT.modules.system_taxonomy.get_current_platform")
-    def test_get_platform_specific_commands_macos(self, mock_platform):
+    def test_get_platform_specific_commands_macos(self, mock_platform) -> Any:
         """Test filtering commands for macOS platform"""
         mock_platform.return_value = "macos"
 
@@ -126,7 +127,7 @@ class TestPlatformFiltering:
 
     @pytest.mark.unit
     @patch("DHT.modules.system_taxonomy.get_current_platform")
-    def test_get_platform_specific_commands_linux(self, mock_platform):
+    def test_get_platform_specific_commands_linux(self, mock_platform) -> Any:
         """Test filtering commands for Linux platform"""
         mock_platform.return_value = "linux"
 
@@ -143,7 +144,7 @@ class TestPlatformFiltering:
 
     @pytest.mark.unit
     @patch("DHT.modules.system_taxonomy.get_current_platform")
-    def test_get_platform_specific_commands_windows(self, mock_platform):
+    def test_get_platform_specific_commands_windows(self, mock_platform) -> Any:
         """Test filtering commands for Windows platform"""
         mock_platform.return_value = "windows"
 
@@ -159,7 +160,7 @@ class TestPlatformFiltering:
         assert "python" in commands
 
     @pytest.mark.unit
-    def test_get_platform_specific_commands_uses_current_by_default(self):
+    def test_get_platform_specific_commands_uses_current_by_default(self) -> Any:
         """Test that platform filtering uses current platform by default"""
         # This test verifies the function works without explicit platform
         commands = cli_commands_registry.get_platform_specific_commands()
@@ -176,7 +177,7 @@ class TestCategoryFiltering:
     """Test suite for category-based command retrieval"""
 
     @pytest.mark.unit
-    def test_get_commands_by_category_version_control(self):
+    def test_get_commands_by_category_version_control(self) -> Any:
         """Test retrieving version control commands"""
         commands = cli_commands_registry.get_commands_by_category("version_control")
 
@@ -188,7 +189,7 @@ class TestCategoryFiltering:
             assert "svn" in commands
 
     @pytest.mark.unit
-    def test_get_commands_by_category_language_runtimes(self):
+    def test_get_commands_by_category_language_runtimes(self) -> Any:
         """Test retrieving language runtime commands"""
         commands = cli_commands_registry.get_commands_by_category("language_runtimes")
 
@@ -198,7 +199,7 @@ class TestCategoryFiltering:
         assert commands["node"]["category"] == "language_runtimes"
 
     @pytest.mark.unit
-    def test_get_commands_by_category_nested(self):
+    def test_get_commands_by_category_nested(self) -> Any:
         """Test retrieving commands from nested categories"""
         # Test package_managers.system.macos
         commands = cli_commands_registry.get_commands_by_category("package_managers.system.macos")
@@ -208,7 +209,7 @@ class TestCategoryFiltering:
                 assert "brew" in commands
 
     @pytest.mark.unit
-    def test_get_commands_by_category_partial_match(self):
+    def test_get_commands_by_category_partial_match(self) -> Any:
         """Test that partial category matches work"""
         # Getting 'package_managers' should include all subcategories
         commands = cli_commands_registry.get_commands_by_category("package_managers")
@@ -224,7 +225,7 @@ class TestCategoryFiltering:
         assert found_any, "Should find at least one package manager"
 
     @pytest.mark.unit
-    def test_get_commands_by_category_nonexistent(self):
+    def test_get_commands_by_category_nonexistent(self) -> Any:
         """Test retrieving commands from nonexistent category"""
         commands = cli_commands_registry.get_commands_by_category("nonexistent_category")
 
@@ -236,7 +237,7 @@ class TestCommandFormats:
     """Test suite for command format specifications"""
 
     @pytest.mark.unit
-    def test_json_format_commands(self):
+    def test_json_format_commands(self) -> Any:
         """Test commands that output JSON"""
         json_commands = []
 
@@ -253,7 +254,7 @@ class TestCommandFormats:
                     assert expected in json_commands
 
     @pytest.mark.unit
-    def test_auto_format_commands(self):
+    def test_auto_format_commands(self) -> Any:
         """Test commands with auto format detection"""
         auto_commands = []
 
@@ -265,7 +266,7 @@ class TestCommandFormats:
         assert len(auto_commands) > 0
 
     @pytest.mark.unit
-    def test_commands_with_json_output_flag(self):
+    def test_commands_with_json_output_flag(self) -> Any:
         """Test commands that have JSON output via flags"""
         json_capable = []
 
@@ -288,7 +289,7 @@ class TestRealCommandExamples:
     """Test suite for real command examples"""
 
     @pytest.mark.unit
-    def test_git_command_definition(self):
+    def test_git_command_definition(self) -> Any:
         """Test git command is properly defined"""
         assert "git" in cli_commands_registry.CLI_COMMANDS
 
@@ -300,7 +301,7 @@ class TestRealCommandExamples:
         assert "--version" in git_cmd["commands"]["version"]
 
     @pytest.mark.unit
-    def test_python_command_definition(self):
+    def test_python_command_definition(self) -> Any:
         """Test python command is properly defined"""
         assert "python" in cli_commands_registry.CLI_COMMANDS
 
@@ -313,7 +314,7 @@ class TestRealCommandExamples:
         assert "--version" in version_cmd or "-V" in version_cmd
 
     @pytest.mark.unit
-    def test_docker_command_definition(self):
+    def test_docker_command_definition(self) -> Any:
         """Test docker command is properly defined"""
         assert "docker" in cli_commands_registry.CLI_COMMANDS
 
@@ -326,7 +327,7 @@ class TestRealCommandExamples:
             assert "info" in docker_cmd["commands"]["info"]
 
     @pytest.mark.unit
-    def test_package_manager_definitions(self):
+    def test_package_manager_definitions(self) -> Any:
         """Test package managers are properly defined"""
         package_managers = {
             "pip": "package_managers.language.python",
@@ -341,7 +342,7 @@ class TestRealCommandExamples:
                 assert pm_cmd["category"].startswith("package_managers"), f"{pm} should be in package_managers category"
 
     @pytest.mark.unit
-    def test_cloud_tool_definitions(self):
+    def test_cloud_tool_definitions(self) -> Any:
         """Test cloud tools are properly defined"""
         cloud_tools = ["aws", "gcloud", "az"]
 
@@ -361,7 +362,7 @@ class TestCommandPatterns:
     """Test suite for command pattern detection"""
 
     @pytest.mark.unit
-    def test_commands_with_error_redirect(self):
+    def test_commands_with_error_redirect(self) -> Any:
         """Test detection of commands that redirect stderr"""
         error_redirect_commands = []
 
@@ -375,7 +376,7 @@ class TestCommandPatterns:
         assert isinstance(error_redirect_commands, list)
 
     @pytest.mark.unit
-    def test_commands_with_environment_vars(self):
+    def test_commands_with_environment_vars(self) -> Any:
         """Test detection of commands that use environment variables"""
         env_var_commands = []
 
@@ -389,7 +390,7 @@ class TestCommandPatterns:
         assert isinstance(env_var_commands, list)
 
     @pytest.mark.unit
-    def test_commands_with_pipes(self):
+    def test_commands_with_pipes(self) -> Any:
         """Test detection of commands that use pipes"""
         piped_commands = []
 
@@ -407,7 +408,7 @@ class TestEdgeCases:
     """Test suite for edge cases and error handling"""
 
     @pytest.mark.unit
-    def test_empty_platform_string(self):
+    def test_empty_platform_string(self) -> Any:
         """Test handling of empty platform string"""
         commands = cli_commands_registry.get_platform_specific_commands("")
 
@@ -416,7 +417,7 @@ class TestEdgeCases:
         assert len(commands) > 0
 
     @pytest.mark.unit
-    def test_invalid_platform_string(self):
+    def test_invalid_platform_string(self) -> Any:
         """Test handling of invalid platform string"""
         commands = cli_commands_registry.get_platform_specific_commands("invalid_os")
 
@@ -427,7 +428,7 @@ class TestEdgeCases:
             assert "git" in commands
 
     @pytest.mark.unit
-    def test_none_category(self):
+    def test_none_category(self) -> Any:
         """Test handling of None category"""
         commands = cli_commands_registry.get_commands_by_category(None)
 
@@ -435,7 +436,7 @@ class TestEdgeCases:
         assert len(commands) == 0
 
     @pytest.mark.unit
-    def test_command_with_multiple_categories(self):
+    def test_command_with_multiple_categories(self) -> Any:
         """Test commands that might belong to multiple categories"""
         # For example, python is both a runtime and has package management
         if "python" in cli_commands_registry.CLI_COMMANDS:
@@ -447,7 +448,7 @@ class TestEdgeCases:
 
 # Module-level test
 @pytest.mark.unit
-def test_module_exports():
+def test_module_exports() -> Any:
     """Test that module exports expected functions"""
     assert hasattr(cli_commands_registry, "CLI_COMMANDS")
     assert hasattr(cli_commands_registry, "get_platform_specific_commands")

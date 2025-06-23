@@ -13,6 +13,7 @@ This uses TDD to identify and fix critical issues.
 
 import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -20,13 +21,13 @@ import pytest
 class TestCriticalFixes:
     """Test critical fixes for issues found in verification."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.project_root = Path(__file__).parent.parent.parent
         self.src_dir = self.project_root / "src" / "DHT"
         self.modules_dir = self.src_dir / "modules"
 
-    def test_no_duplicate_lint_command(self):
+    def test_no_duplicate_lint_command(self) -> Any:
         """Test that lint_command is not duplicated."""
         utils_file = self.modules_dir / "utils.sh"
         dhtl_utils_file = self.modules_dir / "dhtl_utils.sh"
@@ -43,7 +44,7 @@ class TestCriticalFixes:
             f"lint_command defined in multiple files: {duplicates}. Should only be in one file."
         )
 
-    def test_github_workflows_are_templates(self):
+    def test_github_workflows_are_templates(self) -> Any:
         """Test that GitHub workflow template files have proper placeholders."""
         workflow_dir = self.src_dir / "GITHUB_WORKFLOWS"
 
@@ -63,7 +64,7 @@ class TestCriticalFixes:
             "GitHub workflow template files should contain {REPO_NAME} placeholders for user project generation"
         )
 
-    def test_precommit_config_is_template(self):
+    def test_precommit_config_is_template(self) -> Any:
         """Test that pre-commit config is a proper template."""
         precommit_file = self.src_dir / "hooks" / ".pre-commit-config.yaml"
 
@@ -74,7 +75,7 @@ class TestCriticalFixes:
         # This should be a TEMPLATE with placeholders for user projects
         assert "{REPO_NAME}" in content, "Pre-commit config should contain {REPO_NAME} placeholder as it's a template"
 
-    def test_our_test_files_dont_use_real_placeholders(self):
+    def test_our_test_files_dont_use_real_placeholders(self) -> Any:
         """Test that our test files use escaped or example placeholders."""
         test_files = [
             self.project_root / "tests" / "unit" / "test_template_files.py",

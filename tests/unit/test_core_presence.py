@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Test for DHT core files presence - updated for Python/Prefect migration.
@@ -9,7 +11,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """Test for DHT core files presence - updated for Python/Prefect migration."""
 
 
-def test_dht_core_files_exist(project_root):
+def test_dht_core_files_exist(project_root) -> Any:
     """Test that essential DHT core files exist after Python migration."""
     # UV-style src layout - project_root points to /Users/emanuelesabetta/Code/DHT
     # The actual project is in the dht subdirectory
@@ -57,7 +59,7 @@ def test_dht_core_files_exist(project_root):
     )
 
 
-def test_dht_parsers_exist(project_root):
+def test_dht_parsers_exist(project_root) -> Any:
     """Test that parser modules exist."""
     # UV-style src layout - project_root points to /Users/emanuelesabetta/Code/DHT
     # The actual project is in the dht subdirectory

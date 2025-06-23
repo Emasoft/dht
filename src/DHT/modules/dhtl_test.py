@@ -22,6 +22,7 @@ Provides commands to test DHT itself and verify its installation.
 import shutil
 import subprocess
 import sys
+from typing import Any
 
 from .common_utils import find_project_root, get_venv_executable
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
@@ -257,7 +258,7 @@ def verify_dht_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_function():
+def placeholder_function() -> Any:
     """Placeholder function."""
     log_warning("Use test_dht_command or verify_dht_command instead")
     return True

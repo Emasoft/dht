@@ -16,6 +16,7 @@ implementation will be created to make these tests pass.
 
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -26,12 +27,12 @@ class TestBashParser:
     """Test suite for BashParser class."""
 
     @pytest.fixture
-    def parser(self):
+    def parser(self) -> Any:
         """Create a BashParser instance for testing."""
         return BashParser()
 
     @pytest.fixture
-    def sample_bash_script(self):
+    def sample_bash_script(self) -> Any:
         """Create a sample bash script for testing."""
         return """#!/bin/bash
 # Sample bash script for testing
@@ -96,19 +97,19 @@ case "$1" in
 esac
 """
 
-    def test_parser_initialization(self, parser):
+    def test_parser_initialization(self, parser) -> Any:
         """Test that the parser initializes correctly."""
         assert parser is not None
         assert hasattr(parser, "parse_file")
         assert hasattr(parser, "extract_dependencies")
 
-    def test_parse_file_with_invalid_path(self, parser):
+    def test_parse_file_with_invalid_path(self, parser) -> Any:
         """Test parsing with an invalid file path."""
         result = parser.parse_file(Path("/non/existent/file.sh"))
         assert "error" in result
         assert "Failed to read file" in result["error"]
 
-    def test_parse_file_returns_expected_structure(self, parser, sample_bash_script):
+    def test_parse_file_returns_expected_structure(self, parser, sample_bash_script) -> Any:
         """Test that parse_file returns the expected data structure."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -138,7 +139,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_shebang(self, parser, sample_bash_script):
+    def test_extract_shebang(self, parser, sample_bash_script) -> Any:
         """Test shebang extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -150,7 +151,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_functions(self, parser, sample_bash_script):
+    def test_extract_functions(self, parser, sample_bash_script) -> Any:
         """Test function extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -178,7 +179,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_variables(self, parser, sample_bash_script):
+    def test_extract_variables(self, parser, sample_bash_script) -> Any:
         """Test variable extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -210,7 +211,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_exports(self, parser, sample_bash_script):
+    def test_extract_exports(self, parser, sample_bash_script) -> Any:
         """Test export statement extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -241,7 +242,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_sourced_files(self, parser, sample_bash_script):
+    def test_extract_sourced_files(self, parser, sample_bash_script) -> Any:
         """Test sourced file extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -262,7 +263,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_commands(self, parser, sample_bash_script):
+    def test_extract_commands(self, parser, sample_bash_script) -> Any:
         """Test command extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -286,7 +287,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_dependencies(self, parser, sample_bash_script):
+    def test_extract_dependencies(self, parser, sample_bash_script) -> Any:
         """Test dependency extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -307,7 +308,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_extract_control_structures(self, parser, sample_bash_script):
+    def test_extract_control_structures(self, parser, sample_bash_script) -> Any:
         """Test control structure extraction."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write(sample_bash_script)
@@ -328,7 +329,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_parse_empty_file(self, parser):
+    def test_parse_empty_file(self, parser) -> Any:
         """Test parsing an empty file."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
             f.write("")
@@ -346,7 +347,7 @@ esac
         finally:
             temp_path.unlink()
 
-    def test_parse_file_with_syntax_errors(self, parser):
+    def test_parse_file_with_syntax_errors(self, parser) -> Any:
         """Test parsing a file with bash syntax errors."""
         broken_script = """#!/bin/bash
 # Broken script
@@ -378,7 +379,7 @@ fi
         finally:
             temp_path.unlink()
 
-    def test_variable_type_inference(self, parser):
+    def test_variable_type_inference(self, parser) -> Any:
         """Test variable type inference."""
         script = """#!/bin/bash
 STRING_VAR="hello"
@@ -422,7 +423,7 @@ EMPTY_VAR=
         finally:
             temp_path.unlink()
 
-    def test_comments_extraction(self, parser):
+    def test_comments_extraction(self, parser) -> Any:
         """Test comment extraction."""
         script = """#!/bin/bash
 # This is a header comment
@@ -462,7 +463,7 @@ do_something() {
         finally:
             temp_path.unlink()
 
-    def test_complex_function_parsing(self, parser):
+    def test_complex_function_parsing(self, parser) -> Any:
         """Test parsing of complex function definitions."""
         script = """#!/bin/bash
 

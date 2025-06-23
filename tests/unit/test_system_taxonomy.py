@@ -39,6 +39,7 @@ behaves correctly in production environments.
 
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -54,7 +55,7 @@ class TestPlatformDetection:
 
     @pytest.mark.unit
     @patch("platform.system")
-    def test_get_current_platform_macos(self, mock_platform):
+    def test_get_current_platform_macos(self, mock_platform) -> Any:
         """Test that Darwin is normalized to macos"""
         # Arrange
         mock_platform.return_value = "Darwin"
@@ -68,7 +69,7 @@ class TestPlatformDetection:
 
     @pytest.mark.unit
     @patch("platform.system")
-    def test_get_current_platform_linux(self, mock_platform):
+    def test_get_current_platform_linux(self, mock_platform) -> Any:
         """Test that Linux is normalized to linux (lowercase)"""
         # Arrange
         mock_platform.return_value = "Linux"
@@ -82,7 +83,7 @@ class TestPlatformDetection:
 
     @pytest.mark.unit
     @patch("platform.system")
-    def test_get_current_platform_windows(self, mock_platform):
+    def test_get_current_platform_windows(self, mock_platform) -> Any:
         """Test that Windows is normalized to windows (lowercase)"""
         # Arrange
         mock_platform.return_value = "Windows"
@@ -96,7 +97,7 @@ class TestPlatformDetection:
 
     @pytest.mark.unit
     @patch("platform.system")
-    def test_get_current_platform_unknown(self, mock_platform):
+    def test_get_current_platform_unknown(self, mock_platform) -> Any:
         """Test that unknown platforms are returned as-is (lowercase)"""
         # Arrange
         mock_platform.return_value = "FreeBSD"
@@ -113,7 +114,7 @@ class TestToolAvailability:
     """Test suite for tool availability checking"""
 
     @pytest.mark.unit
-    def test_brew_only_available_on_macos(self):
+    def test_brew_only_available_on_macos(self) -> Any:
         """Test that brew is only available on macOS"""
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform("brew", "macos") is True
@@ -121,7 +122,7 @@ class TestToolAvailability:
         assert system_taxonomy.is_tool_available_on_platform("brew", "windows") is False
 
     @pytest.mark.unit
-    def test_apt_only_available_on_linux(self):
+    def test_apt_only_available_on_linux(self) -> Any:
         """Test that apt is only available on Linux"""
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform("apt", "linux") is True
@@ -129,7 +130,7 @@ class TestToolAvailability:
         assert system_taxonomy.is_tool_available_on_platform("apt", "windows") is False
 
     @pytest.mark.unit
-    def test_choco_only_available_on_windows(self):
+    def test_choco_only_available_on_windows(self) -> Any:
         """Test that chocolatey is only available on Windows"""
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform("choco", "windows") is True
@@ -137,7 +138,7 @@ class TestToolAvailability:
         assert system_taxonomy.is_tool_available_on_platform("choco", "linux") is False
 
     @pytest.mark.unit
-    def test_cross_platform_tools_available_everywhere(self):
+    def test_cross_platform_tools_available_everywhere(self) -> Any:
         """Test that cross-platform tools are available on all platforms"""
         # Arrange
         cross_platform_tools = ["git", "python", "docker", "node", "npm", "terraform"]
@@ -151,7 +152,7 @@ class TestToolAvailability:
                 )
 
     @pytest.mark.unit
-    def test_wsl_only_on_windows(self):
+    def test_wsl_only_on_windows(self) -> Any:
         """Test that WSL is only available on Windows"""
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform("wsl", "windows") is True
@@ -160,7 +161,7 @@ class TestToolAvailability:
         assert system_taxonomy.is_tool_available_on_platform("wsl", "linux") is False
 
     @pytest.mark.unit
-    def test_systemctl_not_on_windows(self):
+    def test_systemctl_not_on_windows(self) -> Any:
         """Test that systemctl is not available on Windows"""
         # Act & Assert
         assert system_taxonomy.is_tool_available_on_platform("systemctl", "linux") is True
@@ -172,7 +173,7 @@ class TestCategoryFiltering:
     """Test suite for category filtering based on platform"""
 
     @pytest.mark.unit
-    def test_get_relevant_categories_filters_package_managers(self):
+    def test_get_relevant_categories_filters_package_managers(self) -> Any:
         """Test that platform-specific package managers are filtered correctly"""
         # Act
         macos_categories = system_taxonomy.get_relevant_categories("macos")
@@ -191,7 +192,7 @@ class TestCategoryFiltering:
         assert "brew" not in windows_categories["package_managers"]["categories"]["system"]["tools"]
 
     @pytest.mark.unit
-    def test_get_relevant_categories_includes_cross_platform_tools(self):
+    def test_get_relevant_categories_includes_cross_platform_tools(self) -> Any:
         """Test that cross-platform tools are included on all platforms"""
         # Act
         platforms = ["macos", "linux", "windows"]
@@ -210,7 +211,7 @@ class TestCategoryFiltering:
             assert "cmake" in categories["build_tools"]["tools"]
 
     @pytest.mark.unit
-    def test_get_relevant_categories_filters_compilers(self):
+    def test_get_relevant_categories_filters_compilers(self) -> Any:
         """Test that platform-specific compilers are filtered correctly"""
         # Act
         macos_categories = system_taxonomy.get_relevant_categories("macos")
@@ -227,7 +228,7 @@ class TestCategoryFiltering:
         assert "clang" in windows_categories["compilers"]["tools"]
 
     @pytest.mark.unit
-    def test_get_relevant_categories_uses_current_platform_by_default(self):
+    def test_get_relevant_categories_uses_current_platform_by_default(self) -> Any:
         """Test that get_relevant_categories uses the current platform when none specified"""
         # Arrange
         with patch("DHT.modules.system_taxonomy.get_current_platform", return_value="linux"):
@@ -241,7 +242,7 @@ class TestCategoryFiltering:
             # This test reveals a conceptual issue - systemctl is a system tool, not a container tool
 
     @pytest.mark.unit
-    def test_get_relevant_categories_structure(self):
+    def test_get_relevant_categories_structure(self) -> Any:
         """Test that filtered categories maintain correct structure"""
         # Act
         categories = system_taxonomy.get_relevant_categories("linux")
@@ -266,7 +267,7 @@ class TestToolFields:
     """Test suite for retrieving tool-specific fields"""
 
     @pytest.mark.unit
-    def test_get_tool_fields_direct_tools(self):
+    def test_get_tool_fields_direct_tools(self) -> Any:
         """Test retrieving fields for tools directly in a category"""
         # Act & Assert
         git_fields = system_taxonomy.get_tool_fields("version_control", "git")
@@ -281,7 +282,7 @@ class TestToolFields:
         assert "daemon_running" in docker_fields
 
     @pytest.mark.unit
-    def test_get_tool_fields_nested_categories(self):
+    def test_get_tool_fields_nested_categories(self) -> Any:
         """Test retrieving fields for tools in nested categories"""
         # Act
         pip_fields = system_taxonomy.get_tool_fields("package_managers", "pip")
@@ -291,7 +292,7 @@ class TestToolFields:
         # Language subcategory tools only have 'version' field in the taxonomy
 
     @pytest.mark.unit
-    def test_get_tool_fields_nonexistent_tool(self):
+    def test_get_tool_fields_nonexistent_tool(self) -> Any:
         """Test retrieving fields for a non-existent tool returns empty list"""
         # Act & Assert
         fields = system_taxonomy.get_tool_fields("version_control", "nonexistent_tool")
@@ -305,7 +306,7 @@ class TestTaxonomyStructure:
     """Test suite for verifying the taxonomy structure itself"""
 
     @pytest.mark.unit
-    def test_all_categories_have_descriptions(self):
+    def test_all_categories_have_descriptions(self) -> Any:
         """Test that all categories have descriptions"""
         # Act & Assert
         for category, info in system_taxonomy.PRACTICAL_TAXONOMY.items():
@@ -314,7 +315,7 @@ class TestTaxonomyStructure:
             assert len(info["description"]) > 0, f"Category {category} has empty description"
 
     @pytest.mark.unit
-    def test_all_tools_have_fields(self):
+    def test_all_tools_have_fields(self) -> Any:
         """Test that all tools have at least one field defined"""
         # Act & Assert
         for category, info in system_taxonomy.PRACTICAL_TAXONOMY.items():
@@ -324,7 +325,7 @@ class TestTaxonomyStructure:
                     assert len(fields) > 0, f"Tool {tool} in {category} has no fields"
 
     @pytest.mark.unit
-    def test_use_case_categories_exist(self):
+    def test_use_case_categories_exist(self) -> Any:
         """Test that all expected use-case driven categories exist"""
         # Arrange
         expected_categories = [
@@ -344,7 +345,7 @@ class TestTaxonomyStructure:
             assert category in system_taxonomy.PRACTICAL_TAXONOMY, f"Expected category {category} not found in taxonomy"
 
     @pytest.mark.unit
-    def test_common_tools_in_correct_categories(self):
+    def test_common_tools_in_correct_categories(self) -> Any:
         """Test that common tools are in their expected categories"""
         # Arrange
         tool_category_mapping = {
@@ -395,7 +396,7 @@ class TestPlatformSpecificBehavior:
     """Test suite for platform-specific behavior and edge cases"""
 
     @pytest.mark.unit
-    def test_platform_tools_mapping_completeness(self):
+    def test_platform_tools_mapping_completeness(self) -> Any:
         """Test that PLATFORM_TOOLS covers all major platforms"""
         # Arrange
         expected_platforms = ["macos", "windows", "linux"]
@@ -412,7 +413,7 @@ class TestPlatformSpecificBehavior:
             assert "system_tools" in platform_info
 
     @pytest.mark.unit
-    def test_no_tool_appears_in_conflicting_exclusions(self):
+    def test_no_tool_appears_in_conflicting_exclusions(self) -> Any:
         """Test that no tool is excluded from all platforms (orphaned tools)"""
         # Arrange
         all_exclusions = set()
@@ -440,7 +441,7 @@ class TestIntegrationScenarios:
     """Test suite for integration scenarios and real-world usage"""
 
     @pytest.mark.unit
-    def test_docker_available_on_all_platforms(self):
+    def test_docker_available_on_all_platforms(self) -> Any:
         """Test that Docker is correctly identified as cross-platform"""
         # Arrange
         platforms = ["macos", "linux", "windows"]
@@ -458,7 +459,7 @@ class TestIntegrationScenarios:
             assert "storage_driver" in docker_fields
 
     @pytest.mark.unit
-    def test_language_package_managers_on_all_platforms(self):
+    def test_language_package_managers_on_all_platforms(self) -> Any:
         """Test that language-specific package managers are available across platforms"""
         # TODO: This test currently fails because the language subcategory is filtered out
         # The implementation needs to be fixed to handle the language subcategory properly
@@ -476,7 +477,7 @@ class TestIntegrationScenarios:
                 )
 
     @pytest.mark.unit
-    def test_build_tools_availability(self):
+    def test_build_tools_availability(self) -> Any:
         """Test that common build tools are available where expected"""
         # Act & Assert
         # Make should be available on Unix-like systems
@@ -493,14 +494,14 @@ class TestEdgeCases:
     """Test suite for edge cases and boundary conditions"""
 
     @pytest.mark.unit
-    def test_empty_platform_string(self):
+    def test_empty_platform_string(self) -> Any:
         """Test behavior with empty platform string"""
         # Should return True by default for unknown platforms
         assert system_taxonomy.is_tool_available_on_platform("git", "") is True
         assert system_taxonomy.is_tool_available_on_platform("unknown_tool", "") is True
 
     @pytest.mark.unit
-    def test_case_sensitivity(self):
+    def test_case_sensitivity(self) -> Any:
         """Test that platform names are case-insensitive in practice"""
         # The get_current_platform already lowercases, but test direct calls
         assert system_taxonomy.is_tool_available_on_platform("brew", "macos") is True
@@ -509,7 +510,7 @@ class TestEdgeCases:
         assert system_taxonomy.is_tool_available_on_platform("brew", "MACOS") is True  # Default behavior
 
     @pytest.mark.unit
-    def test_tools_with_special_characters(self):
+    def test_tools_with_special_characters(self) -> Any:
         """Test tools with special characters in names"""
         # Tools like g++, clang++ have special characters
         categories = system_taxonomy.get_relevant_categories("linux")
@@ -520,7 +521,7 @@ class TestEdgeCases:
         assert "version" in categories["compilers"]["tools"]["g++"]
 
     @pytest.mark.unit
-    def test_deeply_nested_tool_lookup(self):
+    def test_deeply_nested_tool_lookup(self) -> Any:
         """Test looking up tools in deeply nested structures"""
         # Package managers have nested structure
         taxonomy = system_taxonomy.PRACTICAL_TAXONOMY
@@ -530,7 +531,7 @@ class TestEdgeCases:
         assert "npm" in taxonomy["package_managers"]["categories"]["language"]["javascript"]
 
     @pytest.mark.unit
-    def test_platform_with_none_value(self):
+    def test_platform_with_none_value(self) -> Any:
         """Test get_relevant_categories with None uses current platform"""
         # This should not raise an error
         categories = system_taxonomy.get_relevant_categories(None)
@@ -538,7 +539,7 @@ class TestEdgeCases:
         assert len(categories) > 0
 
     @pytest.mark.unit
-    def test_tool_fields_for_nested_tools(self):
+    def test_tool_fields_for_nested_tools(self) -> Any:
         """Test that get_tool_fields handles tools in nested categories correctly"""
         # Now works correctly for nested tools!
         fields = system_taxonomy.get_tool_fields("package_managers", "pip")
@@ -550,7 +551,7 @@ class TestEdgeCases:
         assert "protocols" in fields
 
     @pytest.mark.unit
-    def test_multiple_exclusions_same_tool(self):
+    def test_multiple_exclusions_same_tool(self) -> Any:
         """Test tools that are excluded from multiple platforms"""
         # msvc is excluded from both macos and linux
         assert system_taxonomy.is_tool_available_on_platform("msvc", "windows") is True
@@ -562,7 +563,7 @@ class TestPerformanceCharacteristics:
     """Test suite for performance-related aspects"""
 
     @pytest.mark.unit
-    def test_get_relevant_categories_caching_opportunity(self):
+    def test_get_relevant_categories_caching_opportunity(self) -> Any:
         """Test that get_relevant_categories could benefit from caching"""
         # Multiple calls with same platform should ideally be cached
         # Currently no caching - each call does full filtering
@@ -586,7 +587,7 @@ class TestPerformanceCharacteristics:
         # Currently both calls take similar time
 
     @pytest.mark.unit
-    def test_large_taxonomy_filtering(self):
+    def test_large_taxonomy_filtering(self) -> Any:
         """Test that filtering works efficiently even with large taxonomy"""
         # Current taxonomy has 18 categories, each with multiple tools
         categories = system_taxonomy.get_relevant_categories("linux")
@@ -610,7 +611,7 @@ class TestImplementationIssues:
     """Test suite documenting current implementation issues that need fixing"""
 
     @pytest.mark.unit
-    def test_language_subcategory_preserved(self):
+    def test_language_subcategory_preserved(self) -> Any:
         """Verify that language subcategory is preserved for all platforms"""
         # The language subcategory has a different structure than system subcategory
         # It uses language names as keys instead of platform names
@@ -624,7 +625,7 @@ class TestImplementationIssues:
         assert "javascript" in categories["package_managers"]["categories"]["language"]
 
     @pytest.mark.unit
-    def test_wsl_platform_exclusion_fixed(self):
+    def test_wsl_platform_exclusion_fixed(self) -> Any:
         """Verify that WSL is properly excluded from Linux"""
         # WSL (Windows Subsystem for Linux) should only be available on Windows
         # This has been fixed - WSL is now in Linux exclusions
@@ -634,7 +635,7 @@ class TestImplementationIssues:
         assert system_taxonomy.is_tool_available_on_platform("wsl", "windows") is True
 
     @pytest.mark.unit
-    def test_cross_platform_tools_not_comprehensive(self):
+    def test_cross_platform_tools_not_comprehensive(self) -> Any:
         """Document that cross_platform set is missing some common tools"""
         # Some tools that should be cross-platform are not in the set
         missing_tools = ["pip", "pip3", "poetry", "yarn", "pnpm"]
@@ -650,7 +651,7 @@ class TestRealWorldScenarios:
     """Test suite for real-world usage scenarios"""
 
     @pytest.mark.unit
-    def test_python_project_tool_detection(self):
+    def test_python_project_tool_detection(self) -> Any:
         """Test detecting tools needed for a Python project"""
         # For a Python project, we need certain tools available
         platform = "linux"  # Common CI/CD platform
@@ -673,7 +674,7 @@ class TestRealWorldScenarios:
         assert "pytest" in categories["testing_tools"]["tools"]
 
     @pytest.mark.unit
-    def test_nodejs_project_tool_detection(self):
+    def test_nodejs_project_tool_detection(self) -> Any:
         """Test detecting tools needed for a Node.js project"""
         platform = "macos"  # Common dev platform
         categories = system_taxonomy.get_relevant_categories(platform)
@@ -691,7 +692,7 @@ class TestRealWorldScenarios:
         assert "mocha" in categories["testing_tools"]["tools"]
 
     @pytest.mark.unit
-    def test_devops_toolchain_detection(self):
+    def test_devops_toolchain_detection(self) -> Any:
         """Test detecting DevOps tools"""
         platform = "linux"
         categories = system_taxonomy.get_relevant_categories(platform)
@@ -710,7 +711,7 @@ class TestRealWorldScenarios:
         assert "gitlab-runner" in categories["ci_cd_tools"]["tools"]
 
     @pytest.mark.unit
-    def test_cross_platform_development_tools(self):
+    def test_cross_platform_development_tools(self) -> Any:
         """Test that essential dev tools are available on all platforms"""
         essential_tools = {
             "version_control": ["git"],
@@ -733,7 +734,7 @@ class TestDataValidation:
     """Test suite for data validation and consistency"""
 
     @pytest.mark.unit
-    def test_no_duplicate_tools_across_categories(self):
+    def test_no_duplicate_tools_across_categories(self) -> Any:
         """Test that tools don't appear in multiple top-level categories"""
         all_tools = {}
         expected_duplicates = {"openssl", "go"}  # Known intentional duplicates
@@ -752,7 +753,7 @@ class TestDataValidation:
         # go appears in both language_runtimes and compilers - this is intentional
 
     @pytest.mark.unit
-    def test_tool_fields_consistency(self):
+    def test_tool_fields_consistency(self) -> Any:
         """Test that all tools have 'version' as a field"""
         # Tools that don't have a simple version command
         no_version_tools = {
@@ -792,7 +793,7 @@ class TestDataValidation:
                             assert "version" in fields, f"Tool {tool} in {category} missing 'version' field"
 
     @pytest.mark.unit
-    def test_category_naming_conventions(self):
+    def test_category_naming_conventions(self) -> Any:
         """Test that category names follow naming conventions"""
         for category in system_taxonomy.PRACTICAL_TAXONOMY.keys():
             # Should be lowercase with underscores
@@ -803,7 +804,7 @@ class TestDataValidation:
             assert len(category) > 3, f"Category {category} name too short"
 
     @pytest.mark.unit
-    def test_platform_tools_consistency(self):
+    def test_platform_tools_consistency(self) -> Any:
         """Test PLATFORM_TOOLS matches actual tool availability"""
         for platform, categories in system_taxonomy.PLATFORM_TOOLS.items():
             for _category, tools in categories.items():
@@ -815,7 +816,7 @@ class TestDataValidation:
 
 
 @pytest.mark.unit
-def test_module_imports():
+def test_module_imports() -> Any:
     """Test that the module can be imported without errors"""
     # This test passes if the import at the top of the file succeeds
     assert system_taxonomy is not None

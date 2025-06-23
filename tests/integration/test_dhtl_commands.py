@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -18,7 +19,7 @@ import pytest
 # Assuming run_dhtl_command helper from test_dhtl_setup_init
 
 
-def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 300):
+def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 300) -> Any:
     """Helper to run dhtl commands via subprocess."""
     # Use Python implementation instead of shell script
     import sys
@@ -54,7 +55,7 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None, timeout: int = 
 
 # --- Setup Fixture ---
 @pytest.fixture(scope="function")  # Use function scope for isolation
-def setup_project(mock_project_dir):
+def setup_project(mock_project_dir) -> Any:
     """Fixture to run dhtl setup once per test function."""
     # Create basic pyproject.toml for setup to succeed
     (mock_project_dir / "pyproject.toml").write_text("""
@@ -69,10 +70,10 @@ dev = ["pytest", "pytest-cov", "ruff", "black", "pre-commit", "tox", "uv"] # Add
     (mock_project_dir / "src").mkdir(exist_ok=True)
     (mock_project_dir / "src" / "cmd_test_proj").mkdir(exist_ok=True)
     (mock_project_dir / "src" / "cmd_test_proj" / "__init__.py").write_text("__version__ = '0.1.0'")
-    (mock_project_dir / "src" / "cmd_test_proj" / "main.py").write_text("def main():\n    print('hello')\n")
+    (mock_project_dir / "src" / "cmd_test_proj" / "main.py").write_text("def main() -> Any:\n    print('hello')\n")
     # Create dummy test file
     (mock_project_dir / "tests").mkdir(exist_ok=True)
-    (mock_project_dir / "tests" / "test_main.py").write_text("def test_success(): assert True")
+    (mock_project_dir / "tests" / "test_main.py").write_text("def test_success() -> Any: assert True")
     # Create dummy shell script for 'dhtl script' command test
     dht_scripts_dir = mock_project_dir / "DHT" / "scripts"
     dht_scripts_dir.mkdir(parents=True, exist_ok=True)
@@ -94,7 +95,7 @@ dev = ["pytest", "pytest-cov", "ruff", "black", "pre-commit", "tox", "uv"] # Add
 
 
 @pytest.mark.integration
-def test_dhtl_lint_command(setup_project):
+def test_dhtl_lint_command(setup_project) -> Any:
     """Test the 'dhtl lint' command."""
     # Arrange (setup_project fixture already ran setup)
     # Create a pre-commit config to test that path
@@ -121,12 +122,12 @@ repos:
 
 
 @pytest.mark.integration
-def test_dhtl_format_command(setup_project):
+def test_dhtl_format_command(setup_project) -> Any:
     """Test the 'dhtl format' command."""
     # Arrange
     # Create a file that needs formatting
     badly_formatted_file = setup_project / "src" / "cmd_test_proj" / "bad_format.py"
-    badly_formatted_file.write_text("import os, sys\ndef my_func(  x ):\n  return x+1\n")
+    badly_formatted_file.write_text("import os, sys\ndef my_func(  x ) -> Any:\n  return x+1\n")
     original_content = badly_formatted_file.read_text()
 
     # Act
@@ -147,11 +148,11 @@ def test_dhtl_format_command(setup_project):
     assert new_content != original_content
     assert "import os" in new_content  # Check for some formatting change
     assert "import sys" in new_content
-    assert "def my_func(x):" in new_content
+    assert "def my_func(x) -> Any:" in new_content
 
 
 @pytest.mark.integration
-def test_dhtl_build_command(setup_project):
+def test_dhtl_build_command(setup_project) -> Any:
     """Test the 'dhtl build' command."""
     # Arrange
     dist_dir = setup_project / "dist"
@@ -174,7 +175,7 @@ def test_dhtl_build_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_clean_command(setup_project):
+def test_dhtl_clean_command(setup_project) -> Any:
     """Test the 'dhtl clean' command."""
     # Arrange
     cache_dir = setup_project / "DHT" / ".dht_cache"
@@ -203,7 +204,7 @@ def test_dhtl_clean_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_commit_command(setup_project):
+def test_dhtl_commit_command(setup_project) -> Any:
     """Test the 'dhtl commit' command (basic execution)."""
     # Arrange
     # Initialize git repo
@@ -232,7 +233,7 @@ def test_dhtl_commit_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_coverage_command(setup_project):
+def test_dhtl_coverage_command(setup_project) -> Any:
     """Test the 'dhtl coverage' command."""
     # Arrange
     coverage_dir = setup_project / "coverage_report"
@@ -252,7 +253,7 @@ def test_dhtl_coverage_command(setup_project):
 
 @pytest.mark.integration
 @patch("subprocess.run")
-def test_dhtl_publish_command(mock_subprocess, setup_project):
+def test_dhtl_publish_command(mock_subprocess, setup_project) -> Any:
     """Test the 'dhtl publish' command (mocks underlying script)."""
     # Arrange
     # Mock the actual publish script to avoid network calls/git pushes
@@ -281,7 +282,7 @@ def test_dhtl_publish_command(mock_subprocess, setup_project):
 
 @pytest.mark.integration
 @patch("subprocess.run")
-def test_dhtl_rebase_command(mock_subprocess, setup_project):
+def test_dhtl_rebase_command(mock_subprocess, setup_project) -> Any:
     """Test the 'dhtl rebase' command (mocks git and zip)."""
     # Arrange
     # Initialize git repo
@@ -291,7 +292,7 @@ def test_dhtl_rebase_command(mock_subprocess, setup_project):
     subprocess.run(["git", "branch", "-M", "main"], cwd=setup_project, check=True)
 
     # Mock zip and git commands called by rebase_command
-    def mock_run(*args, **kwargs):
+    def mock_run(*args, **kwargs) -> Any:
         cmd = args[0]
         mock_process = subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
         if cmd[0] == "zip":
@@ -330,12 +331,12 @@ def test_dhtl_rebase_command(mock_subprocess, setup_project):
 
 @pytest.mark.integration
 @patch("subprocess.run")
-def test_dhtl_workflows_command(mock_subprocess, setup_project):
+def test_dhtl_workflows_command(mock_subprocess, setup_project) -> Any:
     """Test the 'dhtl workflows' command (mocks gh)."""
 
     # Arrange
     # Mock gh commands
-    def mock_run(*args, **kwargs):
+    def mock_run(*args, **kwargs) -> Any:
         cmd = args[0]
         mock_process = subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
         if "gh" in cmd[0] and "auth status" in cmd:
@@ -371,7 +372,7 @@ def test_dhtl_workflows_command(mock_subprocess, setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_env_command(setup_project):
+def test_dhtl_env_command(setup_project) -> Any:
     """Test the 'dhtl env' command."""
     # Arrange (setup_project fixture already ran setup)
 
@@ -389,7 +390,7 @@ def test_dhtl_env_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_restore_command(setup_project):
+def test_dhtl_restore_command(setup_project) -> Any:
     """Test the 'dhtl restore' command."""
     # Arrange
     # Simulate removing a dependency file from venv to trigger reinstall/sync
@@ -411,7 +412,7 @@ def test_dhtl_restore_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_script_command(setup_project):
+def test_dhtl_script_command(setup_project) -> Any:
     """Test the 'dhtl script' command."""
     # Arrange (setup_project fixture created DHT/scripts/hello.sh)
 
@@ -426,7 +427,7 @@ def test_dhtl_script_command(setup_project):
 
 
 @pytest.mark.integration
-def test_dhtl_script_command_not_found(setup_project):
+def test_dhtl_script_command_not_found(setup_project) -> Any:
     """Test 'dhtl script' when the script doesn't exist."""
     # Act
     result = run_dhtl_command(["script", "nonexistent"], cwd=setup_project)

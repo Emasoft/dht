@@ -23,6 +23,7 @@ import shutil
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -46,7 +47,7 @@ class TestDhtlSetupCommand:
         """Check if UV is available."""
         return shutil.which("uv") is not None
 
-    def test_setup_existing_project(self, temp_dir, uv_available):
+    def test_setup_existing_project(self, temp_dir, uv_available) -> Any:
         """Test setting up an existing Python project."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -106,7 +107,7 @@ build-backend = "hatchling.build"
         assert "installed" in result
         assert result["installed"]["dependencies"] > 0
 
-    def test_setup_with_dev_dependencies(self, temp_dir, uv_available):
+    def test_setup_with_dev_dependencies(self, temp_dir, uv_available) -> Any:
         """Test setting up project with development dependencies."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -141,7 +142,7 @@ test = ["pytest-cov", "pytest-xdist"]
         # Verify dev dependencies were installed
         assert result["installed"]["dev_dependencies"] > 0
 
-    def test_setup_from_requirements_txt(self, temp_dir, uv_available):
+    def test_setup_from_requirements_txt(self, temp_dir, uv_available) -> Any:
         """Test setting up project from requirements.txt."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -185,7 +186,7 @@ ruff>=0.1.0
         assert any("requests" in dep for dep in deps)
         assert any("click" in dep for dep in deps)
 
-    def test_setup_with_python_version(self, temp_dir, uv_available):
+    def test_setup_with_python_version(self, temp_dir, uv_available) -> Any:
         """Test setting up project with specific Python version."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -218,7 +219,7 @@ dependencies = []
         python_version = (project_path / ".python-version").read_text().strip()
         assert python_version == "3.11"
 
-    def test_setup_with_install_flags(self, temp_dir, uv_available):
+    def test_setup_with_install_flags(self, temp_dir, uv_available) -> Any:
         """Test setup with additional install flags."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -248,7 +249,7 @@ dependencies = ["requests", "httpx"]
         assert result["options"]["compile_bytecode"] is True
         assert result["options"]["editable"] is True
 
-    def test_setup_workspace_project(self, temp_dir, uv_available):
+    def test_setup_workspace_project(self, temp_dir, uv_available) -> Any:
         """Test setting up a workspace with multiple packages."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -299,7 +300,7 @@ package-a = { workspace = true }
         assert result["success"] is True
         assert result["workspace"]["packages_installed"] == 2
 
-    def test_setup_with_index_url(self, temp_dir, uv_available):
+    def test_setup_with_index_url(self, temp_dir, uv_available) -> Any:
         """Test setup with custom package index."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -325,7 +326,7 @@ dependencies = ["requests"]
         assert result["success"] is True
         assert result["options"]["index_url"] == "https://pypi.org/simple"
 
-    def test_setup_idempotent(self, temp_dir, uv_available):
+    def test_setup_idempotent(self, temp_dir, uv_available) -> Any:
         """Test that setup is idempotent (can be run multiple times)."""
         if not uv_available:
             pytest.skip("UV is not installed")
@@ -354,7 +355,7 @@ dependencies = ["click"]
         assert result2["success"] is True
         assert "already set up" in result2["message"].lower() or "setup completed" in result2["message"].lower()
 
-    def test_setup_with_pre_commit(self, temp_dir, uv_available):
+    def test_setup_with_pre_commit(self, temp_dir, uv_available) -> Any:
         """Test setting up pre-commit hooks."""
         if not uv_available:
             pytest.skip("UV is not installed")

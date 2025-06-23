@@ -21,6 +21,8 @@ and framework-specific setup recommendations.
 # - Added tests for migration detection
 # - Added tests for hybrid project support
 
+from typing import Any
+
 import pytest
 
 from DHT.modules.framework_configs import FrameworkConfig
@@ -32,12 +34,12 @@ class TestProjectTypeDetector:
     """Test the project type detection system."""
 
     @pytest.fixture
-    def detector(self):
+    def detector(self) -> Any:
         """Create a project type detector instance."""
         return ProjectTypeDetector()
 
     @pytest.fixture
-    def django_project(self, tmp_path):
+    def django_project(self, tmp_path) -> Any:
         """Create a Django project structure."""
         project_dir = tmp_path / "django_project"
         project_dir.mkdir()
@@ -96,7 +98,7 @@ redis>=4.5
         return project_dir
 
     @pytest.fixture
-    def fastapi_project(self, tmp_path):
+    def fastapi_project(self, tmp_path) -> Any:
         """Create a FastAPI project structure."""
         project_dir = tmp_path / "fastapi_project"
         project_dir.mkdir()
@@ -114,11 +116,11 @@ class Item(BaseModel):
     price: float
 
 @app.get("/")
-async def root():
+async def root() -> Any:
     return {"message": "Hello World"}
 
 @app.post("/items/")
-async def create_item(item: Item):
+async def create_item(item: Item) -> Any:
     return item
 
 if __name__ == "__main__":
@@ -158,7 +160,7 @@ dependencies = [
         return project_dir
 
     @pytest.fixture
-    def ml_project(self, tmp_path):
+    def ml_project(self, tmp_path) -> Any:
         """Create a machine learning project structure."""
         project_dir = tmp_path / "ml_project"
         project_dir.mkdir()
@@ -196,7 +198,7 @@ jupyterlab>=4.0
 
         return project_dir
 
-    def test_detect_django_project(self, detector, django_project):
+    def test_detect_django_project(self, detector, django_project) -> Any:
         """Test Django project detection with high confidence."""
         # Debug: Print the created structure
         print(f"\nDjango project path: {django_project}")
@@ -222,7 +224,7 @@ jupyterlab>=4.0
         assert "import:django" in result.markers or "file:manage.py" in result.markers
         assert any("django" in d.lower() for d in result.primary_dependencies)
 
-    def test_detect_fastapi_project(self, detector, fastapi_project):
+    def test_detect_fastapi_project(self, detector, fastapi_project) -> Any:
         """Test FastAPI project detection."""
         result = detector.analyze(fastapi_project)
 
@@ -232,7 +234,7 @@ jupyterlab>=4.0
         assert "fastapi" in result.primary_dependencies
         assert "uvicorn" in result.primary_dependencies
 
-    def test_detect_ml_project(self, detector, ml_project):
+    def test_detect_ml_project(self, detector, ml_project) -> Any:
         """Test machine learning project detection."""
         result = detector.analyze(ml_project)
 
@@ -243,7 +245,7 @@ jupyterlab>=4.0
         assert "tensorflow" in result.ml_frameworks
         assert "torch" in result.ml_frameworks
 
-    def test_generate_django_config(self, detector, django_project):
+    def test_generate_django_config(self, detector, django_project) -> Any:
         """Test Django configuration generation."""
         analysis = detector.analyze(django_project)
         configs = detector.generate_configurations(analysis)
@@ -266,7 +268,7 @@ jupyterlab>=4.0
         precommit = configs[".pre-commit-config.yaml"]
         assert "django-upgrade" in precommit
 
-    def test_generate_fastapi_config(self, detector, fastapi_project):
+    def test_generate_fastapi_config(self, detector, fastapi_project) -> Any:
         """Test FastAPI configuration generation."""
         analysis = detector.analyze(fastapi_project)
         configs = detector.generate_configurations(analysis)
@@ -287,7 +289,7 @@ jupyterlab>=4.0
         # Check alembic config
         assert "alembic.ini" in configs
 
-    def test_generate_ml_config(self, detector, ml_project):
+    def test_generate_ml_config(self, detector, ml_project) -> Any:
         """Test ML project configuration generation."""
         analysis = detector.analyze(ml_project)
         configs = detector.generate_configurations(analysis)
@@ -304,7 +306,7 @@ jupyterlab>=4.0
         # Check notebook config
         assert ".jupyter/jupyter_notebook_config.py" in configs
 
-    def test_detect_hybrid_project(self, detector, tmp_path):
+    def test_detect_hybrid_project(self, detector, tmp_path) -> Any:
         """Test detection of projects with multiple frameworks."""
         project_dir = tmp_path / "hybrid_project"
         project_dir.mkdir()
@@ -347,7 +349,7 @@ if __name__ == '__main__':
         assert ProjectType.REACT in result.detected_types
         assert result.category == ProjectCategory.FULL_STACK
 
-    def test_migration_detection(self, detector, tmp_path):
+    def test_migration_detection(self, detector, tmp_path) -> Any:
         """Test detection of projects needing migration."""
         project_dir = tmp_path / "poetry_project"
         project_dir.mkdir()
@@ -370,7 +372,7 @@ django = "^4.0"
         assert result.migration_suggested
         assert "poetry_to_uv" in result.migration_paths
 
-    def test_setup_recommendations(self, detector, django_project):
+    def test_setup_recommendations(self, detector, django_project) -> Any:
         """Test project setup recommendations."""
         analysis = detector.analyze(django_project)
         recommendations = detector.get_setup_recommendations(analysis)
@@ -388,7 +390,7 @@ django = "^4.0"
         assert "testing" in recommendations
         assert "pytest-django" in recommendations["testing"]["packages"]
 
-    def test_cli_detection(self, detector, tmp_path):
+    def test_cli_detection(self, detector, tmp_path) -> Any:
         """Test CLI application detection."""
         project_dir = tmp_path / "cli_app"
         project_dir.mkdir()
@@ -398,7 +400,7 @@ import click
 import typer
 
 @click.command()
-def main():
+def main() -> Any:
     pass
 
 app = typer.Typer()
@@ -421,7 +423,7 @@ setup(
         assert "click" in result.cli_frameworks
         assert "typer" in result.cli_frameworks
 
-    def test_library_detection(self, detector, tmp_path):
+    def test_library_detection(self, detector, tmp_path) -> Any:
         """Test library project detection."""
         project_dir = tmp_path / "my_library"
         project_dir.mkdir()
@@ -448,7 +450,7 @@ description = "An awesome library"
         assert result.category == ProjectCategory.PACKAGE
         assert result.is_publishable
 
-    def test_minimal_project_handling(self, detector, tmp_path):
+    def test_minimal_project_handling(self, detector, tmp_path) -> Any:
         """Test detection of minimal/new projects."""
         project_dir = tmp_path / "new_project"
         project_dir.mkdir()
@@ -466,7 +468,7 @@ description = "An awesome library"
         assert "project_structure" in recommendations
         assert "Choose a project type" in recommendations["project_structure"]["actions"]
 
-    def test_confidence_scoring(self, detector, django_project):
+    def test_confidence_scoring(self, detector, django_project) -> Any:
         """Test confidence scoring accuracy."""
         # Full Django project should have high confidence
         result = detector.analyze(django_project)
@@ -482,7 +484,7 @@ description = "An awesome library"
         result3 = detector.analyze(django_project)
         assert result3.confidence <= 0.6
 
-    def test_config_validation(self, detector, fastapi_project):
+    def test_config_validation(self, detector, fastapi_project) -> Any:
         """Test configuration validation."""
         analysis = detector.analyze(fastapi_project)
         configs = detector.generate_configurations(analysis)
@@ -494,7 +496,7 @@ description = "An awesome library"
         assert len(validation.errors) == 0
         assert "All configurations valid" in validation.summary
 
-    def test_incremental_detection(self, detector, tmp_path):
+    def test_incremental_detection(self, detector, tmp_path) -> Any:
         """Test incremental project type detection."""
         project_dir = tmp_path / "evolving_project"
         project_dir.mkdir()
@@ -521,7 +523,7 @@ app = FastAPI()
 class TestFrameworkConfig:
     """Test framework configuration templates."""
 
-    def test_django_framework_config(self):
+    def test_django_framework_config(self) -> Any:
         """Test Django framework configuration."""
         config = FrameworkConfig.get_config(ProjectType.DJANGO)
 
@@ -531,7 +533,7 @@ class TestFrameworkConfig:
         assert config.default_port == 8000
         assert config.wsgi_module == "wsgi:application"
 
-    def test_fastapi_framework_config(self):
+    def test_fastapi_framework_config(self) -> Any:
         """Test FastAPI framework configuration."""
         config = FrameworkConfig.get_config(ProjectType.FASTAPI)
 
@@ -540,7 +542,7 @@ class TestFrameworkConfig:
         assert config.default_port == 8000
         assert "alembic" in config.migration_tool
 
-    def test_config_inheritance(self):
+    def test_config_inheritance(self) -> Any:
         """Test configuration inheritance for related frameworks."""
         django_config = FrameworkConfig.get_config(ProjectType.DJANGO)
         drf_config = FrameworkConfig.get_config(ProjectType.DJANGO_REST)
@@ -556,7 +558,7 @@ class TestFrameworkConfig:
 class TestProjectCategory:
     """Test project category classification."""
 
-    def test_category_properties(self):
+    def test_category_properties(self) -> Any:
         """Test category properties and methods."""
         web_category = ProjectCategory.WEB_FRAMEWORK
 

@@ -8,6 +8,7 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import os
 import sys
+from typing import Any
 
 import pytest
 
@@ -16,7 +17,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from helpers import create_mock_file, mock_bash_script, run_bash_command
 
 
-def test_detect_active_venv(monkeypatch):
+def test_detect_active_venv(monkeypatch) -> Any:
     """Test the detect_active_venv function."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -50,7 +51,7 @@ def test_detect_active_venv(monkeypatch):
         os.unlink(script_path)
 
 
-def test_env_command_output(mock_dht_env):
+def test_env_command_output(mock_dht_env) -> Any:
     """Test the env_command function produces expected output."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -116,7 +117,7 @@ EOF
 
 
 @pytest.mark.skip(reason="setup_environment function was removed - canonical logic is in dhtl_init.sh")
-def test_setup_environment(tmp_path, mock_dht_env):
+def test_setup_environment(tmp_path, mock_dht_env) -> Any:
     """Test the setup_environment function."""
     # Create a minimal script to call setup_environment
     project_root = os.path.join(str(tmp_path), "test_project")

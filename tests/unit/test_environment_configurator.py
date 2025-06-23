@@ -15,6 +15,7 @@ Test suite for environment configurator.
 # - Tests for refactored modules
 #
 
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -29,12 +30,12 @@ class TestEnvironmentConfigurator:
     """Test the environment configurator."""
 
     @pytest.fixture
-    def configurator(self):
+    def configurator(self) -> Any:
         """Create a configurator instance."""
         return EnvironmentConfigurator()
 
     @pytest.fixture
-    def sample_project(self, tmp_path):
+    def sample_project(self, tmp_path) -> Any:
         """Create a sample Python project."""
         project_dir = tmp_path / "sample_project"
         project_dir.mkdir()
@@ -44,7 +45,7 @@ class TestEnvironmentConfigurator:
 import click
 
 @click.command()
-def main():
+def main() -> Any:
     print("Hello World")
 
 if __name__ == "__main__":
@@ -66,7 +67,7 @@ line-length = 88
 
         return project_dir
 
-    def test_configurator_initialization(self, configurator):
+    def test_configurator_initialization(self, configurator) -> Any:
         """Test configurator initializes with required components."""
         assert configurator.analyzer is not None
         assert configurator.env_analyzer is not None
@@ -75,7 +76,7 @@ line-length = 88
         assert isinstance(configurator.installer, EnvironmentInstaller)
 
     @patch("DHT.modules.environment_analyzer.build_system_report")
-    def test_analyze_environment_requirements(self, mock_system_report, configurator, sample_project):
+    def test_analyze_environment_requirements(self, mock_system_report, configurator, sample_project) -> Any:
         """Test environment requirements analysis."""
         mock_system_report.return_value = {"system": {"platform": "darwin"}, "tools": {}}
 
@@ -86,7 +87,7 @@ line-length = 88
         assert "recommended_tools" in analysis
         assert "python_requirements" in analysis
 
-    def test_generate_environment_config(self, configurator, sample_project):
+    def test_generate_environment_config(self, configurator, sample_project) -> Any:
         """Test environment configuration generation."""
         # Create analysis result
         analysis = {
@@ -118,7 +119,7 @@ line-length = 88
     @patch("DHT.modules.environment_installer.install_dependencies")
     def test_configure_development_environment(
         self, mock_install_deps, mock_create_venv, mock_check_uv, configurator, sample_project
-    ):
+    ) -> Any:
         """Test full environment configuration flow."""
         # Mock UV availability
         mock_check_uv.return_value = {"available": True}
@@ -140,7 +141,7 @@ line-length = 88
             assert result.success
             assert "create_virtual_environment" in result.steps_completed
 
-    def test_environment_analyzer_integration(self, configurator, sample_project):
+    def test_environment_analyzer_integration(self, configurator, sample_project) -> Any:
         """Test that environment analyzer is properly integrated."""
         # The analyzer methods should be delegated to
         with patch.object(configurator.env_analyzer, "_detect_tools_from_project") as mock_detect:
@@ -163,7 +164,7 @@ line-length = 88
                     assert "recommended_tools" in result
                     assert result["recommended_tools"] == ["ruff", "mypy"]
 
-    def test_config_file_generation(self, configurator, sample_project):
+    def test_config_file_generation(self, configurator, sample_project) -> Any:
         """Test configuration file generation."""
         config = EnvironmentConfig(
             project_path=sample_project,
@@ -193,11 +194,11 @@ class TestEnvironmentAnalyzer:
     """Test the environment analyzer module."""
 
     @pytest.fixture
-    def analyzer(self):
+    def analyzer(self) -> Any:
         """Create an analyzer instance."""
         return EnvironmentAnalyzer()
 
-    def test_analyze_environment_requirements(self, analyzer, tmp_path):
+    def test_analyze_environment_requirements(self, analyzer, tmp_path) -> Any:
         """Test basic environment analysis."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -213,7 +214,7 @@ class TestEnvironmentAnalyzer:
             assert "system_requirements" in analysis
             assert "python_requirements" in analysis
 
-    def test_detect_tools_from_project(self, analyzer, tmp_path):
+    def test_detect_tools_from_project(self, analyzer, tmp_path) -> Any:
         """Test tool detection from project files."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -242,13 +243,13 @@ class TestEnvironmentInstaller:
     """Test the environment installer module."""
 
     @pytest.fixture
-    def installer(self):
+    def installer(self) -> Any:
         """Create an installer instance."""
         return EnvironmentInstaller()
 
     @patch("DHT.modules.environment_installer.check_uv_available")
     @patch("DHT.modules.environment_installer.create_virtual_environment")
-    def test_install_python_environment_with_uv(self, mock_create_venv, mock_check_uv, installer, tmp_path):
+    def test_install_python_environment_with_uv(self, mock_create_venv, mock_check_uv, installer, tmp_path) -> Any:
         """Test Python environment installation with UV."""
         mock_check_uv.return_value = {"available": True}
         mock_create_venv.return_value = tmp_path / ".venv"
@@ -264,7 +265,7 @@ class TestEnvironmentInstaller:
             assert success
             assert "create_virtual_environment" in result.steps_completed
 
-    def test_install_with_pip_fallback(self, installer, tmp_path):
+    def test_install_with_pip_fallback(self, installer, tmp_path) -> Any:
         """Test fallback to pip when UV is not available."""
         config = EnvironmentConfig(project_path=tmp_path, project_type="python", python_packages=["click", "requests"])
         result = ConfigurationResult(success=True, config=config)

@@ -12,6 +12,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
@@ -20,13 +21,13 @@ from DHT.modules.environment_reproducer import EnvironmentReproducer, Environmen
 
 
 @pytest.fixture
-def reproducer():
+def reproducer() -> Any:
     """Create an EnvironmentReproducer instance."""
     return EnvironmentReproducer()
 
 
 @pytest.fixture
-def sample_snapshot():
+def sample_snapshot() -> Any:
     """Create a sample environment snapshot."""
     return EnvironmentSnapshot(
         timestamp="2024-01-15T10:30:00",
@@ -90,7 +91,7 @@ def sample_snapshot():
 
 
 @pytest.fixture
-def sample_project_path(tmp_path):
+def sample_project_path(tmp_path) -> Any:
     """Create a sample project directory."""
     project_path = tmp_path / "test_project"
     project_path.mkdir()
@@ -125,7 +126,7 @@ class TestEnvironmentReproducer:
     """Tests for EnvironmentReproducer class."""
 
     @pytest.fixture(autouse=True)
-    def mock_prefect_tasks(self):
+    def mock_prefect_tasks(self) -> Any:
         """Mock all Prefect-decorated methods to avoid circular imports."""
         with patch("DHT.modules.environment_reproducer.check_uv_available") as mock_check_uv:
             mock_check_uv.return_value = {"available": True, "version": "0.1.32"}
@@ -173,7 +174,7 @@ class TestEnvironmentReproducer:
                     }
                     yield
 
-    def test_init(self, reproducer):
+    def test_init(self, reproducer) -> Any:
         """Test reproducer initialization."""
         assert reproducer.configurator is not None
         assert reproducer.version_critical_tools is not None
@@ -189,7 +190,7 @@ class TestEnvironmentReproducer:
         assert "curl" in reproducer.behavior_compatible_tools
         assert "make" in reproducer.behavior_compatible_tools
 
-    def test_generate_snapshot_id(self, reproducer):
+    def test_generate_snapshot_id(self, reproducer) -> Any:
         """Test snapshot ID generation."""
         snapshot_id = reproducer._generate_snapshot_id()
 
@@ -200,13 +201,13 @@ class TestEnvironmentReproducer:
         snapshot_id2 = reproducer._generate_snapshot_id()
         assert snapshot_id != snapshot_id2
 
-    def test_get_dht_version(self, reproducer):
+    def test_get_dht_version(self, reproducer) -> Any:
         """Test DHT version detection."""
         version = reproducer.env_capture_utils.get_dht_version()
         assert isinstance(version, str)
         assert len(version) > 0
 
-    def test_extract_version_from_output(self, reproducer):
+    def test_extract_version_from_output(self, reproducer) -> Any:
         """Test version extraction from tool output."""
         test_cases = [
             ("Python 3.11.5", "3.11.5"),
@@ -224,7 +225,7 @@ class TestEnvironmentReproducer:
             result = reproducer.tool_manager.extract_version_from_output(output)
             assert result == expected, f"Failed for '{output}', expected {expected}, got {result}"
 
-    def test_get_version_command(self, reproducer):
+    def test_get_version_command(self, reproducer) -> Any:
         """Test version command lookup."""
         # Import the function from platform_normalizer
         from DHT.modules.platform_normalizer import get_tool_command
@@ -240,7 +241,7 @@ class TestEnvironmentReproducer:
             result = get_tool_command(tool)
             assert result == expected
 
-    def test_compare_versions(self, reproducer):
+    def test_compare_versions(self, reproducer) -> Any:
         """Test version comparison logic."""
         # Exact matches
         assert reproducer.tool_manager.compare_versions("1.2.3", "1.2.3", "python", True) is True
@@ -274,7 +275,7 @@ class TestEnvironmentReproducer:
         mock_platform_platform,
         reproducer,
         sample_project_path,
-    ):
+    ) -> Any:
         """Test environment snapshot capture."""
 
         # Create a proper mock for sys.version_info that supports comparison
@@ -283,7 +284,7 @@ class TestEnvironmentReproducer:
             minor = 11
             micro = 5
 
-            def __new__(cls):
+            def __new__(cls) -> Any:
                 return tuple.__new__(cls, (3, 11, 5, "final", 0))
 
         version_info_mock = VersionInfoMock()
@@ -336,7 +337,7 @@ class TestEnvironmentReproducer:
                         assert "requests" in snapshot.python_packages
                         assert len(snapshot.reproduction_steps) > 0
 
-    def test_capture_system_tools(self, reproducer):
+    def test_capture_system_tools(self, reproducer) -> Any:
         """Test system tools capture."""
         snapshot = EnvironmentSnapshot(
             timestamp="2024-01-15T10:30:00",
@@ -369,7 +370,7 @@ class TestEnvironmentReproducer:
         assert snapshot.tool_paths["git"] == "/usr/bin/git"
         assert snapshot.tool_paths["uv"] == "/opt/homebrew/bin/uv"
 
-    def test_capture_environment_variables(self, reproducer):
+    def test_capture_environment_variables(self, reproducer) -> Any:
         """Test environment variables capture."""
         snapshot = EnvironmentSnapshot(
             timestamp="2024-01-15T10:30:00",
@@ -399,7 +400,7 @@ class TestEnvironmentReproducer:
 
             assert snapshot.path_entries == ["/usr/bin", "/bin"]
 
-    def test_capture_project_info(self, reproducer, sample_project_path):
+    def test_capture_project_info(self, reproducer, sample_project_path) -> Any:
         """Test project information capture."""
         snapshot = EnvironmentSnapshot(
             timestamp="2024-01-15T10:30:00",
@@ -451,7 +452,7 @@ class TestEnvironmentReproducer:
                     assert "pyproject.toml" in snapshot.config_files
                     assert len(snapshot.checksums) > 0
 
-    def test_generate_reproduction_steps(self, reproducer, sample_snapshot):
+    def test_generate_reproduction_steps(self, reproducer, sample_snapshot) -> Any:
         """Test reproduction steps generation."""
         reproducer.steps_generator.generate_reproduction_steps(sample_snapshot)
 
@@ -467,7 +468,7 @@ class TestEnvironmentReproducer:
         if sample_snapshot.platform == "darwin":
             assert any("homebrew" in note.lower() for note in notes)
 
-    def test_verify_platform_compatibility(self, reproducer, sample_snapshot):
+    def test_verify_platform_compatibility(self, reproducer, sample_snapshot) -> Any:
         """Test platform compatibility verification."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="linux")
 
@@ -488,7 +489,7 @@ class TestEnvironmentReproducer:
             assert len(result.warnings) > 0
             assert any("differs" in warning.lower() for warning in result.warnings)
 
-    def test_verify_python_version_exact_match(self, reproducer, sample_snapshot):
+    def test_verify_python_version_exact_match(self, reproducer, sample_snapshot) -> Any:
         """Test Python version verification with exact match."""
 
         # Create a proper mock for sys.version_info that supports comparison
@@ -497,7 +498,7 @@ class TestEnvironmentReproducer:
             minor = 11
             micro = 5
 
-            def __new__(cls):
+            def __new__(cls) -> Any:
                 return tuple.__new__(cls, (3, 11, 5, "final", 0))
 
         version_info_mock = VersionInfoMock()
@@ -509,7 +510,7 @@ class TestEnvironmentReproducer:
             assert result.versions_verified["python"] is True
             assert "python" not in result.version_mismatches
 
-    def test_verify_python_version_compatible(self, reproducer, sample_snapshot):
+    def test_verify_python_version_compatible(self, reproducer, sample_snapshot) -> Any:
         """Test Python version verification with compatible version."""
 
         # Create a proper mock for sys.version_info that supports comparison
@@ -518,7 +519,7 @@ class TestEnvironmentReproducer:
             minor = 11
             micro = 6
 
-            def __new__(cls):
+            def __new__(cls) -> Any:
                 return tuple.__new__(cls, (3, 11, 6, "final", 0))
 
         version_info_mock = VersionInfoMock()
@@ -533,7 +534,7 @@ class TestEnvironmentReproducer:
 
     @patch("shutil.which")
     @patch("DHT.modules.environment_reproducer.subprocess.run")
-    def test_verify_tools_success(self, mock_subprocess, mock_which, reproducer, sample_snapshot):
+    def test_verify_tools_success(self, mock_subprocess, mock_which, reproducer, sample_snapshot) -> Any:
         """Test successful tool verification."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
 
@@ -555,7 +556,7 @@ class TestEnvironmentReproducer:
         assert "git" not in result.version_mismatches
 
     @patch("shutil.which")
-    def test_verify_tools_missing(self, mock_which, reproducer, sample_snapshot):
+    def test_verify_tools_missing(self, mock_which, reproducer, sample_snapshot) -> Any:
         """Test tool verification with missing tools."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
 
@@ -569,7 +570,7 @@ class TestEnvironmentReproducer:
 
     @patch("shutil.which")
     @patch("DHT.modules.environment_reproducer.subprocess.run")
-    def test_verify_tools_version_mismatch(self, mock_subprocess, mock_which, reproducer, sample_snapshot):
+    def test_verify_tools_version_mismatch(self, mock_subprocess, mock_which, reproducer, sample_snapshot) -> Any:
         """Test tool verification with version mismatch."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
 
@@ -590,7 +591,7 @@ class TestEnvironmentReproducer:
         assert "git" in result.version_mismatches
         assert result.version_mismatches["git"] == ("2.39.3", "2.40.0")
 
-    def test_reproduce_environment_success(self, reproducer, sample_snapshot, tmp_path):
+    def test_reproduce_environment_success(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test successful environment reproduction."""
         with (
             patch.object(reproducer.env_verification_utils, "verify_platform_compatibility"),
@@ -606,7 +607,7 @@ class TestEnvironmentReproducer:
             assert isinstance(result, ReproductionResult)
             assert result.snapshot_id == sample_snapshot.snapshot_id
 
-    def test_reproduce_project_environment(self, reproducer, sample_snapshot, tmp_path):
+    def test_reproduce_project_environment(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test project environment reproduction."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
 
@@ -636,7 +637,7 @@ class TestEnvironmentReproducer:
                 # Config files should be in actions_completed
                 assert any(file in action for action in result.actions_completed), f"Expected {file} to be restored"
 
-    def test_verify_configurations(self, reproducer, sample_snapshot, tmp_path):
+    def test_verify_configurations(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test configuration verification."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
 
@@ -653,7 +654,7 @@ class TestEnvironmentReproducer:
         assert "ruff.toml" in result.config_differences
         assert "Content differs" in result.config_differences["ruff.toml"]
 
-    def test_save_environment_snapshot(self, reproducer, sample_snapshot, tmp_path):
+    def test_save_environment_snapshot(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test saving environment snapshot to file."""
         output_file = tmp_path / "snapshot.json"
 
@@ -668,7 +669,7 @@ class TestEnvironmentReproducer:
         # The actual file content checking is skipped since save_snapshot is mocked
         # The mock ensures the method is called with the correct parameters
 
-    def test_save_environment_snapshot_yaml(self, reproducer, sample_snapshot, tmp_path):
+    def test_save_environment_snapshot_yaml(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test saving environment snapshot in YAML format."""
         output_file = tmp_path / "snapshot.yaml"
 
@@ -682,7 +683,7 @@ class TestEnvironmentReproducer:
 
         # The actual file content checking is skipped since save_snapshot is mocked
 
-    def test_load_environment_snapshot(self, reproducer, sample_snapshot, tmp_path):
+    def test_load_environment_snapshot(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test loading environment snapshot from file."""
         # Since load_snapshot is mocked to return a fixed snapshot,
         # we test that the method is called and returns expected type
@@ -697,7 +698,7 @@ class TestEnvironmentReproducer:
         assert loaded_snapshot.python_version == "3.11.5"
         assert loaded_snapshot.platform == "darwin"
 
-    def test_load_environment_snapshot_yaml(self, reproducer, sample_snapshot, tmp_path):
+    def test_load_environment_snapshot_yaml(self, reproducer, sample_snapshot, tmp_path) -> Any:
         """Test loading environment snapshot from YAML file."""
         # Since load_snapshot is mocked to return a fixed snapshot,
         # we test that the method is called and returns expected type
@@ -711,7 +712,7 @@ class TestEnvironmentReproducer:
         assert loaded_snapshot.snapshot_id == "test_loaded"
         assert loaded_snapshot.python_version == "3.11.5"
 
-    def test_load_environment_snapshot_not_found(self, reproducer, tmp_path):
+    def test_load_environment_snapshot_not_found(self, reproducer, tmp_path) -> Any:
         """Test loading snapshot from non-existent file."""
         nonexistent_file = tmp_path / "nonexistent.json"
 
@@ -724,7 +725,7 @@ class TestEnvironmentReproducer:
 class TestEnvironmentSnapshot:
     """Tests for EnvironmentSnapshot dataclass."""
 
-    def test_environment_snapshot_creation(self):
+    def test_environment_snapshot_creation(self) -> Any:
         """Test creating EnvironmentSnapshot."""
         snapshot = EnvironmentSnapshot(
             timestamp="2024-01-15T10:30:00",
@@ -742,7 +743,7 @@ class TestEnvironmentSnapshot:
         assert snapshot.python_packages == {}  # Default empty dict
         assert snapshot.reproduction_steps == []  # Default empty list
 
-    def test_environment_snapshot_with_data(self):
+    def test_environment_snapshot_with_data(self) -> Any:
         """Test creating EnvironmentSnapshot with all data."""
         snapshot = EnvironmentSnapshot(
             timestamp="2024-01-15T10:30:00",
@@ -770,7 +771,7 @@ class TestEnvironmentSnapshot:
 class TestReproductionResult:
     """Tests for ReproductionResult dataclass."""
 
-    def test_reproduction_result_creation(self):
+    def test_reproduction_result_creation(self) -> Any:
         """Test creating ReproductionResult."""
         result = ReproductionResult(success=True, snapshot_id="test_id", platform="darwin")
 
@@ -780,7 +781,7 @@ class TestReproductionResult:
         assert result.tools_verified == {}  # Default empty dict
         assert result.missing_tools == []  # Default empty list
 
-    def test_reproduction_result_with_data(self):
+    def test_reproduction_result_with_data(self) -> Any:
         """Test creating ReproductionResult with all data."""
         result = ReproductionResult(
             success=False,
@@ -810,7 +811,7 @@ class TestIntegration:
     """Integration tests for environment reproducer."""
 
     @pytest.fixture(autouse=True)
-    def mock_prefect_tasks(self):
+    def mock_prefect_tasks(self) -> Any:
         """Mock all Prefect-decorated methods to avoid circular imports."""
         with patch("DHT.modules.environment_reproducer.check_uv_available") as mock_check_uv:
             mock_check_uv.return_value = {"available": True, "version": "0.1.32"}
@@ -854,7 +855,9 @@ class TestIntegration:
 
     @patch("DHT.modules.environment_reproducer.build_system_report")
     @patch("DHT.modules.environment_reproducer.subprocess.run")
-    def test_end_to_end_snapshot_and_reproduction(self, mock_subprocess, mock_build_system_report, sample_project_path):
+    def test_end_to_end_snapshot_and_reproduction(
+        self, mock_subprocess, mock_build_system_report, sample_project_path
+    ) -> Any:
         """Test complete snapshot capture and reproduction workflow."""
         # Setup mocks
         mock_build_system_report.return_value = {"system": {"platform": "darwin"}}
@@ -915,7 +918,9 @@ class TestIntegration:
 
     @patch("DHT.modules.reproduction_artifacts.create_table_artifact")
     @patch("DHT.modules.reproduction_artifacts.create_markdown_artifact")
-    def test_create_reproducible_environment_flow(self, mock_create_markdown, mock_create_table, sample_project_path):
+    def test_create_reproducible_environment_flow(
+        self, mock_create_markdown, mock_create_table, sample_project_path
+    ) -> Any:
         """Test the complete reproducible environment creation flow."""
         reproducer = EnvironmentReproducer()
 

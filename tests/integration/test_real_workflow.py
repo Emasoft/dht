@@ -30,6 +30,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from tabulate import tabulate  # type: ignore[import-untyped]
 
@@ -80,12 +81,12 @@ class TestRealDHTWorkflow:
         "https://github.com/pandas-dev/pandas",
     ]
 
-    def __init__(self):
+    def __init__(self) -> Any:
         self.dhtl_path = Path("/Users/emanuelesabetta/Code/DHT/dht/dhtl.sh")
         self.test_dir = Path("/Users/emanuelesabetta/Code/DHT/dht/temp_test/real_workflow_test")
         self.original_dir = Path.cwd()
 
-    def setup(self):
+    def setup(self) -> Any:
         """Set up test environment."""
         # Create clean test directory
         if self.test_dir.exists():
@@ -93,7 +94,7 @@ class TestRealDHTWorkflow:
         self.test_dir.mkdir(parents=True, exist_ok=True)
         os.chdir(self.test_dir)
 
-    def teardown(self):
+    def teardown(self) -> Any:
         """Clean up test environment."""
         os.chdir(self.original_dir)
 
@@ -284,7 +285,7 @@ class TestRealDHTWorkflow:
 
         return results
 
-    def print_tabulated_report(self, results: list[RepoWorkflowResult]):
+    def print_tabulated_report(self, results: list[RepoWorkflowResult]) -> Any:
         """Print detailed tabulated report."""
         print("\n" + "=" * 80)
         print("DETAILED TEST RESULTS")
@@ -375,7 +376,7 @@ class TestRealDHTWorkflow:
                 if r.clone.error:
                     print(f"Error: {r.clone.error[:200]}...")
 
-    def save_results(self, results: list[RepoWorkflowResult]):
+    def save_results(self, results: list[RepoWorkflowResult]) -> Any:
         """Save detailed results to JSON."""
         results_data = []
         for r in results:
@@ -415,7 +416,7 @@ class TestRealDHTWorkflow:
         print(f"\nDetailed results saved to: {self.test_dir}/dht_workflow_results.json")
 
 
-def main():
+def main() -> Any:
     """Run the real workflow test."""
     test = TestRealDHTWorkflow()
     test.setup()

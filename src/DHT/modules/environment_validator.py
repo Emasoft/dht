@@ -47,7 +47,7 @@ class EnvironmentValidator:
             "docker": self._extract_docker_version,
         }
 
-    @task(name="verify_python_version")
+    @task(name="verify_python_version")  # type: ignore[misc]
     def verify_python_version(
         self, expected_version: str, python_executable: str | None = None
     ) -> tuple[bool, str, list[str]]:
@@ -58,7 +58,7 @@ class EnvironmentValidator:
             Tuple of (is_match, actual_version, warnings)
         """
         logger = get_run_logger()
-        warnings = []
+        warnings: list[Any] = []
 
         try:
             # Get Python version
@@ -90,7 +90,7 @@ class EnvironmentValidator:
         except Exception as e:
             return False, "unknown", [f"Error verifying Python version: {str(e)}"]
 
-    @task(name="verify_tools")
+    @task(name="verify_tools")  # type: ignore[misc]
     def verify_tools(
         self, expected_tools: dict[str, str], platform_name: str | None = None
     ) -> dict[str, dict[str, Any]]:
@@ -101,7 +101,7 @@ class EnvironmentValidator:
             Dict mapping tool name to verification result
         """
         logger = get_run_logger()
-        results = {}
+        results: dict[str, Any] = {}
 
         for tool, expected_version in expected_tools.items():
             logger.info(f"Verifying {tool} version...")
@@ -157,13 +157,13 @@ class EnvironmentValidator:
 
         return results
 
-    @task(name="verify_python_packages")
+    @task(name="verify_python_packages")  # type: ignore[misc]
     def verify_python_packages(
         self, expected_packages: dict[str, str], python_executable: str | None = None
     ) -> dict[str, dict[str, Any]]:
         """Verify Python package versions."""
         logger = get_run_logger()
-        results = {}
+        results: dict[str, Any] = {}
 
         # Get installed packages
         try:
@@ -283,7 +283,7 @@ class EnvironmentValidator:
         Returns:
             Tuple of (versions_match, warnings)
         """
-        warnings = []
+        warnings: list[Any] = []
 
         # Exact match
         if expected == actual:
@@ -322,8 +322,8 @@ class EnvironmentValidator:
         Returns:
             Dict with 'verified' and 'differences' keys
         """
-        verified = {}
-        differences = {}
+        verified: dict[str, Any] = {}
+        differences: dict[str, Any] = {}
 
         for filename, expected_content in expected_configs.items():
             config_path = target_path / filename

@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 try:
     import tomllib  # Python 3.11+
@@ -366,7 +367,7 @@ def update_version_in_files(project_root: Path, old_version: str, new_version: s
 
 
 # For backward compatibility
-def placeholder_function():
+def placeholder_function() -> Any:
     """Placeholder function."""
     log_warning("Use tag_command or bump_command instead")
     return True

@@ -12,9 +12,10 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+from typing import Any
 
 
-def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=True):
+def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=True) -> Any:
     """
     Run a DHTL command and return the result.
 
@@ -59,7 +60,7 @@ def run_dhtl_command(command, cwd=None, env=None, check=True, capture_output=Tru
 
 
 # Keep the old function for compatibility but mark it as deprecated
-def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_output=True):
+def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_output=True) -> Any:
     """
     DEPRECATED: Run a DHTL command using shell script.
     Use run_dhtl_command() instead for Python implementation.
@@ -125,7 +126,7 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
         )
 
 
-def run_bash_command(command, cwd=None, env=None):
+def run_bash_command(command, cwd=None, env=None) -> Any:
     """
     Run a bash command and return the output.
 
@@ -145,7 +146,7 @@ def run_bash_command(command, cwd=None, env=None):
     return output.strip()
 
 
-def create_mock_file(directory, filename, content=""):
+def create_mock_file(directory, filename, content="") -> Any:
     """Create a mock file with the given content."""
     file_path = Path(directory) / filename
     file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -153,7 +154,7 @@ def create_mock_file(directory, filename, content=""):
     return file_path
 
 
-def mock_bash_script(script_content):
+def mock_bash_script(script_content) -> Any:
     """
     Create a temporary bash script with the given content and return its path.
 
@@ -173,7 +174,7 @@ def mock_bash_script(script_content):
     return script_path
 
 
-def verify_dhtl_components(project_dir):
+def verify_dhtl_components(project_dir) -> Any:
     """
     Verify that the essential DHT components are present in the project.
 

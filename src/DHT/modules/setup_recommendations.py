@@ -34,7 +34,7 @@ def get_setup_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
     Returns:
         Dictionary of recommendations by category
     """
-    recommendations = {}
+    recommendations: dict[str, Any] = {}
 
     # Database recommendations
     if analysis.category.requires_database():
@@ -132,20 +132,21 @@ def get_ci_cd_recommendations(analysis: ProjectAnalysis) -> dict[str, Any]:
     if analysis.category == ProjectCategory.WEB_API:
         ci_cd["deployment"] = {
             "platforms": ["Heroku", "Railway", "Fly.io"],
-            "containerization": "Docker",
-            "orchestration": "Kubernetes (for scale)",
+            "containerization": ["Docker"],
+            "orchestration": ["Kubernetes (for scale)"],
         }
     elif analysis.category == ProjectCategory.WEB_FRAMEWORK:
         ci_cd["deployment"] = {
             "platforms": ["Vercel", "Netlify", "Railway"],
-            "static_hosting": "GitHub Pages (for docs)",
+            "static_hosting": ["GitHub Pages (for docs)"],
         }
 
     # Add release recommendations
     if analysis.is_publishable:
         ci_cd["release"] = {
-            "pypi": {"tools": ["twine", "build"], "workflow": "publish-to-pypi"},
-            "versioning": "semantic-release",
+            "pypi_tools": ["twine", "build"],
+            "pypi_workflow": ["publish-to-pypi"],
+            "versioning": ["semantic-release"],
         }
 
     return ci_cd
@@ -163,21 +164,21 @@ def get_documentation_recommendations(analysis: ProjectAnalysis) -> dict[str, An
     if analysis.category in [ProjectCategory.WEB_API, ProjectCategory.WEB_FRAMEWORK]:
         docs["api_docs"] = {
             "tools": ["Sphinx", "MkDocs"],
-            "api_spec": "OpenAPI/Swagger" if analysis.type == ProjectType.FASTAPI else "Django REST Swagger",
+            "api_spec": ["OpenAPI/Swagger"] if analysis.type == ProjectType.FASTAPI else ["Django REST Swagger"],
         }
 
     # Add notebook documentation for data science
     if analysis.category.is_data_related():
         docs["notebooks"] = {
-            "structure": "docs/notebooks/",
-            "naming": "01_data_exploration.ipynb, 02_feature_engineering.ipynb",
+            "structure": ["docs/notebooks/"],
+            "naming": ["01_data_exploration.ipynb, 02_feature_engineering.ipynb"],
             "tools": ["nbconvert", "jupyter-book"],
         }
 
     # Add docstring recommendations
     docs["docstrings"] = {
-        "style": "Google",
-        "coverage": "All public functions and classes",
+        "style": ["Google"],
+        "coverage": ["All public functions and classes"],
         "tools": ["pydocstyle", "darglint"],
     }
 

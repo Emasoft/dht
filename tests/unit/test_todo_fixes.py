@@ -17,6 +17,7 @@ This test verifies that:
 
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -24,19 +25,19 @@ import pytest
 class TestTodoFixes:
     """Test all TODO fixes are properly implemented."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.project_root = Path(__file__).parent.parent.parent
         self.src_dir = self.project_root / "src" / "DHT"
 
     @pytest.mark.skip(reason="include_secrets functionality not implemented in diagnostic_reporter_v2")
-    def test_include_secrets_implemented_in_diagnostic_reporter(self):
+    def test_include_secrets_implemented_in_diagnostic_reporter(self) -> Any:
         """Test that include_secrets functionality is implemented."""
         # This test is for the old diagnostic_reporter which has been removed.
         # The v2 version doesn't implement include_secrets functionality.
         pass
 
-    def test_system_taxonomy_handles_language_package_managers(self):
+    def test_system_taxonomy_handles_language_package_managers(self) -> Any:
         """Test that system_taxonomy includes language package managers."""
         # Import the module
         sys.path.insert(0, str(self.src_dir / "modules"))
@@ -77,7 +78,7 @@ class TestTodoFixes:
         finally:
             sys.path.pop(0)
 
-    def test_system_taxonomy_handles_nested_categories(self):
+    def test_system_taxonomy_handles_nested_categories(self) -> Any:
         """Test that get_tool_fields handles nested categories."""
         # Import the module
         sys.path.insert(0, str(self.src_dir / "modules"))
@@ -100,7 +101,7 @@ class TestTodoFixes:
         finally:
             sys.path.pop(0)
 
-    def test_dhtl_regenerate_poc_version_check_implemented(self):
+    def test_dhtl_regenerate_poc_version_check_implemented(self) -> Any:
         """Test that version check is implemented in dhtl_regenerate_poc.sh."""
         script_path = self.src_dir / "modules" / "dhtl_regenerate_poc.sh"
 
@@ -120,7 +121,7 @@ class TestTodoFixes:
         assert 'if [[ -z "$CURRENT_DHT_VERSION" ]]; then' in content
         assert 'elif [[ "$CURRENT_DHT_VERSION" != "$DHT_VERSION" ]]; then' in content
 
-    def test_no_todos_remain(self):
+    def test_no_todos_remain(self) -> Any:
         """Test that no TODO comments remain in the fixed files."""
         files_to_check = [
             self.src_dir / "modules" / "system_taxonomy.py",

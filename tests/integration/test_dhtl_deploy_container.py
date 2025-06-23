@@ -24,6 +24,7 @@ import shutil
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import docker
@@ -75,7 +76,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def read_root():
+def read_root() -> Any:
     return {"message": "Hello from container!"}
 
 if __name__ == "__main__":
@@ -86,10 +87,10 @@ if __name__ == "__main__":
 
             # Create test file
             test_content = """
-def test_example():
+def test_example() -> Any:
     assert 1 + 1 == 2
 
-def test_app():
+def test_app() -> Any:
     from main import app
     from fastapi.testclient import TestClient
 
@@ -108,7 +109,7 @@ def test_app():
         return shutil.which("docker") is not None
 
     @pytest.fixture
-    def mock_docker_client(self):
+    def mock_docker_client(self) -> Any:
         """Mock Docker client for testing without Docker."""
         with patch("docker.from_env") as mock_client:
             client = MagicMock()
@@ -130,12 +131,12 @@ def test_app():
 
             yield client
 
-    def test_deploy_command_exists(self):
+    def test_deploy_command_exists(self) -> Any:
         """Test that deploy_project_in_container command is registered."""
         commands = DHTLCommands()
         assert hasattr(commands, "deploy_project_in_container")
 
-    def test_docker_availability_check(self, docker_available):
+    def test_docker_availability_check(self, docker_available) -> Any:
         """Test Docker availability detection."""
         docker_mgr = DockerManager()
 
@@ -149,7 +150,7 @@ def test_app():
             assert is_available is False
 
     @pytest.mark.skipif(not shutil.which("docker"), reason="Docker not installed")
-    def test_docker_daemon_check(self):
+    def test_docker_daemon_check(self) -> Any:
         """Test Docker daemon status check."""
         docker_mgr = DockerManager()
 
@@ -159,7 +160,7 @@ def test_app():
         # This might be True or False depending on system state
         assert isinstance(is_running, bool)
 
-    def test_dockerfile_generation_web_app(self, temp_project):
+    def test_dockerfile_generation_web_app(self, temp_project) -> Any:
         """Test Dockerfile generation for a web application."""
         generator = DockerfileGenerator()
 
@@ -182,7 +183,7 @@ def test_app():
         assert "EXPOSE 8000" in dockerfile_content
         assert 'CMD ["uv", "run", "python", "main.py"]' in dockerfile_content
 
-    def test_dockerfile_generation_cli_app(self, temp_project):
+    def test_dockerfile_generation_cli_app(self, temp_project) -> Any:
         """Test Dockerfile generation for a CLI application."""
         # Modify project to be CLI app
         cli_content = '''
@@ -190,7 +191,7 @@ import click
 
 @click.command()
 @click.option('--name', default='World', help='Name to greet.')
-def main(name):
+def main(name) -> Any:
     """Simple CLI application."""
     click.echo(f'Hello {name}!')
 
@@ -223,7 +224,7 @@ if __name__ == '__main__':
         assert "EXPOSE" not in dockerfile_content
         assert 'CMD ["uv", "run", "python", "cli.py"]' in dockerfile_content
 
-    def test_container_build_process(self, temp_project, mock_docker_client):
+    def test_container_build_process(self, temp_project, mock_docker_client) -> Any:
         """Test Docker image building process."""
         docker_mgr = DockerManager()
 
@@ -235,7 +236,7 @@ if __name__ == '__main__':
         assert logs is not None
         mock_docker_client.images.build.assert_called_once()
 
-    def test_container_run_application(self, temp_project, mock_docker_client):
+    def test_container_run_application(self, temp_project, mock_docker_client) -> Any:
         """Test running application in container."""
         docker_mgr = DockerManager()
 
@@ -248,7 +249,7 @@ if __name__ == '__main__':
         assert container is not None
         mock_docker_client.containers.run.assert_called_once()
 
-    def test_pytest_execution_in_container(self, temp_project, mock_docker_client):
+    def test_pytest_execution_in_container(self, temp_project, mock_docker_client) -> Any:
         """Test running pytest in container."""
         test_runner = ContainerTestRunner()
 
@@ -278,7 +279,7 @@ tests/test_main.py::test_app PASSED
         assert "test_app" in results["tests"]
 
     @pytest.mark.skipif(not shutil.which("playwright"), reason="Playwright not installed")
-    def test_playwright_execution_in_container(self, temp_project, mock_docker_client):
+    def test_playwright_execution_in_container(self, temp_project, mock_docker_client) -> Any:
         """Test running Playwright tests in container."""
         # Create Playwright test
         e2e_dir = temp_project / "tests" / "e2e"
@@ -312,7 +313,7 @@ test('homepage test', async ({ page }) => {
         assert results["total"] >= 1
         assert results["passed"] >= 1
 
-    def test_results_formatting(self):
+    def test_results_formatting(self) -> Any:
         """Test formatting test results as table."""
         test_runner = ContainerTestRunner()
 
@@ -335,7 +336,7 @@ test('homepage test', async ({ page }) => {
 
     @patch("DHT.modules.docker_manager.docker.from_env")
     @patch("DHT.modules.container_test_runner.DockerManager")
-    def test_deploy_command_integration(self, mock_docker_manager_class, mock_docker_from_env, temp_project):
+    def test_deploy_command_integration(self, mock_docker_manager_class, mock_docker_from_env, temp_project) -> Any:
         """Test full deploy_project_in_container command flow."""
         # Setup mocks
         mock_client = MagicMock()
@@ -394,7 +395,7 @@ tests/test_main.py::test_app PASSED
         assert TestFramework.PYTEST in result["test_results"]
         assert result["test_results"][TestFramework.PYTEST]["total"] == 2
 
-    def test_error_handling_no_docker(self):
+    def test_error_handling_no_docker(self) -> Any:
         """Test error handling when Docker is not available."""
         with patch("shutil.which", return_value=None):
             docker_mgr = DockerManager()
@@ -405,7 +406,7 @@ tests/test_main.py::test_app PASSED
             with pytest.raises(RuntimeError, match="Docker is not installed"):
                 docker_mgr.check_docker_requirements()
 
-    def test_error_handling_daemon_not_running(self, mock_docker_client):
+    def test_error_handling_daemon_not_running(self, mock_docker_client) -> Any:
         """Test error handling when Docker daemon is not running."""
         mock_docker_client.ping.side_effect = docker.errors.DockerException("Cannot connect")
 
@@ -415,7 +416,7 @@ tests/test_main.py::test_app PASSED
         with pytest.raises(RuntimeError, match="Docker daemon is not running"):
             docker_mgr.check_docker_requirements()
 
-    def test_cleanup_on_failure(self, temp_project, mock_docker_client):
+    def test_cleanup_on_failure(self, temp_project, mock_docker_client) -> Any:
         """Test cleanup when deployment fails."""
         # Make build fail
         mock_docker_client.images.build.side_effect = docker.errors.BuildError("Build failed", build_log=[])
@@ -430,7 +431,7 @@ tests/test_main.py::test_app PASSED
         # Should clean up any partial resources
         # (In real implementation, this would remove partial images/containers)
 
-    def test_container_logs_streaming(self, mock_docker_client):
+    def test_container_logs_streaming(self, mock_docker_client) -> Any:
         """Test streaming logs from container."""
         docker_mgr = DockerManager()
 
@@ -444,7 +445,7 @@ tests/test_main.py::test_app PASSED
         assert "Line 2" in logs
         assert "Line 3" in logs
 
-    def test_port_availability_check(self):
+    def test_port_availability_check(self) -> Any:
         """Test checking if ports are available before binding."""
         docker_mgr = DockerManager()
 
@@ -457,7 +458,7 @@ tests/test_main.py::test_app PASSED
         # Port beyond valid range is invalid
         assert docker_mgr.is_port_available(70000) is False
 
-    def test_custom_dockerfile_support(self, temp_project):
+    def test_custom_dockerfile_support(self, temp_project) -> Any:
         """Test using existing Dockerfile if present."""
         # Create custom Dockerfile
         custom_dockerfile = """
@@ -476,7 +477,7 @@ CMD ["python", "-m", "myapp"]
         assert "FROM python:3.12-alpine" in dockerfile_content
         assert 'CMD ["python", "-m", "myapp"]' in dockerfile_content
 
-    def test_multi_stage_build(self, temp_project):
+    def test_multi_stage_build(self, temp_project) -> Any:
         """Test generating multi-stage Dockerfile for production."""
         generator = DockerfileGenerator()
 

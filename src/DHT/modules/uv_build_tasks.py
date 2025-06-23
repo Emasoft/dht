@@ -23,7 +23,7 @@ from DHT.modules.uv_task_models import BUILD_TIMEOUT, RETRY_DELAYS, UV_MEMORY_LI
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(
+@task(  # type: ignore[misc]
     name="build_project",
     description="Build Python project",
     retries=2,

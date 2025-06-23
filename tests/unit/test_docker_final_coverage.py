@@ -11,6 +11,7 @@ Final tests to reach 100% coverage for Docker deployment modules.
 """
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import docker.errors
@@ -24,7 +25,7 @@ class TestFinalCoverage:
     """Final tests to cover remaining lines."""
 
     # ContainerTestRunner missing lines: 62, 179, 232, 321-322
-    def test_run_all_tests_default_frameworks(self):
+    def test_run_all_tests_default_frameworks(self) -> Any:
         """Test run_all_tests with default frameworks (None)."""
         runner = ContainerTestRunner()
 
@@ -39,7 +40,7 @@ class TestFinalCoverage:
         assert TestFramework.PYTEST in results
         assert len(results) == 1
 
-    def test_run_playwright_with_test_path(self):
+    def test_run_playwright_with_test_path(self) -> Any:
         """Test run_playwright with specific test path."""
         runner = ContainerTestRunner()
 
@@ -54,7 +55,7 @@ class TestFinalCoverage:
         call_args = mock_docker_manager.exec_command.call_args_list[1]
         assert "tests/e2e/specific.spec.ts" in call_args[0][1]
 
-    def test_run_puppeteer_with_test_path(self):
+    def test_run_puppeteer_with_test_path(self) -> Any:
         """Test run_puppeteer with specific test path."""
         runner = ContainerTestRunner()
 
@@ -69,7 +70,7 @@ class TestFinalCoverage:
         call_args = mock_docker_manager.exec_command.call_args
         assert "tests/puppeteer/test_ui.py" in call_args[0][1]
 
-    def test_parse_playwright_output_zero_total(self):
+    def test_parse_playwright_output_zero_total(self) -> Any:
         """Test parsing Playwright output when no pytest format and total is 0."""
         runner = ContainerTestRunner()
 
@@ -82,7 +83,7 @@ class TestFinalCoverage:
         assert results["total"] == 0
 
     # DockerManager missing lines: 134, 194-195
-    def test_build_image_with_buildargs(self):
+    def test_build_image_with_buildargs(self) -> Any:
         """Test building image with build arguments."""
         manager = DockerManager()
 
@@ -107,7 +108,7 @@ class TestFinalCoverage:
             call_args = mock_client.images.build.call_args
             assert call_args[1]["buildargs"] == {"ARG1": "value1", "ARG2": "value2"}
 
-    def test_run_container_with_no_existing_container(self):
+    def test_run_container_with_no_existing_container(self) -> Any:
         """Test running container when get() raises NotFound."""
         manager = DockerManager()
 
@@ -130,7 +131,7 @@ class TestFinalCoverage:
             assert mock_client.containers.get.call_count == 1
 
     # DockerfileGenerator missing lines: 230, 329, 423-424, 448-449, 542
-    def test_detect_cli_project_with_cli_dependency(self):
+    def test_detect_cli_project_with_cli_dependency(self) -> Any:
         """Test detecting CLI project with click in dependencies."""
         generator = DockerfileGenerator()
 
@@ -150,7 +151,7 @@ dependencies = ["click>=8.0"]
 import click
 
 @click.command()
-def main():
+def main() -> Any:
     pass
 """)
 
@@ -161,7 +162,7 @@ def main():
 
             shutil.rmtree(tmp_path, ignore_errors=True)
 
-    def test_get_dependencies_with_optional_deps(self):
+    def test_get_dependencies_with_optional_deps(self) -> Any:
         """Test getting dependencies including optional dependencies."""
         generator = DockerfileGenerator()
 
@@ -193,7 +194,7 @@ docs = ["sphinx", "mkdocs"]
 
             shutil.rmtree(tmp_path, ignore_errors=True)
 
-    def test_detect_ports_with_invalid_values(self):
+    def test_detect_ports_with_invalid_values(self) -> Any:
         """Test port detection with invalid port values."""
         generator = DockerfileGenerator()
 
@@ -218,7 +219,7 @@ valid_port = 3  # This will be found
 
             shutil.rmtree(tmp_path, ignore_errors=True)
 
-    def test_get_dockerfile_generates_new(self):
+    def test_get_dockerfile_generates_new(self) -> Any:
         """Test get_dockerfile when no existing Dockerfile."""
         generator = DockerfileGenerator()
 
@@ -255,7 +256,7 @@ dependencies = []
 
             shutil.rmtree(tmp_path, ignore_errors=True)
 
-    def test_validate_dockerfile_valid(self):
+    def test_validate_dockerfile_valid(self) -> Any:
         """Test validating a valid Dockerfile."""
         generator = DockerfileGenerator()
 

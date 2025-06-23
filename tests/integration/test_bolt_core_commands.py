@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 Core integration tests for essential Bolt commands.
 
@@ -32,7 +34,7 @@ class TestAddRemoveUpgradeCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_add_command_dispatches_to_uv(self, mock_run):
+    def test_add_command_dispatches_to_uv(self, mock_run) -> Any:
         """Test add command calls uv add."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Added package", stderr="")
 
@@ -49,7 +51,7 @@ class TestAddRemoveUpgradeCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_remove_command_dispatches_to_uv(self, mock_run):
+    def test_remove_command_dispatches_to_uv(self, mock_run) -> Any:
         """Test remove command calls uv remove."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Removed package", stderr="")
 
@@ -65,7 +67,7 @@ class TestAddRemoveUpgradeCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_upgrade_command_with_packages(self, mock_run):
+    def test_upgrade_command_with_packages(self, mock_run) -> Any:
         """Test upgrade command with specific packages."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Upgraded", stderr="")
 
@@ -83,7 +85,7 @@ class TestAddRemoveUpgradeCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_upgrade_command_without_packages(self, mock_run):
+    def test_upgrade_command_without_packages(self, mock_run) -> Any:
         """Test upgrade command without packages upgrades all."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Upgraded all", stderr="")
 
@@ -103,7 +105,7 @@ class TestCheckCommand:
     @pytest.mark.integration
     @patch("subprocess.run")
     @patch("pathlib.Path.exists", return_value=True)
-    def test_check_runs_mypy(self, mock_exists, mock_run):
+    def test_check_runs_mypy(self, mock_exists, mock_run) -> Any:
         """Test check command runs mypy."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Success", stderr="")
 
@@ -124,7 +126,7 @@ class TestCheckCommand:
     @pytest.mark.integration
     @patch("subprocess.run")
     @patch("pathlib.Path.exists", return_value=True)
-    def test_check_with_files(self, mock_exists, mock_run):
+    def test_check_with_files(self, mock_exists, mock_run) -> Any:
         """Test check command with specific files."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Checked", stderr="")
 
@@ -142,7 +144,7 @@ class TestBinCommand:
 
     @pytest.mark.integration
     @patch("pathlib.Path.exists")
-    def test_bin_shows_venv_path(self, mock_exists, capsys):
+    def test_bin_shows_venv_path(self, mock_exists, capsys) -> Any:
         """Test bin command shows virtual environment bin path."""
         # Mock that .venv exists
         mock_exists.return_value = True
@@ -157,7 +159,7 @@ class TestBinCommand:
 
     @pytest.mark.integration
     @patch("pathlib.Path.exists", return_value=False)
-    def test_bin_error_when_no_venv(self, mock_exists, capsys):
+    def test_bin_error_when_no_venv(self, mock_exists, capsys) -> Any:
         """Test bin command error when no venv."""
         dispatcher = CommandDispatcher()
         result = dispatcher.dispatch("bin", [])
@@ -173,7 +175,7 @@ class TestFormatCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_fmt_is_alias_for_format(self, mock_run):
+    def test_fmt_is_alias_for_format(self, mock_run) -> Any:
         """Test fmt command works as alias."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Formatted", stderr="")
 
@@ -188,7 +190,7 @@ class TestFormatCommands:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_format_with_check_flag(self, mock_run):
+    def test_format_with_check_flag(self, mock_run) -> Any:
         """Test format --check doesn't modify files."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Would format", stderr="")
 
@@ -207,7 +209,7 @@ class TestDocCommand:
     @pytest.mark.integration
     @patch("subprocess.run")
     @patch("pathlib.Path.exists", return_value=True)
-    def test_doc_generates_documentation(self, mock_exists, mock_run):
+    def test_doc_generates_documentation(self, mock_exists, mock_run) -> Any:
         """Test doc command attempts to generate docs."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Docs generated", stderr="")
 
@@ -223,7 +225,7 @@ class TestInstallCommand:
 
     @pytest.mark.integration
     @patch("subprocess.run")
-    def test_install_is_setup_alias(self, mock_run):
+    def test_install_is_setup_alias(self, mock_run) -> Any:
         """Test install command runs setup."""
         mock_run.return_value = MagicMock(returncode=0, stdout="Setup complete", stderr="")
 

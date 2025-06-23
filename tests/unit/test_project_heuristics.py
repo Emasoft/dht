@@ -21,6 +21,8 @@ and configuration suggestions.
 # - Added tests for code quality analysis
 # - Added integration tests with project analyzer output
 
+from typing import Any
+
 import pytest
 
 from DHT.modules.project_heuristics import FRAMEWORK_PATTERNS, IMPORT_TO_SYSTEM_DEPS, ProjectHeuristics
@@ -30,12 +32,12 @@ class TestProjectHeuristics:
     """Test the project heuristics functionality."""
 
     @pytest.fixture
-    def heuristics(self):
+    def heuristics(self) -> Any:
         """Create a project heuristics instance."""
         return ProjectHeuristics()
 
     @pytest.fixture
-    def django_analysis_result(self):
+    def django_analysis_result(self) -> Any:
         """Create a mock Django project analysis result."""
         return {
             "project_type": "python",
@@ -50,7 +52,7 @@ class TestProjectHeuristics:
         }
 
     @pytest.fixture
-    def flask_analysis_result(self):
+    def flask_analysis_result(self) -> Any:
         """Create a mock Flask project analysis result."""
         return {
             "project_type": "python",
@@ -71,7 +73,7 @@ class TestProjectHeuristics:
         }
 
     @pytest.fixture
-    def fastapi_analysis_result(self):
+    def fastapi_analysis_result(self) -> Any:
         """Create a mock FastAPI project analysis result."""
         return {
             "project_type": "python",
@@ -95,7 +97,7 @@ class TestProjectHeuristics:
         }
 
     @pytest.fixture
-    def data_science_analysis_result(self):
+    def data_science_analysis_result(self) -> Any:
         """Create a mock data science project analysis result."""
         return {
             "project_type": "python",
@@ -115,7 +117,7 @@ class TestProjectHeuristics:
             "structure": {"has_tests": True},
         }
 
-    def test_detect_django_project(self, heuristics, django_analysis_result):
+    def test_detect_django_project(self, heuristics, django_analysis_result) -> Any:
         """Test Django project detection."""
         result = heuristics.detect_project_type(django_analysis_result)
 
@@ -128,7 +130,7 @@ class TestProjectHeuristics:
         assert any("file:manage.py" in match for match in django_info["matches"])
         assert any("import:django.db" in match for match in django_info["matches"])
 
-    def test_detect_flask_project(self, heuristics, flask_analysis_result):
+    def test_detect_flask_project(self, heuristics, flask_analysis_result) -> Any:
         """Test Flask project detection."""
         result = heuristics.detect_project_type(flask_analysis_result)
 
@@ -141,7 +143,7 @@ class TestProjectHeuristics:
         assert any("import:flask" in match for match in flask_info["matches"])
         assert any("structure:templates/" in match for match in flask_info["matches"])
 
-    def test_detect_fastapi_project(self, heuristics, fastapi_analysis_result):
+    def test_detect_fastapi_project(self, heuristics, fastapi_analysis_result) -> Any:
         """Test FastAPI project detection."""
         result = heuristics.detect_project_type(fastapi_analysis_result)
 
@@ -153,7 +155,7 @@ class TestProjectHeuristics:
         assert any("import:fastapi" in match for match in fastapi_info["matches"])
         assert any("structure:routers/" in match for match in fastapi_info["matches"])
 
-    def test_detect_data_science_project(self, heuristics, data_science_analysis_result):
+    def test_detect_data_science_project(self, heuristics, data_science_analysis_result) -> Any:
         """Test data science project detection."""
         result = heuristics.detect_project_type(data_science_analysis_result)
 
@@ -161,7 +163,7 @@ class TestProjectHeuristics:
         assert "data_science" in result["characteristics"]
         assert "notebooks" in result["characteristics"]
 
-    def test_detect_generic_project(self, heuristics):
+    def test_detect_generic_project(self, heuristics) -> Any:
         """Test generic project detection when no framework matches."""
         generic_result = {
             "project_type": "python",
@@ -175,7 +177,7 @@ class TestProjectHeuristics:
         assert result["confidence"] == 0.0
         assert result["category"] == "application"
 
-    def test_infer_system_dependencies(self, heuristics, django_analysis_result):
+    def test_infer_system_dependencies(self, heuristics, django_analysis_result) -> Any:
         """Test system dependency inference from imports."""
         result = heuristics.infer_system_dependencies(django_analysis_result)
 
@@ -193,7 +195,7 @@ class TestProjectHeuristics:
         assert "psycopg2" in result["import_mapping"]
         assert result["import_mapping"]["psycopg2"] == ["postgresql-client", "libpq-dev"]
 
-    def test_infer_ml_dependencies(self, heuristics, data_science_analysis_result):
+    def test_infer_ml_dependencies(self, heuristics, data_science_analysis_result) -> Any:
         """Test ML/data science dependency inference."""
         result = heuristics.infer_system_dependencies(data_science_analysis_result)
 
@@ -207,7 +209,7 @@ class TestProjectHeuristics:
         # Check PIL dependencies
         assert "libjpeg-dev" in result["inferred_packages"]
 
-    def test_suggest_django_configurations(self, heuristics, django_analysis_result):
+    def test_suggest_django_configurations(self, heuristics, django_analysis_result) -> Any:
         """Test configuration suggestions for Django projects."""
         project_type = heuristics.detect_project_type(django_analysis_result)
         suggestions = heuristics.suggest_configurations(project_type, django_analysis_result)
@@ -224,7 +226,7 @@ class TestProjectHeuristics:
         assert any("environment variables" in bp for bp in suggestions["best_practices"])
         assert any("Split requirements" in bp for bp in suggestions["best_practices"])
 
-    def test_suggest_fastapi_configurations(self, heuristics, fastapi_analysis_result):
+    def test_suggest_fastapi_configurations(self, heuristics, fastapi_analysis_result) -> Any:
         """Test configuration suggestions for FastAPI projects."""
         project_type = heuristics.detect_project_type(fastapi_analysis_result)
         suggestions = heuristics.suggest_configurations(project_type, fastapi_analysis_result)
@@ -237,7 +239,7 @@ class TestProjectHeuristics:
         assert "pyproject.toml" in suggestions["config_templates"]
         assert "tool.pytest.ini_options" in suggestions["config_templates"]["pyproject.toml"]
 
-    def test_analyze_code_quality(self, heuristics, flask_analysis_result):
+    def test_analyze_code_quality(self, heuristics, flask_analysis_result) -> Any:
         """Test code quality analysis."""
         result = heuristics.analyze_code_quality(flask_analysis_result)
 
@@ -252,7 +254,7 @@ class TestProjectHeuristics:
         # Has partial type hints
         assert "type_hint_coverage" in result
 
-    def test_analyze_code_quality_with_configs(self, heuristics):
+    def test_analyze_code_quality_with_configs(self, heuristics) -> Any:
         """Test code quality detection with config files."""
         analysis_with_configs = {
             "project_type": "python",
@@ -270,7 +272,7 @@ class TestProjectHeuristics:
         assert result["has_formatting"] is True  # pyproject.toml counts
         assert "Add pre-commit hooks" not in result["suggestions"]
 
-    def test_complete_analysis_flow(self, heuristics, django_analysis_result):
+    def test_complete_analysis_flow(self, heuristics, django_analysis_result) -> Any:
         """Test complete heuristic analysis flow."""
         result = heuristics.analyze(django_analysis_result)
 
@@ -288,7 +290,7 @@ class TestProjectHeuristics:
         # Verify suggestions
         assert len(result["configuration_suggestions"]["best_practices"]) > 0
 
-    def test_project_characteristics_detection(self, heuristics):
+    def test_project_characteristics_detection(self, heuristics) -> Any:
         """Test detection of various project characteristics."""
         # Create a complex project with multiple characteristics
         complex_project = {
@@ -312,7 +314,7 @@ class TestProjectHeuristics:
         assert "containerized" in characteristics  # Has Dockerfile
         assert "library" in characteristics  # Has setup.py but no web framework
 
-    def test_empty_project_handling(self, heuristics):
+    def test_empty_project_handling(self, heuristics) -> Any:
         """Test handling of empty or minimal projects."""
         empty_project = {"project_type": "unknown", "file_analysis": {}, "structure": {}, "dependencies": {}}
 
@@ -331,7 +333,7 @@ class TestProjectHeuristics:
 class TestFrameworkPatterns:
     """Test framework pattern definitions."""
 
-    def test_framework_patterns_completeness(self):
+    def test_framework_patterns_completeness(self) -> Any:
         """Test that all framework patterns have required fields."""
         required_fields = {"files", "imports", "structure_hints", "config_files"}
 
@@ -342,7 +344,7 @@ class TestFrameworkPatterns:
             for field in required_fields:
                 assert isinstance(patterns[field], list), f"Framework {framework} field {field} should be a list"
 
-    def test_import_to_system_deps_validity(self):
+    def test_import_to_system_deps_validity(self) -> Any:
         """Test that system dependency mappings are valid."""
         for import_name, deps in IMPORT_TO_SYSTEM_DEPS.items():
             assert isinstance(deps, list), f"Dependencies for {import_name} should be a list"

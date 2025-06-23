@@ -16,11 +16,12 @@ properly migrated to Python modules.
 
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 
-def test_all_core_python_modules_exist():
+def test_all_core_python_modules_exist() -> Any:
     """Test that all core Python modules exist after migration."""
     # Add the src directory to sys.path for imports
     import sys
@@ -66,7 +67,7 @@ def test_all_core_python_modules_exist():
             pytest.fail(f"Required module {module_name} not found: {e}")
 
 
-def test_uv_functionality_migrated():
+def test_uv_functionality_migrated() -> Any:
     """Test that UV functionality has been migrated to Python."""
     # Add the src directory to sys.path for imports
     import sys
@@ -92,7 +93,7 @@ def test_uv_functionality_migrated():
     # UVResult was not implemented in the migration
 
 
-def test_guardian_functionality_migrated():
+def test_guardian_functionality_migrated() -> Any:
     """Test that guardian functionality has been migrated to Python."""
     # Add the src directory to sys.path for imports
     import sys
@@ -110,7 +111,7 @@ def test_guardian_functionality_migrated():
     assert hasattr(guardian_prefect, "check_system_resources")
 
 
-def test_dht_flows_available():
+def test_dht_flows_available() -> Any:
     """Test that DHT flows are available."""
     from DHT.modules.dht_flows import restore_flow, test_flow
 
@@ -126,7 +127,7 @@ def test_dht_flows_available():
     assert hasattr(test_flow, "run_pytest") or hasattr(test_flow, "execute_test_command")
 
 
-def test_main_entry_point_exists():
+def test_main_entry_point_exists() -> Any:
     """Test that main.py entry point exists."""
     # The main.py is in the dht directory (project root)
     main_py = Path(__file__).parent.parent.parent / "main.py"
@@ -143,19 +144,19 @@ def test_main_entry_point_exists():
 
 
 @pytest.mark.unit
-def test_prefect_integration():
+def test_prefect_integration() -> Any:
     """Test that Prefect is properly integrated."""
     try:
         from prefect import flow, task
 
         # Test we can create a simple task
         @task
-        def test_task():
+        def test_task() -> Any:
             return "test"
 
         # Test we can create a simple flow
         @flow
-        def test_flow():
+        def test_flow() -> Any:
             return test_task()
 
         # Verify they work
@@ -166,12 +167,12 @@ def test_prefect_integration():
         pytest.fail(f"Prefect not properly installed: {e}")
 
 
-def test_python_version_requirement():
+def test_python_version_requirement() -> Any:
     """Test that we're running on Python 3.10+."""
     assert sys.version_info >= (3, 10), f"Python 3.10+ required, got {sys.version}"
 
 
-def test_critical_dependencies_installed():
+def test_critical_dependencies_installed() -> Any:
     """Test that critical dependencies are installed."""
     required_packages = [
         "prefect",
@@ -192,7 +193,7 @@ def test_critical_dependencies_installed():
             pytest.fail(f"Required package '{package}' not installed")
 
 
-def test_shell_script_migration_complete():
+def test_shell_script_migration_complete() -> Any:
     """Verify that shell scripts have been properly migrated to Python."""
     # This test documents that shell scripts have been successfully migrated
     modules_dir = Path(__file__).parent.parent.parent / "src" / "DHT" / "modules"
@@ -221,7 +222,7 @@ def test_shell_script_migration_complete():
     assert len(migration_map) > 0, "Migration map should document shell->Python transitions"
 
 
-def test_python_entry_points_exist():
+def test_python_entry_points_exist() -> Any:
     """Test that Python entry points exist after migration."""
     # Check Python entry points
     root_dir = Path(__file__).parent.parent.parent

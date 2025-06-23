@@ -7,13 +7,14 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import os
 import sys
+from typing import Any
 
 # Import helper functions
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import mock_bash_script, run_bash_command
 
 
-def test_uv_is_available():
+def test_uv_is_available() -> Any:
     """Test the uv_is_available function."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -78,7 +79,7 @@ def test_uv_is_available():
             shutil.rmtree(test_dir)
 
 
-def test_get_uv_command():
+def test_get_uv_command() -> Any:
     """Test the get_uv_command function."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -139,7 +140,7 @@ def test_get_uv_command():
             shutil.rmtree(test_dir)
 
 
-def test_uv_create_venv():
+def test_uv_create_venv() -> Any:
     """Test the uv_create_venv function."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -226,7 +227,7 @@ def test_uv_create_venv():
             shutil.rmtree(test_dir)
 
 
-def test_uv_command_help():
+def test_uv_command_help() -> Any:
     """Test the uv_command help function."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))

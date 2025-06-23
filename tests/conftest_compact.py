@@ -13,6 +13,7 @@ Pytest configuration to reduce output verbosity.
 import logging
 import os
 import warnings
+from typing import Any
 
 # Reduce all logging to ERROR level
 logging.getLogger().setLevel(logging.ERROR)
@@ -34,7 +35,7 @@ os.environ["PYTHONWARNINGS"] = "ignore"
 
 
 # Pytest hooks to reduce output
-def pytest_configure(config):
+def pytest_configure(config) -> Any:
     """Configure pytest for minimal output."""
     # Override verbosity settings
     config.option.verbose = -1  # Minimal verbosity
@@ -46,7 +47,7 @@ def pytest_configure(config):
     config.option.capture = "no"
 
 
-def pytest_collection_modifyitems(session, config, items):
+def pytest_collection_modifyitems(session, config, items) -> Any:
     """Modify test collection to add markers."""
     # Mark all tests as no-capture to reduce output
     for item in items:
@@ -54,7 +55,7 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 # Hook to suppress output from specific tests
-def pytest_runtest_setup(item):
+def pytest_runtest_setup(item) -> Any:
     """Setup test to minimize output."""
     # Suppress stdout/stderr for all tests
     if hasattr(item, "capfd"):

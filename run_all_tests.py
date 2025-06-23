@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 
-def run_pytest_json(test_path):
+def run_pytest_json(test_path) -> None:
     """Run pytest and get JSON output."""
     cmd = [
         sys.executable,

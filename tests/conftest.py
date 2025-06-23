@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE file for details.
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -25,13 +26,13 @@ if parent_dir not in sys.path:
 
 
 @pytest.fixture(scope="session")
-def project_root():
+def project_root() -> Any:
     """Returns the project root directory (parent of DHT)."""
     return Path(__file__).parent.parent.parent
 
 
 @pytest.fixture
-def temp_dir_session_scoped(tmp_path_factory):
+def temp_dir_session_scoped(tmp_path_factory) -> Any:
     """Create a temporary directory for tests that is cleaned up after session."""
     temp_dir = tmp_path_factory.mktemp("dht_tests_")
     yield temp_dir
@@ -39,7 +40,7 @@ def temp_dir_session_scoped(tmp_path_factory):
 
 
 @pytest.fixture
-def mock_project_dir(temp_dir_session_scoped):
+def mock_project_dir(temp_dir_session_scoped) -> Any:
     """Create a mock project directory with basic structure within a temp dir."""
     project_dir = Path(temp_dir_session_scoped) / "mock_project"
     project_dir.mkdir(exist_ok=True)
@@ -57,7 +58,7 @@ def mock_project_dir(temp_dir_session_scoped):
 
 
 @pytest.fixture
-def mock_dht_env(monkeypatch, project_root):
+def mock_dht_env(monkeypatch, project_root) -> Any:
     """Set up environment variables for DHT testing."""
     dht_dir = project_root / "DHT"
     monkeypatch.setenv("DHTL_SESSION_ID", "test_session_123")
@@ -79,7 +80,7 @@ def mock_dht_env(monkeypatch, project_root):
 
 
 @pytest.fixture
-def mock_project_with_venv(mock_project_dir):
+def mock_project_with_venv(mock_project_dir) -> Any:
     """Create a mock project with a virtual environment."""
     # Create venv directory structure
     venv_dir = mock_project_dir / ".venv"
@@ -107,7 +108,7 @@ def mock_project_with_venv(mock_project_dir):
     return mock_project_dir
 
 
-def pytest_sessionfinish(session, exitstatus):
+def pytest_sessionfinish(session, exitstatus) -> Any:
     """Print a summary of test results at the end of the session."""
     try:
         reporter = session.config.pluginmanager.getplugin("terminalreporter")

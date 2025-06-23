@@ -21,6 +21,7 @@ realistic fixtures and minimal mocking.
 
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -63,7 +64,7 @@ from DHT.modules.dht_flows.test_flow import (
 class TestRestoreFlow:
     """Test the restore dependencies Prefect flow."""
 
-    def test_find_project_root_with_pyproject(self):
+    def test_find_project_root_with_pyproject(self) -> Any:
         """Test finding project root with pyproject.toml."""
         project_path, metadata = create_temporary_project(project_type="simple", project_name="test_project")
 
@@ -80,7 +81,7 @@ class TestRestoreFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    def test_find_project_root_with_git(self, tmp_path):
+    def test_find_project_root_with_git(self, tmp_path) -> Any:
         """Test finding project root with .git directory."""
         project_dir = tmp_path / "git_project"
         project_dir.mkdir()
@@ -89,7 +90,7 @@ class TestRestoreFlow:
         root = find_project_root(project_dir)
         assert root == project_dir
 
-    def test_find_project_root_not_found(self, tmp_path):
+    def test_find_project_root_not_found(self, tmp_path) -> Any:
         """Test error when project root cannot be found."""
         empty_dir = tmp_path / "empty"
         empty_dir.mkdir()
@@ -99,7 +100,7 @@ class TestRestoreFlow:
 
     @patch("sys.prefix", "/tmp/test_venv")
     @patch("sys.base_prefix", "/usr/bin/python")
-    def test_detect_virtual_environment_exists(self):
+    def test_detect_virtual_environment_exists(self) -> Any:
         """Test detecting existing virtual environment."""
         project_path, _ = create_temporary_project("simple")
 
@@ -113,7 +114,7 @@ class TestRestoreFlow:
             cleanup_temporary_project(project_path)
 
     @patch("sys.prefix", sys.base_prefix)  # Make sure we're not in a venv
-    def test_detect_virtual_environment_not_exists(self):
+    def test_detect_virtual_environment_not_exists(self) -> Any:
         """Test detecting when no virtual environment exists."""
         project_path, _ = create_temporary_project("simple")
 
@@ -126,7 +127,7 @@ class TestRestoreFlow:
             cleanup_temporary_project(project_path)
 
     @patch("DHT.modules.dht_flows.restore_flow.UVManager")
-    def test_create_virtual_environment(self, mock_uv_manager_class):
+    def test_create_virtual_environment(self, mock_uv_manager_class) -> Any:
         """Test virtual environment creation."""
         # Mock UV manager
         mock_uv = MagicMock()
@@ -143,7 +144,7 @@ class TestRestoreFlow:
 
     @patch("DHT.modules.dht_flows.restore_flow.run_with_guardian")
     @patch("DHT.modules.dht_flows.restore_flow.UVManager")
-    def test_install_dependencies_with_lock(self, mock_uv_manager_class, mock_run):
+    def test_install_dependencies_with_lock(self, mock_uv_manager_class, mock_run) -> Any:
         """Test installing dependencies with uv.lock."""
         project_path, _ = create_temporary_project("simple")
 
@@ -179,7 +180,7 @@ class TestRestoreFlow:
             cleanup_temporary_project(project_path)
 
     @patch("DHT.modules.dht_flows.restore_flow.subprocess.run")
-    def test_verify_installation(self, mock_subprocess):
+    def test_verify_installation(self, mock_subprocess) -> Any:
         """Test installation verification."""
         project_path, _ = create_temporary_project("simple", project_name="my_app")
 
@@ -222,7 +223,7 @@ class TestRestoreFlow:
     @patch("DHT.modules.dht_flows.restore_flow.verify_installation")
     def test_restore_dependencies_flow_complete(
         self, mock_verify, mock_install_dht, mock_install_deps, mock_create_venv, mock_detect_venv, mock_find_root
-    ):
+    ) -> Any:
         """Test complete restore dependencies flow."""
         # Setup mocks
         project_root = Path("/tmp/test_project")
@@ -270,7 +271,7 @@ class TestTestFlow:
     @patch("psutil.virtual_memory")
     @patch("psutil.cpu_count")
     @patch("psutil.cpu_percent")
-    def test_check_test_resources(self, mock_cpu_percent, mock_cpu_count, mock_vm):
+    def test_check_test_resources(self, mock_cpu_percent, mock_cpu_count, mock_vm) -> Any:
         """Test resource checking."""
         # Mock system resources
         mock_vm.return_value = create_psutil_virtual_memory_mock(
@@ -289,7 +290,7 @@ class TestTestFlow:
         assert result["cpu"]["count"] == 4
         assert result["cpu"]["percent_used"] == 25.0
 
-    def test_discover_tests_pytest_project(self):
+    def test_discover_tests_pytest_project(self) -> Any:
         """Test discovering tests in a pytest project."""
         project_path, _ = create_temporary_project(project_type="simple", include_tests=True)
 
@@ -305,7 +306,7 @@ class TestTestFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    def test_discover_tests_no_tests(self):
+    def test_discover_tests_no_tests(self) -> Any:
         """Test discovering when no tests exist."""
         project_path, _ = create_temporary_project(project_type="simple", include_tests=False)
 
@@ -319,7 +320,7 @@ class TestTestFlow:
         finally:
             cleanup_temporary_project(project_path)
 
-    def test_prepare_test_command_pytest(self, tmp_path):
+    def test_prepare_test_command_pytest(self, tmp_path) -> Any:
         """Test preparing pytest command."""
         venv_path = tmp_path / ".venv"
         venv_path.mkdir()
@@ -350,7 +351,7 @@ class TestTestFlow:
         assert "--timeout" in cmd
         assert "300" in cmd
 
-    def test_parse_test_output_pytest_success(self):
+    def test_parse_test_output_pytest_success(self) -> Any:
         """Test parsing successful pytest output."""
         stdout = """
         ============================= test session starts ==============================
@@ -372,7 +373,7 @@ class TestTestFlow:
         assert summary["failed"] == 0
         assert summary["errors"] == 0
 
-    def test_parse_test_output_pytest_failures(self):
+    def test_parse_test_output_pytest_failures(self) -> Any:
         """Test parsing pytest output with failures."""
         stdout = """
         ============================= test session starts ==============================
@@ -394,7 +395,7 @@ class TestTestFlow:
         assert summary["failed"] == 2
         assert summary["errors"] == 1
 
-    def test_parse_test_output_unittest(self):
+    def test_parse_test_output_unittest(self) -> Any:
         """Test parsing unittest output."""
         stdout = """
         ...F.E.
@@ -434,7 +435,7 @@ class TestTestFlow:
         mock_detect_venv,
         mock_find_root,
         mock_check_resources,
-    ):
+    ) -> Any:
         """Test complete test command flow."""
         # Setup mocks
         project_root = Path("/tmp/test_project")
@@ -483,7 +484,7 @@ class TestTestFlow:
         mock_coverage.assert_called_once()
 
     @patch("DHT.modules.dht_flows.test_flow.detect_virtual_environment")
-    def test_test_command_flow_no_venv(self, mock_detect_venv):
+    def test_test_command_flow_no_venv(self, mock_detect_venv) -> Any:
         """Test error when no virtual environment exists."""
         project_path, _ = create_temporary_project("simple")
 

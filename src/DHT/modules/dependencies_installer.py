@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 dependencies_installer.py - Project dependencies installation
 
@@ -31,7 +33,7 @@ class DependenciesInstaller:
     @task(name="install_project_dependencies")
     def install_project_dependencies(
         self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path
-    ):
+    ) -> Any:
         """Install project dependencies."""
         logger = get_run_logger()
 

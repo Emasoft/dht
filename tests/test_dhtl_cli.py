@@ -8,6 +8,7 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -16,7 +17,7 @@ DHTL = PROJECT_ROOT / "dhtl.sh"
 
 
 @pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
-def test_version():
+def test_version() -> Any:
     res = subprocess.run(
         [str(DHTL), "--no-guardian", "--quiet", "version"],
         capture_output=True,
@@ -28,7 +29,7 @@ def test_version():
 
 
 @pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
-def test_help():
+def test_help() -> Any:
     res = subprocess.run(
         [str(DHTL), "--no-guardian", "--quiet", "help"],
         capture_output=True,
@@ -40,7 +41,7 @@ def test_help():
 
 
 @pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
-def test_unknown_command_exit_code():
+def test_unknown_command_exit_code() -> Any:
     res = subprocess.run(
         [str(DHTL), "--no-guardian", "--quiet", "totally_unknown"],
         capture_output=True,

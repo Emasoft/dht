@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -29,13 +30,13 @@ import pytest
 class TestComprehensiveVerification:
     """Comprehensive verification of DHT codebase."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.project_root = Path(__file__).parent.parent.parent
         self.src_dir = self.project_root / "src" / "DHT"
         self.modules_dir = self.src_dir / "modules"
 
-    def test_all_python_files_have_valid_syntax(self):
+    def test_all_python_files_have_valid_syntax(self) -> Any:
         """Test that ALL Python files have valid syntax."""
         python_files = list(self.project_root.rglob("*.py"))
         # Exclude test repositories and cache directories
@@ -59,7 +60,7 @@ class TestComprehensiveVerification:
 
         assert len(syntax_errors) == 0, "Syntax errors found:\n" + "\n".join(syntax_errors)
 
-    def test_no_shell_scripts_remain(self):
+    def test_no_shell_scripts_remain(self) -> Any:
         """Test that no shell scripts remain after Python migration."""
         shell_files = list(self.project_root.rglob("*.sh"))
         # Exclude third-party directories
@@ -81,7 +82,7 @@ class TestComprehensiveVerification:
             f"Bat files should be removed, found: {[str(f.relative_to(self.project_root)) for f in bat_files]}"
         )
 
-    def test_no_template_placeholders_remain(self):
+    def test_no_template_placeholders_remain(self) -> Any:
         """Test that no unresolved template placeholders remain in non-template files."""
         all_files = list(self.project_root.rglob("*"))
         text_files = [
@@ -134,7 +135,7 @@ class TestComprehensiveVerification:
             files_with_placeholders
         )
 
-    def test_critical_files_exist(self):
+    def test_critical_files_exist(self) -> Any:
         """Test that all critical files exist."""
         critical_files = [
             # Entry points
@@ -169,7 +170,7 @@ class TestComprehensiveVerification:
 
         assert len(missing_files) == 0, "Critical files missing:\n" + "\n".join(missing_files)
 
-    def _check_relative_import(self, py_file, module, level):
+    def _check_relative_import(self, py_file, module, level) -> Any:
         """Check if a relative import is valid."""
         if level == 1 and module:  # from .module import something
             target_file = py_file.parent / f"{module[1:]}.py"
@@ -180,7 +181,7 @@ class TestComprehensiveVerification:
                     return f"{py_file.name}: Relative import {module} not found"
         return None
 
-    def test_no_import_errors_in_python_files(self):
+    def test_no_import_errors_in_python_files(self) -> Any:
         """Test that Python files don't have obvious import errors."""
         python_files = list(self.src_dir.rglob("*.py"))
         import_errors = []
@@ -209,7 +210,7 @@ class TestComprehensiveVerification:
             for error in import_errors:
                 print(f"  - {error}")
 
-    def test_uv_build_works(self):
+    def test_uv_build_works(self) -> Any:
         """Test that UV build command works."""
         try:
             result = subprocess.run(
@@ -234,7 +235,7 @@ class TestComprehensiveVerification:
         except FileNotFoundError:
             pytest.skip("UV not available for build test")
 
-    def test_no_duplicate_class_definitions_comprehensive(self):
+    def test_no_duplicate_class_definitions_comprehensive(self) -> Any:
         """Test for duplicate class definitions across all Python modules."""
         python_files = list(self.modules_dir.glob("*.py"))
         class_definitions = {}
@@ -274,7 +275,7 @@ class TestComprehensiveVerification:
 
         assert len(critical_duplicates) == 0, f"Critical class duplicates found: {critical_duplicates}"
 
-    def test_orchestrator_imports_all_required_modules(self):
+    def test_orchestrator_imports_all_required_modules(self) -> Any:
         """Test that orchestrator.py imports all required modules."""
         orchestrator_file = self.modules_dir / "orchestrator.py"
         if not orchestrator_file.exists():
@@ -296,7 +297,7 @@ class TestComprehensiveVerification:
 
         assert len(missing_imports) == 0, f"Orchestrator missing imports for: {missing_imports}"
 
-    def test_no_broken_symlinks(self):
+    def test_no_broken_symlinks(self) -> Any:
         """Test that there are no broken symlinks."""
         broken_symlinks = []
 
@@ -306,7 +307,7 @@ class TestComprehensiveVerification:
 
         assert len(broken_symlinks) == 0, f"Broken symlinks found: {broken_symlinks}"
 
-    def test_file_permissions_are_correct(self):
+    def test_file_permissions_are_correct(self) -> Any:
         """Test that file permissions are correctly set."""
         permission_issues = []
 
@@ -335,7 +336,7 @@ class TestComprehensiveVerification:
             for issue in permission_issues:
                 print(f"  - {issue}")
 
-    def test_pyproject_toml_is_valid(self):
+    def test_pyproject_toml_is_valid(self) -> Any:
         """Test that pyproject.toml is valid."""
         pyproject_file = self.project_root / "pyproject.toml"
         assert pyproject_file.exists(), "pyproject.toml missing"
@@ -365,7 +366,7 @@ class TestComprehensiveVerification:
         except Exception as e:
             pytest.fail(f"pyproject.toml is invalid: {e}")
 
-    def test_no_large_files_violating_guidelines(self):
+    def test_no_large_files_violating_guidelines(self) -> Any:
         """Test that files respect size guidelines."""
         large_files = []
 

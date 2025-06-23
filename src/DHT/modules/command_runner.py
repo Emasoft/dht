@@ -140,7 +140,7 @@ class CommandRunner:
             Result dictionary with success status and any output
         """
         if args is None:
-            args = {}
+            args: dict[str, Any] = {}
 
         self.logger.info(f"Executing command: {command_name}")
 

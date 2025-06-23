@@ -145,7 +145,7 @@ def resolve_system_packages(requirements: list[str]) -> list[str]:
     platform_map = {"darwin": "darwin", "linux": "linux", "windows": "windows"}
     platform_key = platform_map.get(system, "linux")
 
-    resolved = []
+    resolved: list[Any] = []
     for req in requirements:
         if req in SYSTEM_PACKAGE_MAPPINGS:
             resolved.extend(SYSTEM_PACKAGE_MAPPINGS[req][platform_key])

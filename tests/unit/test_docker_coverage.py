@@ -11,6 +11,7 @@ Additional tests to reach 100% coverage for Docker deployment modules.
 """
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import docker.errors
@@ -25,7 +26,7 @@ class TestDockerManagerCoverage:
     """Additional tests for DockerManager coverage."""
 
     @patch("docker.from_env")
-    def test_client_property_error(self, mock_docker):
+    def test_client_property_error(self, mock_docker) -> Any:
         """Test client property when Docker connection fails."""
         mock_docker.side_effect = docker.errors.DockerException("Connection failed")
 
@@ -33,7 +34,7 @@ class TestDockerManagerCoverage:
         with pytest.raises(DockerError, match="Failed to connect to Docker"):
             _ = manager.client
 
-    def test_is_port_available_invalid_ports(self):
+    def test_is_port_available_invalid_ports(self) -> Any:
         """Test port availability for invalid port numbers."""
         manager = DockerManager()
 
@@ -43,7 +44,7 @@ class TestDockerManagerCoverage:
         assert manager.is_port_available(65536) is False
         assert manager.is_port_available(100000) is False
 
-    def test_is_port_available_occupied(self):
+    def test_is_port_available_occupied(self) -> Any:
         """Test port availability when port is occupied."""
         manager = DockerManager()
 
@@ -61,7 +62,7 @@ class TestDockerManagerCoverage:
             occupied_socket.close()
 
     @patch("docker.from_env")
-    def test_build_image_with_dockerfile_content(self, mock_docker):
+    def test_build_image_with_dockerfile_content(self, mock_docker) -> Any:
         """Test building image with Dockerfile content."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -81,7 +82,7 @@ class TestDockerManagerCoverage:
         assert "Step 1/5" in logs
 
     @patch("docker.from_env")
-    def test_build_image_unexpected_error(self, mock_docker):
+    def test_build_image_unexpected_error(self, mock_docker) -> Any:
         """Test build image with unexpected error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -95,7 +96,7 @@ class TestDockerManagerCoverage:
             manager.build_image(Path("/tmp"), "test:latest")
 
     @patch("docker.from_env")
-    def test_run_container_image_not_found(self, mock_docker):
+    def test_run_container_image_not_found(self, mock_docker) -> Any:
         """Test running container when image not found."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -109,7 +110,7 @@ class TestDockerManagerCoverage:
             manager.run_container("nonexistent:latest", "test-container")
 
     @patch("docker.from_env")
-    def test_run_container_api_error(self, mock_docker):
+    def test_run_container_api_error(self, mock_docker) -> Any:
         """Test running container with API error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -123,7 +124,7 @@ class TestDockerManagerCoverage:
             manager.run_container("test:latest", "test-container")
 
     @patch("docker.from_env")
-    def test_run_container_unexpected_error(self, mock_docker):
+    def test_run_container_unexpected_error(self, mock_docker) -> Any:
         """Test running container with unexpected error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -137,7 +138,7 @@ class TestDockerManagerCoverage:
             manager.run_container("test:latest", "test-container")
 
     @patch("docker.from_env")
-    def test_run_container_with_existing_container(self, mock_docker):
+    def test_run_container_with_existing_container(self, mock_docker) -> Any:
         """Test running container when container with same name exists."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -160,7 +161,7 @@ class TestDockerManagerCoverage:
         assert container == new_container
 
     @patch("docker.from_env")
-    def test_stop_container_not_found(self, mock_docker):
+    def test_stop_container_not_found(self, mock_docker) -> Any:
         """Test stopping container that doesn't exist."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -173,7 +174,7 @@ class TestDockerManagerCoverage:
         manager.stop_container("nonexistent")
 
     @patch("docker.from_env")
-    def test_stop_container_error(self, mock_docker):
+    def test_stop_container_error(self, mock_docker) -> Any:
         """Test stopping container with error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -188,7 +189,7 @@ class TestDockerManagerCoverage:
             manager.stop_container("test-container")
 
     @patch("docker.from_env")
-    def test_stream_logs_follow(self, mock_docker):
+    def test_stream_logs_follow(self, mock_docker) -> Any:
         """Test streaming logs with follow=True."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -206,7 +207,7 @@ class TestDockerManagerCoverage:
         assert logs == mock_logs_generator
 
     @patch("docker.from_env")
-    def test_stream_logs_string_output(self, mock_docker):
+    def test_stream_logs_string_output(self, mock_docker) -> Any:
         """Test streaming logs with string output."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -222,7 +223,7 @@ class TestDockerManagerCoverage:
         assert logs == "String logs"
 
     @patch("docker.from_env")
-    def test_stream_logs_not_found(self, mock_docker):
+    def test_stream_logs_not_found(self, mock_docker) -> Any:
         """Test streaming logs from non-existent container."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -234,7 +235,7 @@ class TestDockerManagerCoverage:
             manager.stream_logs("nonexistent")
 
     @patch("docker.from_env")
-    def test_stream_logs_error(self, mock_docker):
+    def test_stream_logs_error(self, mock_docker) -> Any:
         """Test streaming logs with error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -248,7 +249,7 @@ class TestDockerManagerCoverage:
             manager.stream_logs("test-container")
 
     @patch("docker.from_env")
-    def test_exec_command_not_found(self, mock_docker):
+    def test_exec_command_not_found(self, mock_docker) -> Any:
         """Test executing command in non-existent container."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -260,7 +261,7 @@ class TestDockerManagerCoverage:
             manager.exec_command("nonexistent", ["echo", "test"])
 
     @patch("docker.from_env")
-    def test_exec_command_error(self, mock_docker):
+    def test_exec_command_error(self, mock_docker) -> Any:
         """Test executing command with error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -274,7 +275,7 @@ class TestDockerManagerCoverage:
             manager.exec_command("test-container", ["echo", "test"])
 
     @patch("docker.from_env")
-    def test_exec_command_no_output(self, mock_docker):
+    def test_exec_command_no_output(self, mock_docker) -> Any:
         """Test executing command with no output."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -293,7 +294,7 @@ class TestDockerManagerCoverage:
         assert output == ""
 
     @patch("docker.from_env")
-    def test_get_container_info_not_found(self, mock_docker):
+    def test_get_container_info_not_found(self, mock_docker) -> Any:
         """Test getting info for non-existent container."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -305,7 +306,7 @@ class TestDockerManagerCoverage:
             manager.get_container_info("nonexistent")
 
     @patch("docker.from_env")
-    def test_get_container_info_error(self, mock_docker):
+    def test_get_container_info_error(self, mock_docker) -> Any:
         """Test getting container info with error."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -317,7 +318,7 @@ class TestDockerManagerCoverage:
             manager.get_container_info("test-container")
 
     @patch("docker.from_env")
-    def test_cleanup_containers_with_errors(self, mock_docker):
+    def test_cleanup_containers_with_errors(self, mock_docker) -> Any:
         """Test cleanup containers with some failures."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -344,7 +345,7 @@ class TestDockerManagerCoverage:
         container1.remove.assert_called_once()
 
     @patch("docker.from_env")
-    def test_cleanup_containers_list_error(self, mock_docker):
+    def test_cleanup_containers_list_error(self, mock_docker) -> Any:
         """Test cleanup containers when list fails."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -356,7 +357,7 @@ class TestDockerManagerCoverage:
         assert cleaned == 0
 
     @patch("docker.from_env")
-    def test_cleanup_images_with_errors(self, mock_docker):
+    def test_cleanup_images_with_errors(self, mock_docker) -> Any:
         """Test cleanup images with some failures."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -384,7 +385,7 @@ class TestDockerManagerCoverage:
         assert cleaned == 1
 
     @patch("docker.from_env")
-    def test_cleanup_images_list_error(self, mock_docker):
+    def test_cleanup_images_list_error(self, mock_docker) -> Any:
         """Test cleanup images when list fails."""
         manager = DockerManager()
         mock_client = MagicMock()
@@ -399,7 +400,7 @@ class TestDockerManagerCoverage:
 class TestDockerfileGeneratorCoverage:
     """Additional tests for DockerfileGenerator coverage."""
 
-    def test_detect_web_project_by_file_content(self, tmp_path):
+    def test_detect_web_project_by_file_content(self, tmp_path) -> Any:
         """Test detecting web project by file content."""
         generator = DockerfileGenerator()
 
@@ -417,14 +418,14 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def read_root():
+def read_root() -> Any:
     return {"Hello": "World"}
 """)
 
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.WEB
 
-    def test_detect_cli_project_by_file_content(self, tmp_path):
+    def test_detect_cli_project_by_file_content(self, tmp_path) -> Any:
         """Test detecting CLI project by file content."""
         generator = DockerfileGenerator()
 
@@ -440,14 +441,14 @@ dependencies = []
 import click
 
 @click.command()
-def main():
+def main() -> Any:
     click.echo("Hello CLI!")
 """)
 
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.CLI
 
-    def test_detect_library_project(self, tmp_path):
+    def test_detect_library_project(self, tmp_path) -> Any:
         """Test detecting library project."""
         generator = DockerfileGenerator()
 
@@ -462,12 +463,12 @@ dependencies = ["requests"]
         lib_dir = tmp_path / "my_library"
         lib_dir.mkdir()
         (lib_dir / "__init__.py").write_text("__version__ = '1.0.0'")
-        (lib_dir / "utils.py").write_text("def helper(): pass")
+        (lib_dir / "utils.py").write_text("def helper() -> Any: pass")
 
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.LIBRARY
 
-    def test_detect_unknown_project(self, tmp_path):
+    def test_detect_unknown_project(self, tmp_path) -> Any:
         """Test detecting unknown project type."""
         generator = DockerfileGenerator()
 
@@ -477,7 +478,7 @@ dependencies = ["requests"]
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.UNKNOWN
 
-    def test_skip_large_files(self, tmp_path):
+    def test_skip_large_files(self, tmp_path) -> Any:
         """Test skipping large files during detection."""
         generator = DockerfileGenerator()
 
@@ -489,7 +490,7 @@ dependencies = ["requests"]
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.UNKNOWN
 
-    def test_handle_file_read_error(self, tmp_path):
+    def test_handle_file_read_error(self, tmp_path) -> Any:
         """Test handling file read errors."""
         generator = DockerfileGenerator()
 
@@ -506,7 +507,7 @@ dependencies = ["requests"]
             # Restore permissions for cleanup
             test_file.chmod(0o644)
 
-    def test_detect_python_version_no_match(self, tmp_path):
+    def test_detect_python_version_no_match(self, tmp_path) -> Any:
         """Test Python version detection with no match."""
         generator = DockerfileGenerator()
 
@@ -516,7 +517,7 @@ dependencies = ["requests"]
         version = generator.detect_python_version(tmp_path)
         assert version == "3.11"  # Default
 
-    def test_detect_python_version_pyproject_error(self, tmp_path):
+    def test_detect_python_version_pyproject_error(self, tmp_path) -> Any:
         """Test Python version detection with invalid pyproject.toml."""
         generator = DockerfileGenerator()
 
@@ -526,13 +527,13 @@ dependencies = ["requests"]
         version = generator.detect_python_version(tmp_path)
         assert version == "3.11"  # Default
 
-    def test_find_entry_points_with_main_check(self, tmp_path):
+    def test_find_entry_points_with_main_check(self, tmp_path) -> Any:
         """Test finding entry points with __main__ check."""
         generator = DockerfileGenerator()
 
         # Create files with different __main__ patterns
         (tmp_path / "run.py").write_text("""
-def main():
+def main() -> Any:
     print("Hello")
 
 if __name__ == '__main__':
@@ -540,7 +541,7 @@ if __name__ == '__main__':
 """)
 
         (tmp_path / "start.py").write_text("""
-def start():
+def start() -> Any:
     print("Starting")
 
 if __name__ == "__main__":
@@ -551,7 +552,7 @@ if __name__ == "__main__":
         assert "run.py" in entry_points
         assert "start.py" in entry_points
 
-    def test_find_entry_points_with_error(self, tmp_path):
+    def test_find_entry_points_with_error(self, tmp_path) -> Any:
         """Test finding entry points with file read error."""
         generator = DockerfileGenerator()
 
@@ -567,7 +568,7 @@ if __name__ == "__main__":
         finally:
             bad_file.chmod(0o644)
 
-    def test_get_dependencies_requirements_only(self, tmp_path):
+    def test_get_dependencies_requirements_only(self, tmp_path) -> Any:
         """Test getting dependencies from requirements.txt only."""
         generator = DockerfileGenerator()
 
@@ -586,7 +587,7 @@ pandas
         assert "flask" in deps
         assert "pandas" in deps
 
-    def test_get_dependencies_pyproject_error(self, tmp_path):
+    def test_get_dependencies_pyproject_error(self, tmp_path) -> Any:
         """Test getting dependencies with pyproject.toml error."""
         generator = DockerfileGenerator()
 
@@ -599,7 +600,7 @@ pandas
         deps = generator._get_dependencies(tmp_path)
         assert "requests" in deps
 
-    def test_get_dependencies_requirements_error(self, tmp_path):
+    def test_get_dependencies_requirements_error(self, tmp_path) -> Any:
         """Test getting dependencies with requirements.txt error."""
         generator = DockerfileGenerator()
 
@@ -614,7 +615,7 @@ pandas
         finally:
             req_file.chmod(0o644)
 
-    def test_get_system_deps_all_mappings(self, tmp_path):
+    def test_get_system_deps_all_mappings(self, tmp_path) -> Any:
         """Test system dependencies for all mapped packages."""
         generator = DockerfileGenerator()
 
@@ -637,17 +638,17 @@ pandas
         assert "libxml2-dev" in system_deps
         assert "libjpeg-dev" in system_deps
 
-    def test_has_tests_with_test_files(self, tmp_path):
+    def test_has_tests_with_test_files(self, tmp_path) -> Any:
         """Test detecting tests with test files."""
         generator = DockerfileGenerator()
 
         # Create test files
-        (tmp_path / "test_main.py").write_text("def test_something(): pass")
-        (tmp_path / "something_test.py").write_text("def test_other(): pass")
+        (tmp_path / "test_main.py").write_text("def test_something() -> Any: pass")
+        (tmp_path / "something_test.py").write_text("def test_other() -> Any: pass")
 
         assert generator._has_tests(tmp_path) is True
 
-    def test_has_frontend_detection(self, tmp_path):
+    def test_has_frontend_detection(self, tmp_path) -> Any:
         """Test frontend detection."""
         generator = DockerfileGenerator()
 
@@ -658,14 +659,14 @@ pandas
         (tmp_path / "package.json").write_text("{}")
         assert generator._has_frontend(tmp_path) is True
 
-    def test_detect_ports_no_main_entry(self, tmp_path):
+    def test_detect_ports_no_main_entry(self, tmp_path) -> Any:
         """Test port detection with no main entry."""
         generator = DockerfileGenerator()
 
         ports = generator._detect_ports(tmp_path, None)
         assert ports == [8000]  # Default
 
-    def test_detect_ports_various_patterns(self, tmp_path):
+    def test_detect_ports_various_patterns(self, tmp_path) -> Any:
         """Test port detection with various patterns."""
         generator = DockerfileGenerator()
 
@@ -692,7 +693,7 @@ negative = -1
         assert 99999 not in ports
         assert -1 not in ports
 
-    def test_detect_ports_with_error(self, tmp_path):
+    def test_detect_ports_with_error(self, tmp_path) -> Any:
         """Test port detection with file read error."""
         generator = DockerfileGenerator()
 
@@ -707,7 +708,7 @@ negative = -1
         finally:
             main_file.chmod(0o644)
 
-    def test_get_dockerfile_existing(self, tmp_path):
+    def test_get_dockerfile_existing(self, tmp_path) -> Any:
         """Test getting existing Dockerfile."""
         generator = DockerfileGenerator()
 
@@ -718,7 +719,7 @@ negative = -1
         result = generator.get_dockerfile(tmp_path)
         assert result == dockerfile_content
 
-    def test_generate_dockerfile_cli_type(self):
+    def test_generate_dockerfile_cli_type(self) -> Any:
         """Test Dockerfile generation for CLI type."""
         generator = DockerfileGenerator()
 
@@ -737,7 +738,7 @@ negative = -1
         assert "EXPOSE" not in dockerfile
         assert 'CMD ["uv", "run", "python", "-m", "app"]' in dockerfile
 
-    def test_generate_dockerfile_library_type(self):
+    def test_generate_dockerfile_library_type(self) -> Any:
         """Test Dockerfile generation for library type."""
         generator = DockerfileGenerator()
 
@@ -755,7 +756,7 @@ negative = -1
         assert "FROM python:3.10-slim" in dockerfile
         assert 'CMD ["uv", "run", "python"]' in dockerfile
 
-    def test_generate_dockerfile_with_tests_production(self):
+    def test_generate_dockerfile_with_tests_production(self) -> Any:
         """Test Dockerfile generation with tests in production mode."""
         generator = DockerfileGenerator()
 
@@ -774,7 +775,7 @@ negative = -1
         dockerfile = generator.generate_dockerfile(project_info, production=True)
         assert "chromium" not in dockerfile
 
-    def test_generate_dockerfile_with_frontend(self):
+    def test_generate_dockerfile_with_frontend(self) -> Any:
         """Test Dockerfile generation with frontend."""
         generator = DockerfileGenerator()
 
@@ -793,7 +794,7 @@ negative = -1
         assert "npm install" in dockerfile
         assert "npm run build" in dockerfile
 
-    def test_validate_dockerfile_all_issues(self):
+    def test_validate_dockerfile_all_issues(self) -> Any:
         """Test Dockerfile validation finding all issues."""
         generator = DockerfileGenerator()
 
@@ -810,7 +811,7 @@ CMD ["python", "app.py"]
         assert any("--no-cache-dir" in issue for issue in issues)
         assert any("apt-get" in issue for issue in issues)
 
-    def test_validate_dockerfile_production_root(self):
+    def test_validate_dockerfile_production_root(self) -> Any:
         """Test Dockerfile validation for production without USER."""
         generator = DockerfileGenerator()
 
@@ -829,7 +830,7 @@ CMD ["python", "app.py"]
 class TestContainerTestRunnerCoverage:
     """Additional tests for ContainerTestRunner coverage."""
 
-    def test_run_all_tests_unknown_framework(self):
+    def test_run_all_tests_unknown_framework(self) -> Any:
         """Test running tests with unknown framework."""
         runner = ContainerTestRunner()
 
@@ -840,7 +841,7 @@ class TestContainerTestRunnerCoverage:
         results = runner.run_all_tests("test-container", [fake_framework])
         assert fake_framework not in results
 
-    def test_run_all_tests_all_frameworks(self):
+    def test_run_all_tests_all_frameworks(self) -> Any:
         """Test running all supported frameworks."""
         runner = ContainerTestRunner()
 
@@ -862,7 +863,7 @@ class TestContainerTestRunnerCoverage:
         assert TestFramework.PLAYWRIGHT in results
         assert TestFramework.PUPPETEER in results
 
-    def test_run_pytest_with_error(self):
+    def test_run_pytest_with_error(self) -> Any:
         """Test pytest execution with Docker error."""
         runner = ContainerTestRunner()
 
@@ -877,7 +878,7 @@ class TestContainerTestRunnerCoverage:
         assert results["exit_code"] == 1
         assert results["total"] == 0
 
-    def test_run_pytest_with_coverage_disabled(self):
+    def test_run_pytest_with_coverage_disabled(self) -> Any:
         """Test pytest execution without coverage."""
         runner = ContainerTestRunner()
 
@@ -892,7 +893,7 @@ class TestContainerTestRunnerCoverage:
         call_args = mock_docker_manager.exec_command.call_args
         assert "--cov" not in call_args[0][1]
 
-    def test_run_pytest_with_specific_path(self):
+    def test_run_pytest_with_specific_path(self) -> Any:
         """Test pytest with specific test path."""
         runner = ContainerTestRunner()
 
@@ -907,7 +908,7 @@ class TestContainerTestRunnerCoverage:
         call_args = mock_docker_manager.exec_command.call_args
         assert "tests/unit" in call_args[0][1]
 
-    def test_run_playwright_install_failure(self):
+    def test_run_playwright_install_failure(self) -> Any:
         """Test Playwright when browser installation fails."""
         runner = ContainerTestRunner()
 
@@ -923,7 +924,7 @@ class TestContainerTestRunnerCoverage:
         # Should still try to run tests
         assert results["exit_code"] == 0
 
-    def test_run_playwright_with_error(self):
+    def test_run_playwright_with_error(self) -> Any:
         """Test Playwright execution with Docker error."""
         runner = ContainerTestRunner()
 
@@ -937,7 +938,7 @@ class TestContainerTestRunnerCoverage:
         assert results["error"] == "Container error"
         assert results["exit_code"] == 1
 
-    def test_run_puppeteer_with_error(self):
+    def test_run_puppeteer_with_error(self) -> Any:
         """Test Puppeteer execution with Docker error."""
         runner = ContainerTestRunner()
 
@@ -951,7 +952,7 @@ class TestContainerTestRunnerCoverage:
         assert results["error"] == "Container error"
         assert results["exit_code"] == 1
 
-    def test_parse_pytest_output_with_errors(self):
+    def test_parse_pytest_output_with_errors(self) -> Any:
         """Test parsing pytest output with errors."""
         runner = ContainerTestRunner()
 
@@ -971,7 +972,7 @@ tests/test_utils.py::test_helper SKIPPED
         assert results["errors"] == 1
         assert results["total"] == 4  # passed + failed + skipped + errors
 
-    def test_parse_pytest_output_with_coverage(self):
+    def test_parse_pytest_output_with_coverage(self) -> Any:
         """Test parsing pytest output with coverage."""
         runner = ContainerTestRunner()
 
@@ -993,7 +994,7 @@ TOTAL                        15      2    87%
         results = runner._parse_pytest_output(output)
         assert results["coverage"] == "87%"
 
-    def test_parse_playwright_output_no_pytest_format(self):
+    def test_parse_playwright_output_no_pytest_format(self) -> Any:
         """Test parsing Playwright output without pytest format."""
         runner = ContainerTestRunner()
 
@@ -1011,7 +1012,7 @@ Running 5 tests using 2 workers
         assert results["total"] == 3
         assert results["passed"] == 3
 
-    def test_format_results_table_with_errors(self):
+    def test_format_results_table_with_errors(self) -> Any:
         """Test formatting table with error results."""
         runner = ContainerTestRunner()
 
@@ -1029,7 +1030,7 @@ Running 5 tests using 2 workers
         # Check that error is shown (truncation happens at 50 chars)
         assert "Failed to connect to Docker daemon" in table
 
-    def test_format_results_table_no_tests(self):
+    def test_format_results_table_no_tests(self) -> Any:
         """Test formatting table with no tests found."""
         runner = ContainerTestRunner()
 
@@ -1038,7 +1039,7 @@ Running 5 tests using 2 workers
         table = runner.format_results_table(results)
         assert "No Tests Found" in table
 
-    def test_format_results_table_with_coverage(self):
+    def test_format_results_table_with_coverage(self) -> Any:
         """Test formatting table with coverage information."""
         runner = ContainerTestRunner()
 
@@ -1051,7 +1052,7 @@ Running 5 tests using 2 workers
         assert "Coverage (pytest): 95%" in table
         assert "Coverage (playwright): 88%" in table
 
-    def test_format_detailed_results(self):
+    def test_format_detailed_results(self) -> Any:
         """Test formatting detailed results."""
         runner = ContainerTestRunner()
 
@@ -1083,7 +1084,7 @@ Running 5 tests using 2 workers
         assert "Very long error output" in detailed
         assert len(detailed) < 10000  # Ensure it's not unbounded
 
-    def test_format_detailed_results_many_failures(self):
+    def test_format_detailed_results_many_failures(self) -> Any:
         """Test formatting detailed results with many failures."""
         runner = ContainerTestRunner()
 
@@ -1100,7 +1101,7 @@ Running 5 tests using 2 workers
         assert "test_9" in detailed
         assert "and 10 more" in detailed
 
-    def test_save_results(self, tmp_path):
+    def test_save_results(self, tmp_path) -> Any:
         """Test saving results to file."""
         runner = ContainerTestRunner()
 

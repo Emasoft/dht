@@ -26,6 +26,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import pytest
 from tabulate import tabulate  # type: ignore[import-untyped]
@@ -88,7 +89,7 @@ class TestGitHubReposWorkflow:
         return test_dir
 
     @pytest.fixture(scope="class", autouse=True)
-    def setup_test_environment(self, test_dir):
+    def setup_test_environment(self, test_dir) -> Any:
         """Set up test environment."""
         # Change to test directory
         original_dir = os.getcwd()
@@ -231,7 +232,7 @@ class TestGitHubReposWorkflow:
         return result
 
     @pytest.mark.timeout(3600)  # 1 hour timeout for all tests
-    def test_all_repositories(self, dhtl_path: Path):
+    def test_all_repositories(self, dhtl_path: Path) -> Any:
         """Test all repositories and generate report."""
         results: list[RepoTestResult] = []
 
@@ -261,7 +262,7 @@ class TestGitHubReposWorkflow:
         assert successful_setups > 0, "No repositories were successfully set up"
         # Don't require all builds to succeed due to project-specific issues
 
-    def print_test_report(self, results: list[RepoTestResult]):
+    def print_test_report(self, results: list[RepoTestResult]) -> Any:
         """Print tabulated test report."""
         print("\n" + "=" * 80)
         print("TEST RESULTS SUMMARY")
@@ -329,7 +330,7 @@ class TestGitHubReposWorkflow:
 
         print(tabulate(perf_data, headers=["Metric", "Value"], tablefmt="grid"))
 
-    def save_detailed_results(self, results: list[RepoTestResult]):
+    def save_detailed_results(self, results: list[RepoTestResult]) -> Any:
         """Save detailed results to JSON file."""
         results_dict = []
         for r in results:

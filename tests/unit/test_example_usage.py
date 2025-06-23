@@ -16,6 +16,7 @@ Example test module demonstrating test_helpers.py usage.
 This shows how to use the test helpers in actual test scenarios.
 """
 
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -35,7 +36,7 @@ class TestDHTDiagnosticScenarios:
 
     @patch("platform.uname")
     @patch("psutil.virtual_memory")
-    def test_system_diagnostics_macos(self, mock_vm, mock_platform):
+    def test_system_diagnostics_macos(self, mock_vm, mock_platform) -> Any:
         """Test system diagnostics on macOS."""
         # Use our helper to create proper mocks
         mock_platform.return_value = create_platform_uname_mock(
@@ -67,7 +68,7 @@ class TestDHTDiagnosticScenarios:
         assert vm.percent == 50.0
 
     @patch("platform.uname")
-    def test_cross_platform_detection(self, mock_platform):
+    def test_cross_platform_detection(self, mock_platform) -> Any:
         """Test platform detection across different OSes."""
         test_cases = [
             ("Darwin", "macOS"),
@@ -86,7 +87,7 @@ class TestDHTDiagnosticScenarios:
 class TestDHTProjectInitialization:
     """Example tests for DHT project initialization."""
 
-    def test_init_simple_python_project(self):
+    def test_init_simple_python_project(self) -> Any:
         """Test initializing a simple Python project."""
         project_path, metadata = create_temporary_project(
             project_type="simple",
@@ -111,7 +112,7 @@ class TestDHTProjectInitialization:
         finally:
             cleanup_temporary_project(project_path)
 
-    def test_init_django_project_with_full_setup(self):
+    def test_init_django_project_with_full_setup(self) -> Any:
         """Test initializing a Django project with all features."""
         project_path, metadata = create_temporary_project(
             project_type="django",
@@ -147,7 +148,7 @@ class TestDHTProjectInitialization:
 class TestDHTProjectAnalysis:
     """Example tests for DHT project analysis features."""
 
-    def test_analyze_ml_project_structure(self, tmp_path):
+    def test_analyze_ml_project_structure(self, tmp_path) -> Any:
         """Test analyzing a machine learning project."""
         # Create a realistic ML project
         metadata = create_project_structure(
@@ -179,7 +180,7 @@ class TestDHTProjectAnalysis:
         assert "model:" in config_content
         assert "dataset:" in config_content
 
-    def test_analyze_fullstack_project_dependencies(self, tmp_path):
+    def test_analyze_fullstack_project_dependencies(self, tmp_path) -> Any:
         """Test analyzing dependencies in a full-stack project."""
         metadata = create_project_structure(
             tmp_path,
@@ -207,7 +208,7 @@ class TestDHTProjectAnalysis:
 class TestDHTEnvironmentSetup:
     """Example tests for DHT environment setup scenarios."""
 
-    def test_setup_library_project_for_distribution(self):
+    def test_setup_library_project_for_distribution(self) -> Any:
         """Test setting up a library project for PyPI distribution."""
         project_path, metadata = create_temporary_project(
             project_type="library",

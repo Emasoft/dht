@@ -22,6 +22,7 @@ This module tests:
 """
 
 import tempfile
+from typing import Any
 
 import pytest
 from test_helpers import (
@@ -41,7 +42,7 @@ from test_helpers import (
 class TestMockFactories:
     """Test mock factory functions."""
 
-    def test_platform_uname_mock(self):
+    def test_platform_uname_mock(self) -> Any:
         """Test platform.uname() mock creation."""
         mock_uname = create_platform_uname_mock(
             system="Linux",
@@ -64,7 +65,7 @@ class TestMockFactories:
         assert default_mock.system == "Darwin"
         assert default_mock.node == "test-machine.local"
 
-    def test_psutil_virtual_memory_mock(self):
+    def test_psutil_virtual_memory_mock(self) -> Any:
         """Test psutil.virtual_memory() mock creation."""
         mock_vm = create_psutil_virtual_memory_mock(
             total=32 * 1024 * 1024 * 1024,  # 32GB
@@ -81,7 +82,7 @@ class TestMockFactories:
         assert default_mock.total == 16 * 1024 * 1024 * 1024
         assert default_mock.percent == 50.0
 
-    def test_psutil_process_mock(self):
+    def test_psutil_process_mock(self) -> Any:
         """Test psutil.Process mock creation."""
         mock_process = create_psutil_process_mock(
             pid=5678,
@@ -101,7 +102,7 @@ class TestMockFactories:
 class TestPathResolution:
     """Test path resolution utilities."""
 
-    def test_find_dht_root(self):
+    def test_find_dht_root(self) -> Any:
         """Test finding DHT root directory."""
         dht_root = find_dht_root()
         assert dht_root.exists()
@@ -109,7 +110,7 @@ class TestPathResolution:
         # Check for either old or new structure
         assert (dht_root / "DHT").is_dir() or (dht_root / "src" / "DHT").is_dir()
 
-    def test_find_dht_modules_dir(self):
+    def test_find_dht_modules_dir(self) -> Any:
         """Test finding DHT modules directory."""
         modules_dir = find_dht_modules_dir()
         assert modules_dir.exists()
@@ -121,7 +122,7 @@ class TestPathResolution:
 class TestProjectStructure:
     """Test project structure creation."""
 
-    def test_create_simple_project(self, tmp_path):
+    def test_create_simple_project(self, tmp_path) -> Any:
         """Test creating a simple Python project."""
         metadata = create_project_structure(
             tmp_path,
@@ -155,7 +156,7 @@ class TestProjectStructure:
         assert 'name = "test_simple"' in pyproject_content
         assert 'requires-python = ">=3.10"' in pyproject_content
 
-    def test_create_django_project(self, tmp_path):
+    def test_create_django_project(self, tmp_path) -> Any:
         """Test creating a Django project."""
         metadata = create_project_structure(
             tmp_path,
@@ -185,7 +186,7 @@ class TestProjectStructure:
         assert "django.contrib.admin" in settings_content
         assert "rest_framework" in settings_content
 
-    def test_create_fastapi_project(self, tmp_path):
+    def test_create_fastapi_project(self, tmp_path) -> Any:
         """Test creating a FastAPI project."""
         metadata = create_project_structure(
             tmp_path,
@@ -215,7 +216,7 @@ class TestProjectStructure:
         assert "from fastapi import FastAPI" in main_content
         assert "@app.get" in main_content
 
-    def test_create_ml_project(self, tmp_path):
+    def test_create_ml_project(self, tmp_path) -> Any:
         """Test creating a machine learning project."""
         metadata = create_project_structure(
             tmp_path,
@@ -246,7 +247,7 @@ class TestProjectStructure:
         assert "import torch" in train_content
         assert "@hydra.main" in train_content
 
-    def test_create_library_project(self, tmp_path):
+    def test_create_library_project(self, tmp_path) -> Any:
         """Test creating a library project."""
         metadata = create_project_structure(
             tmp_path,
@@ -274,7 +275,7 @@ class TestProjectStructure:
         assert "__version__" in init_content
         assert "__all__" in init_content
 
-    def test_create_fullstack_project(self, tmp_path):
+    def test_create_fullstack_project(self, tmp_path) -> Any:
         """Test creating a full-stack project."""
         metadata = create_project_structure(
             tmp_path,
@@ -311,7 +312,7 @@ class TestProjectStructure:
         assert '"next"' in package_json
         assert '"react"' in package_json
 
-    def test_project_with_tests(self, tmp_path):
+    def test_project_with_tests(self, tmp_path) -> Any:
         """Test creating a project with test structure."""
         metadata = create_project_structure(
             tmp_path,
@@ -332,7 +333,7 @@ class TestProjectStructure:
             ],
         )
 
-    def test_project_with_docs(self, tmp_path):
+    def test_project_with_docs(self, tmp_path) -> Any:
         """Test creating a project with documentation."""
         metadata = create_project_structure(
             tmp_path,
@@ -353,7 +354,7 @@ class TestProjectStructure:
             ],
         )
 
-    def test_project_with_ci(self, tmp_path):
+    def test_project_with_ci(self, tmp_path) -> Any:
         """Test creating a project with CI/CD configuration."""
         metadata = create_project_structure(
             tmp_path,
@@ -383,7 +384,7 @@ class TestProjectStructure:
 class TestTemporaryProjects:
     """Test temporary project management."""
 
-    def test_create_temporary_project(self):
+    def test_create_temporary_project(self) -> Any:
         """Test creating and cleaning up temporary projects."""
         project_path, metadata = create_temporary_project(
             project_type="simple",
@@ -406,7 +407,7 @@ class TestTemporaryProjects:
         # Verify cleanup
         assert not project_path.exists()
 
-    def test_temporary_project_auto_name(self):
+    def test_temporary_project_auto_name(self) -> Any:
         """Test temporary project with auto-generated name."""
         project_path, metadata = create_temporary_project(project_type="django")
 
@@ -421,7 +422,7 @@ class TestTemporaryProjects:
 class TestUtilityFunctions:
     """Test utility functions."""
 
-    def test_create_mock_pyproject_toml(self, tmp_path):
+    def test_create_mock_pyproject_toml(self, tmp_path) -> Any:
         """Test creating a mock pyproject.toml."""
         pyproject_path = create_mock_pyproject_toml(
             tmp_path,
@@ -440,7 +441,7 @@ class TestUtilityFunctions:
         assert '"requests>=2.28.0"' in content
         assert '"mypy>=1.0.0"' in content
 
-    def test_invalid_project_type(self, tmp_path):
+    def test_invalid_project_type(self, tmp_path) -> Any:
         """Test error handling for invalid project type."""
         with pytest.raises(ValueError, match="Unknown project type: invalid"):
             create_project_structure(

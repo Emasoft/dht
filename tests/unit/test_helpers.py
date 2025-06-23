@@ -181,7 +181,7 @@ def create_project_structure(
     return metadata
 
 
-def create_base_structure(project_dir: Path, project_name: str, python_version: str, metadata: dict):
+def create_base_structure(project_dir: Path, project_name: str, python_version: str, metadata: dict) -> Any:
     """Create base project structure common to all project types."""
     # Create pyproject.toml
     pyproject_content = f'''[build-system]
@@ -316,7 +316,7 @@ DHT/.dht_environment_report.json
     metadata["files"].extend(["src/__init__.py"])
 
 
-def create_simple_project(project_dir: Path, project_name: str, metadata: dict):
+def create_simple_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a simple Python script project."""
     # Main script
     main_content = '''#!/usr/bin/env python3
@@ -329,7 +329,7 @@ import argparse
 from pathlib import Path
 
 
-def main():
+def main() -> Any:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Simple test script")
     parser.add_argument("--input", type=Path, help="Input file")
@@ -384,7 +384,7 @@ def validate_input(value: str) -> bool:
     metadata["files"].append("src/utils.py")
 
 
-def create_django_project(project_dir: Path, project_name: str, metadata: dict):
+def create_django_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a Django project structure."""
     # Django-specific dependencies in pyproject.toml
     pyproject_path = project_dir / "pyproject.toml"
@@ -593,7 +593,7 @@ class Item(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-    def __str__(self):
+    def __str__(self) -> Any:
         return self.name
 '''
     (api_dir / "models.py").write_text(models_content)
@@ -612,7 +612,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> Any:
         serializer.save(created_by=self.request.user)
 '''
     (api_dir / "views.py").write_text(views_content)
@@ -651,7 +651,7 @@ urlpatterns = [
     metadata["files"].append("api/urls.py")
 
 
-def create_fastapi_project(project_dir: Path, project_name: str, metadata: dict):
+def create_fastapi_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a FastAPI project structure."""
     # Update pyproject.toml with FastAPI dependencies
     pyproject_path = project_dir / "pyproject.toml"
@@ -691,7 +691,7 @@ from app.db.base import Base
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> Any:
     """Handle application lifecycle events."""
     # Startup
     async with engine.begin() as conn:
@@ -722,7 +722,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/health")
-async def health_check():
+async def health_check() -> Any:
     """Health check endpoint."""
     return {"status": "healthy", "service": settings.PROJECT_NAME}
 '''
@@ -790,7 +790,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> Any:
     """Create JWT access token."""
     to_encode = data.copy()
     if expires_delta:
@@ -838,7 +838,7 @@ AsyncSessionLocal = sessionmaker(
 )
 
 
-async def get_db():
+async def get_db() -> Any:
     """Dependency to get DB session."""
     async with AsyncSessionLocal() as session:
         try:
@@ -921,7 +921,7 @@ async def create_item(item_data: dict, db: AsyncSession = Depends(get_db)):
     metadata["files"].append("app/api/v1/endpoints/items.py")
 
 
-def create_ml_project(project_dir: Path, project_name: str, metadata: dict):
+def create_ml_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a machine learning project structure."""
     # Update pyproject.toml with ML dependencies
     pyproject_path = project_dir / "pyproject.toml"
@@ -1077,12 +1077,12 @@ import torchvision.models as models
 class ResNet(nn.Module):
     """ResNet model wrapper."""
 
-    def __init__(self, num_classes: int, pretrained: bool = True):
+    def __init__(self, num_classes: int, pretrained: bool = True) -> Any:
         super().__init__()
         self.backbone = models.resnet50(pretrained=pretrained)
         self.backbone.fc = nn.Linear(self.backbone.fc.in_features, num_classes)
 
-    def forward(self, x):
+    def forward(self, x) -> Any:
         return self.backbone(x)
 '''
     (models_dir / "resnet.py").write_text(resnet_content)
@@ -1104,7 +1104,7 @@ class TransformerModel(nn.Module):
         num_heads: int = 8,
         num_layers: int = 6,
         max_seq_length: int = 512,
-    ):
+    ) -> Any:
         super().__init__()
         self.d_model = d_model
         self.embedding = nn.Embedding(vocab_size, d_model)
@@ -1119,7 +1119,7 @@ class TransformerModel(nn.Module):
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers)
         self.output_projection = nn.Linear(d_model, vocab_size)
 
-    def forward(self, x):
+    def forward(self, x) -> Any:
         x = self.embedding(x) * math.sqrt(self.d_model)
         x = self.pos_encoding(x)
         x = self.transformer(x)
@@ -1129,7 +1129,7 @@ class TransformerModel(nn.Module):
 class PositionalEncoding(nn.Module):
     """Positional encoding for transformer."""
 
-    def __init__(self, d_model: int, max_len: int = 5000):
+    def __init__(self, d_model: int, max_len: int = 5000) -> Any:
         super().__init__()
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
@@ -1140,7 +1140,7 @@ class PositionalEncoding(nn.Module):
         pe[:, 1::2] = torch.cos(position * div_term)
         self.register_buffer('pe', pe.unsqueeze(0))
 
-    def forward(self, x):
+    def forward(self, x) -> Any:
         return x + self.pe[:, :x.size(1)]
 '''
     (models_dir / "transformer.py").write_text(transformer_content)
@@ -1182,7 +1182,7 @@ from torch.utils.data import Dataset
 class DummyDataset(Dataset):
     """Dummy dataset for testing."""
 
-    def __init__(self, size: int = 1000, num_classes: int = 10, split: str = "train"):
+    def __init__(self, size: int = 1000, num_classes: int = 10, split: str = "train") -> Any:
         self.size = size
         self.num_classes = num_classes
         self.split = split
@@ -1192,10 +1192,10 @@ class DummyDataset(Dataset):
         self.data = torch.randn(size, 3, 224, 224)
         self.labels = torch.randint(0, num_classes, (size,))
 
-    def __len__(self):
+    def __len__(self) -> Any:
         return self.size
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx) -> Any:
         return self.data[idx], self.labels[idx]
 '''
     (datasets_dir / "dummy_dataset.py").write_text(dummy_dataset_content)
@@ -1228,7 +1228,7 @@ class Trainer:
         cfg: DictConfig,
         train_loader: DataLoader,
         val_loader: DataLoader,
-    ):
+    ) -> Any:
         self.model = model
         self.cfg = cfg
         self.train_loader = train_loader
@@ -1243,7 +1243,7 @@ class Trainer:
         self.checkpoint_dir = Path("checkpoints")
         self.checkpoint_dir.mkdir(exist_ok=True)
 
-    def train(self):
+    def train(self) -> Any:
         """Main training loop."""
         for epoch in range(self.cfg.num_epochs):
             self.model.train()
@@ -1287,7 +1287,7 @@ class Trainer:
             if (epoch + 1) % self.cfg.save_every == 0:
                 self.save_checkpoint(f"epoch_{epoch+1}")
 
-    def validate(self):
+    def validate(self) -> Any:
         """Validation loop."""
         self.model.eval()
         val_loss = 0.0
@@ -1309,7 +1309,7 @@ class Trainer:
 
         return val_loss, val_acc
 
-    def save_checkpoint(self, name: str):
+    def save_checkpoint(self, name: str) -> Any:
         """Save model checkpoint."""
         checkpoint = {
             "model_state_dict": self.model.state_dict(),
@@ -1330,7 +1330,7 @@ import torch
 import logging
 
 
-def set_seed(seed: int):
+def set_seed(seed: int) -> Any:
     """Set random seeds for reproducibility."""
     random.seed(seed)
     np.random.seed(seed)
@@ -1448,7 +1448,7 @@ save_every: 5
     metadata["files"].append("notebooks/exploration.ipynb")
 
 
-def create_library_project(project_dir: Path, project_name: str, metadata: dict):
+def create_library_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a library project structure."""
     # Update pyproject.toml for library distribution
     pyproject_path = project_dir / "pyproject.toml"
@@ -1655,7 +1655,7 @@ if __name__ == "__main__":
     metadata["files"].append(f"{project_name}/py.typed")
 
 
-def create_fullstack_project(project_dir: Path, project_name: str, metadata: dict):
+def create_fullstack_project(project_dir: Path, project_name: str, metadata: dict) -> Any:
     """Create a full-stack project with frontend and backend."""
     # First create a FastAPI backend
     create_fastapi_project(project_dir, project_name, metadata)
@@ -1840,7 +1840,7 @@ API Docs: http://localhost:8000/docs
     readme_path.write_text(fullstack_readme)
 
 
-def create_test_structure(project_dir: Path, project_type: str, metadata: dict):
+def create_test_structure(project_dir: Path, project_type: str, metadata: dict) -> Any:
     """Create test files appropriate for the project type."""
     tests_dir = project_dir / "tests"
     tests_dir.mkdir(exist_ok=True)
@@ -1852,13 +1852,13 @@ from pathlib import Path
 
 
 @pytest.fixture
-def project_root():
+def project_root() -> Any:
     """Return the project root directory."""
     return Path(__file__).parent.parent
 
 
 @pytest.fixture
-def sample_data():
+def sample_data() -> Any:
     """Provide sample data for tests."""
     return [
         {"id": 1, "name": "Item 1", "value": 100},
@@ -1875,7 +1875,7 @@ from pathlib import Path
 from src.utils import process_data, validate_input
 
 
-def test_process_data(sample_data):
+def test_process_data(sample_data) -> Any:
     """Test data processing function."""
     result = process_data(sample_data)
     assert result["count"] == 2
@@ -1883,7 +1883,7 @@ def test_process_data(sample_data):
     assert len(result["items"]) == 2
 
 
-def test_validate_input():
+def test_validate_input() -> Any:
     """Test input validation."""
     assert validate_input("valid string") is True
     assert validate_input("") is False
@@ -1901,20 +1901,20 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def client():
+def client() -> Any:
     """Create test client."""
     from main import app
     return TestClient(app)
 
 
-def test_health_check(client):
+def test_health_check(client) -> Any:
     """Test health check endpoint."""
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "healthy"
 
 
-def test_get_items(client):
+def test_get_items(client) -> Any:
     """Test items endpoint."""
     response = client.get("/api/v1/items")
     assert response.status_code == 200
@@ -1932,7 +1932,7 @@ from src.datasets import create_dataset
 from omegaconf import OmegaConf
 
 
-def test_model_creation():
+def test_model_creation() -> Any:
     """Test model creation."""
     cfg = OmegaConf.create({
         "name": "resnet",
@@ -1949,7 +1949,7 @@ def test_model_creation():
     assert output.shape == (batch_size, 10)
 
 
-def test_dataset_creation():
+def test_dataset_creation() -> Any:
     """Test dataset creation."""
     cfg = OmegaConf.create({
         "name": "dummy",
@@ -1975,7 +1975,7 @@ from pathlib import Path
 from {metadata["name"]}.core import process_data, validate_input, load_config, save_results
 
 
-def test_process_data_basic(sample_data):
+def test_process_data_basic(sample_data) -> Any:
     """Test basic data processing."""
     result = process_data(sample_data)
     assert result["count"] == len(sample_data)
@@ -1983,14 +1983,14 @@ def test_process_data_basic(sample_data):
     assert result["version"] == "0.1.0"
 
 
-def test_process_data_with_config(sample_data):
+def test_process_data_with_config(sample_data) -> Any:
     """Test data processing with configuration."""
     config = {{"option1": "value1", "option2": 42}}
     result = process_data(sample_data, config)
     assert result["config"] == config
 
 
-def test_validate_input_strings():
+def test_validate_input_strings() -> Any:
     """Test string validation."""
     assert validate_input("valid") is True
     assert validate_input("") is False
@@ -1999,7 +1999,7 @@ def test_validate_input_strings():
     assert validate_input("long enough", min_length=5) is True
 
 
-def test_validate_input_types():
+def test_validate_input_types() -> Any:
     """Test type validation."""
     assert validate_input(123, expected_type=int) is True
     assert validate_input("123", expected_type=int) is False
@@ -2007,7 +2007,7 @@ def test_validate_input_types():
     assert validate_input([], expected_type=list, min_length=1) is False
 
 
-def test_config_operations(tmp_path):
+def test_config_operations(tmp_path) -> Any:
     """Test config loading and saving."""
     config = {{"key": "value", "number": 42}}
     config_path = tmp_path / "config.json"
@@ -2024,7 +2024,7 @@ def test_config_operations(tmp_path):
         load_config(tmp_path / "missing.json")
 
 
-def test_save_results(tmp_path, sample_data):
+def test_save_results(tmp_path, sample_data) -> Any:
     """Test saving results."""
     results = process_data(sample_data)
     output_path = tmp_path / "output" / "results.json"
@@ -2040,7 +2040,7 @@ def test_save_results(tmp_path, sample_data):
         metadata["files"].append("tests/test_core.py")
 
 
-def create_docs_structure(project_dir: Path, metadata: dict):
+def create_docs_structure(project_dir: Path, metadata: dict) -> Any:
     """Create documentation structure."""
     docs_dir = project_dir / "docs"
     docs_dir.mkdir(exist_ok=True)
@@ -2152,7 +2152,7 @@ Validate input value against expected criteria.
     metadata["files"].append("docs/contributing.md")
 
 
-def create_ci_structure(project_dir: Path, metadata: dict):
+def create_ci_structure(project_dir: Path, metadata: dict) -> Any:
     """Create CI/CD configuration files."""
     # GitHub Actions
     workflows_dir = project_dir / ".github" / "workflows"

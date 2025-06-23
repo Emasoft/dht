@@ -10,13 +10,14 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 # Assuming conftest.py provides mock_project_dir fixture
 
 
-def run_dhtl_command(command: list, cwd: Path, env: dict = None):
+def run_dhtl_command(command: list, cwd: Path, env: dict = None) -> Any:
     """Helper to run dhtl commands via subprocess."""
     dhtl_script = cwd / "DHT" / "dhtl.sh"  # Assumes DHT is directly under cwd
     if not dhtl_script.exists():
@@ -86,7 +87,7 @@ def run_dhtl_command(command: list, cwd: Path, env: dict = None):
 
 
 @pytest.mark.integration
-def test_dhtl_setup_creates_venv_and_installs_deps(mock_project_dir):
+def test_dhtl_setup_creates_venv_and_installs_deps(mock_project_dir) -> Any:
     """Test that 'dhtl setup' creates venv, installs uv, tox, pytest, and alias."""
     # Arrange
     # Create a basic pyproject.toml requiring some dev deps
@@ -123,7 +124,7 @@ dev = ["pytest", "ruff", "tox", "uv", "pre-commit"] # Added pre-commit
 
 
 @pytest.mark.integration
-def test_dhtl_init_creates_structure_and_runs_setup(mock_project_dir):
+def test_dhtl_init_creates_structure_and_runs_setup(mock_project_dir) -> Any:
     """Test that 'dhtl init' creates files/dirs and runs the setup steps."""
     # Arrange
     # Use a subdirectory within mock_project_dir to simulate initializing in a new location
@@ -167,7 +168,7 @@ def test_dhtl_init_creates_structure_and_runs_setup(mock_project_dir):
 
 
 @pytest.mark.integration
-def test_dhtl_setup_is_idempotent(mock_project_dir):
+def test_dhtl_setup_is_idempotent(mock_project_dir) -> Any:
     """Test that running 'dhtl setup' multiple times works correctly."""
     # Arrange
     (mock_project_dir / "pyproject.toml").write_text("""
@@ -197,13 +198,13 @@ dev = ["pytest"]
 
 
 @pytest.mark.integration
-def test_dhtl_setup_handles_secrets(mock_project_dir):
+def test_dhtl_setup_handles_secrets(mock_project_dir) -> Any:
     """Test that 'dhtl setup' checks secrets and creates/updates .env file correctly."""
     # Arrange
     # Create a mock test file that references a secret
     (mock_project_dir / "tests").mkdir(exist_ok=True)
     (mock_project_dir / "tests" / "test_secrets.py").write_text(
-        "import os\ndef test_secret(): assert os.environ.get('MY_TEST_SECRET')"
+        "import os\ndef test_secret() -> Any: assert os.environ.get('MY_TEST_SECRET')"
     )
     env_file = mock_project_dir / ".env"
     gitignore_file = mock_project_dir / ".gitignore"
@@ -241,7 +242,7 @@ def test_dhtl_setup_handles_secrets(mock_project_dir):
     mock_env["NEW_GLOBAL_SECRET"] = "new_global"
     # Add a mock check that would detect this new secret
     (mock_project_dir / "tests" / "test_new_secret.py").write_text(
-        "import os\ndef test_new(): assert os.environ.get('NEW_GLOBAL_SECRET')"
+        "import os\ndef test_new() -> Any: assert os.environ.get('NEW_GLOBAL_SECRET')"
     )
     result3 = run_dhtl_command(["setup"], cwd=mock_project_dir, env=mock_env)
     assert result3.returncode == 0, "Third dhtl setup failed"
@@ -252,7 +253,7 @@ def test_dhtl_setup_handles_secrets(mock_project_dir):
 
 
 @pytest.mark.integration
-def test_dhtl_setup_respects_python_version_file(mock_project_dir):
+def test_dhtl_setup_respects_python_version_file(mock_project_dir) -> Any:
     """Test that 'dhtl setup' uses the python version from .python-version."""
     # Arrange
     # Create a .python-version file

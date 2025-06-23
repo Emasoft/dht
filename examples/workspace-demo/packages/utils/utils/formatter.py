@@ -13,7 +13,7 @@ from pathlib import Path
 from core import hello as core_hello
 
 
-def format_text():
+def format_text() -> int:
     """Format text with various styles."""
     print("🎨 Text Formatter from demo-utils")
     print("-" * 40)

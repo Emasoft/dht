@@ -15,6 +15,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """Tests for workspace commands."""
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 from src.DHT.modules.commands.workspace_command import WorkspaceCommand
@@ -24,13 +25,13 @@ from src.DHT.modules.commands.workspaces_command import WorkspacesCommand
 class TestWorkspacesCommand:
     """Tests for workspaces command."""
 
-    def test_detect_workspace_members_no_config(self, tmp_path):
+    def test_detect_workspace_members_no_config(self, tmp_path) -> Any:
         """Test workspace detection with no configuration."""
         cmd = WorkspacesCommand()
         members = cmd.detect_workspace_members(tmp_path)
         assert members == []
 
-    def test_detect_workspace_members_with_config(self, tmp_path):
+    def test_detect_workspace_members_with_config(self, tmp_path) -> Any:
         """Test workspace detection with valid configuration."""
         # Create root pyproject.toml with workspace config
         pyproject = tmp_path / "pyproject.toml"
@@ -66,7 +67,7 @@ exclude = ["packages/excluded"]
         assert "excluded" not in member_names
 
     @patch("subprocess.run")
-    def test_workspaces_run_subcommand(self, mock_run, tmp_path):
+    def test_workspaces_run_subcommand(self, mock_run, tmp_path) -> Any:
         """Test workspaces run subcommand."""
         # Setup mock
         mock_result = MagicMock()
@@ -111,7 +112,7 @@ members = ["pkg1"]
             assert "--verbose" in args
 
     @patch("subprocess.run")
-    def test_workspaces_exec_subcommand(self, mock_run, tmp_path):
+    def test_workspaces_exec_subcommand(self, mock_run, tmp_path) -> Any:
         """Test workspaces exec subcommand."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -139,7 +140,7 @@ members = ["pkg1"]
         assert "Executed command:" in result["message"]
 
     @patch("subprocess.run")
-    def test_workspaces_upgrade_subcommand(self, mock_run, tmp_path):
+    def test_workspaces_upgrade_subcommand(self, mock_run, tmp_path) -> Any:
         """Test workspaces upgrade subcommand."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -177,7 +178,7 @@ members = ["pkg1"]
             assert "pytest" in args
 
     @patch("subprocess.run")
-    def test_workspaces_remove_subcommand(self, mock_run, tmp_path):
+    def test_workspaces_remove_subcommand(self, mock_run, tmp_path) -> Any:
         """Test workspaces remove subcommand."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -212,7 +213,7 @@ members = ["pkg1"]
             assert args[1] == "remove"
             assert "requests" in args
 
-    def test_workspaces_filter_by_name(self, tmp_path):
+    def test_workspaces_filter_by_name(self, tmp_path) -> Any:
         """Test filtering workspace members by name."""
         pyproject = tmp_path / "pyproject.toml"
         pyproject.write_text("""
@@ -236,7 +237,7 @@ members = ["packages/*"]
         assert "bar" in member_names
         assert "foobar" in member_names
 
-    def test_workspaces_no_workspace(self, tmp_path):
+    def test_workspaces_no_workspace(self, tmp_path) -> Any:
         """Test error when not in a workspace."""
         cmd = WorkspacesCommand()
         with patch.object(Path, "cwd", return_value=tmp_path):
@@ -254,7 +255,7 @@ class TestWorkspaceCommand:
     """Tests for single workspace command."""
 
     @patch("subprocess.run")
-    def test_workspace_run_specific_member(self, mock_run, tmp_path):
+    def test_workspace_run_specific_member(self, mock_run, tmp_path) -> Any:
         """Test running command in specific workspace member."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -291,7 +292,7 @@ members = ["packages/*"]
         dir_idx = args.index("--directory")
         assert "pkg1" in args[dir_idx + 1]
 
-    def test_workspace_member_not_found(self, tmp_path):
+    def test_workspace_member_not_found(self, tmp_path) -> Any:
         """Test error when workspace member not found."""
         pyproject = tmp_path / "pyproject.toml"
         pyproject.write_text("""
@@ -311,7 +312,7 @@ members = ["packages/*"]
         assert "not found" in result["error"]
 
     @patch("subprocess.run")
-    def test_workspace_upgrade_in_member(self, mock_run, tmp_path):
+    def test_workspace_upgrade_in_member(self, mock_run, tmp_path) -> Any:
         """Test upgrading packages in specific member."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -343,7 +344,7 @@ members = ["pkg1"]
         assert "requests" in args
 
     @patch("subprocess.run")
-    def test_workspace_remove_from_member(self, mock_run, tmp_path):
+    def test_workspace_remove_from_member(self, mock_run, tmp_path) -> Any:
         """Test removing packages from specific member."""
         mock_result = MagicMock()
         mock_result.returncode = 0
@@ -378,7 +379,7 @@ members = ["pkg1"]
 class TestCommandDispatcherWorkspaces:
     """Test command dispatcher handling of workspace commands."""
 
-    def test_parse_workspaces_args(self):
+    def test_parse_workspaces_args(self) -> Any:
         """Test parsing workspaces command arguments."""
         from src.DHT.modules.command_dispatcher import CommandDispatcher
 
@@ -406,7 +407,7 @@ class TestCommandDispatcherWorkspaces:
         assert args["ignore"] == ["test*"]
         assert args["only_fs"] == ["*.py"]
 
-    def test_parse_workspace_args(self):
+    def test_parse_workspace_args(self) -> Any:
         """Test parsing workspace command arguments."""
         from src.DHT.modules.command_dispatcher import CommandDispatcher
 

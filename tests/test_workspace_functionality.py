@@ -14,6 +14,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """Comprehensive tests for workspace functionality."""
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 from src.DHT.modules.commands.project_command import ProjectCommand
@@ -24,13 +25,13 @@ from src.DHT.modules.commands.workspaces_command import WorkspacesCommand
 class TestWorkspaceRefactoring:
     """Test refactored workspace functionality."""
 
-    def test_timeout_is_30_minutes(self):
+    def test_timeout_is_30_minutes(self) -> Any:
         """Verify timeout is set to 30 minutes as per CLAUDE.md."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
         assert WorkspaceBase.DEFAULT_TIMEOUT == 1800  # 30 minutes
 
-    def test_no_shell_injection(self):
+    def test_no_shell_injection(self) -> Any:
         """Verify shell=False is used for security."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
@@ -47,7 +48,7 @@ class TestWorkspaceRefactoring:
             call_kwargs = mock_run.call_args[1]
             assert call_kwargs["shell"] is False
 
-    def test_progress_indicators(self):
+    def test_progress_indicators(self) -> Any:
         """Verify progress indicators are shown."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
@@ -66,7 +67,7 @@ class TestWorkspaceRefactoring:
                 ]
                 assert len(progress_logs) >= 2
 
-    def test_package_validation(self):
+    def test_package_validation(self) -> Any:
         """Test package name validation."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
@@ -89,7 +90,7 @@ class TestWorkspaceRefactoring:
         assert is_valid is False
         assert len(errors) == 4
 
-    def test_workspace_filtering(self):
+    def test_workspace_filtering(self) -> Any:
         """Test workspace member filtering."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
@@ -112,7 +113,7 @@ class TestWorkspaceRefactoring:
         assert len(filtered) == 3
         assert not any("tests" in str(m) for m in filtered)
 
-    def test_all_commands_use_workspace_base(self):
+    def test_all_commands_use_workspace_base(self) -> Any:
         """Verify all workspace commands inherit from WorkspaceBase."""
         from src.DHT.modules.commands.workspace_base import WorkspaceBase
 
@@ -134,7 +135,7 @@ class TestWorkspaceCommandMessages:
     """Test that command messages are consistent."""
 
     @patch("subprocess.run")
-    def test_consistent_success_messages(self, mock_run, tmp_path):
+    def test_consistent_success_messages(self, mock_run, tmp_path) -> Any:
         """Verify success messages follow a consistent pattern."""
         mock_run.return_value = MagicMock(returncode=0, stdout="OK", stderr="")
 

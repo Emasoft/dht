@@ -129,7 +129,7 @@ class WorkspaceCommand(WorkspaceBase):
     def _handle_exec(self, member: Path, name: str, script: str | None, args: list[str] | None) -> dict[str, Any]:
         """Handle 'exec' subcommand for single member."""
         # Build command from script + args
-        cmd_args = []
+        cmd_args: list[Any] = []
         if script:
             cmd_args.append(script)
         if args:
@@ -154,7 +154,7 @@ class WorkspaceCommand(WorkspaceBase):
     ) -> dict[str, Any]:
         """Handle package operations for single member."""
         # Collect packages
-        packages = []
+        packages: list[Any] = []
         if script:
             packages.append(script)
         if args:

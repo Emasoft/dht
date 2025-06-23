@@ -243,7 +243,7 @@ def extract_owner_repo(url: str) -> str | None:
 
 
 # For backward compatibility
-def placeholder_function():
+def placeholder_function() -> bool:
     """Placeholder function."""
     log_warning("Use clone_command or fork_command instead")
     return True

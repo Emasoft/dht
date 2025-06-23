@@ -24,6 +24,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
 def ensure_tree_sitter_installed() -> None:
@@ -54,7 +55,7 @@ def ensure_tree_sitter_installed() -> None:
             return False  # type: ignore[return-value]
 
 
-def ensure_build_directory(project_root):
+def ensure_build_directory(project_root) -> Any:
     """Ensure the build directory exists"""
     build_dir = project_root / "build"
     if not build_dir.exists():
@@ -223,7 +224,7 @@ def test_bash_parsing(project_root) -> None:
         print("Tree structure (simplified):")
         print(f"  - Root node: {root_node.type}")
 
-        function_nodes = []
+        function_nodes: list[Any] = []
         for child in root_node.children:
             print(f"  - Child node: {child.type}")
             if child.type == "function_definition":

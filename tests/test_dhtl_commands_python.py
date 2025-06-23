@@ -11,6 +11,7 @@ Licensed under the MIT License. See LICENSE file for details.
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -22,7 +23,7 @@ class TestDHTLInit:
     """Test the dhtl init command."""
 
     @pytest.fixture
-    def temp_project_dir(self):
+    def temp_project_dir(self) -> Any:
         """Create a temporary directory for testing."""
         temp_dir = tempfile.mkdtemp()
         yield Path(temp_dir)
@@ -30,7 +31,7 @@ class TestDHTLInit:
         shutil.rmtree(temp_dir, ignore_errors=True)
 
     @pytest.fixture
-    def dhtl_commands(self):
+    def dhtl_commands(self) -> Any:
         """Create DHTLCommands instance with mocked UV."""
         with patch("src.DHT.modules.dhtl_commands.UVManager") as mock_uv:
             mock_uv_instance = MagicMock()
@@ -43,13 +44,13 @@ class TestDHTLInit:
             commands.uv_manager = mock_uv_instance
             return commands
 
-    def test_init_creates_project_structure(self, dhtl_commands, temp_project_dir):
+    def test_init_creates_project_structure(self, dhtl_commands, temp_project_dir) -> Any:
         """Test that init creates the expected project structure."""
         project_name = "test_project"
         project_path = temp_project_dir / project_name
 
         # Mock the UV init to create the pyproject.toml
-        def mock_uv_init(*args, **kwargs):
+        def mock_uv_init(*args, **kwargs) -> Any:
             # Create project directory and pyproject.toml
             project_path.mkdir(parents=True, exist_ok=True)
             (project_path / "pyproject.toml").write_text("""
@@ -73,7 +74,7 @@ version = "0.1.0"
         assert "--python" in init_call[0][0]
         assert "3.11" in init_call[0][0]
 
-    def test_init_handles_existing_project(self, dhtl_commands, temp_project_dir):
+    def test_init_handles_existing_project(self, dhtl_commands, temp_project_dir) -> Any:
         """Test that init handles existing projects gracefully."""
         # Create pyproject.toml to simulate existing project
         (temp_project_dir / "pyproject.toml").write_text("[project]\nname = 'existing'\n")
@@ -86,12 +87,12 @@ version = "0.1.0"
         # UV init should not be called for existing projects
         assert not dhtl_commands.uv_manager.run_command.called
 
-    def test_init_with_dev_dependencies(self, dhtl_commands, temp_project_dir):
+    def test_init_with_dev_dependencies(self, dhtl_commands, temp_project_dir) -> Any:
         """Test that init adds dev dependencies when requested."""
         project_path = temp_project_dir / "dev_project"
 
         # Mock the UV init to create the pyproject.toml
-        def mock_uv_init(*args, **kwargs):
+        def mock_uv_init(*args, **kwargs) -> Any:
             # Create project directory and pyproject.toml
             project_path.mkdir(parents=True, exist_ok=True)
             (project_path / "pyproject.toml").write_text("""
@@ -115,7 +116,7 @@ class TestDHTLSetup:
     """Test the dhtl setup command."""
 
     @pytest.fixture
-    def temp_project_dir(self):
+    def temp_project_dir(self) -> Any:
         """Create a temporary directory with a basic project."""
         temp_dir = tempfile.mkdtemp()
         project_path = Path(temp_dir)
@@ -133,7 +134,7 @@ dependencies = ["click>=8.0"]
         shutil.rmtree(temp_dir, ignore_errors=True)
 
     @pytest.fixture
-    def dhtl_commands(self):
+    def dhtl_commands(self) -> Any:
         """Create DHTLCommands instance with mocked UV."""
         with patch("src.DHT.modules.dhtl_commands.UVManager") as mock_uv:
             mock_uv_instance = MagicMock()
@@ -152,7 +153,7 @@ dependencies = ["click>=8.0"]
             commands.uv_manager = mock_uv_instance
             return commands
 
-    def test_setup_creates_environment(self, dhtl_commands, temp_project_dir):
+    def test_setup_creates_environment(self, dhtl_commands, temp_project_dir) -> Any:
         """Test that setup creates virtual environment and installs dependencies."""
         result = dhtl_commands.setup(path=str(temp_project_dir), dev=True)
 
@@ -164,7 +165,7 @@ dependencies = ["click>=8.0"]
         assert dhtl_commands.uv_manager.run_command.called
         assert dhtl_commands.uv_manager.generate_lock_file.called
 
-    def test_setup_handles_missing_project(self, dhtl_commands, temp_project_dir):
+    def test_setup_handles_missing_project(self, dhtl_commands, temp_project_dir) -> Any:
         """Test that setup fails gracefully when project doesn't exist."""
         result = dhtl_commands.setup(path=str(temp_project_dir / "nonexistent"))
 

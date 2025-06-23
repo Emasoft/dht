@@ -119,7 +119,7 @@ class EnvironmentVerificationUtils:
 
     def verify_tools(
         self, snapshot: EnvironmentSnapshot, result: ReproductionResult, strict_mode: bool, auto_install: bool
-    ):
+    ) -> Any:
         """Verify tool versions."""
         for tool, expected_version in snapshot.tool_versions.items():
             # Check if tool is installed

@@ -9,6 +9,9 @@ description = "Global allowlist for DHT"
 regexes = [
   '''713559\+Emasoft@users\.noreply\.github\.com''',
   '''POSTGRES_PASSWORD=postgres''',
+  '''POSTGRES_USER=postgres''',
+  '''POSTGRES_DB=app''',
+  '''export \$secret=''',
 ]
 
 # Paths to exclude from scanning
@@ -160,6 +163,17 @@ regexes = [
   '''(?i)<[A-Z_]+>''',
   '''xxx+''',
   '''None|null|undefined|""''',
+  # Allow default postgres password in Docker Compose files
+  '''POSTGRES_PASSWORD=postgres''',
+  # Allow variable patterns in shell scripts
+  '''export \$secret=''',
+]
+paths = [
+  # Docker Compose files with default postgres
+  '''docker-compose.*\.ya?ml''',
+  '''compose.*\.ya?ml''',
+  # Config generators are creating templates
+  '''config_generators\.py''',
 ]
 
 [[rules]]

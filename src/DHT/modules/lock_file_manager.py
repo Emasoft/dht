@@ -57,7 +57,7 @@ class LockFileManager:
             "poetry.lock": self._parse_poetry_lock,
         }
 
-    @task(name="generate_project_lock_files")
+    @task(name="generate_project_lock_files")  # type: ignore[misc]
     def generate_project_lock_files(self, project_path: Path, project_type: str) -> dict[str, LockFileInfo]:
         """Generate lock files for a project."""
         logger = get_run_logger()
@@ -124,7 +124,7 @@ class LockFileManager:
             created_at=datetime.now().isoformat(),
         )
 
-    @task(name="verify_lock_files")
+    @task(name="verify_lock_files")  # type: ignore[misc]
     def verify_lock_files(self, project_path: Path, expected_lock_files: dict[str, LockFileInfo]) -> dict[str, bool]:
         """Verify lock files match expected checksums."""
         logger = get_run_logger()

@@ -3,6 +3,7 @@
 """Integration tests for dhtl build command."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -13,11 +14,11 @@ class TestDHTLBuildCommand:
     """Test cases for dhtl build command."""
 
     @pytest.fixture
-    def commands(self):
+    def commands(self) -> Any:
         """Create DHTLCommands instance."""
         return DHTLCommands()
 
-    def test_build_basic_project(self, commands, tmp_path):
+    def test_build_basic_project(self, commands, tmp_path) -> Any:
         """Test building a basic Python project."""
         # Create project directory
         project_dir = tmp_path / "test-project"
@@ -32,7 +33,7 @@ class TestDHTLBuildCommand:
         src_dir.mkdir(parents=True, exist_ok=True)
         (src_dir / "__init__.py").write_text('__version__ = "0.1.0"')
         (src_dir / "main.py").write_text('''
-def hello():
+def hello() -> Any:
     """Return a greeting."""
     return "Hello, World!"
 
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         assert len(wheel_files) >= 1
         assert "test_project-0.1.0" in wheel_files[0].name
 
-    def test_build_with_wheel_only(self, commands, tmp_path):
+    def test_build_with_wheel_only(self, commands, tmp_path) -> Any:
         """Test building only wheel distribution."""
         # Create project
         project_dir = tmp_path / "wheel-project"
@@ -82,7 +83,7 @@ if __name__ == "__main__":
         assert len(wheel_files) == 1
         assert len(tar_files) == 0
 
-    def test_build_with_sdist_only(self, commands, tmp_path):
+    def test_build_with_sdist_only(self, commands, tmp_path) -> Any:
         """Test building only source distribution."""
         # Create project
         project_dir = tmp_path / "sdist-project"
@@ -105,7 +106,7 @@ if __name__ == "__main__":
         assert len(wheel_files) == 0
         assert len(tar_files) == 1
 
-    def test_build_with_custom_output_dir(self, commands, tmp_path):
+    def test_build_with_custom_output_dir(self, commands, tmp_path) -> Any:
         """Test building with custom output directory."""
         # Create project
         project_dir = tmp_path / "custom-output-project"
@@ -133,7 +134,7 @@ if __name__ == "__main__":
         default_dist = project_dir / "dist"
         assert not default_dist.exists()
 
-    def test_build_with_no_checks(self, commands, tmp_path):
+    def test_build_with_no_checks(self, commands, tmp_path) -> Any:
         """Test building with pre-build checks disabled."""
         # Create project
         project_dir = tmp_path / "no-checks-project"
@@ -150,7 +151,7 @@ if __name__ == "__main__":
         (src_dir / "bad_code.py").write_text("""
 # This code has linting issues
 import unused_module
-def bad_function( ):
+def bad_function( ) -> Any:
     x=1;y=2
     return x+y
 """)
@@ -162,7 +163,7 @@ def bad_function( ):
         # Build with checks might fail (depending on lint config)
         # We won't test this as it depends on project setup
 
-    def test_build_nonexistent_project(self, commands, tmp_path):
+    def test_build_nonexistent_project(self, commands, tmp_path) -> Any:
         """Test building a nonexistent project."""
         # Try to build nonexistent project
         fake_dir = tmp_path / "nonexistent"
@@ -173,7 +174,7 @@ def bad_function( ):
         assert "error" in result
         assert "not found" in result["error"].lower() or "does not exist" in result["error"].lower()
 
-    def test_build_project_without_pyproject(self, commands, tmp_path):
+    def test_build_project_without_pyproject(self, commands, tmp_path) -> Any:
         """Test building project without pyproject.toml."""
         # Create directory without pyproject.toml
         project_dir = tmp_path / "no-pyproject"
@@ -186,7 +187,7 @@ def bad_function( ):
         assert not result["success"]
         assert "pyproject.toml" in result["error"]
 
-    def test_build_cleans_previous_artifacts(self, commands, tmp_path):
+    def test_build_cleans_previous_artifacts(self, commands, tmp_path) -> Any:
         """Test that build cleans previous build artifacts."""
         # Create and initialize project
         project_dir = tmp_path / "clean-test"
@@ -216,7 +217,7 @@ def bad_function( ):
         assert len(new_wheels) >= 1
         assert "old-artifact" not in new_wheels[0].name
 
-    def test_build_incremental_version(self, commands, tmp_path):
+    def test_build_incremental_version(self, commands, tmp_path) -> Any:
         """Test building with updated version number."""
         # Create and initialize project
         project_dir = tmp_path / "version-test"

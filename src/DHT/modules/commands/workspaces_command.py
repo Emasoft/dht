@@ -137,7 +137,7 @@ class WorkspacesCommand(WorkspaceBase):
     def _handle_exec(self, members: list[Path], script: str | None, args: list[str] | None) -> dict[str, Any]:
         """Handle 'exec' subcommand."""
         # For exec, the command is in script + args
-        cmd_args = []
+        cmd_args: list[Any] = []
         if script:
             cmd_args.append(script)
         if args:
@@ -146,7 +146,7 @@ class WorkspacesCommand(WorkspaceBase):
         if not cmd_args:
             return {"success": False, "error": "Command required for 'exec' subcommand"}
 
-        results = {}
+        results: dict[str, Any] = {}
         all_success = True
         total = len(members)
 
@@ -172,7 +172,7 @@ class WorkspacesCommand(WorkspaceBase):
     ) -> dict[str, Any]:
         """Handle package operations (upgrade/remove)."""
         # Collect packages from script + args
-        packages = []
+        packages: list[Any] = []
         if script:
             packages.append(script)
         if args:

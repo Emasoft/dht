@@ -33,7 +33,7 @@ from DHT.modules.uv_task_models import DEFAULT_TIMEOUT, RETRY_DELAYS, UV_MEMORY_
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(
+@task(  # type: ignore[misc]
     name="create_virtual_environment",
     description="Create a virtual environment using UV",
     retries=2,

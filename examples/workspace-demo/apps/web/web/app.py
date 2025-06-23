@@ -9,12 +9,13 @@ Licensed under the MIT License. See LICENSE file for details.
 """Web application using workspace packages."""
 
 from pathlib import Path
+from typing import Any
 
 from core import hello
 from utils import validate
 
 
-def serve():
+def serve() -> Any:
     """Start the production web server."""
     print("🌐 Starting Demo Web Server (Production)")
     print("=" * 40)
@@ -43,7 +44,7 @@ def serve():
     return 0
 
 
-def dev_server():
+def dev_server() -> Any:
     """Start the development web server with hot reload."""
     print("🔧 Starting Demo Web Server (Development)")
     print("=" * 40)

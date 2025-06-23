@@ -22,6 +22,7 @@ Unit tests for the UV Prefect tasks module.
 
 import tempfile
 from pathlib import Path
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -51,7 +52,7 @@ class TestUVPrefectTasks:
     """Test cases for UV Prefect tasks."""
 
     @pytest.fixture(autouse=True)
-    def setup_prefect(self):
+    def setup_prefect(self) -> Any:
         """Setup Prefect test harness."""
         # Clear the LRU cache before each test
         find_uv_executable.cache_clear()
@@ -59,7 +60,7 @@ class TestUVPrefectTasks:
         with prefect_test_harness():
             yield
 
-    def test_extract_min_python_version(self):
+    def test_extract_min_python_version(self) -> Any:
         """Test Python version extraction from constraints."""
         assert extract_min_python_version(">=3.8") == "3.8"
         assert extract_min_python_version(">=3.8,<3.12") == "3.8"
@@ -70,7 +71,7 @@ class TestUVPrefectTasks:
 
     @mock.patch("DHT.modules.uv_python_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_python_tasks.run_with_guardian")
-    def test_check_uv_available_success(self, mock_run, mock_find):
+    def test_check_uv_available_success(self, mock_run, mock_find) -> Any:
         """Test successful UV availability check."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         print(f"Mock find_uv_executable configured to return: {mock_find.return_value}")
@@ -91,7 +92,7 @@ class TestUVPrefectTasks:
         assert result["path"] == "/usr/local/bin/uv"
 
     @mock.patch("DHT.modules.uv_python_tasks.find_uv_executable")
-    def test_check_uv_available_not_found(self, mock_find):
+    def test_check_uv_available_not_found(self, mock_find) -> Any:
         """Test UV not found."""
         mock_find.return_value = None
 
@@ -100,7 +101,7 @@ class TestUVPrefectTasks:
         assert result["available"] is False
         assert "not found" in result["error"]
 
-    def test_detect_python_version_from_file(self):
+    def test_detect_python_version_from_file(self) -> Any:
         """Test Python version detection from .python-version file."""
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
@@ -110,7 +111,7 @@ class TestUVPrefectTasks:
             version = detect_python_version(project_path)
             assert version == "3.11.6"
 
-    def test_detect_python_version_from_pyproject(self):
+    def test_detect_python_version_from_pyproject(self) -> Any:
         """Test Python version detection from pyproject.toml."""
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
@@ -124,7 +125,7 @@ requires-python = ">=3.11"
             version = detect_python_version(project_path)
             assert version == "3.11"
 
-    def test_detect_python_version_none(self):
+    def test_detect_python_version_none(self) -> Any:
         """Test Python version detection when no config found."""
         with tempfile.TemporaryDirectory() as tmpdir:
             project_path = Path(tmpdir)
@@ -134,7 +135,7 @@ requires-python = ">=3.11"
 
     @mock.patch("DHT.modules.uv_python_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_python_tasks.run_with_guardian")
-    def test_list_python_versions(self, mock_run, mock_find):
+    def test_list_python_versions(self, mock_run, mock_find) -> Any:
         """Test listing Python versions."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -161,7 +162,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
     @mock.patch("pathlib.Path.exists")
     @mock.patch("DHT.modules.uv_python_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_python_tasks.run_with_guardian")
-    def test_ensure_python_version_already_installed(self, mock_run, mock_find, mock_exists):
+    def test_ensure_python_version_already_installed(self, mock_run, mock_find, mock_exists) -> Any:
         """Test ensuring Python version that's already installed."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_exists.return_value = True  # Python path exists
@@ -184,7 +185,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
     @mock.patch("pathlib.Path.exists")
     @mock.patch("DHT.modules.uv_python_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_python_tasks.run_with_guardian")
-    def test_ensure_python_version_install_needed(self, mock_run, mock_find, mock_exists):
+    def test_ensure_python_version_install_needed(self, mock_run, mock_find, mock_exists) -> Any:
         """Test ensuring Python version that needs installation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         # Path doesn't exist initially, then exists after installation
@@ -231,7 +232,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
 
     @mock.patch("DHT.modules.uv_environment_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_environment_tasks.run_with_guardian")
-    def test_create_virtual_environment(self, mock_run, mock_find):
+    def test_create_virtual_environment(self, mock_run, mock_find) -> Any:
         """Test virtual environment creation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -260,7 +261,7 @@ pypy-3.9.18-macos-aarch64     <download available>""",
 
     @mock.patch("DHT.modules.uv_dependency_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_dependency_tasks.run_with_guardian")
-    def test_install_dependencies_with_lock(self, mock_run, mock_find):
+    def test_install_dependencies_with_lock(self, mock_run, mock_find) -> Any:
         """Test dependency installation with lock file."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -296,7 +297,7 @@ version = "0.1.0"
 
     @mock.patch("DHT.modules.uv_dependency_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_dependency_tasks.run_with_guardian")
-    def test_install_dependencies_with_requirements(self, mock_run, mock_find):
+    def test_install_dependencies_with_requirements(self, mock_run, mock_find) -> Any:
         """Test dependency installation with requirements.txt."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -329,7 +330,7 @@ version = "0.1.0"
 
     @mock.patch("DHT.modules.uv_dependency_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_dependency_tasks.run_with_guardian")
-    def test_generate_lock_file(self, mock_run, mock_find):
+    def test_generate_lock_file(self, mock_run, mock_find) -> Any:
         """Test lock file generation."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -357,7 +358,7 @@ version = "0.1.0"
 
     @mock.patch("DHT.modules.uv_dependency_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_dependency_tasks.run_with_guardian")
-    def test_add_dependency(self, mock_run, mock_find):
+    def test_add_dependency(self, mock_run, mock_find) -> Any:
         """Test adding a dependency."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.side_effect = [
@@ -394,7 +395,7 @@ version = "0.1.0"
 
     @mock.patch("DHT.modules.uv_build_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_build_tasks.run_with_guardian")
-    def test_build_project(self, mock_run, mock_find):
+    def test_build_project(self, mock_run, mock_find) -> Any:
         """Test project building."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -422,7 +423,7 @@ version = "0.1.0"
 
     @mock.patch("DHT.modules.uv_script_tasks.find_uv_executable")
     @mock.patch("DHT.modules.uv_script_tasks.run_with_guardian")
-    def test_run_python_script(self, mock_run, mock_find):
+    def test_run_python_script(self, mock_run, mock_find) -> Any:
         """Test running Python scripts."""
         mock_find.return_value = Path("/usr/local/bin/uv")
         mock_run.return_value = GuardianResult(
@@ -453,7 +454,7 @@ version = "0.1.0"
     @mock.patch("DHT.modules.uv_prefect_tasks.generate_lock_file")
     def test_setup_project_environment_flow(
         self, mock_gen_lock, mock_install, mock_create_venv, mock_ensure_py, mock_detect_py, mock_check_uv
-    ):
+    ) -> Any:
         """Test complete project setup flow."""
         # Setup mocks
         mock_check_uv.return_value = {"available": True, "version": "0.4.27", "path": "/usr/local/bin/uv"}
@@ -491,7 +492,7 @@ version = "0.1.0"
             assert result["steps"]["dependencies"]["success"] is True
 
     @mock.patch("DHT.modules.uv_environment_tasks.check_uv_available")
-    def test_setup_project_environment_no_uv(self, mock_check_uv):
+    def test_setup_project_environment_no_uv(self, mock_check_uv) -> Any:
         """Test project setup when UV is not available."""
         mock_check_uv.return_value = {"available": False, "error": "UV not found"}
 

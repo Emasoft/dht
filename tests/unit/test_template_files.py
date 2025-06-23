@@ -18,6 +18,7 @@ This test verifies that files containing template placeholders are either:
 import ast
 import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -25,7 +26,7 @@ import pytest
 class TestTemplateFiles:
     """Test template files functionality."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.dht_modules_dir = Path(__file__).parent.parent.parent / "src" / "DHT" / "modules"
         self.template_files = [
@@ -38,13 +39,13 @@ class TestTemplateFiles:
             "dl_icons.py",
         ]
 
-    def test_template_files_removed(self):
+    def test_template_files_removed(self) -> Any:
         """Test that template files with syntax errors have been removed."""
         for filename in self.template_files:
             file_path = self.dht_modules_dir / filename
             assert not file_path.exists(), f"Template file {filename} should have been removed"
 
-    def test_no_template_files_remaining(self):
+    def test_no_template_files_remaining(self) -> Any:
         """Test that no template files with syntax errors remain in modules directory."""
         # Get all Python files in the modules directory
         python_files = list(self.dht_modules_dir.glob("*.py"))
@@ -73,7 +74,7 @@ class TestTemplateFiles:
                 # Skip binary files
                 continue
 
-    def test_template_files_removed_successfully(self):
+    def test_template_files_removed_successfully(self) -> Any:
         """Test that template files have been successfully removed."""
         blame_path = self.dht_modules_dir / "blame.py"
 
@@ -85,7 +86,7 @@ class TestTemplateFiles:
             file_path = self.dht_modules_dir / filename
             assert not file_path.exists(), f"Template file {filename} should have been removed"
 
-    def test_template_files_not_imported_by_dht(self):
+    def test_template_files_not_imported_by_dht(self) -> Any:
         """Test that template files are not imported by DHT modules."""
         # Get all Python files in the modules directory
         python_files = list(self.dht_modules_dir.glob("*.py"))
@@ -117,7 +118,7 @@ class TestTemplateFiles:
                 # Skip binary files
                 continue
 
-    def test_orchestrator_py_imports_template_files(self):
+    def test_orchestrator_py_imports_template_files(self) -> Any:
         """Test whether orchestrator.py tries to import template files."""
         orchestrator_path = self.dht_modules_dir / "orchestrator.py"
         if not orchestrator_path.exists():
@@ -132,7 +133,7 @@ class TestTemplateFiles:
             for pattern in import_patterns:
                 assert pattern not in content, f"orchestrator.py should not import template file {template_file}"
 
-    def test_template_files_issue_resolved(self):
+    def test_template_files_issue_resolved(self) -> Any:
         """Test that template files issue has been resolved."""
         # This test documents that the template files issue has been resolved
         # The files with placeholders have been removed since they were unused

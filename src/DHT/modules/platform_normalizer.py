@@ -24,6 +24,7 @@ interfaces for cross-platform compatibility.
 import os
 import platform
 from pathlib import Path
+from typing import Any
 
 from prefect import task
 
@@ -115,7 +116,7 @@ def get_tool_command(tool: str, platform_name: str | None = None) -> list[str] |
     return tool_commands.get(platform_name)
 
 
-@task(name="verify_platform_compatibility")
+@task(name="verify_platform_compatibility")  # type: ignore[misc]
 def verify_platform_compatibility(
     snapshot_platform: str, current_platform: str | None = None
 ) -> tuple[bool, list[str]]:
@@ -131,7 +132,7 @@ def verify_platform_compatibility(
     snapshot_platform = normalize_platform_name(snapshot_platform)
     current_platform = normalize_platform_name(current_platform)
 
-    warnings = []
+    warnings: list[Any] = []
 
     # Same platform = fully compatible
     if snapshot_platform == current_platform:
@@ -164,7 +165,7 @@ def verify_platform_compatibility(
 def normalize_environment_variables(env_vars: dict[str, str]) -> dict[str, str]:
     """Normalize environment variables for current platform."""
     current_platform = normalize_platform_name(platform.system())
-    normalized = {}
+    normalized: dict[str, Any] = {}
 
     for key, value in env_vars.items():
         # Skip platform-specific variables

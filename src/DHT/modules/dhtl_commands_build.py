@@ -32,7 +32,7 @@ class BuildCommand:
         """Initialize build command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_build", log_prints=True, cache_policy=NO_CACHE)
+    @task(name="dhtl_build", log_prints=True, cache_policy=NO_CACHE)  # type: ignore[misc]
     def build(
         self,
         uv_manager: UVManager,

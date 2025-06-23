@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE file for details.
 """Unit tests for dhtconfig module."""
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
@@ -19,14 +20,14 @@ from DHT.modules.dhtconfig import DHTConfig
 class TestDHTConfig:
     """Test cases for DHTConfig class."""
 
-    def test_init(self):
+    def test_init(self) -> Any:
         """Test DHTConfig initialization."""
         config = DHTConfig()
         assert config.SCHEMA_VERSION == "1.0.0"
         assert config.CONFIG_FILENAME == ".dhtconfig"
         assert hasattr(config, "project_analyzer")
 
-    def test_extract_version(self):
+    def test_extract_version(self) -> Any:
         """Test version extraction from various formats."""
         config = DHTConfig()
 
@@ -38,7 +39,7 @@ class TestDHTConfig:
         assert config._extract_version("unknown format") == "unknown"
 
     @patch("DHT.modules.dhtconfig_validation_utils.subprocess.run")
-    def test_generate_validation_info(self, mock_run):
+    def test_generate_validation_info(self, mock_run) -> Any:
         """Test validation info generation."""
         config = DHTConfig()
 
@@ -68,7 +69,7 @@ class TestDHTConfig:
             assert "black" in validation["tool_behaviors"]
             assert validation["tool_behaviors"]["black"]["version"] == "23.7.0"
 
-    def test_extract_dependencies(self):
+    def test_extract_dependencies(self) -> Any:
         """Test dependency extraction from project info."""
         config = DHTConfig()
 
@@ -97,7 +98,7 @@ class TestDHTConfig:
         assert deps["python_packages"] == []
         assert deps["lock_files"] == {}
 
-    def test_extract_tool_requirements(self):
+    def test_extract_tool_requirements(self) -> Any:
         """Test tool requirements extraction."""
         config = DHTConfig()
 
@@ -124,7 +125,7 @@ class TestDHTConfig:
         assert any(t["name"] == "docker" for t in tools["optional"])
         assert any(t["name"] == "pytest" for t in tools["optional"])
 
-    def test_extract_build_config(self):
+    def test_extract_build_config(self) -> Any:
         """Test build configuration extraction."""
         config = DHTConfig()
 
@@ -144,7 +145,7 @@ class TestDHTConfig:
         assert "make" in build["build_commands"]
         assert "make test" in build["test_commands"]
 
-    def test_extract_environment_vars(self):
+    def test_extract_environment_vars(self) -> Any:
         """Test environment variable extraction."""
         config = DHTConfig()
 
@@ -170,7 +171,7 @@ SECRET_KEY=CHANGE_ME
             assert env["optional"]["DATABASE_URL"] == "postgresql://localhost/db"
             assert "DEBUG" in env["optional"]
 
-    def test_deep_merge(self):
+    def test_deep_merge(self) -> Any:
         """Test deep merge functionality."""
         config = DHTConfig()
 
@@ -186,7 +187,7 @@ SECRET_KEY=CHANGE_ME
         assert base["d"] == "updated"
         assert base["f"] == "new"
 
-    def test_merge_platform_config(self):
+    def test_merge_platform_config(self) -> Any:
         """Test platform-specific config merging."""
         config = DHTConfig()
 
@@ -208,7 +209,7 @@ SECRET_KEY=CHANGE_ME
         assert len(merged["dependencies"]["system_packages"]) == 1
         assert merged["dependencies"]["system_packages"][0]["name"] == "build-essential"
 
-    def test_save_and_load_config(self):
+    def test_save_and_load_config(self) -> Any:
         """Test saving and loading configuration."""
         config = DHTConfig()
 
@@ -236,7 +237,7 @@ SECRET_KEY=CHANGE_ME
             with pytest.raises(FileNotFoundError):
                 config.load_config(project_path / "nonexistent.yaml")
 
-    def test_validate_config(self):
+    def test_validate_config(self) -> Any:
         """Test configuration validation."""
         config = DHTConfig()
 
@@ -266,7 +267,7 @@ SECRET_KEY=CHANGE_ME
 
     @patch("DHT.modules.project_analyzer.ProjectAnalyzer.analyze_project")
     @patch("DHT.modules.dhtconfig.diagnostic_reporter_v2.build_system_report")
-    def test_generate_from_project_integration(self, mock_system_report, mock_analyze):
+    def test_generate_from_project_integration(self, mock_system_report, mock_analyze) -> Any:
         """Test full config generation from project."""
         config = DHTConfig()
 

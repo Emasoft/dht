@@ -19,6 +19,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -26,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from DHT.modules.parsers.bash_parser import BashParser
 
 
-def create_test_script():
+def create_test_script() -> Any:
     """Create a test bash script with various elements."""
     script_content = """#!/bin/bash
 # Test script for bash parser
@@ -91,7 +92,7 @@ esac
     return script_content
 
 
-def test_bash_parser():
+def test_bash_parser() -> Any:
     """Test the bash parser functionality."""
     print("Testing Bash Parser...")
     print("-" * 50)
@@ -181,7 +182,7 @@ def test_bash_parser():
         test_file.unlink()
 
 
-def test_tree_sitter_availability():
+def test_tree_sitter_availability() -> Any:
     """Check if tree-sitter is properly configured."""
     print("\n🔍 Checking tree-sitter availability...")
 

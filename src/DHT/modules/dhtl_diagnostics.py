@@ -24,6 +24,7 @@ import platform
 import shutil
 import subprocess
 import sys
+from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
@@ -158,6 +159,6 @@ def diagnostics_command(*args, **kwargs) -> int:
         return 1 if errors > 0 else 0
 
 
-def placeholder_function(*args, **kwargs):
+def placeholder_function(*args, **kwargs) -> Any:
     """Placeholder for backward compatibility."""
     return diagnostics_command(*args, **kwargs)

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 environment_installer.py - Environment installation and setup  This module handles Python environment installation and package management.
 
@@ -38,7 +40,7 @@ from DHT.modules.uv_prefect_tasks import (
 )
 
 
-def _get_logger():
+def _get_logger() -> Any:
     """Get logger, falling back to standard logging if not in Prefect context."""
     try:
         return get_run_logger()
@@ -49,7 +51,7 @@ def _get_logger():
 class EnvironmentInstaller:
     """Handles environment installation and setup."""
 
-    @task(name="install_python_environment", description="Install Python environment based on configuration")
+    @task(name="install_python_environment", description="Install Python environment based on configuration")  # type: ignore[misc]
     def install_python_environment(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Install Python environment based on configuration.
@@ -188,7 +190,7 @@ class EnvironmentInstaller:
             "safety": "safety",
         }
 
-        packages_to_install = []
+        packages_to_install: list[Any] = []
         for tool in tools:
             if tool in tool_packages:
                 packages_to_install.append(tool_packages[tool])
@@ -196,7 +198,7 @@ class EnvironmentInstaller:
         if packages_to_install:
             self._install_additional_packages(project_path, packages_to_install)
 
-    @task(name="install_system_packages", description="Install system-level packages")
+    @task(name="install_system_packages", description="Install system-level packages")  # type: ignore[misc]
     def install_system_packages(self, config: EnvironmentConfig, result: ConfigurationResult, platform: str) -> bool:
         """
         Install system-level packages.
@@ -237,7 +239,7 @@ class EnvironmentInstaller:
             return True
 
         # Install packages
-        failed_packages = []
+        failed_packages: list[Any] = []
         for package in config.system_packages:
             try:
                 cmd = pm["install"] + [package]
@@ -254,7 +256,7 @@ class EnvironmentInstaller:
 
         return len(failed_packages) == 0
 
-    @task(name="run_post_install_commands", description="Run post-installation commands")
+    @task(name="run_post_install_commands", description="Run post-installation commands")  # type: ignore[misc]
     def run_post_install_commands(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Run post-installation commands.
@@ -271,7 +273,7 @@ class EnvironmentInstaller:
         if not config.post_install_commands:
             return True
 
-        failed_commands = []
+        failed_commands: list[Any] = []
         for command in config.post_install_commands:
             try:
                 # Run command in project directory

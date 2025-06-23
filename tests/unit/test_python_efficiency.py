@@ -16,6 +16,7 @@ efficiency and modularity best practices as outlined in CLAUDE.md.
 import ast
 import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -23,7 +24,7 @@ import pytest
 class TestPythonEfficiency:
     """Test Python script efficiency and modularity."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.dht_dir = Path(__file__).parent.parent.parent / "src" / "DHT"
         self.python_files = list(self.dht_dir.rglob("*.py"))
@@ -31,7 +32,7 @@ class TestPythonEfficiency:
         self.python_files = [f for f in self.python_files if "__pycache__" not in str(f) and "test_" not in f.name]
         self.max_file_size_kb = 10  # CLAUDE.md mentions 10KB limit for Python files
 
-    def test_python_files_exist(self):
+    def test_python_files_exist(self) -> Any:
         """Test that Python files exist in DHT package."""
         assert len(self.python_files) > 0, "Should find Python files in DHT package"
 
@@ -42,7 +43,7 @@ class TestPythonEfficiency:
         for core_file in core_files:
             assert core_file in existing_files, f"Core file {core_file} should exist"
 
-    def test_file_sizes_modular(self):
+    def test_file_sizes_modular(self) -> Any:
         """Test that Python files follow the 10KB modularity rule from CLAUDE.md."""
         oversized_files = []
 
@@ -59,7 +60,7 @@ class TestPythonEfficiency:
         # CLAUDE.md states: "always keep the size of source code files below 10Kb"
         assert len(oversized_files) == 0, f"These Python files exceed the 10KB limit: {oversized_files}"
 
-    def test_files_have_proper_headers(self):
+    def test_files_have_proper_headers(self) -> Any:
         """Test that Python files have proper headers."""
         for py_file in self.python_files:
             content = py_file.read_text()
@@ -77,7 +78,7 @@ class TestPythonEfficiency:
                     f"{py_file.name} should have encoding declaration on second line"
                 )
 
-    def test_files_have_valid_syntax(self):
+    def test_files_have_valid_syntax(self) -> Any:
         """Test that all Python files have valid syntax."""
         for py_file in self.python_files:
             content = py_file.read_text()
@@ -87,7 +88,7 @@ class TestPythonEfficiency:
             except SyntaxError as e:
                 pytest.fail(f"Syntax error in {py_file.name}: {e}")
 
-    def test_files_have_docstrings(self):
+    def test_files_have_docstrings(self) -> Any:
         """Test that Python files have module docstrings (CLAUDE.md requirement)."""
         files_without_docstrings = []
 
@@ -127,7 +128,7 @@ class TestPythonEfficiency:
             f"Only {docstring_ratio * 100:.1f}% of Python files have docstrings (expected >70%)"
         )
 
-    def test_functions_have_docstrings(self):
+    def test_functions_have_docstrings(self) -> Any:
         """Test that functions have docstrings (CLAUDE.md requirement)."""
         functions_without_docstrings = []
         total_functions = 0
@@ -171,7 +172,7 @@ class TestPythonEfficiency:
                 f"Only {docstring_ratio * 100:.1f}% of functions have docstrings (expected >60%)"
             )
 
-    def test_functions_use_type_annotations(self):
+    def test_functions_use_type_annotations(self) -> Any:
         """Test that functions use type annotations (CLAUDE.md requirement)."""
         functions_without_types = []
         total_functions = 0
@@ -217,7 +218,7 @@ class TestPythonEfficiency:
                 f"Only {type_annotation_ratio * 100:.1f}% of functions have type annotations (expected >50%)"
             )
 
-    def test_imports_are_organized(self):
+    def test_imports_are_organized(self) -> Any:
         """Test that imports are properly organized."""
         for py_file in self.python_files:
             content = py_file.read_text()
@@ -248,7 +249,7 @@ class TestPythonEfficiency:
                 # Already caught in test_files_have_valid_syntax
                 pass
 
-    def test_no_unused_imports(self):
+    def test_no_unused_imports(self) -> Any:
         """Test for obvious unused imports (basic check)."""
         files_with_potential_unused_imports = []
 
@@ -278,7 +279,7 @@ class TestPythonEfficiency:
             for filename in files_with_potential_unused_imports:
                 print(f"  - {filename}")
 
-    def test_code_complexity_reasonable(self):
+    def test_code_complexity_reasonable(self) -> Any:
         """Test that code complexity is reasonable."""
         complex_functions = []
 

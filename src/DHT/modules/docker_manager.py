@@ -49,7 +49,7 @@ class DockerManager:
         self._client = None
 
     @property
-    def client(self):
+    def client(self) -> Any:
         """Get Docker client, creating if necessary."""
         if self._client is None:
             try:
@@ -92,7 +92,7 @@ class DockerManager:
             except OSError:
                 return False
 
-    @task
+    @task  # type: ignore[misc]
     def build_image(
         self, context_path: Path, tag: str, dockerfile: str | None = None, buildargs: dict[str, str] | None = None
     ) -> tuple[bool, str]:
@@ -136,7 +136,7 @@ class DockerManager:
             image, logs = self.client.images.build(**build_kwargs)
 
             # Collect log output
-            log_output = []
+            log_output: list[Any] = []
             for log in logs:
                 if "stream" in log:
                     log_output.append(log["stream"].strip())
@@ -153,7 +153,7 @@ class DockerManager:
             self.logger.error(f"Unexpected error during build: {e}")
             raise DockerError(f"Failed to build image: {e}") from e
 
-    @task
+    @task  # type: ignore[misc]
     def run_container(
         self,
         image: str,
@@ -319,7 +319,7 @@ class DockerManager:
             container = self.client.containers.get(name_or_id)
 
             # Get port mappings
-            ports = {}
+            ports: dict[str, Any] = {}
             if container.attrs.get("NetworkSettings", {}).get("Ports"):
                 for container_port, host_info in container.attrs["NetworkSettings"]["Ports"].items():
                     if host_info:

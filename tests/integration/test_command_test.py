@@ -9,6 +9,7 @@ Licensed under the MIT License. See LICENSE file for details.
 import os
 import subprocess
 import sys
+from typing import Any
 
 import pytest
 
@@ -18,14 +19,14 @@ from helpers import create_mock_file
 
 
 @pytest.mark.integration
-def test_test_command_with_pytest_script(mock_project_with_venv):
+def test_test_command_with_pytest_script(mock_project_with_venv) -> Any:
     """Test that the test command runs pytest with the correct arguments."""
     # Create a mock test file
     test_file = create_mock_file(
         mock_project_with_venv / "tests",
         "test_example.py",
         """
-def test_example():
+def test_example() -> Any:
     assert True
 """,
     )
@@ -91,14 +92,14 @@ fi
 
 
 @pytest.mark.integration
-def test_test_command_with_fast_option(mock_project_with_venv):
+def test_test_command_with_fast_option(mock_project_with_venv) -> Any:
     """Test that the --fast option for test command works."""
     # Create a mock test file
     test_file = create_mock_file(
         mock_project_with_venv / "tests",
         "test_example.py",
         """
-def test_example():
+def test_example() -> Any:
     assert True
 """,
     )

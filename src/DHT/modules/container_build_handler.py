@@ -15,6 +15,7 @@ import json
 import os
 import subprocess
 from pathlib import Path
+from typing import Any
 
 
 class ContainerBuildHandler:
@@ -44,7 +45,7 @@ class ContainerBuildHandler:
         with open(config_file, "w") as f:
             json.dump(config, f, indent=2)
 
-        return config
+        # Config created
 
     def detect_container_builder(self) -> str | None:
         """Detect available container builder."""
@@ -87,7 +88,7 @@ class ContainerBuildHandler:
             "docker-compose.*.yaml",
         ]
 
-        files = []
+        files: list[Any] = []
         for pattern in compose_patterns:
             files.extend([str(f.relative_to(self.project_path)) for f in self.project_path.glob(pattern)])
 

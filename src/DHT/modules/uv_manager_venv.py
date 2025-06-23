@@ -35,7 +35,7 @@ class VirtualEnvironmentManager:
         self.logger = logging.getLogger(__name__)
         self.run_command = run_command_func
 
-    @task
+    @task  # type: ignore[misc]
     def create_venv(self, project_path: Path, python_version: str | None = None, venv_path: Path | None = None) -> Path:
         """
         Create virtual environment for project.

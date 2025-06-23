@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 uv_task_utils.py - Utility functions for UV Prefect tasks  This module contains utility functions used by UV Prefect tasks.
 
@@ -27,7 +29,7 @@ from pathlib import Path
 from prefect import get_run_logger
 
 
-def get_logger():
+def get_logger() -> Any:
     """Get logger with fallback for testing."""
     try:
         return get_run_logger()

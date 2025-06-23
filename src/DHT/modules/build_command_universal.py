@@ -67,7 +67,7 @@ def run_build_commands(commands: list[str], project_path: Path) -> dict[str, Any
     """Run the actual build commands."""
     logger = get_run_logger()
 
-    results = []
+    results: list[Any] = []
 
     for cmd in commands:
         logger.info(f"Running build: {cmd}")
@@ -130,7 +130,7 @@ def check_artifacts(artifacts_path: str | None, project_path: Path) -> list[str]
     if not artifacts_dir.exists():
         return []
 
-    artifacts = []
+    artifacts: list[Any] = []
     for item in artifacts_dir.rglob("*"):
         if item.is_file():
             # Get relative path from project root
@@ -213,7 +213,7 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
         return {"success": False, "error": "Build failed", "details": build_results["results"]}
 
     # 6. Check artifacts
-    artifacts = []
+    artifacts: list[Any] = []
     if config.get("artifacts_path"):
         console.print("\n[yellow]📦 Checking build artifacts...[/yellow]")
         artifacts = check_artifacts(config["artifacts_path"], project_path)

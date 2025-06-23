@@ -12,11 +12,12 @@ Simple test for dhtl init to debug issues.
 
 import tempfile
 from pathlib import Path
+from typing import Any
 
 from DHT.modules.dhtl_commands import DHTLCommands
 
 
-def test_simple_init():
+def test_simple_init() -> Any:
     """Very simple test to see what's happening."""
     with tempfile.TemporaryDirectory() as tmpdir:
         project_path = Path(tmpdir) / "test-project"

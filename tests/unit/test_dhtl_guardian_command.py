@@ -10,12 +10,13 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import sys
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
 
 
-def test_guardian_prefect_module():
+def test_guardian_prefect_module() -> Any:
     """Test that guardian_prefect module can be imported."""
     try:
         import sys
@@ -33,7 +34,7 @@ def test_guardian_prefect_module():
 
 
 @pytest.mark.unit
-def test_resource_limits_class():
+def test_resource_limits_class() -> Any:
     """Test ResourceLimits class."""
     sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import ResourceLimits
@@ -52,7 +53,7 @@ def test_resource_limits_class():
 
 
 @pytest.mark.unit
-def test_guardian_result_dataclass():
+def test_guardian_result_dataclass() -> Any:
     """Test GuardianResult dataclass."""
     sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import GuardianResult
@@ -89,7 +90,7 @@ def test_guardian_result_dataclass():
 
 
 @pytest.mark.unit
-def test_check_system_resources():
+def test_check_system_resources() -> Any:
     """Test check_system_resources function exists and has correct structure."""
     sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from DHT.modules.guardian_prefect import check_system_resources
@@ -106,7 +107,7 @@ def test_check_system_resources():
 
 
 @pytest.mark.unit
-def test_run_with_guardian_success():
+def test_run_with_guardian_success() -> Any:
     """Test run_with_guardian with successful execution."""
     sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from unittest.mock import patch
@@ -136,7 +137,7 @@ def test_run_with_guardian_success():
 
 
 @pytest.mark.unit
-def test_dhtl_guardian_prefect_module():
+def test_dhtl_guardian_prefect_module() -> Any:
     """Test the dhtl_guardian_prefect module exists."""
     try:
         import sys
@@ -153,7 +154,7 @@ def test_dhtl_guardian_prefect_module():
 
 @pytest.mark.unit
 @patch("sys.argv", ["guardian", "echo", "test"])
-def test_guardian_cli_interface():
+def test_guardian_cli_interface() -> Any:
     """Test the guardian CLI interface."""
     sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
     from unittest.mock import patch

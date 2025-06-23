@@ -40,7 +40,7 @@ class ScriptExecutor:
         self.logger = logging.getLogger(__name__)
         self.run_command = run_command_func
 
-    @task
+    @task  # type: ignore[misc]
     def run_script(self, project_path: Path, script: str, args: list[str] | None = None) -> dict[str, Any]:
         """
         Run a Python script in the project environment.

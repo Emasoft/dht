@@ -9,13 +9,14 @@ Licensed under the MIT License. See LICENSE file for details.
 """CLI application using workspace packages."""
 
 from pathlib import Path
+from typing import Any
 
 from core import hello, info
 from experimental import analyze, benchmark_run
 from utils import format_text, validate
 
 
-def cli():
+def cli() -> Any:
     """Main CLI entry point."""
     print("🖥️  Demo CLI Application")
     print("=" * 50)

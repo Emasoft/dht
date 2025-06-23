@@ -98,7 +98,7 @@ class WorkspaceBase:
         """
         members = config.get("members", [])
         exclude = config.get("exclude", [])
-        member_paths = []
+        member_paths: list[Any] = []
 
         # Resolve each member pattern
         for pattern in members:
@@ -150,7 +150,7 @@ class WorkspaceBase:
         if timeout is None:
             timeout = self.DEFAULT_TIMEOUT
 
-        results = {}
+        results: dict[str, Any] = {}
         all_success = True
         total = len(members)
 
@@ -270,7 +270,7 @@ class WorkspaceBase:
             Filtered list of members
         """
 
-        filtered = []
+        filtered: list[Any] = []
 
         for member in members:
             # Check name patterns
@@ -317,7 +317,7 @@ class WorkspaceBase:
         Returns:
             Tuple of (is_valid, error_messages)
         """
-        errors = []
+        errors: list[Any] = []
 
         for pkg in packages:
             # Basic validation - package names should be safe

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """
 Integration tests for Bolt-compatible commands.
 
@@ -40,7 +42,7 @@ class TestBoltAddRemoveCommands:
     """Integration tests for add/remove commands."""
 
     @pytest.mark.integration
-    def test_add_package_to_project(self):
+    def test_add_package_to_project(self) -> Any:
         """Test adding a package to a project."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -66,7 +68,7 @@ dependencies = []
             assert "click" in pyproject.read_text().lower() or "Added click" in result.stdout
 
     @pytest.mark.integration
-    def test_add_multiple_packages(self):
+    def test_add_multiple_packages(self) -> Any:
         """Test adding multiple packages at once."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -94,7 +96,7 @@ dependencies = []
                 assert pkg in project_text or pkg in output_text
 
     @pytest.mark.integration
-    def test_remove_package_from_project(self):
+    def test_remove_package_from_project(self) -> Any:
         """Test removing a package from a project."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -123,7 +125,7 @@ class TestBoltUpgradeCommand:
     """Integration tests for upgrade command."""
 
     @pytest.mark.integration
-    def test_upgrade_single_package(self):
+    def test_upgrade_single_package(self) -> Any:
         """Test upgrading a single package."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -147,7 +149,7 @@ dependencies = ["click>=7.0"]
             assert "click" in result.stdout.lower() or "upgraded" in result.stdout.lower()
 
     @pytest.mark.integration
-    def test_upgrade_all_packages(self):
+    def test_upgrade_all_packages(self) -> Any:
         """Test upgrading all packages when no package specified."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -175,7 +177,7 @@ class TestBoltCheckCommand:
     """Integration tests for check (type checking) command."""
 
     @pytest.mark.integration
-    def test_check_command_runs_mypy(self):
+    def test_check_command_runs_mypy(self) -> Any:
         """Test that check command runs type checking."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -204,14 +206,14 @@ version = "0.1.0"
             assert "mypy" in result.stdout.lower() or "mypy" in result.stderr.lower() or "type" in result.stdout.lower()
 
     @pytest.mark.integration
-    def test_check_with_specific_files(self):
+    def test_check_with_specific_files(self) -> Any:
         """Test check command with specific files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
 
             # Create Python files
             (tmpdir / "good.py").write_text("def add(a: int, b: int) -> int: return a + b")
-            (tmpdir / "bad.py").write_text("def bad(x): return x + 1  # Missing type annotations")
+            (tmpdir / "bad.py").write_text("def bad(x) -> Any: return x + 1  # Missing type annotations")
 
             # Run check on specific file
             result = run_dhtl_command(["check", "good.py"], cwd=tmpdir)
@@ -224,20 +226,20 @@ class TestBoltFormatCommands:
     """Integration tests for format commands."""
 
     @pytest.mark.integration
-    def test_fmt_alias_for_format(self):
+    def test_fmt_alias_for_format(self) -> Any:
         """Test that fmt is an alias for format."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
 
             # Create unformatted Python file
             (tmpdir / "ugly.py").write_text("""
-def ugly_function(  x,y,   z ):
+def ugly_function(  x,y,   z ) -> Any:
     return x+y+z
 
 
 class BadFormat:
     def __init__(self,
-    value):
+    value) -> Any:
         self.value=value
 """)
 
@@ -248,7 +250,7 @@ class BadFormat:
             assert result.returncode == 0 or "format" in result.stdout.lower() or "ruff" in result.stdout.lower()
 
     @pytest.mark.integration
-    def test_format_check_mode(self):
+    def test_format_check_mode(self) -> Any:
         """Test format command in check mode."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -267,7 +269,7 @@ class TestBoltBinCommand:
     """Integration tests for bin command."""
 
     @pytest.mark.integration
-    def test_bin_prints_venv_path(self):
+    def test_bin_prints_venv_path(self) -> Any:
         """Test that bin command prints virtual environment bin path."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -293,7 +295,7 @@ version = "0.1.0"
             assert "bin" in output or "Scripts" in output
 
     @pytest.mark.integration
-    def test_bin_when_no_venv(self):
+    def test_bin_when_no_venv(self) -> Any:
         """Test bin command when no virtual environment exists."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -310,7 +312,7 @@ class TestBoltDocCommand:
     """Integration tests for doc command."""
 
     @pytest.mark.integration
-    def test_doc_generates_documentation(self):
+    def test_doc_generates_documentation(self) -> Any:
         """Test that doc command generates documentation."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -353,7 +355,7 @@ class TestBoltDefaultBehaviors:
     """Integration tests for Bolt default behaviors."""
 
     @pytest.mark.integration
-    def test_no_args_runs_install(self):
+    def test_no_args_runs_install(self) -> Any:
         """Test that dhtl with no args runs install/setup."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -372,7 +374,7 @@ version = "0.1.0"
             assert "setup" in result.stdout.lower() or "install" in result.stdout.lower() or result.returncode == 0
 
     @pytest.mark.integration
-    def test_install_is_alias_for_setup(self):
+    def test_install_is_alias_for_setup(self) -> Any:
         """Test that install command works as alias for setup."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -396,7 +398,7 @@ class TestWorkspaceFilteringIntegration:
     """Integration tests for workspace filtering options."""
 
     @pytest.mark.integration
-    def test_workspaces_only_filter(self):
+    def test_workspaces_only_filter(self) -> Any:
         """Test --only filter for workspace commands."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -433,7 +435,7 @@ version = "0.1.0"
             # shared should not be included
 
     @pytest.mark.integration
-    def test_workspaces_ignore_filter(self):
+    def test_workspaces_ignore_filter(self) -> Any:
         """Test --ignore filter for workspace commands."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -473,7 +475,7 @@ class TestProjectCommandIntegration:
     """Integration tests for project command."""
 
     @pytest.mark.integration
-    def test_project_run_in_root_only(self):
+    def test_project_run_in_root_only(self) -> Any:
         """Test that project command runs only in root."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -512,7 +514,7 @@ class TestComplexWorkspaceScenarios:
     """Integration tests for complex workspace scenarios."""
 
     @pytest.mark.integration
-    def test_nested_workspace_members(self):
+    def test_nested_workspace_members(self) -> Any:
         """Test workspace with nested member structure."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -553,7 +555,7 @@ version = "0.1.0"
             assert result.stdout.count("OK") >= 5
 
     @pytest.mark.integration
-    def test_workspace_with_dependencies(self):
+    def test_workspace_with_dependencies(self) -> Any:
         """Test workspace where members depend on each other."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)

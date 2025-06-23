@@ -16,6 +16,7 @@ Licensed under the MIT License. See LICENSE file for details.
 import subprocess
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -24,7 +25,7 @@ class TestWorkspaceIntegration:
     """Integration tests for workspace commands."""
 
     @pytest.mark.integration
-    def test_workspaces_run_integration(self):
+    def test_workspaces_run_integration(self) -> Any:
         """Test workspaces run command end-to-end."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -65,7 +66,7 @@ hello = "echo 'Hello from pkg1'"
             assert "Python" in result.stdout or "Python" in result.stderr
 
     @pytest.mark.integration
-    def test_workspace_single_member_integration(self):
+    def test_workspace_single_member_integration(self) -> Any:
         """Test workspace command for single member."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -103,7 +104,7 @@ version = "0.1.0"
             assert "Hello from myapp" in result.stdout
 
     @pytest.mark.integration
-    def test_project_command_integration(self):
+    def test_project_command_integration(self) -> Any:
         """Test project command runs only in root."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)

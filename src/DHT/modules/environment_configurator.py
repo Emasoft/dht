@@ -85,7 +85,7 @@ class EnvironmentConfigurator:
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")
+    @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")  # type: ignore[misc]
     def analyze_environment_requirements(self, project_path: Path, include_system_info: bool = True) -> dict[str, Any]:
         """
         Analyze project and system to determine environment requirements.
@@ -150,7 +150,7 @@ class EnvironmentConfigurator:
         """Delegate to environment analyzer."""
         return self.env_analyzer._recommend_ci_setup(project_info)
 
-    @task(name="generate_environment_config", description="Generate environment configuration from analysis")
+    @task(name="generate_environment_config", description="Generate environment configuration from analysis")  # type: ignore[misc]
     def generate_environment_config(
         self, project_path: Path, analysis: dict[str, Any], custom_requirements: dict[str, Any] | None = None
     ) -> EnvironmentConfig:
@@ -236,7 +236,7 @@ class EnvironmentConfigurator:
         logger.info(f"Generated configuration for {project_type} project")
         return config
 
-    @flow(name="configure_development_environment", description="Complete development environment configuration flow")
+    @flow(name="configure_development_environment", description="Complete development environment configuration flow")  # type: ignore[misc]
     def configure_development_environment(
         self,
         project_path: Path,
@@ -368,7 +368,7 @@ class EnvironmentConfigurator:
         logger = self._get_logger()
 
         try:
-            files_created = []
+            files_created: list[Any] = []
 
             # Generate .gitignore if needed
             if not (config.project_path / ".gitignore").exists():

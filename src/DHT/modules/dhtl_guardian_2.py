@@ -22,6 +22,7 @@ import os
 import subprocess
 import threading
 import time
+from typing import Any
 
 import psutil
 
@@ -87,7 +88,7 @@ class AdvancedProcessGuardian:
 
 
 # Export functions
-def ensure_process_guardian_running():
+def ensure_process_guardian_running() -> Any:
     """Ensure process guardian is initialized."""
     # In Python version, guardian is created on demand
     log_info("Process guardian ready")

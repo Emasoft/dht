@@ -25,12 +25,13 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class TestPythonArchitecture:
     """Test the integrity of DHT's Python-based architecture."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.dht_root = Path(__file__).parent.parent.parent
         self.dhtl_entry_py = self.dht_root / "dhtl_entry.py"
@@ -39,7 +40,7 @@ class TestPythonArchitecture:
         self.launcher_py = self.dht_root / "src" / "DHT" / "launcher.py"
         self.orchestrator_py = self.dht_root / "src" / "DHT" / "modules" / "orchestrator.py"
 
-    def test_python_entry_points_exist(self):
+    def test_python_entry_points_exist(self) -> Any:
         """Test that Python entry points exist and are executable."""
         # Test dhtl_entry.py exists and is executable
         assert self.dhtl_entry_py.exists(), "dhtl_entry.py entry point missing"
@@ -57,7 +58,7 @@ class TestPythonArchitecture:
         # Test orchestrator exists
         assert self.orchestrator_py.exists(), "Python orchestrator missing"
 
-    def test_python_entry_point_syntax(self):
+    def test_python_entry_point_syntax(self) -> Any:
         """Test that Python scripts have correct syntax."""
         # Test Python syntax for all entry points
         python_files = [self.dhtl_entry_py, self.dhtl_entry_windows_py, self.dhtl_py, self.launcher_py]
@@ -66,7 +67,7 @@ class TestPythonArchitecture:
             result = subprocess.run([sys.executable, "-m", "py_compile", str(py_file)], capture_output=True, text=True)
             assert result.returncode == 0, f"{py_file.name} syntax error: {result.stderr}"
 
-    def test_python_entry_point_works(self):
+    def test_python_entry_point_works(self) -> Any:
         """Test that Python entry point works correctly."""
         # Test version command through Python
         result = subprocess.run(
@@ -75,7 +76,7 @@ class TestPythonArchitecture:
         assert result.returncode == 0, f"Python entry point failed: {result.stderr}"
         assert "Development Helper Toolkit" in result.stdout and "v" in result.stdout, "Version output not found"
 
-    def test_python_launcher_uses_command_dispatcher(self):
+    def test_python_launcher_uses_command_dispatcher(self) -> Any:
         """Test that Python launcher properly uses command dispatcher."""
         # Check the launcher module where the actual work is done
         with open(self.launcher_py) as f:
@@ -90,7 +91,7 @@ class TestPythonArchitecture:
         # Should use CommandDispatcher
         assert "CommandDispatcher" in content, "Launcher doesn't use CommandDispatcher"
 
-    def test_python_modules_structure(self):
+    def test_python_modules_structure(self) -> Any:
         """Test that Python modules maintain proper structure."""
         modules_dir = self.dht_root / "src" / "DHT" / "modules"
 
@@ -109,7 +110,7 @@ class TestPythonArchitecture:
             module_path = modules_dir / module
             assert module_path.exists(), f"Essential Python module missing: {module}"
 
-    def test_uv_package_compatibility(self):
+    def test_uv_package_compatibility(self) -> Any:
         """Test that UV package structure is compatible with Python architecture."""
         # Check that src/ structure exists
         src_dir = self.dht_root / "src"
@@ -130,11 +131,11 @@ class TestPythonArchitecture:
 class TestDuplicationElimination:
     """Test that duplicate files and structures are eliminated."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.dht_root = Path(__file__).parent.parent.parent
 
-    def test_no_duplicate_requirements(self):
+    def test_no_duplicate_requirements(self) -> Any:
         """Test that there are no duplicate requirements directories."""
         root_requirements = self.dht_root / "requirements"
         pkg_requirements = self.dht_root / "src" / "DHT" / "requirements"
@@ -145,7 +146,7 @@ class TestDuplicationElimination:
         # Package requirements should NOT exist (eliminated duplication)
         assert not pkg_requirements.exists(), "Duplicate requirements directory in package"
 
-    def test_no_duplicate_diagnostic_reporters(self):
+    def test_no_duplicate_diagnostic_reporters(self) -> Any:
         """Test that diagnostic reporter v2 exists in the package without duplication."""
         # We now only have diagnostic_reporter_v2 in the package
         pkg_reporter_v2 = self.dht_root / "src" / "DHT" / "diagnostic_reporter_v2.py"
@@ -163,7 +164,7 @@ class TestDuplicationElimination:
         root_reporter = self.dht_root / "diagnostic_reporter.py"
         assert not root_reporter.exists(), "No diagnostic reporter should be at root level"
 
-    def test_no_orphaned_files(self):
+    def test_no_orphaned_files(self) -> Any:
         """Test that there are no orphaned Python scripts at root level."""
         # Should have Python entry points
         dhtl_files = list(self.dht_root.glob("dhtl*.py"))
@@ -176,11 +177,11 @@ class TestDuplicationElimination:
 class TestModularity:
     """Test that code is modular, efficient, and lean."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.dht_root = Path(__file__).parent.parent.parent
 
-    def test_python_files_are_modular(self):
+    def test_python_files_are_modular(self) -> Any:
         """Test that Python files follow modular design."""
         # Check main Python launcher
         dhtl_py = self.dht_root / "src" / "DHT" / "dhtl.py"
@@ -204,7 +205,7 @@ class TestModularity:
         # Entry point should delegate to launcher class
         assert "DHTLauncher" in dhtl_content, "Entry point should use launcher class"
 
-    def test_python_modules_are_focused(self):
+    def test_python_modules_are_focused(self) -> Any:
         """Test that Python modules are focused and lean."""
         modules_dir = self.dht_root / "src" / "DHT" / "modules"
 
@@ -237,7 +238,7 @@ class TestModularity:
 
         assert not truly_oversized, f"Oversized modules found (>11KB): {truly_oversized}"
 
-    def test_no_duplicate_implementations(self):
+    def test_no_duplicate_implementations(self) -> Any:
         """Test that there are no duplicate implementations."""
         # Check that orchestrator properly imports modules (no duplication)
         orchestrator = self.dht_root / "src" / "DHT" / "modules" / "orchestrator.py"

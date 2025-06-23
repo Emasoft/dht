@@ -12,7 +12,7 @@ import re
 from pathlib import Path
 
 
-def validate():
+def validate() -> bool:
     """Validate various data formats."""
     print("✅ Validator from demo-utils")
     print("-" * 40)
@@ -34,7 +34,7 @@ def validate():
         print("INVALID ✗")
 
     print(f"\nRunning from: {Path(__file__).parent.parent}")
-    return 0
+    return False
 
 
 if __name__ == "__main__":

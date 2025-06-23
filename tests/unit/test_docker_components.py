@@ -20,6 +20,7 @@ Tests individual components of the container deployment system.
 #
 
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -32,7 +33,7 @@ from DHT.modules.dockerfile_generator import DockerfileGenerator, ProjectType
 class TestDockerManager:
     """Unit tests for DockerManager class."""
 
-    def test_docker_manager_initialization(self):
+    def test_docker_manager_initialization(self) -> Any:
         """Test DockerManager initialization."""
         manager = DockerManager()
         assert manager is not None
@@ -40,7 +41,7 @@ class TestDockerManager:
         assert hasattr(manager, "logger")
 
     @patch("shutil.which")
-    def test_is_docker_available(self, mock_which):
+    def test_is_docker_available(self, mock_which) -> Any:
         """Test Docker availability check."""
         manager = DockerManager()
 
@@ -53,7 +54,7 @@ class TestDockerManager:
         assert manager.is_docker_available() is False
 
     @patch("docker.from_env")
-    def test_is_daemon_running(self, mock_docker):
+    def test_is_daemon_running(self, mock_docker) -> Any:
         """Test Docker daemon status check."""
         manager = DockerManager()
 
@@ -68,7 +69,7 @@ class TestDockerManager:
         mock_client.ping.side_effect = Exception("Connection failed")
         assert manager.is_daemon_running() is False
 
-    def test_is_port_available(self):
+    def test_is_port_available(self) -> Any:
         """Test port availability check."""
         manager = DockerManager()
 
@@ -85,7 +86,7 @@ class TestDockerManager:
         assert manager.is_port_available(70000) is False
 
     @patch("docker.from_env")
-    def test_build_image_success(self, mock_docker):
+    def test_build_image_success(self, mock_docker) -> Any:
         """Test successful Docker image build."""
         manager = DockerManager()
 
@@ -104,7 +105,7 @@ class TestDockerManager:
         mock_client.images.build.assert_called_once()
 
     @patch("docker.from_env")
-    def test_build_image_failure(self, mock_docker):
+    def test_build_image_failure(self, mock_docker) -> Any:
         """Test Docker image build failure."""
         manager = DockerManager()
 
@@ -117,7 +118,7 @@ class TestDockerManager:
             manager.build_image(Path("/test/project"), "test:latest")
 
     @patch("docker.from_env")
-    def test_run_container(self, mock_docker):
+    def test_run_container(self, mock_docker) -> Any:
         """Test running a container."""
         manager = DockerManager()
 
@@ -143,7 +144,7 @@ class TestDockerManager:
         mock_client.containers.run.assert_called_once()
 
     @patch("docker.from_env")
-    def test_stop_container(self, mock_docker):
+    def test_stop_container(self, mock_docker) -> Any:
         """Test stopping a container."""
         manager = DockerManager()
 
@@ -159,7 +160,7 @@ class TestDockerManager:
         mock_container.remove.assert_called_once()
 
     @patch("docker.from_env")
-    def test_stream_logs(self, mock_docker):
+    def test_stream_logs(self, mock_docker) -> Any:
         """Test streaming container logs."""
         manager = DockerManager()
 
@@ -181,13 +182,13 @@ class TestDockerManager:
 class TestDockerfileGenerator:
     """Unit tests for DockerfileGenerator class."""
 
-    def test_dockerfile_generator_initialization(self):
+    def test_dockerfile_generator_initialization(self) -> Any:
         """Test DockerfileGenerator initialization."""
         generator = DockerfileGenerator()
         assert generator is not None
         assert hasattr(generator, "templates")
 
-    def test_detect_project_type_web(self, tmp_path):
+    def test_detect_project_type_web(self, tmp_path) -> Any:
         """Test detecting web application project."""
         generator = DockerfileGenerator()
 
@@ -198,18 +199,18 @@ class TestDockerfileGenerator:
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.WEB
 
-    def test_detect_project_type_cli(self, tmp_path):
+    def test_detect_project_type_cli(self, tmp_path) -> Any:
         """Test detecting CLI application project."""
         generator = DockerfileGenerator()
 
         # Create CLI app indicators
-        (tmp_path / "cli.py").write_text("import click\n@click.command()\ndef main(): pass")
+        (tmp_path / "cli.py").write_text("import click\n@click.command()\ndef main() -> Any: pass")
         (tmp_path / "pyproject.toml").write_text('[project]\ndependencies = ["click"]')
 
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.CLI
 
-    def test_detect_project_type_library(self, tmp_path):
+    def test_detect_project_type_library(self, tmp_path) -> Any:
         """Test detecting library project."""
         generator = DockerfileGenerator()
 
@@ -221,14 +222,14 @@ class TestDockerfileGenerator:
         project_type = generator.detect_project_type(tmp_path)
         assert project_type == ProjectType.LIBRARY
 
-    def test_find_main_entry_points(self, tmp_path):
+    def test_find_main_entry_points(self, tmp_path) -> Any:
         """Test finding main entry points."""
         generator = DockerfileGenerator()
 
         # Create multiple entry points
         (tmp_path / "main.py").write_text("if __name__ == '__main__': pass")
         (tmp_path / "app.py").write_text("app = Flask(__name__)")
-        (tmp_path / "cli.py").write_text("def main(): pass")
+        (tmp_path / "cli.py").write_text("def main() -> Any: pass")
 
         entry_points = generator.find_entry_points(tmp_path)
 
@@ -236,7 +237,7 @@ class TestDockerfileGenerator:
         assert "app.py" in entry_points
         assert "cli.py" in entry_points
 
-    def test_detect_python_version(self, tmp_path):
+    def test_detect_python_version(self, tmp_path) -> Any:
         """Test detecting Python version from project."""
         generator = DockerfileGenerator()
 
@@ -256,7 +257,7 @@ class TestDockerfileGenerator:
         version = generator.detect_python_version(tmp_path)
         assert version == "3.11"  # Default
 
-    def test_generate_basic_dockerfile(self):
+    def test_generate_basic_dockerfile(self) -> Any:
         """Test generating basic Dockerfile."""
         generator = DockerfileGenerator()
 
@@ -279,7 +280,7 @@ class TestDockerfileGenerator:
         assert "EXPOSE 8000" in dockerfile
         assert 'CMD ["uv", "run", "python", "main.py"]' in dockerfile
 
-    def test_generate_multistage_dockerfile(self):
+    def test_generate_multistage_dockerfile(self) -> Any:
         """Test generating multi-stage Dockerfile."""
         generator = DockerfileGenerator()
 
@@ -293,7 +294,7 @@ class TestDockerfileGenerator:
         assert "RUN useradd" in dockerfile  # Non-root user
         assert "USER appuser" in dockerfile
 
-    def test_handle_existing_dockerfile(self, tmp_path):
+    def test_handle_existing_dockerfile(self, tmp_path) -> Any:
         """Test handling existing Dockerfile."""
         generator = DockerfileGenerator()
 
@@ -308,13 +309,13 @@ class TestDockerfileGenerator:
 class TestContainerTestRunner:
     """Unit tests for ContainerTestRunner class."""
 
-    def test_container_test_runner_initialization(self):
+    def test_container_test_runner_initialization(self) -> Any:
         """Test ContainerTestRunner initialization."""
         runner = ContainerTestRunner()
         assert runner is not None
         assert hasattr(runner, "docker_manager")
 
-    def test_run_pytest(self):
+    def test_run_pytest(self) -> Any:
         """Test running pytest in container."""
         runner = ContainerTestRunner()
 
@@ -351,7 +352,7 @@ FAILED tests/test_utils.py::test_error - AssertionError
         assert results["tests"]["test_example"] == "passed"
         assert results["tests"]["test_error"] == "failed"
 
-    def test_run_playwright(self):
+    def test_run_playwright(self) -> Any:
         """Test running Playwright tests in container."""
         runner = ContainerTestRunner()
 
@@ -371,7 +372,7 @@ FAILED tests/test_utils.py::test_error - AssertionError
         assert results["passed"] == 3
         assert results["failed"] == 0
 
-    def test_format_results_table(self):
+    def test_format_results_table(self) -> Any:
         """Test formatting results as table."""
         runner = ContainerTestRunner()
 
@@ -398,7 +399,7 @@ FAILED tests/test_utils.py::test_error - AssertionError
         assert "7" in table
         assert "2" in table
 
-    def test_handle_test_failures(self):
+    def test_handle_test_failures(self) -> Any:
         """Test handling test failures in container."""
         runner = ContainerTestRunner()
 

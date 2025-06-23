@@ -29,6 +29,7 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
@@ -41,14 +42,14 @@ class TestUVManager:
     """Test the UV manager functionality."""
 
     @pytest.fixture
-    def uv_manager(self):
+    def uv_manager(self) -> Any:
         """Create a UV manager instance with mocked executable."""
         with patch("DHT.modules.uv_manager.find_uv_executable", return_value=Path("/usr/bin/uv")):
             with patch("DHT.modules.uv_manager.verify_uv_version"):
                 return UVManager()
 
     @pytest.fixture
-    def project_with_python_version(self, tmp_path):
+    def project_with_python_version(self, tmp_path) -> Any:
         """Create a project with .python-version file."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -59,7 +60,7 @@ class TestUVManager:
         return project_dir
 
     @pytest.fixture
-    def project_with_pyproject(self, tmp_path):
+    def project_with_pyproject(self, tmp_path) -> Any:
         """Create a project with pyproject.toml."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -89,7 +90,7 @@ build-backend = "setuptools.build_meta"
         return project_dir
 
     @pytest.fixture
-    def project_with_requirements(self, tmp_path):
+    def project_with_requirements(self, tmp_path) -> Any:
         """Create a project with requirements.txt."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -104,7 +105,7 @@ pytest>=7.0.0
         return project_dir
 
     @pytest.fixture
-    def project_with_lock(self, tmp_path):
+    def project_with_lock(self, tmp_path) -> Any:
         """Create a project with uv.lock file."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
@@ -127,7 +128,7 @@ dependencies = ["requests"]
 
         return project_dir
 
-    def test_find_uv_executable_in_path(self):
+    def test_find_uv_executable_in_path(self) -> Any:
         """Test finding UV executable in PATH."""
         with patch("DHT.modules.uv_manager.find_uv_executable", return_value=Path("/usr/bin/uv")):
             with patch("DHT.modules.uv_manager.verify_uv_version"):
@@ -135,7 +136,7 @@ dependencies = ["requests"]
                 assert manager.uv_path == Path("/usr/bin/uv")
                 assert manager.is_available
 
-    def test_find_uv_executable_common_locations(self):
+    def test_find_uv_executable_common_locations(self) -> Any:
         """Test finding UV in common locations when not in PATH."""
         with patch("DHT.modules.uv_manager_utils.shutil.which", return_value=None):
             # Create a mock path that exists
@@ -158,7 +159,7 @@ dependencies = ["requests"]
                             assert manager.uv_path is not None
                             assert ".local/bin/uv" in str(manager.uv_path)
 
-    def test_uv_not_found(self):
+    def test_uv_not_found(self) -> Any:
         """Test when UV is not found anywhere."""
         with patch("DHT.modules.uv_manager_utils.shutil.which", return_value=None):
             with patch("pathlib.Path.exists", return_value=False):
@@ -166,7 +167,7 @@ dependencies = ["requests"]
                 assert manager.uv_path is None
                 assert not manager.is_available
 
-    def test_verify_uv_version_success(self):
+    def test_verify_uv_version_success(self) -> Any:
         """Test successful UV version verification."""
         # Test the verify_uv_version function directly from utils
         from DHT.modules.uv_manager_utils import verify_uv_version
@@ -178,7 +179,7 @@ dependencies = ["requests"]
         verify_uv_version(Path("/usr/bin/uv"), "0.4.0", mock_run_command)
         mock_run_command.assert_called_once_with(["--version"])
 
-    def test_verify_uv_version_too_old(self):
+    def test_verify_uv_version_too_old(self) -> Any:
         """Test UV version that's too old."""
         # Test the verify_uv_version function directly from utils
         from DHT.modules.uv_manager_utils import verify_uv_version
@@ -189,7 +190,7 @@ dependencies = ["requests"]
         with pytest.raises(UVError, match="below minimum required"):
             verify_uv_version(Path("/usr/bin/uv"), "0.4.0", mock_run_command)
 
-    def test_run_command_success(self, uv_manager):
+    def test_run_command_success(self, uv_manager) -> Any:
         """Test successful command execution."""
         # Mock the subprocess.run in the utils module where it's used
         with patch("DHT.modules.uv_manager_utils.subprocess.run") as mock_run:
@@ -212,7 +213,7 @@ dependencies = ["requests"]
             call_args = mock_run.call_args[0][0]
             assert call_args == ["/usr/bin/uv", "python", "list"]
 
-    def test_run_command_failure(self, uv_manager):
+    def test_run_command_failure(self, uv_manager) -> Any:
         """Test command execution failure."""
         with patch("DHT.modules.uv_manager_utils.subprocess.run") as mock_run:
             mock_run.side_effect = subprocess.CalledProcessError(
@@ -226,7 +227,7 @@ dependencies = ["requests"]
             assert result["success"] is False
             assert result["stderr"] == "Invalid command"
 
-    def test_run_command_no_uv(self):
+    def test_run_command_no_uv(self) -> Any:
         """Test running command when UV is not available."""
         # Create a manager without UV
         manager = UVManager()
@@ -235,17 +236,17 @@ dependencies = ["requests"]
         with pytest.raises(UVNotFoundError):
             manager.run_command(["python", "list"])
 
-    def test_detect_python_version_from_file(self, uv_manager, project_with_python_version):
+    def test_detect_python_version_from_file(self, uv_manager, project_with_python_version) -> Any:
         """Test detecting Python version from .python-version file."""
         version = uv_manager.detect_python_version(project_with_python_version)
         assert version == "3.11.6"
 
-    def test_detect_python_version_from_pyproject(self, uv_manager, project_with_pyproject):
+    def test_detect_python_version_from_pyproject(self, uv_manager, project_with_pyproject) -> Any:
         """Test detecting Python version from pyproject.toml."""
         version = uv_manager.detect_python_version(project_with_pyproject)
         assert version == "3.10"  # Minimum version from >=3.10,<3.12
 
-    def test_detect_python_version_none(self, uv_manager, tmp_path):
+    def test_detect_python_version_none(self, uv_manager, tmp_path) -> Any:
         """Test when no Python version is specified."""
         empty_project = tmp_path / "empty_project"
         empty_project.mkdir()
@@ -253,7 +254,7 @@ dependencies = ["requests"]
         version = uv_manager.detect_python_version(empty_project)
         assert version is None
 
-    def test_extract_min_version(self):
+    def test_extract_min_version(self) -> Any:
         """Test extracting minimum version from various constraints."""
         # Test the extract_min_version function directly from utils
         from DHT.modules.uv_manager_utils import extract_min_version
@@ -271,7 +272,7 @@ dependencies = ["requests"]
             result = extract_min_version(constraint)
             assert result == expected or result.startswith(expected.split(".")[0])
 
-    def test_list_python_versions(self, uv_manager):
+    def test_list_python_versions(self, uv_manager) -> Any:
         """Test listing available Python versions."""
         # Mock the python_manager's method directly to avoid Prefect task execution
         mock_versions = [
@@ -288,7 +289,7 @@ dependencies = ["requests"]
             assert versions[0]["installed"] is True
             assert versions[1]["installed"] is False
 
-    def test_ensure_python_version_already_installed(self, uv_manager):
+    def test_ensure_python_version_already_installed(self, uv_manager) -> Any:
         """Test ensuring Python version that's already installed."""
         # Mock the python_manager's method directly to avoid Prefect task execution
         expected_path = Path("/usr/bin/python3.11")
@@ -299,7 +300,7 @@ dependencies = ["requests"]
             assert python_path == expected_path
             uv_manager.python_manager.ensure_python_version.assert_called_once_with("3.11")
 
-    def test_ensure_python_version_install_needed(self, uv_manager):
+    def test_ensure_python_version_install_needed(self, uv_manager) -> Any:
         """Test ensuring Python version that needs installation."""
         with patch.object(uv_manager, "run_command") as mock_run:
             # First find fails, then install succeeds, then find succeeds
@@ -314,7 +315,7 @@ dependencies = ["requests"]
             assert python_path == Path("/home/user/.local/python3.11")
             assert mock_run.call_count == 3
 
-    def test_ensure_python_version_install_fails(self, uv_manager):
+    def test_ensure_python_version_install_fails(self, uv_manager) -> Any:
         """Test when Python installation fails."""
         with patch.object(uv_manager, "run_command") as mock_run:
             mock_run.side_effect = [
@@ -325,7 +326,7 @@ dependencies = ["requests"]
             with pytest.raises(PythonVersionError, match="Failed to install"):
                 uv_manager.ensure_python_version("3.11")
 
-    def test_create_venv_default(self, uv_manager, tmp_path):
+    def test_create_venv_default(self, uv_manager, tmp_path) -> Any:
         """Test creating virtual environment with defaults."""
         project_dir = tmp_path / "project"
         project_dir.mkdir()
@@ -338,7 +339,7 @@ dependencies = ["requests"]
             assert venv_path == project_dir / ".venv"
             mock_run.assert_called_once_with(["venv"], cwd=project_dir)
 
-    def test_create_venv_with_python_version(self, uv_manager, tmp_path):
+    def test_create_venv_with_python_version(self, uv_manager, tmp_path) -> Any:
         """Test creating virtual environment with specific Python version."""
         project_dir = tmp_path / "project"
         project_dir.mkdir()
@@ -351,7 +352,7 @@ dependencies = ["requests"]
             assert venv_path == project_dir / ".venv"
             mock_run.assert_called_once_with(["venv", "--python", "3.11"], cwd=project_dir)
 
-    def test_create_venv_custom_path(self, uv_manager, tmp_path):
+    def test_create_venv_custom_path(self, uv_manager, tmp_path) -> Any:
         """Test creating virtual environment at custom path."""
         project_dir = tmp_path / "project"
         project_dir.mkdir()
@@ -365,7 +366,7 @@ dependencies = ["requests"]
             assert venv_path == custom_venv
             mock_run.assert_called_once_with(["venv", str(custom_venv)], cwd=project_dir)
 
-    def test_install_dependencies_with_lock(self, uv_manager, project_with_lock):
+    def test_install_dependencies_with_lock(self, uv_manager, project_with_lock) -> Any:
         """Test installing dependencies from lock file."""
         with patch.object(uv_manager, "_sync_dependencies") as mock_sync:
             mock_sync.return_value = {"success": True, "method": "uv sync", "message": "Synced"}
@@ -376,7 +377,7 @@ dependencies = ["requests"]
             assert result["method"] == "uv sync"
             mock_sync.assert_called_once_with(project_with_lock, dev=False, extras=None)
 
-    def test_install_dependencies_requirements_txt(self, uv_manager, project_with_requirements):
+    def test_install_dependencies_requirements_txt(self, uv_manager, project_with_requirements) -> Any:
         """Test installing dependencies from requirements.txt."""
         with patch.object(uv_manager, "_pip_install_requirements") as mock_install:
             mock_install.return_value = {"success": True, "method": "uv pip install -r", "message": "Installed"}
@@ -387,7 +388,7 @@ dependencies = ["requests"]
             assert result["method"] == "uv pip install -r"
             mock_install.assert_called_once()
 
-    def test_install_dependencies_pyproject(self, uv_manager, project_with_pyproject):
+    def test_install_dependencies_pyproject(self, uv_manager, project_with_pyproject) -> Any:
         """Test installing dependencies from pyproject.toml."""
         with patch.object(uv_manager, "_pip_install_project") as mock_install:
             mock_install.return_value = {"success": True, "method": "uv pip install -e", "message": "Installed"}
@@ -398,7 +399,7 @@ dependencies = ["requests"]
             assert result["method"] == "uv pip install -e"
             mock_install.assert_called_once_with(project_with_pyproject, dev=True, extras=None)
 
-    def test_generate_lock_file(self, uv_manager, project_with_pyproject):
+    def test_generate_lock_file(self, uv_manager, project_with_pyproject) -> Any:
         """Test generating lock file."""
         with patch.object(uv_manager, "run_command") as mock_run:
             mock_run.return_value = {"stdout": "Generated lock", "stderr": "", "success": True}
@@ -408,7 +409,7 @@ dependencies = ["requests"]
             assert lock_path == project_with_pyproject / "uv.lock"
             mock_run.assert_called_once_with(["lock"], cwd=project_with_pyproject)
 
-    def test_generate_lock_file_failure(self, uv_manager, tmp_path):
+    def test_generate_lock_file_failure(self, uv_manager, tmp_path) -> Any:
         """Test lock file generation failure."""
         with patch.object(uv_manager, "run_command") as mock_run:
             mock_run.return_value = {"stdout": "", "stderr": "Failed to resolve", "success": False}
@@ -416,7 +417,7 @@ dependencies = ["requests"]
             with pytest.raises(DependencyError, match="Failed to generate lock"):
                 uv_manager.generate_lock_file(tmp_path)
 
-    def test_add_dependency(self, uv_manager, project_with_pyproject):
+    def test_add_dependency(self, uv_manager, project_with_pyproject) -> Any:
         """Test adding a dependency."""
         with patch.object(uv_manager, "run_command") as mock_run:
             with patch.object(uv_manager, "generate_lock_file") as mock_lock:
@@ -431,7 +432,7 @@ dependencies = ["requests"]
                 mock_run.assert_called_once_with(["add", "--dev", "numpy>=1.20"], cwd=project_with_pyproject)
                 mock_lock.assert_called_once_with(project_with_pyproject)
 
-    def test_remove_dependency(self, uv_manager, project_with_pyproject):
+    def test_remove_dependency(self, uv_manager, project_with_pyproject) -> Any:
         """Test removing a dependency."""
         with patch.object(uv_manager, "run_command") as mock_run:
             with patch.object(uv_manager, "generate_lock_file") as mock_lock:
@@ -445,7 +446,7 @@ dependencies = ["requests"]
                 mock_run.assert_called_once_with(["remove", "requests"], cwd=project_with_pyproject)
                 mock_lock.assert_called_once()
 
-    def test_check_outdated(self, uv_manager, project_with_pyproject):
+    def test_check_outdated(self, uv_manager, project_with_pyproject) -> Any:
         """Test checking for outdated packages."""
         with patch.object(uv_manager, "run_command") as mock_run:
             mock_run.return_value = {
@@ -463,7 +464,7 @@ dependencies = ["requests"]
             assert outdated[0]["version"] == "2.28.0"
             assert outdated[0]["latest_version"] == "2.31.0"
 
-    def test_run_script_file(self, uv_manager, tmp_path):
+    def test_run_script_file(self, uv_manager, tmp_path) -> Any:
         """Test running a Python script file."""
         script_path = tmp_path / "script.py"
         script_path.write_text("print('Hello')")
@@ -478,7 +479,7 @@ dependencies = ["requests"]
 
             mock_run.assert_called_once_with(["run", "python", str(script_path)], cwd=tmp_path)
 
-    def test_run_script_module(self, uv_manager, tmp_path):
+    def test_run_script_module(self, uv_manager, tmp_path) -> Any:
         """Test running a Python module."""
         with patch.object(uv_manager, "run_command") as mock_run:
             mock_run.return_value = {"stdout": "Module output", "stderr": "", "success": True}
@@ -489,7 +490,7 @@ dependencies = ["requests"]
 
             mock_run.assert_called_once_with(["run", "python", "-m", "mymodule.main", "--help"], cwd=tmp_path)
 
-    def test_setup_project_complete_flow(self, uv_manager, project_with_pyproject):
+    def test_setup_project_complete_flow(self, uv_manager, project_with_pyproject) -> Any:
         """Test complete project setup flow."""
         with patch.object(uv_manager, "detect_python_version") as mock_detect:
             with patch.object(uv_manager, "ensure_python_version") as mock_ensure:
@@ -514,7 +515,7 @@ dependencies = ["requests"]
                             mock_deps.assert_called_once_with(project_with_pyproject, dev=True)
                             mock_lock.assert_called_once()
 
-    def test_setup_project_with_failures(self, uv_manager, tmp_path):
+    def test_setup_project_with_failures(self, uv_manager, tmp_path) -> Any:
         """Test project setup with failures."""
         project_dir = tmp_path / "failing_project"
         project_dir.mkdir()
@@ -539,7 +540,7 @@ class TestUVIntegration:
     """Integration tests with actual UV commands (if UV is installed)."""
 
     @pytest.mark.skipif(not shutil.which("uv"), reason="UV not installed")
-    def test_real_uv_version_check(self):
+    def test_real_uv_version_check(self) -> Any:
         """Test with real UV installation."""
         manager = UVManager()
 
@@ -549,7 +550,7 @@ class TestUVIntegration:
             assert "uv" in result["stdout"]
 
     @pytest.mark.skipif(not shutil.which("uv"), reason="UV not installed")
-    def test_real_python_list(self):
+    def test_real_python_list(self) -> Any:
         """Test listing Python versions with real UV."""
         manager = UVManager()
 

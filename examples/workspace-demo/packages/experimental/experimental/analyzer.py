@@ -10,12 +10,13 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import time
 from pathlib import Path
+from typing import Any
 
 from core import info as core_info
 from utils import format_text
 
 
-def analyze():
+def analyze() -> Any:
     """Run experimental analysis."""
     print("🧪 Experimental Analyzer")
     print("=" * 40)

@@ -21,6 +21,7 @@ It maintains the shell-based architecture while providing Python coordination.
 
 import argparse
 import sys
+from typing import Any
 
 try:
     from .launcher import DHTLauncher
@@ -72,7 +73,7 @@ def main(argv=None) -> None:
     if not remaining:
         # Default to install command when no args provided
         command = "install"
-        command_args = []
+        command_args: list[Any] = []
     else:
         command = remaining[0]
         command_args = remaining[1:]

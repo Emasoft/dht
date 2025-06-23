@@ -17,6 +17,7 @@ Tests the comprehensive project analysis functionality that:
 """
 
 import json
+from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -28,12 +29,12 @@ class TestProjectAnalyzer:
     """Test the main project analyzer functionality."""
 
     @pytest.fixture
-    def analyzer(self):
+    def analyzer(self) -> Any:
         """Create a project analyzer instance."""
         return ProjectAnalyzer()
 
     @pytest.fixture
-    def simple_python_project(self, tmp_path):
+    def simple_python_project(self, tmp_path) -> Any:
         """Create a simple Python project structure."""
         # Create project structure
         project_dir = tmp_path / "simple_project"
@@ -48,7 +49,7 @@ import requests
 from pathlib import Path
 
 @click.command()
-def main():
+def main() -> Any:
     \"\"\"Simple CLI application.\"\"\"
     response = requests.get("https://api.example.com")
     print(response.json())
@@ -73,14 +74,14 @@ pytest>=7.0.0
 import pytest
 from main import main
 
-def test_main():
+def test_main() -> Any:
     assert main is not None
 """)
 
         return project_dir
 
     @pytest.fixture
-    def complex_python_project(self, tmp_path):
+    def complex_python_project(self, tmp_path) -> Any:
         """Create a complex Python project with pyproject.toml."""
         project_dir = tmp_path / "complex_project"
         project_dir.mkdir()
@@ -138,11 +139,11 @@ class Item(BaseModel):
     price: float
 
 @app.get("/")
-async def root():
+async def root() -> Any:
     return {"message": "Hello World"}
 
 @app.post("/items/")
-async def create_item(item: Item):
+async def create_item(item: Item) -> Any:
     return item
 """)
 
@@ -164,7 +165,7 @@ class Product(Base):
         return project_dir
 
     @pytest.fixture
-    def node_project(self, tmp_path):
+    def node_project(self, tmp_path) -> Any:
         """Create a Node.js project structure."""
         project_dir = tmp_path / "node_project"
         project_dir.mkdir()
@@ -220,7 +221,7 @@ app.listen(PORT, () => {
         return project_dir
 
     @pytest.fixture
-    def mixed_language_project(self, tmp_path):
+    def mixed_language_project(self, tmp_path) -> Any:
         """Create a project with multiple languages."""
         project_dir = tmp_path / "mixed_project"
         project_dir.mkdir()
@@ -244,7 +245,7 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/api/data')
-def get_data():
+def get_data() -> Any:
     return jsonify({"data": "from backend"})
 """)
 
@@ -299,7 +300,7 @@ services:
 
         return project_dir
 
-    def test_analyze_simple_python_project(self, analyzer, simple_python_project):
+    def test_analyze_simple_python_project(self, analyzer, simple_python_project) -> Any:
         """Test analyzing a simple Python project."""
         result = analyzer.analyze_project(simple_python_project)
 
@@ -331,7 +332,7 @@ services:
         assert result["languages"]["python"]["file_count"] == 2
         assert set(result["dependencies"]["python"]["runtime"]) == {"click", "requests"}
 
-    def test_analyze_complex_python_project(self, analyzer, complex_python_project):
+    def test_analyze_complex_python_project(self, analyzer, complex_python_project) -> Any:
         """Test analyzing a complex Python project with pyproject.toml."""
         # result = analyzer.analyze_project(complex_python_project)
 
@@ -358,7 +359,7 @@ services:
         # assert "fastapi" in result["project_subtypes"]
         # assert result["structure"]["layout"] == "src"
 
-    def test_analyze_node_project(self, analyzer, node_project):
+    def test_analyze_node_project(self, analyzer, node_project) -> Any:
         """Test analyzing a Node.js project."""
         # result = analyzer.analyze_project(node_project)
 
@@ -388,7 +389,7 @@ services:
         # assert "express" in result["frameworks"]
         # assert result["test_framework"] == "jest"
 
-    def test_analyze_mixed_language_project(self, analyzer, mixed_language_project):
+    def test_analyze_mixed_language_project(self, analyzer, mixed_language_project) -> Any:
         """Test analyzing a project with multiple languages."""
         # result = analyzer.analyze_project(mixed_language_project)
 
@@ -423,7 +424,7 @@ services:
         # assert "backend" in result["components"]
         # assert result["deployment"]["containerized"] is True
 
-    def test_detect_project_patterns(self, analyzer):
+    def test_detect_project_patterns(self, analyzer) -> Any:
         """Test detection of common project patterns."""
         patterns = [
             {
@@ -459,7 +460,7 @@ services:
             # assert set(pattern["expected_subtypes"]).issubset(project_type["subtypes"])
             pass
 
-    def test_dependency_resolution(self, analyzer, tmp_path):
+    def test_dependency_resolution(self, analyzer, tmp_path) -> Any:
         """Test comprehensive dependency resolution across files."""
         project_dir = tmp_path / "dep_test"
         project_dir.mkdir()
@@ -505,7 +506,7 @@ setup(
         # assert set(result["python"]["consolidated"]["all"]) == set(expected["python"]["consolidated"]["all"])
 
     @pytest.mark.asyncio
-    async def test_parallel_file_analysis(self, analyzer, complex_python_project):
+    async def test_parallel_file_analysis(self, analyzer, complex_python_project) -> Any:
         """Test that files are analyzed in parallel for performance."""
         # Mock the file parsers to track call timing
         with patch("modules.project_analyzer.PythonParser") as mock_parser:
@@ -513,7 +514,7 @@ setup(
             mock_parser.return_value = mock_instance
 
             # Simulate slow parsing
-            async def slow_parse(file_path):
+            async def slow_parse(file_path) -> Any:
                 import asyncio
 
                 await asyncio.sleep(0.1)
@@ -528,7 +529,7 @@ setup(
             # Should be faster than sequential (0.1s * file_count)
             # assert duration < 0.5
 
-    def test_configuration_detection(self, analyzer, tmp_path):
+    def test_configuration_detection(self, analyzer, tmp_path) -> Any:
         """Test detection of various configuration files."""
         project_dir = tmp_path / "config_test"
         project_dir.mkdir()
@@ -566,7 +567,7 @@ setup(
         # assert result["ci_cd"]["github_actions"] is True
         # assert "make" in result["build_tools"]
 
-    def test_project_metadata_generation(self, analyzer, complex_python_project):
+    def test_project_metadata_generation(self, analyzer, complex_python_project) -> Any:
         """Test generation of comprehensive project metadata."""
         # result = analyzer.generate_metadata(complex_python_project)
 
@@ -587,7 +588,7 @@ setup(
         # assert result["project_info"]["name"] == "complex-app"
         # assert isinstance(result["analysis_timestamp"], str)
 
-    def test_error_handling(self, analyzer, tmp_path):
+    def test_error_handling(self, analyzer, tmp_path) -> Any:
         """Test graceful error handling for various edge cases."""
         # Empty directory
         empty_dir = tmp_path / "empty"
@@ -610,7 +611,7 @@ setup(
         # result = analyzer.analyze_file(locked_file)
         # assert "permission" in result.get("error", "").lower()
 
-    def test_caching_mechanism(self, analyzer, simple_python_project):
+    def test_caching_mechanism(self, analyzer, simple_python_project) -> Any:
         """Test that analysis results are cached appropriately."""
         # First analysis
         # result1 = analyzer.analyze_project(simple_python_project)
@@ -635,7 +636,7 @@ setup(
 class TestProjectTypeDetection:
     """Test project type detection heuristics."""
 
-    def test_python_project_variants(self):
+    def test_python_project_variants(self) -> Any:
         """Test detection of various Python project types."""
         test_cases = [
             {
@@ -670,7 +671,7 @@ class TestProjectTypeDetection:
             #     assert result["framework"] == case["expected"]["framework"]
             pass
 
-    def test_web_project_detection(self):
+    def test_web_project_detection(self) -> Any:
         """Test detection of web projects."""
         test_cases = [
             {
@@ -701,7 +702,7 @@ class TestProjectTypeDetection:
             # assert result["framework"] == case["expected"]["framework"]
             pass
 
-    def test_mobile_project_detection(self):
+    def test_mobile_project_detection(self) -> Any:
         """Test detection of mobile projects."""
         test_cases = [
             {
@@ -732,7 +733,7 @@ class TestProjectTypeDetection:
 class TestDependencyAnalysis:
     """Test dependency analysis across different package managers."""
 
-    def test_python_dependency_consolidation(self):
+    def test_python_dependency_consolidation(self) -> Any:
         """Test consolidating Python dependencies from multiple sources."""
         sources = {
             "requirements.txt": [
@@ -773,7 +774,7 @@ class TestDependencyAnalysis:
 
         # assert result == expected
 
-    def test_version_conflict_detection(self):
+    def test_version_conflict_detection(self) -> Any:
         """Test detection of version conflicts."""
         dependencies = [
             {"name": "package-a", "version": "==1.0.0", "source": "file1"},

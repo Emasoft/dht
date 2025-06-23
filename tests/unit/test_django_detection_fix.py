@@ -12,6 +12,7 @@ Test to verify Django project detection is working correctly after the fix.
 
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -24,7 +25,7 @@ class TestDjangoDetectionFix:
     """Test Django project detection after analyzer enhancement."""
 
     @pytest.fixture
-    def django_project(self):
+    def django_project(self) -> Any:
         """Create a minimal Django project structure."""
         with tempfile.TemporaryDirectory() as tmpdir:
             proj_dir = Path(tmpdir) / "django_test"
@@ -96,7 +97,7 @@ class MyModel(models.Model):
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def index(request):
+def index(request) -> Any:
     return HttpResponse("Hello, Django!")
 """)
 
@@ -109,7 +110,7 @@ psycopg2-binary==2.9.6
 
             yield proj_dir
 
-    def test_project_analyzer_detects_django_files(self, django_project):
+    def test_project_analyzer_detects_django_files(self, django_project) -> Any:
         """Test that ProjectAnalyzer properly analyzes Django files."""
         analyzer = ProjectAnalyzer()
         result = analyzer.analyze_project(django_project)
@@ -139,7 +140,7 @@ psycopg2-binary==2.9.6
         imports = [imp["module"] for imp in manage_py_analysis["imports"]]
         assert "django.core.management" in imports
 
-    def test_project_heuristics_detects_django(self, django_project):
+    def test_project_heuristics_detects_django(self, django_project) -> Any:
         """Test that ProjectHeuristics correctly identifies Django project."""
         analyzer = ProjectAnalyzer()
         analysis_result = analyzer.analyze_project(django_project)
@@ -170,7 +171,7 @@ psycopg2-binary==2.9.6
         assert "file:manage.py" in matches
         assert "import:django" in matches
 
-    def test_project_type_detector_full_flow(self, django_project):
+    def test_project_type_detector_full_flow(self, django_project) -> Any:
         """Test the complete project type detection flow."""
         detector = ProjectTypeDetector()
         analysis = detector.analyze(django_project)
@@ -191,7 +192,7 @@ psycopg2-binary==2.9.6
         # Verify it's not detected as GENERIC
         assert analysis.type != ProjectType.GENERIC
 
-    def test_django_rest_framework_detection(self, django_project):
+    def test_django_rest_framework_detection(self, django_project) -> Any:
         """Test detection of Django REST Framework projects."""
         # Add DRF to requirements
         req_file = django_project / "requirements.txt"

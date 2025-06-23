@@ -15,6 +15,7 @@ shell script modules, which could cause conflicts and confusion.
 
 import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -22,12 +23,12 @@ import pytest
 class TestDuplicateFunctions:
     """Test for duplicate function definitions."""
 
-    def setup_method(self):
+    def setup_method(self) -> Any:
         """Set up test environment."""
         self.modules_dir = Path(__file__).parent.parent.parent / "src" / "DHT" / "modules"
         self.shell_scripts = list(self.modules_dir.glob("*.sh"))
 
-    def test_no_duplicate_workflows_command(self):
+    def test_no_duplicate_workflows_command(self) -> Any:
         """Test that workflows_command is not duplicated across shell scripts."""
         workflows_definitions = []
 
@@ -59,7 +60,7 @@ class TestDuplicateFunctions:
                 f"workflows_command should be in dhtl_commands_workflows.sh, but found in {definition['file']}"
             )
 
-    def test_no_duplicate_functions_general(self):
+    def test_no_duplicate_functions_general(self) -> Any:
         """Test that no functions are duplicated across shell scripts."""
         function_definitions = {}
 
@@ -100,7 +101,7 @@ class TestDuplicateFunctions:
                 locations = [f"{d['file']}:{d['line']}" for d in defs]
                 print(f"  {name}: {locations}")
 
-    def test_workflows_command_properly_located(self):
+    def test_workflows_command_properly_located(self) -> Any:
         """Test that workflows_command is in the right file with proper implementation."""
         workflows_file = self.modules_dir / "dhtl_commands_workflows.sh"
 

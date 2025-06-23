@@ -11,6 +11,7 @@ Custom pytest plugin for concise test reporting.
 """
 
 from collections import defaultdict
+from typing import Any
 
 import pytest
 
@@ -18,11 +19,11 @@ import pytest
 class TestSummaryReporter:
     """Collects test results for summary table."""
 
-    def __init__(self):
+    def __init__(self) -> Any:
         self.results: dict[str, list[tuple[str, str, float]]] = defaultdict(list)
         self.errors: dict[str, str] = {}
 
-    def add_result(self, nodeid: str, outcome: str, duration: float, error: str | None = None):
+    def add_result(self, nodeid: str, outcome: str, duration: float, error: str | None = None) -> Any:
         """Add a test result."""
         # Parse nodeid to get file and test name
         parts = nodeid.split("::")
@@ -37,7 +38,7 @@ class TestSummaryReporter:
         if error:
             self.errors[nodeid] = error
 
-    def print_summary(self):
+    def print_summary(self) -> Any:
         """Print summary table."""
         print("\n" + "=" * 100)
         print("📊 DHT Test Summary")
@@ -101,7 +102,7 @@ reporter = TestSummaryReporter()
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport(item, call) -> Any:
     """Hook to capture test results."""
     outcome = yield
     report = outcome.get_result()
@@ -120,20 +121,20 @@ def pytest_runtest_makereport(item, call):
         reporter.add_result(nodeid, outcome_str, duration, error)
 
 
-def pytest_sessionfinish(session, exitstatus):
+def pytest_sessionfinish(session, exitstatus) -> Any:
     """Print summary at end of session."""
     reporter.print_summary()
 
 
 # Pytest configuration options
-def pytest_addoption(parser):
+def pytest_addoption(parser) -> Any:
     """Add custom options."""
     parser.addoption(
         "--quiet-summary", action="store_true", default=False, help="Show only summary table without verbose output"
     )
 
 
-def pytest_configure(config):
+def pytest_configure(config) -> Any:
     """Configure pytest."""
     # Register our plugin
     config.pluginmanager.register(reporter, "test_summary_reporter")

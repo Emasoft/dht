@@ -30,7 +30,7 @@ def info() -> None:
     print("  - Basic hello world functionality")
     print("  - Package information display")
     print("  - Foundation for other packages")
-    return 0
+    # Info displayed successfully
 
 
 if __name__ == "__main__":

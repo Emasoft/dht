@@ -79,11 +79,11 @@ class ToolVersionManager:
             },
         }
 
-    @task(name="capture_tool_versions")
+    @task(name="capture_tool_versions")  # type: ignore[misc]
     def capture_tool_versions(self) -> dict[str, dict[str, str]]:
         """Capture versions of all installed development tools."""
         logger = get_run_logger()
-        tools_info = {}
+        tools_info: dict[str, Any] = {}
 
         # Define tools to check with their version commands
         tools_to_check = {
@@ -195,13 +195,13 @@ class ToolVersionManager:
 
         return command
 
-    @task(name="verify_tool_compatibility")
+    @task(name="verify_tool_compatibility")  # type: ignore[misc]
     def verify_tool_compatibility(
         self, expected_tools: dict[str, str], actual_tools: dict[str, str], strict_mode: bool = True
     ) -> dict[str, dict[str, Any]]:
         """Verify tool compatibility between environments."""
         logger = get_run_logger()
-        results = {}
+        results: dict[str, Any] = {}
 
         for tool, expected_version in expected_tools.items():
             if tool not in actual_tools:

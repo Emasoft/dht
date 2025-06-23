@@ -39,7 +39,7 @@ class UVManagerImproved(UVManager):
         try:
             import tomllib
         except ImportError:
-            import tomli as tomllib  # type: ignore[import,no-redef]
+            import tomli as tomllib  # type: ignore[import-not-found,no-redef]
 
         with open(file_path, "rb") as f:
             data: dict[str, Any] = tomllib.load(f)

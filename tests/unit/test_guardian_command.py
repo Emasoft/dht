@@ -7,6 +7,7 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import os
 import sys
+from typing import Any
 
 # Import helper functions
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
@@ -14,7 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from tests.helpers import mock_bash_script, run_bash_command
 
 
-def test_guardian_command_status():
+def test_guardian_command_status() -> Any:
     """Test the guardian_command function with status subcommand."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -81,7 +82,7 @@ def test_guardian_command_status():
             shutil.rmtree(guardian_dir)
 
 
-def test_guardian_command_start():
+def test_guardian_command_start() -> Any:
     """Test the guardian_command function with start subcommand."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -190,7 +191,7 @@ def test_guardian_command_start():
             shutil.rmtree(guardian_dir)
 
 
-def test_guardian_command_stop():
+def test_guardian_command_stop() -> Any:
     """Test the guardian_command function with stop subcommand."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
@@ -271,7 +272,7 @@ def test_guardian_command_stop():
             shutil.rmtree(guardian_dir)
 
 
-def test_guardian_help():
+def test_guardian_help() -> Any:
     """Test the guardian help command."""
     # Create a script that sources the module and calls the function
     dht_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/DHT"))
