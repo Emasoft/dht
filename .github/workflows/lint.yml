@@ -37,15 +37,15 @@ jobs:
         source .venv/bin/activate
         pre-commit run --all-files --show-diff-on-failure
 
-    - name: Run additional Python linters
+    - name: Run additional Python linters via pre-commit
       run: |-
         source .venv/bin/activate
-        # Run ruff with more comprehensive checks
-        ruff check src/ tests/ --statistics
+        # Run individual pre-commit hooks for detailed output
+        echo "Running ruff checks..."
+        pre-commit run ruff --all-files || true
 
-        # Run mypy with strict mode
-        mypy src/ --strict --ignore-missing-imports || true
+        echo "Running mypy type checking..."
+        pre-commit run mypy --all-files || true
 
-        # Check for security issues
-        pip install bandit
-        bandit -r src/ -ll || true
+        echo "Running formatting checks..."
+        pre-commit run ruff-format --all-files --show-diff-on-failure || true

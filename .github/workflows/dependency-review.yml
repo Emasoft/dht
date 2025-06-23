@@ -52,17 +52,19 @@ jobs:
 
     - name: Run deptry with detailed output
       run: |
-        echo "## Deptry Dependency Analysis" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Deptry Dependency Analysis" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
 
         # Run deptry and capture output
         if uv run deptry src --config pyproject.toml > deptry_output.txt 2>&1; then
-          echo "✅ No dependency issues found!" >> $GITHUB_STEP_SUMMARY
+          echo "✅ No dependency issues found!" >> "$GITHUB_STEP_SUMMARY"
         else
-          echo "❌ Dependency issues detected:" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat deptry_output.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          {
+            echo "❌ Dependency issues detected:"
+            echo '```'
+            cat deptry_output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
           # Still fail the job
           exit 1

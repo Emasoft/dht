@@ -58,12 +58,12 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync --locked --all-extras --dev
-        uv pip install deptry
+        uv pip install pre-commit
 
     - name: Run deptry
       run: |
         echo "Running deptry dependency analysis..."
-        uv run deptry src --config pyproject.toml
+        uv run pre-commit run deptry --all-files --show-diff-on-failure
 
     - name: Check for dependency issues
       if: failure()
@@ -89,22 +89,24 @@ jobs:
       run: uv python install 3.11
 
     - name: Install dependencies
-      run: uv sync --locked --all-extras --dev
+      run: |
+        uv sync --locked --all-extras --dev
+        uv pip install pre-commit
 
     - name: Run ruff linter
       run: |
         echo "Running ruff linter..."
-        uv run ruff check src/ tests/ --output-format=github
+        uv run pre-commit run ruff --all-files --show-diff-on-failure
 
     - name: Check code formatting
       run: |
         echo "Checking code formatting with ruff..."
-        uv run ruff format --check src/ tests/
+        uv run pre-commit run ruff-format --all-files --show-diff-on-failure
 
     - name: Run mypy type checker
       run: |
         echo "Running mypy type checker..."
-        uv run mypy src/DHT/ --show-error-codes --pretty
+        uv run pre-commit run mypy --all-files --show-diff-on-failure
 
   lock-file-check:
     name: Check lock file
