@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 system_taxonomy_data2.py - Additional taxonomy data structures (part 2)
 
@@ -6,16 +8,10 @@ Copyright (c) 2024 Emasoft (Emanuele Sabetta)
 Licensed under the MIT License. See LICENSE file for details.
 """
 
-"""
-system_taxonomy_data2.py - Additional taxonomy data structures (part 2)
-"""
-
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted from system_taxonomy.py to reduce file size
 # - Contains additional PRACTICAL_TAXONOMY categories
 #
-
-from __future__ import annotations
 
 # Additional taxonomy categories
 PRACTICAL_TAXONOMY_PART2 = {

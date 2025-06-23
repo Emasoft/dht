@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 System taxonomy constants module for DHT.
 
@@ -9,6 +11,7 @@ Licensed under the MIT License. See LICENSE file for details.
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted from system_taxonomy.py to reduce file size
 # - Contains platform exclusions, cross-platform tools, and platform-specific tools
+# - Fixed import order - moved __future__ import to the top
 #
 
 """
@@ -16,8 +19,6 @@ System taxonomy constants module for DHT.
 
 This module contains platform-specific exclusions and tool lists used by the system taxonomy.
 """
-
-from __future__ import annotations
 
 # Define platform-specific exclusions
 PLATFORM_EXCLUSIONS = {

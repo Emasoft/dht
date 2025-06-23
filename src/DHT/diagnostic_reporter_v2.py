@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Diagnostic Reporter V2 module.
 
@@ -35,8 +37,6 @@ Key features:
 - Support for filtering by categories and tools
 - YAML and JSON output formats
 """
-
-from __future__ import annotations
 
 import argparse
 import json

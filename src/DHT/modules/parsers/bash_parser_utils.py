@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 bash_parser_utils.py - Utility functions for Bash parser  This module contains utility functions used by both tree-sitter and regex parsers.
 
@@ -17,7 +19,6 @@ This module contains utility functions used by both tree-sitter and regex parser
 # - Contains utility functions for type inference, path resolution, etc.
 #
 
-from __future__ import annotations
 
 import re
 from pathlib import Path

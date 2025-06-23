@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 reproduction_artifacts.py - Create Prefect artifacts for environment reproduction  This module handles creation of artifacts and documentation for environment reproduction workflows.
 
@@ -18,7 +20,6 @@ reproduction workflows.
 # - Contains artifact creation and documentation generation
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

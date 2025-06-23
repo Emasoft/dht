@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtl_commands_sync.py - Implementation of dhtl sync command  This module implements the sync command functionality extracted from dhtl_commands.py
 
@@ -18,7 +20,6 @@ This module implements the sync command functionality extracted from dhtl_comman
 # - Part of refactoring to keep files under 10KB
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

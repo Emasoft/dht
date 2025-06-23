@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_config_helpers.py - Helper functions for environment configuration  This module contains helper functions and constants used by the environment configurator.
 
@@ -17,7 +19,6 @@ This module contains helper functions and constants used by the environment conf
 # - Contains configuration generation and artifact creation functions
 #
 
-from __future__ import annotations
 
 import json
 from datetime import datetime

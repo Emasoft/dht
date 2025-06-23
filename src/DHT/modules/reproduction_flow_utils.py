@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 reproduction_flow_utils.py - Utilities for reproduction flow orchestration  This module contains utilities for orchestrating the complete environment reproduction flow including snapshot creation, saving, and verification.
 
@@ -18,7 +20,6 @@ reproduction flow including snapshot creation, saving, and verification.
 # - Contains reproduction flow orchestration logic
 #
 
-from __future__ import annotations
 
 import tempfile
 import time

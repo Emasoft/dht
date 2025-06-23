@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_script.py - Script execution for UV Manager  This module contains functionality for running Python scripts with UV.
 
@@ -17,7 +19,6 @@ This module contains functionality for running Python scripts with UV.
 # - Contains script execution functionality
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

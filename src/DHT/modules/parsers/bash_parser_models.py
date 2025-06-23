@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 bash_parser_models.py - Data models and constants for Bash parser  This module contains data models, constants, and common patterns used by the Bash parser.
 
@@ -17,7 +19,6 @@ This module contains data models, constants, and common patterns used by the Bas
 # - Contains constants and common patterns for bash parsing
 #
 
-from __future__ import annotations
 
 # Common commands to look for in scripts
 COMMON_COMMANDS: set[str] = {

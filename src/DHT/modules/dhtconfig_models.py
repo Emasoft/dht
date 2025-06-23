@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_models.py - Data models for DHT configuration  This module contains data models and constants used by the DHT configuration system.
 
@@ -17,7 +19,6 @@ This module contains data models and constants used by the DHT configuration sys
 # - Contains constants and schema-related functionality
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

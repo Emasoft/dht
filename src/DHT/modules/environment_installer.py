@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_installer.py - Environment installation and setup  This module handles Python environment installation and package management.
 
@@ -17,7 +19,6 @@ This module handles Python environment installation and package management.
 # - Contains environment installation and package management functions
 #
 
-from __future__ import annotations
 
 import logging as std_logging
 import os

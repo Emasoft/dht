@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""
-act_linter.py - GitHub Actions workflow linting functionality  This module provides linting capabilities for GitHub Actions workflows using actionlint, with support for both native and Docker-based execution.
-
-Copyright (c) 2024 Emasoft (Emanuele Sabetta)
-Licensed under the MIT License. See LICENSE file for details.
-"""
+from __future__ import annotations
 
 """
 act_linter.py - GitHub Actions workflow linting functionality
 
 This module provides linting capabilities for GitHub Actions workflows
 using actionlint, with support for both native and Docker-based execution.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
 """
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
@@ -18,7 +16,6 @@ using actionlint, with support for both native and Docker-based execution.
 # - Contains workflow linting functionality
 #
 
-from __future__ import annotations
 
 import shutil
 import subprocess

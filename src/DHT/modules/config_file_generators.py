@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
-config_file_generators.py - Configuration file generators for development tools  This module generates configuration files for various development tools.
+config_file_generators.py - Configuration file generators for development tools
+
+This module generates configuration files for various development tools.
 
 Copyright (c) 2024 Emasoft (Emanuele Sabetta)
 Licensed under the MIT License. See LICENSE file for details.
@@ -17,7 +21,6 @@ This module generates configuration files for various development tools.
 # - Contains generators for ruff, black, mypy, pytest, and pre-commit configs
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 

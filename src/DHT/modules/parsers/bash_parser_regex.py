@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 bash_parser_regex.py - Regex-based fallback parsing for Bash scripts  This module provides regex-based parsing as a fallback when tree-sitter is not available.
 
@@ -17,7 +19,6 @@ This module provides regex-based parsing as a fallback when tree-sitter is not a
 # - Contains regex-based fallback parsing methods
 #
 
-from __future__ import annotations
 
 import re
 from typing import Any

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_script_tasks.py - Script execution tasks for UV  This module contains Prefect tasks for running Python scripts with UV.
 
@@ -17,7 +19,6 @@ This module contains Prefect tasks for running Python scripts with UV.
 # - Contains Python script execution tasks
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

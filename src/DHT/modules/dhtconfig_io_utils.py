@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_io_utils.py - I/O utilities for DHT configuration  This module handles saving and loading of DHT configuration files.
 
@@ -17,7 +19,6 @@ This module handles saving and loading of DHT configuration files.
 # - Contains config save/load operations
 #
 
-from __future__ import annotations
 
 import json
 from pathlib import Path

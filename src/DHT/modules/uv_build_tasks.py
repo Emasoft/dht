@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_build_tasks.py - Build tasks for UV
 
@@ -10,7 +12,6 @@ This module contains Prefect tasks for building Python projects with UV.
 # - Contains project build tasks
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

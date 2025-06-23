@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Environment Reproducer module.
 
@@ -32,7 +34,6 @@ Key Features:
 - Configuration fingerprinting
 """
 
-from __future__ import annotations
 
 import hashlib
 import logging

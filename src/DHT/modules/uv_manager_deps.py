@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_deps.py - Dependency management for UV Manager  This module contains dependency installation, management, and lock file operations.
 
@@ -17,7 +19,6 @@ This module contains dependency installation, management, and lock file operatio
 # - Contains dependency installation, sync, add/remove, and lock file operations
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

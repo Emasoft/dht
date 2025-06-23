@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 platform_normalizer.py - Platform normalization and abstraction utilities  This module handles platform-specific differences and provides normalized interfaces for cross-platform compatibility.
 
@@ -18,7 +20,6 @@ interfaces for cross-platform compatibility.
 # - Contains platform compatibility checking and normalization functions
 #
 
-from __future__ import annotations
 
 import os
 import platform

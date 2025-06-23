@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_reproduction_steps.py - Generate platform-specific reproduction steps  This module generates detailed reproduction steps based on the environment snapshot and target platform.
 
@@ -18,7 +20,6 @@ snapshot and target platform.
 # - Contains reproduction step generation logic
 #
 
-from __future__ import annotations
 
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
 

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 tool_version_manager.py - Tool version management and comparison  This module handles tool version extraction, comparison, and installation suggestions for cross-platform environment reproduction.
 
@@ -19,7 +21,6 @@ suggestions for cross-platform environment reproduction.
 # - Provides platform-specific installation commands
 #
 
-from __future__ import annotations
 
 import platform
 import re

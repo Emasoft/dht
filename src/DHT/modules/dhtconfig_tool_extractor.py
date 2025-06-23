@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_tool_extractor.py - Tool requirements extraction for DHT configuration  This module handles extraction of tool requirements from project analysis.
 
@@ -17,7 +19,6 @@ This module handles extraction of tool requirements from project analysis.
 # - Contains tool requirements extraction logic
 #
 
-from __future__ import annotations
 
 from typing import Any
 

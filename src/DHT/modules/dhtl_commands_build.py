@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtl_commands_build.py - Implementation of dhtl build command
 
@@ -11,7 +13,6 @@ This module implements the build command functionality extracted from dhtl_comma
 # - Part of refactoring to keep files under 10KB
 #
 
-from __future__ import annotations
 
 import logging
 import shutil

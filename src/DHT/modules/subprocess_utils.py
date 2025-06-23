@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 subprocess_utils.py - Enhanced subprocess handling with comprehensive error management  This module provides robust subprocess execution with: - Detailed error handling and custom exceptions - Timeout management with proper cleanup - Signal handling (interrupts) - Retry logic for transient failures - Resource limit enforcement
 
@@ -6,7 +8,6 @@ Copyright (c) 2024 Emasoft (Emanuele Sabetta)
 Licensed under the MIT License. See LICENSE file for details.
 """
 
-from __future__ import annotations
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Created comprehensive subprocess utilities with enhanced error handling

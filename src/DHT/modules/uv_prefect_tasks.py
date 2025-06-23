@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 UV Prefect Tasks Module.
 
@@ -19,7 +21,6 @@ This module provides Prefect task wrappers for all UV operations with proper
 resource management, error handling, and monitoring capabilities.
 """
 
-from __future__ import annotations
 
 from DHT.modules.uv_build_tasks import (
     build_project,

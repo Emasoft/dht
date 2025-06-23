@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_config_models.py - Data models for environment configuration  This module contains the data models used by the environment configurator.
 
@@ -17,7 +19,6 @@ This module contains the data models used by the environment configurator.
 # - Contains EnvironmentConfig and ConfigurationResult dataclasses
 #
 
-from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path

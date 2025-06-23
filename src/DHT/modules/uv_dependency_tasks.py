@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_dependency_tasks.py - Dependency management tasks for UV  This module contains Prefect tasks for managing project dependencies with UV.
 
@@ -17,7 +19,6 @@ This module contains Prefect tasks for managing project dependencies with UV.
 # - Contains dependency installation, sync, and management tasks
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

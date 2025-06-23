@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 act_command_builder.py - Command building for act execution
 
 This module handles building act commands with various options and configurations.
@@ -9,8 +11,6 @@ This module handles building act commands with various options and configuration
 # - Extracted from act_integration.py to reduce file size
 # - Contains command building functionality for act
 #
-
-from __future__ import annotations
 
 from pathlib import Path
 

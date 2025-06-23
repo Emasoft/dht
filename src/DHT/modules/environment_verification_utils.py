@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_verification_utils.py - Utilities for environment verification  This module contains utilities for verifying environment compatibility including platform, Python version, and tool version verification.
 
@@ -18,7 +20,6 @@ including platform, Python version, and tool version verification.
 # - Contains environment verification utilities
 #
 
-from __future__ import annotations
 
 import platform
 import shutil

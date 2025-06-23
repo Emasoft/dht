@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_validator.py - Environment validation and verification utilities  This module provides utilities for validating and verifying that environments match expected configurations and dependencies.
 
@@ -18,7 +20,6 @@ match expected configurations and dependencies.
 # - Contains environment validation and verification functions
 #
 
-from __future__ import annotations
 
 import re
 import subprocess

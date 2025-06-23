@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_python.py - Python version management for UV Manager  This module contains Python version detection and management functionality.
 
@@ -17,7 +19,6 @@ This module contains Python version detection and management functionality.
 # - Contains Python version detection, listing, and installation
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

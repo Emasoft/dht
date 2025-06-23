@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 project_capture_utils.py - Utilities for capturing project information  This module contains utilities for capturing project-specific information including configuration files, lock files, and project metadata.
 
@@ -18,7 +20,6 @@ including configuration files, lock files, and project metadata.
 # - Contains project information capture utilities
 #
 
-from __future__ import annotations
 
 import hashlib
 from pathlib import Path

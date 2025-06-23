@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 bash_parser.py - Bash script parser using tree-sitter  This module provides comprehensive Bash script parsing using tree-sitter. It extracts functions, variables, sourced files, and commands from shell scripts.
 
@@ -18,7 +20,6 @@ It extracts functions, variables, sourced files, and commands from shell scripts
 # - Reduced file size by delegating to specialized parsers
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

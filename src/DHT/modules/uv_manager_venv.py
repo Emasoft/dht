@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_venv.py - Virtual environment management for UV Manager
 
@@ -10,7 +12,6 @@ This module contains virtual environment creation and management functionality.
 # - Contains virtual environment creation and setup
 #
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Environment Configurator module.
 
@@ -25,7 +27,6 @@ configure development environments based on detected tools, project structure,
 and platform capabilities.
 """
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

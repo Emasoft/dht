@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 project_file_generators.py - Project file generators  This module generates project files like gitignore, Dockerfile, and CI workflows.
 
@@ -17,7 +19,6 @@ This module generates project files like gitignore, Dockerfile, and CI workflows
 # - Contains generators for gitignore, Dockerfile, GitHub workflows, and env files
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 

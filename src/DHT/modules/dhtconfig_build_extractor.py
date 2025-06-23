@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_build_extractor.py - Build configuration extraction for DHT configuration
 
@@ -10,7 +12,6 @@ This module handles extraction of build configuration from project analysis.
 # - Contains build configuration extraction logic
 #
 
-from __future__ import annotations
 
 from typing import Any
 

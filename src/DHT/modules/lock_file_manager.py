@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 lock_file_manager.py - Lock file generation and management  This module handles the creation, parsing, and management of lock files for deterministic dependency resolution.
 
@@ -18,7 +20,6 @@ for deterministic dependency resolution.
 # - Contains lock file generation and parsing utilities
 #
 
-from __future__ import annotations
 
 import hashlib
 import json

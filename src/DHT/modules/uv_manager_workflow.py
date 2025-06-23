@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_workflow.py - Project setup workflow for UV Manager  This module contains the project setup workflow and related operations.
 
@@ -17,7 +19,6 @@ This module contains the project setup workflow and related operations.
 # - Contains project setup workflow and orchestration
 #
 
-from __future__ import annotations
 
 import logging
 from datetime import datetime

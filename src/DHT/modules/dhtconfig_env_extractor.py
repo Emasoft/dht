@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_env_extractor.py - Environment variables extraction for DHT configuration  This module handles extraction of environment variables from project files.
 
@@ -17,7 +19,6 @@ This module handles extraction of environment variables from project files.
 # - Contains environment variables extraction logic
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

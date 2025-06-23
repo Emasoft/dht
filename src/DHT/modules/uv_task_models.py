@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_task_models.py - Data models and constants for UV Prefect tasks  This module contains data models, constants, and configurations used by UV Prefect tasks.
 
@@ -18,7 +20,6 @@ UV Prefect tasks.
 # - Contains task configuration defaults, memory limits, and exception classes
 #
 
-from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path

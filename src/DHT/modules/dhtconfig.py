@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Dhtconfig module.
 
@@ -26,7 +28,6 @@ These files capture exact project requirements for deterministic environment
 regeneration across different platforms.
 """
 
-from __future__ import annotations
 
 import platform
 from datetime import datetime

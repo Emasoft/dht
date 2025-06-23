@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_pip_tasks.py - Pip-specific tasks for UV  This module contains Prefect tasks for UV pip operations.
 
@@ -17,7 +19,6 @@ This module contains Prefect tasks for UV pip operations.
 # - Contains pip-specific installation tasks
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

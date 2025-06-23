@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_validation_utils.py - Validation utilities for DHT configuration  This module handles validation info generation and config validation.
 
@@ -17,7 +19,6 @@ This module handles validation info generation and config validation.
 # - Contains validation info generation and config validation logic
 #
 
-from __future__ import annotations
 
 import hashlib
 import re

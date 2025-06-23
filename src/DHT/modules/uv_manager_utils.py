@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_manager_utils.py - Utility functions for UV Manager  This module contains utility functions used by the UV Manager.
 
@@ -17,7 +19,6 @@ This module contains utility functions used by the UV Manager.
 # - Contains UV executable discovery, version checking, and command execution
 #
 
-from __future__ import annotations
 
 import logging
 import shutil

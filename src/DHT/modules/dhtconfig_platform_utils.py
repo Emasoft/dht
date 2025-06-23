@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_platform_utils.py - Platform-specific utilities for DHT configuration  This module handles platform-specific configuration overrides and merging.
 
@@ -17,7 +19,6 @@ This module handles platform-specific configuration overrides and merging.
 # - Contains platform override generation and config merging logic
 #
 
-from __future__ import annotations
 
 import copy
 import platform

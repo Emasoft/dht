@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 bash_parser_tree_sitter.py - Tree-sitter based parsing for Bash scripts  This module contains all tree-sitter specific parsing functionality for Bash scripts.
 
@@ -17,7 +19,6 @@ This module contains all tree-sitter specific parsing functionality for Bash scr
 # - Contains tree-sitter based parsing methods
 #
 
-from __future__ import annotations
 
 import logging
 from typing import Any

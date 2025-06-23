@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 system_taxonomy_data.py - Taxonomy data structures for DHT
 
@@ -6,16 +8,10 @@ Copyright (c) 2024 Emasoft (Emanuele Sabetta)
 Licensed under the MIT License. See LICENSE file for details.
 """
 
-"""
-system_taxonomy_data.py - Taxonomy data structures for DHT
-"""
-
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
 # - Extracted from system_taxonomy.py to reduce file size
 # - Contains the PRACTICAL_TAXONOMY data structure
 #
-
-from __future__ import annotations
 
 # Practical taxonomy of development tools organized by use case
 PRACTICAL_TAXONOMY = {

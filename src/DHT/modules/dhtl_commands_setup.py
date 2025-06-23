@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtl_commands_setup.py - Implementation of dhtl setup command  This module implements the setup command functionality extracted from dhtl_commands.py
 
@@ -18,7 +20,6 @@ This module implements the setup command functionality extracted from dhtl_comma
 # - Part of refactoring to keep files under 10KB
 #
 
-from __future__ import annotations
 
 import glob
 import logging

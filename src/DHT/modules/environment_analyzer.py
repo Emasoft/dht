@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_analyzer.py - Environment analysis and requirements detection  This module analyzes project environments and determines requirements.
 
@@ -17,7 +19,6 @@ This module analyzes project environments and determines requirements.
 # - Contains environment analysis and requirement detection functions
 #
 
-from __future__ import annotations
 
 import re
 from pathlib import Path

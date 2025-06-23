@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtconfig_dependency_extractor.py - Dependency extraction for DHT configuration  This module handles extraction of dependencies from project analysis.
 
@@ -17,7 +19,6 @@ This module handles extraction of dependencies from project analysis.
 # - Contains dependency extraction logic
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

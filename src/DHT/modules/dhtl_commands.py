@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtl_commands.py - Implementation of dhtl CLI commands using UV  This module implements the main dhtl commands (init, setup, build, sync) following UV documentation best practices.
 
@@ -20,7 +22,6 @@ following UV documentation best practices.
 # - DHTLCommands acts as orchestrator using delegation pattern
 #
 
-from __future__ import annotations
 
 import logging
 from typing import Any

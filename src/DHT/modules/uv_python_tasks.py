@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_python_tasks.py - Python version management tasks for UV  This module contains Prefect tasks for managing Python versions with UV.
 
@@ -17,7 +19,6 @@ This module contains Prefect tasks for managing Python versions with UV.
 # - Contains Python version detection, listing, and management tasks
 #
 
-from __future__ import annotations
 
 import re
 from pathlib import Path

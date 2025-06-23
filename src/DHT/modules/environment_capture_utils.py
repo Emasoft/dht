@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_capture_utils.py - Utilities for capturing environment details  This module contains utilities for capturing various aspects of the development environment including Python packages, system tools, and environment variables.
 
@@ -19,7 +21,6 @@ environment variables.
 # - Contains environment capture utilities
 #
 
-from __future__ import annotations
 
 import json
 import os

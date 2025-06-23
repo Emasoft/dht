@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_environment_tasks.py - Virtual environment management tasks for UV  This module contains Prefect tasks for managing virtual environments with UV.
 
@@ -17,7 +19,6 @@ This module contains Prefect tasks for managing virtual environments with UV.
 # - Contains virtual environment creation and management tasks
 #
 
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any

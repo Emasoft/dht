@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 uv_task_utils.py - Utility functions for UV Prefect tasks  This module contains utility functions used by UV Prefect tasks.
 
@@ -17,7 +19,6 @@ This module contains utility functions used by UV Prefect tasks.
 # - Contains utility functions for UV executable discovery and logging
 #
 
-from __future__ import annotations
 
 import shutil
 from functools import lru_cache

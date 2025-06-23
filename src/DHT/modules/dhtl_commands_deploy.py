@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 dhtl_commands_deploy.py - Implementation of dhtl deploy_project_in_container command  This module implements the deploy command functionality extracted from dhtl_commands.py
 
@@ -18,7 +20,6 @@ This module implements the deploy command functionality extracted from dhtl_comm
 # - Part of refactoring to keep files under 10KB
 #
 
-from __future__ import annotations
 
 import logging
 import os

@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""
-act_setup_manager.py - Act installation and setup management  This module handles installation, configuration, and availability checking for act and related tools.
-
-Copyright (c) 2024 Emasoft (Emanuele Sabetta)
-Licensed under the MIT License. See LICENSE file for details.
-"""
+from __future__ import annotations
 
 """
 act_setup_manager.py - Act installation and setup management
 
 This module handles installation, configuration, and availability checking
 for act and related tools.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
 """
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
@@ -18,7 +16,6 @@ for act and related tools.
 # - Contains act setup and availability checking functionality
 #
 
-from __future__ import annotations
 
 import json
 import logging

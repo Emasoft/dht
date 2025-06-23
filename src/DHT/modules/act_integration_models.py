@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-"""
-act_integration_models.py - Data models for act integration  This module contains data models and structures used by the act integration system.
-
-Copyright (c) 2024 Emasoft (Emanuele Sabetta)
-Licensed under the MIT License. See LICENSE file for details.
-"""
+from __future__ import annotations
 
 """
 act_integration_models.py - Data models for act integration
 
 This module contains data models and structures used by the act integration system.
+
+Copyright (c) 2024 Emasoft (Emanuele Sabetta)
+Licensed under the MIT License. See LICENSE file for details.
 """
 
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
@@ -17,7 +15,6 @@ This module contains data models and structures used by the act integration syst
 # - Contains ActConfig dataclass and related type definitions
 #
 
-from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any

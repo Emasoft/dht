@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Project Analyzer module.
 
@@ -20,7 +22,6 @@ This module analyzes project structures to detect type, dependencies,
 and configuration requirements.
 """
 
-from __future__ import annotations
 
 import logging
 from pathlib import Path

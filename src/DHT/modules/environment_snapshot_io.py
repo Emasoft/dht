@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_snapshot_io.py - Environment snapshot I/O operations  This module handles saving and loading of environment snapshots to/from various formats (JSON, YAML).
 
@@ -18,7 +20,6 @@ various formats (JSON, YAML).
 # - Contains snapshot serialization and deserialization logic
 #
 
-from __future__ import annotations
 
 import json
 from pathlib import Path

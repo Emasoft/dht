@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 environment_snapshot_models.py - Data models for environment snapshots  This module contains the data models used by the environment reproducer.
 
@@ -17,7 +19,6 @@ This module contains the data models used by the environment reproducer.
 # - Contains EnvironmentSnapshot and ReproductionResult dataclasses
 #
 
-from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
