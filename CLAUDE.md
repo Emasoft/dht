@@ -125,6 +125,7 @@ yamlfmt -path .github/workflows
 - IMPORTANT: yamlfmt must not format all yaml files, but only those inside the .github subfolder, since it is configured for the github workflows formatting style. Other yaml files may exist outside the .github folder using different formatting styles. Do not format those files.
 
 
+
 ### Linting Rules
 - Use `ruff check` and mypy for python
 - Use autofix to lint pull-requests automatically. Read how here: https://autofix.ci/setup
@@ -138,6 +139,13 @@ yamlfmt -path .github/workflows
 - use shellcheck-py if you need to use shellcheck from a python script
 - Use `pnpm run lint` to run eslint on node.js source files.
 - Add git hooks that uses uv-pre-commit to run the linting at each commit, read the guide here: `https://docs.astral.sh/uv/guides/integration/pre-commit/`
+- Use deptry to check the dependencies. To install deptry follow hese instructions: `https://github.com/fpgmaas/deptry/`
+- Add deptry to the project pre-commit configuration following these instructions: https://github.com/astral-sh/uv-pre-commit .
+- Add deptry to both the local and the remote github workflows/ actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: https://docs.astral.sh/uv/guides/integration/github/ .
+- Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
+- If you need to, you can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: https://github.com/nektos/act
+
+
 
 
 

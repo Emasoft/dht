@@ -23,15 +23,16 @@ This module provides heuristics for:
 # - Added configuration suggestions based on project type
 # - Integrated with project analyzer output
 # - Added support for data science and CLI projects
+# - Added complete type annotations to fix mypy errors
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import flow, task
 
 # Framework detection patterns
-FRAMEWORK_PATTERNS = {
+FRAMEWORK_PATTERNS: dict[str, dict[str, Any]] = {
     "django": {
         "files": ["manage.py", "wsgi.py", "asgi.py", "settings.py", "urls.py", "models.py"],
         "imports": ["django", "django.conf", "django.urls", "django.db"],
@@ -77,7 +78,7 @@ FRAMEWORK_PATTERNS = {
 }
 
 # Import to system dependency mapping
-IMPORT_TO_SYSTEM_DEPS = {
+IMPORT_TO_SYSTEM_DEPS: dict[str, list[str]] = {
     # Database drivers
     "psycopg2": ["postgresql-client", "libpq-dev"],
     "psycopg": ["postgresql-client", "libpq-dev"],
@@ -121,7 +122,7 @@ IMPORT_TO_SYSTEM_DEPS = {
 }
 
 # Configuration templates for different project types
-CONFIG_TEMPLATES = {
+CONFIG_TEMPLATES: dict[str, dict[str, Any]] = {
     "django": {
         "pyproject.toml": {
             "tool.django": {
@@ -177,10 +178,10 @@ class ProjectHeuristics:
     about project type, dependencies, and optimal configuration.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-    @task
+    @task  # type: ignore[misc]
     def detect_project_type(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Detect the primary project type and characteristics.
@@ -191,7 +192,7 @@ class ProjectHeuristics:
         Returns:
             Dictionary with project type information and confidence scores
         """
-        scores = {}
+        scores: dict[str, dict[str, Any]] = {}
 
         # Extract relevant data from analysis
         file_paths = self._extract_file_paths(analysis_result)
@@ -201,7 +202,7 @@ class ProjectHeuristics:
         # Score each framework
         for framework, patterns in FRAMEWORK_PATTERNS.items():
             score = 0
-            matches = []
+            matches: list[str] = []
 
             # Check for marker files
             for marker_file in patterns["files"]:
@@ -246,7 +247,7 @@ class ProjectHeuristics:
         characteristics = self._detect_characteristics(file_paths, imports, analysis_result)
 
         # Sort frameworks by score
-        ranked_frameworks = sorted(scores.items(), key=lambda x: x[1]["score"], reverse=True)
+        ranked_frameworks = sorted(scores.items(), key=lambda x: cast(int, x[1]["score"]), reverse=True)
 
         result = {
             "primary_type": ranked_frameworks[0][0] if ranked_frameworks else "generic",
@@ -271,8 +272,8 @@ class ProjectHeuristics:
 
         return result
 
-    @task
-    def infer_system_dependencies(self, analysis_result: dict[str, Any]) -> dict[str, list[str]]:
+    @task  # type: ignore[misc]
+    def infer_system_dependencies(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Infer system dependencies based on Python imports.
 
@@ -283,7 +284,7 @@ class ProjectHeuristics:
             Dictionary mapping dependency names to system packages
         """
         imports = self._extract_all_imports(analysis_result)
-        system_deps = {}
+        system_deps: dict[str, list[str]] = {}
 
         for import_name in imports:
             # Check direct mapping
@@ -298,7 +299,7 @@ class ProjectHeuristics:
                     system_deps[base_module] = deps
 
         # Deduplicate system packages
-        all_packages = set()
+        all_packages: set[str] = set()
         for deps in system_deps.values():
             all_packages.update(deps)
 
@@ -308,7 +309,7 @@ class ProjectHeuristics:
             "confidence": "high" if system_deps else "low",
         }
 
-    @task
+    @task  # type: ignore[misc]
     def suggest_configurations(
         self, project_type_info: dict[str, Any], analysis_result: dict[str, Any]
     ) -> dict[str, Any]:
@@ -322,7 +323,7 @@ class ProjectHeuristics:
         Returns:
             Configuration suggestions and templates
         """
-        suggestions = {
+        suggestions: dict[str, Any] = {
             "recommended_files": [],
             "config_templates": {},
             "best_practices": [],
@@ -422,7 +423,7 @@ class ProjectHeuristics:
 
         return suggestions
 
-    @task
+    @task  # type: ignore[misc]
     def analyze_code_quality(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Analyze code quality indicators and suggest improvements.
@@ -433,7 +434,7 @@ class ProjectHeuristics:
         Returns:
             Code quality metrics and suggestions
         """
-        quality_indicators = {
+        quality_indicators: dict[str, Any] = {
             "has_tests": False,
             "has_type_hints": False,
             "has_docstrings": False,
@@ -498,7 +499,7 @@ class ProjectHeuristics:
 
         return quality_indicators
 
-    @flow(name="analyze_project_heuristics")
+    @flow(name="analyze_project_heuristics")  # type: ignore[misc]
     def analyze(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Run complete heuristic analysis on a project.
@@ -531,7 +532,7 @@ class ProjectHeuristics:
 
     def _extract_file_paths(self, analysis_result: dict[str, Any]) -> list[str]:
         """Extract all file paths from analysis result."""
-        file_paths = []
+        file_paths: list[str] = []
 
         # From file_analysis section
         if "file_analysis" in analysis_result:
@@ -546,7 +547,7 @@ class ProjectHeuristics:
 
     def _extract_all_imports(self, analysis_result: dict[str, Any]) -> set[str]:
         """Extract all unique imports from the analysis."""
-        imports = set()
+        imports: set[str] = set()
 
         # From file analysis
         for file_data in analysis_result.get("file_analysis", {}).values():
@@ -575,7 +576,7 @@ class ProjectHeuristics:
         self, file_paths: list[str], imports: set[str], analysis_result: dict[str, Any]
     ) -> list[str]:
         """Detect additional project characteristics."""
-        characteristics = []
+        characteristics: list[str] = []
 
         # Testing framework
         if any("test" in str(f) for f in file_paths):
