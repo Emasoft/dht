@@ -31,7 +31,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from tabulate import tabulate
+from tabulate import tabulate  # type: ignore[import-untyped]
 
 
 @dataclass

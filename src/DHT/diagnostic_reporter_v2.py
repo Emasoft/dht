@@ -529,7 +529,7 @@ def collect_all_tools(
                 }
 
     # Build the tree structure
-    tree = {}
+    tree: dict[str, Any] = {}
 
     for tool_name, tool_info in tool_results.items():
         category = tool_info.get("category", "unknown")
@@ -677,7 +677,7 @@ def list_tools() -> None:
     print(f"Available tools for {platform_name}:")
 
     # Group by category
-    by_category = {}
+    by_category: dict[str, list[Any]] = {}
     for tool_name, tool_spec in commands.items():
         category = tool_spec.get("category", "unknown")
         if category not in by_category:

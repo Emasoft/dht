@@ -96,7 +96,7 @@ class TreeSitterBashParser:
         # Query for function definitions
         captures = self.query_tree(tree, TREE_SITTER_QUERIES["functions"])
 
-        current_func = {}
+        current_func: dict[str, Any] = {}
         for node, capture_name in captures:
             if capture_name == "function":
                 if current_func and "name" in current_func:
@@ -142,7 +142,7 @@ class TreeSitterBashParser:
 
         captures = self.query_tree(tree, TREE_SITTER_QUERIES["variables"])
 
-        current_var = {}
+        current_var: dict[str, Any] = {}
         for node, name in captures:
             if name == "assignment":
                 if current_var:
@@ -215,7 +215,7 @@ class TreeSitterBashParser:
 
         captures = self.query_tree(tree, TREE_SITTER_QUERIES["commands"])
 
-        current_cmd = {}
+        current_cmd: dict[str, Any] = {}
         for node, capture_name in captures:
             if capture_name == "command":
                 if current_cmd and "name" in current_cmd:

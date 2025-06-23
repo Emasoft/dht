@@ -119,6 +119,8 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
+no_implicit_optional = false
+check_untyped_defs = true
 exclude = [
     "tree-sitter-bash",
     "build",
@@ -221,4 +223,7 @@ bump-my-version = "bumpversion"
 [dependency-groups]
 dev = [
     "pytest-cov>=6.2.1",
+    "types-pyyaml>=6.0.12.20250516",
+    "types-tabulate>=0.9.0.20241207",
+    "types-toml>=0.10.8.20240310",
 ]

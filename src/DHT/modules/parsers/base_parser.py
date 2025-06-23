@@ -272,7 +272,7 @@ class BaseParser(ABC):
     def load_toml(file_path: Path) -> dict[str, Any]:
         """Load and parse TOML file"""
         try:
-            import toml
+            import toml  # type: ignore[import-untyped]
         except ImportError as e:
             raise ImportError("toml package required for TOML parsing. Install with: pip install toml") from e
 
