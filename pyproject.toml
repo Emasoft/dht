@@ -79,11 +79,6 @@ dhtl = "DHT.dhtl:main"
 dht = "DHT.dhtl:main"
 
 [project.optional-dependencies]
-ai = [
-    "openai>=1.0.0",
-    "litellm>=1.0.0",
-    "google-generativeai>=0.8.0",
-]
 test = [
     "pytest>=8.0.0",
     "pytest-asyncio>=1.0.0",
@@ -94,9 +89,6 @@ lint = [
     "flake8>=7.0.0",
 ]
 all = [
-    "openai>=1.0.0",
-    "litellm>=1.0.0",
-    "google-generativeai>=0.8.0",
     "pytest>=8.0.0",
     "pytest-asyncio>=1.0.0",
     "mypy>=1.0.0",
@@ -214,7 +206,7 @@ ignore = ["DEP001", "DEP002", "DEP003"]  # Ignore missing imports, unused deps, 
 [tool.deptry.per_rule_ignores]
 DEP002 = [
     "pytest", "pytest-asyncio", "mypy", "ruff", "flake8", "black", "pre-commit", "deptry",
-    "openai", "litellm", "google-generativeai", "bump-my-version", "uv",
+    "bump-my-version", "uv",
     "prefect-shell", "tree-sitter-language-pack", "tree-sitter-yaml",
     "tabulate", "pathspec", "typing-extensions"
 ]
