@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 import psutil
-import yaml
+import yaml  # type: ignore[import-untyped]
 from prefect import flow, get_run_logger, task
 
 

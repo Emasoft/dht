@@ -22,7 +22,7 @@ Provides process management with resource limits using Prefect.
 import sys
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .guardian_prefect import (

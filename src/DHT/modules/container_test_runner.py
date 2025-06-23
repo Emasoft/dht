@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Any
 
 from prefect import task
-from tabulate import tabulate
+from tabulate import tabulate  # type: ignore[import-untyped]
 
 from .docker_manager import DockerError, DockerManager
 

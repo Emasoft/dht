@@ -23,7 +23,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
