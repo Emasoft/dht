@@ -1,0 +1,46 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+  # Run daily at 2 AM UTC
+  - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  gitleaks:
+    name: Gitleaks Secret Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for scanning all commits
+
+    - name: Install gitleaks safely
+      run: |
+        echo "Installing gitleaks in /tmp to prevent overwriting project files..."
+        bash .github/scripts/install-gitleaks-safe.sh
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+    - name: Run gitleaks scan
+      run: |
+        echo "Running gitleaks scan with custom config..."
+        gitleaks detect --source . --config .gitleaks.toml --verbose
+
+    - name: Run gitleaks on git history
+      run: |
+        echo "Scanning git history for secrets..."
+        gitleaks git --source . --config .gitleaks.toml --verbose
+
+    - name: Upload gitleaks report
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: gitleaks-report
+        path: gitleaks-report.json
+        retention-days: 30
