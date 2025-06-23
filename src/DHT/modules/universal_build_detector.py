@@ -14,6 +14,7 @@ Detects project type and returns appropriate build commands.
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -98,7 +99,7 @@ class UniversalBuildDetector:
             notes="Python project with setup.py",
         )
 
-    def _python_pyproject_config(self) -> BuildConfig:
+    def _python_pyproject_config(self) -> BuildConfig | None:
         """Python project with pyproject.toml."""
         pyproject_path = self.project_path / "pyproject.toml"
         if not pyproject_path.exists():
@@ -362,7 +363,7 @@ class UniversalBuildDetector:
             notes=".NET project",
         )
 
-    def get_build_summary(self) -> dict[str, any]:
+    def get_build_summary(self) -> dict[str, Any]:
         """Get a summary of the build configuration."""
         config = self.detect_build_config()
 
