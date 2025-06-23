@@ -28,6 +28,9 @@ from DHT.modules.uv_manager_deps import DependencyManager
 # Import exceptions
 from DHT.modules.uv_manager_exceptions import UVNotFoundError
 
+# Re-export for backward compatibility
+__all__ = ["UVManager", "UVNotFoundError"]
+
 # Import specialized managers
 from DHT.modules.uv_manager_python import PythonVersionManager
 from DHT.modules.uv_manager_script import ScriptExecutor

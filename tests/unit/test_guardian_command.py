@@ -9,8 +9,9 @@ import os
 import sys
 
 # Import helper functions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from helpers import mock_bash_script, run_bash_command
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
+from tests.helpers import mock_bash_script, run_bash_command
 
 
 def test_guardian_command_status():

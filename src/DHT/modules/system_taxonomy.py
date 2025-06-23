@@ -150,7 +150,7 @@ def get_category_for_platform(category_name: str, platform_name: str | None = No
     if category_name not in PRACTICAL_TAXONOMY:
         return {}
 
-    category = copy.deepcopy(PRACTICAL_TAXONOMY[category_name])
+    category: dict[str, Any] = copy.deepcopy(PRACTICAL_TAXONOMY[category_name])
 
     # Handle nested categories (like package_managers)
     if "categories" in category:
@@ -192,7 +192,8 @@ def get_tool_fields(category_name: str, tool_name: str) -> list[str]:
 
             # Check direct tools
             if "tools" in category_data and tool_name in category_data["tools"]:
-                return category_data["tools"][tool_name]
+                result = category_data["tools"][tool_name]
+                return list(result) if isinstance(result, list) else []
 
             # Check nested categories
             if "categories" in category_data:
@@ -200,7 +201,8 @@ def get_tool_fields(category_name: str, tool_name: str) -> list[str]:
                     # Check standard subcategory with tools
                     if isinstance(subcat_data, dict) and "tools" in subcat_data:
                         if tool_name in subcat_data["tools"]:
-                            return subcat_data["tools"][tool_name]
+                            result = subcat_data["tools"][tool_name]
+                            return list(result) if isinstance(result, list) else []
                     # Check language subcategory structure
                     elif subcat_name == "language" and isinstance(subcat_data, dict):
                         for lang_name, lang_tools in subcat_data.items():
@@ -224,14 +226,16 @@ def get_tool_fields(category_name: str, tool_name: str) -> list[str]:
 
         # Look for the tool
         if "tools" in current_data and tool_name in current_data["tools"]:
-            return current_data["tools"][tool_name]
+            result = current_data["tools"][tool_name]
+            return list(result) if isinstance(result, list) else []
 
         # Handle language-specific package managers
         if isinstance(current_data, dict):
             for lang_name, lang_data in current_data.items():
                 if lang_name != "description":
                     if isinstance(lang_data, dict) and "tools" in lang_data and tool_name in lang_data["tools"]:
-                        return lang_data["tools"][tool_name]
+                        result = lang_data["tools"][tool_name]
+                        return list(result) if isinstance(result, list) else []
                     elif isinstance(lang_data, list) and tool_name in lang_data:
                         # For simple lists, return standard fields
                         return ["version"]

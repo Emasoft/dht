@@ -122,7 +122,7 @@ CMD ["act --help"]
 """
 
 
-@task(name="build_act_container")
+@task(name="build_act_container")  # type: ignore[misc]
 def build_act_container(runtime: str, image_name: str = "dht-act", tag: str = "latest") -> dict[str, Any]:
     """Build container image with act pre-installed."""
     logger = get_run_logger()
@@ -167,7 +167,7 @@ def build_act_container(runtime: str, image_name: str = "dht-act", tag: str = "l
             return {"success": False, "error": "Build timeout"}
 
 
-@task(name="check_act_image")
+@task(name="check_act_image")  # type: ignore[misc]
 def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
     """Check if act container image exists."""
     try:
@@ -289,7 +289,7 @@ class ActContainerRunner:
             return {"success": False, "error": str(e)}
 
 
-@flow(name="act_container_workflow")
+@flow(name="act_container_workflow")  # type: ignore[misc]
 def act_container_workflow(
     project_path: str, event: str = "push", job: str | None = None, runtime: str = "podman"
 ) -> dict[str, Any]:
@@ -300,18 +300,18 @@ def act_container_workflow(
     CI/CD environment by running act inside a container.
     """
     logger = get_run_logger()
-    project_path = Path(project_path).resolve()
+    resolved_path = Path(project_path).resolve()
 
     console.print("[bold blue]🐳 DHT Act Container Mode[/bold blue]")
-    console.print(f"Project: {project_path.name}")
+    console.print(f"Project: {resolved_path.name}")
     console.print(f"Runtime: {runtime}")
     console.print(f"Event: {event}")
 
     # Create runner
-    runner = ActContainerRunner(project_path, runtime)
+    runner = ActContainerRunner(resolved_path, runtime)
 
     # Check for secrets and env files
-    act_config_path = project_path / ".venv" / "dht-act"
+    act_config_path = resolved_path / ".venv" / "dht-act"
     secrets_file = act_config_path / ".secrets"
     env_file = act_config_path / ".env"
 

@@ -16,14 +16,10 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-
-class UVNotFoundError(Exception):
-    """Raised when UV is not found on the system."""
-
-    pass
+from DHT.modules.uv_manager import UVManager, UVNotFoundError
 
 
-class UVManagerImproved:
+class UVManagerImproved(UVManager):
     """Improved version with fixes for identified issues."""
 
     def _load_toml(self, file_path: Path) -> dict[str, Any]:
@@ -43,10 +39,11 @@ class UVManagerImproved:
         try:
             import tomllib
         except ImportError:
-            import tomli as tomllib
+            import tomli as tomllib  # type: ignore[import,no-redef]
 
         with open(file_path, "rb") as f:
-            return tomllib.load(f)
+            data: dict[str, Any] = tomllib.load(f)
+            return data
 
     def run_command_with_timeout(
         self,
@@ -114,7 +111,7 @@ class UVManagerImproved:
         Returns:
             Setup result with python_path
         """
-        result = {"success": True, "steps": []}
+        result: dict[str, Any] = {"success": True, "steps": []}
 
         # Detect Python version if not specified
         if not python_version:
@@ -145,7 +142,7 @@ class UVManagerImproved:
         Returns:
             Creation result with venv_path
         """
-        result = {"success": True, "steps": []}
+        result: dict[str, Any] = {"success": True, "steps": []}
 
         try:
             venv_path = self.create_venv(project_path, python_version)
