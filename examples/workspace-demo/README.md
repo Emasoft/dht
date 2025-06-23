@@ -208,6 +208,41 @@ dhtl ws run exp-analyze      # Runs only in experimental
 - `--dev` - Work with dev dependencies
 - `-m <module>` - Run as Python module
 
+## Bolt-Compatible Commands
+
+DHT provides Bolt-compatible commands for easy migration:
+
+### Core Commands
+- `dhtl add <package>` - Add a dependency (alias for `uv add`)
+- `dhtl remove <package>` - Remove a dependency (alias for `uv remove`)
+- `dhtl upgrade <package>` - Upgrade dependencies (alias for `uv add --upgrade`)
+- `dhtl install` - Install dependencies (alias for `setup`)
+- `dhtl fmt` - Format code (alias for `format`)
+- `dhtl check` - Type check with mypy
+- `dhtl doc` - Generate documentation
+- `dhtl bin` - Show virtual environment bin directory
+
+### Examples
+```bash
+# Add dependencies
+dhtl add click rich
+dhtl add --dev pytest mypy
+
+# Remove dependencies
+dhtl remove old-package
+
+# Upgrade dependencies
+dhtl upgrade requests
+dhtl upgrade  # Upgrade all
+
+# Format and check code
+dhtl fmt
+dhtl check
+
+# Show bin directory
+dhtl bin
+```
+
 ## Workspace Structure Benefits
 
 1. **Monorepo Management**: All related packages in one repository
