@@ -6,6 +6,17 @@ Copyright (c) 2024 Emasoft (Emanuele Sabetta)
 Licensed under the MIT License. See LICENSE file for details.
 """
 
+from __future__ import annotations
+
+# HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
+# - Created comprehensive subprocess utilities with enhanced error handling
+# - Added custom exception types for different error scenarios
+# - Implemented retry logic, timeout handling, and resource limits
+# - Added context manager for proper resource cleanup
+# - Included security features like sensitive data masking
+# - Fixed all type annotations for mypy strict mode compliance
+#
+
 """
 subprocess_utils.py - Enhanced subprocess handling with comprehensive error management
 
@@ -19,16 +30,6 @@ This module provides robust subprocess execution with:
 - Sensitive data masking in logs
 - Process group management for cleanup
 """
-
-# HERE IS THE CHANGELOG FOR THIS VERSION OF THE CODE:
-# - Created comprehensive subprocess utilities with enhanced error handling
-# - Added custom exception types for different error scenarios
-# - Implemented retry logic, timeout handling, and resource limits
-# - Added context manager for proper resource cleanup
-# - Included security features like sensitive data masking
-#
-
-from __future__ import annotations
 
 import logging
 import os
@@ -87,7 +88,7 @@ class CommandTimeoutError(ProcessError):
 class ProcessInterruptedError(ProcessError):
     """Raised when process is interrupted by signal."""
 
-    def __init__(self, message: str, command: list[str], signal_num: int, **kwargs):
+    def __init__(self, message: str, command: list[str], signal_num: int, **kwargs: Any) -> None:
         """Initialize with signal number."""
         super().__init__(message, command, **kwargs)
         self.signal_num = signal_num
@@ -96,39 +97,38 @@ class ProcessInterruptedError(ProcessError):
 class SubprocessContext:
     """Context manager for subprocess execution with cleanup."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize context manager."""
         self.processes_run = 0
         self.cleaned_up = False
-        self._active_processes: list[subprocess.Popen] = []
+        self._active_processes: list[subprocess.Popen[Any]] = []
         self._lock = threading.Lock()
 
-    def __enter__(self):
+    def __enter__(self) -> SubprocessContext:
         """Enter context."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: Any) -> None:
         """Exit context and cleanup resources."""
         self.cleanup()
-        return False
 
-    def run(self, command: list[str], **kwargs) -> dict[str, Any]:
+    def run(self, command: list[str], **kwargs: Any) -> dict[str, Any]:
         """Run command within context."""
         self.processes_run += 1
         return run_subprocess(command, context=self, **kwargs)
 
-    def register_process(self, process: subprocess.Popen):
+    def register_process(self, process: subprocess.Popen[Any]) -> None:
         """Register a process for tracking."""
         with self._lock:
             self._active_processes.append(process)
 
-    def unregister_process(self, process: subprocess.Popen):
+    def unregister_process(self, process: subprocess.Popen[Any]) -> None:
         """Unregister a process."""
         with self._lock:
             if process in self._active_processes:
                 self._active_processes.remove(process)
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Cleanup all active processes."""
         with self._lock:
             for process in self._active_processes:
@@ -164,7 +164,7 @@ def mask_sensitive_args(command: list[str], sensitive_args: list[str]) -> list[s
     return masked_command
 
 
-def set_resource_limits(memory_limit_mb: int | None = None):
+def set_resource_limits(memory_limit_mb: int | None = None) -> None:
     """Set resource limits for subprocess."""
     if not memory_limit_mb:
         return
@@ -203,7 +203,7 @@ def run_subprocess(
     max_output_size: int | None = None,
     create_process_group: bool = False,
     memory_limit_mb: int | None = None,
-    error_handler: Callable | None = None,
+    error_handler: Callable[[Exception, dict[str, Any]], dict[str, Any]] | None = None,
     log_command: bool = True,
     sensitive_args: list[str] | None = None,
     context: SubprocessContext | None = None,
@@ -268,7 +268,7 @@ def run_subprocess(
     process_env = env if env is not None else os.environ.copy()
 
     # Attempt execution with retries
-    last_error = None
+    last_error: ProcessError | None = None
     for attempt in range(retry_count + 1):
         try:
             # Setup process options
@@ -285,7 +285,7 @@ def run_subprocess(
             if create_process_group and hasattr(os, "setpgrp"):
                 popen_kwargs["preexec_fn"] = os.setpgrp
             elif create_process_group and sys.platform == "win32" and hasattr(subprocess, "CREATE_NEW_PROCESS_GROUP"):
-                popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+                popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
 
             # Set resource limits if specified
             if memory_limit_mb and hasattr(os, "setpgrp"):
@@ -304,6 +304,7 @@ def run_subprocess(
 
             try:
                 # Communicate with timeout
+                comm_input: str | bytes | None
                 if input_data:
                     if text:
                         # When text=True, communicate expects str input
@@ -347,7 +348,7 @@ def run_subprocess(
                 raise CommandTimeoutError(
                     f"Command timed out after {timeout} seconds",
                     command if isinstance(command, list) else [command],
-                    timeout,
+                    timeout or 0.0,
                     cwd=cwd,
                 ) from e
 
@@ -410,9 +411,13 @@ def run_subprocess(
 
             # Use custom error handler if provided
             if error_handler:
-                return error_handler(last_error, {"command": command, "attempt": attempt})
+                if last_error is not None:
+                    return error_handler(last_error, {"command": command, "attempt": attempt})
 
-            raise last_error from e
+            if last_error is not None:
+                raise last_error from e
+            else:
+                raise
 
         except (CommandTimeoutError, ProcessInterruptedError):
             # Re-raise these without retry
@@ -439,12 +444,12 @@ def run_subprocess(
 
 
 # Convenience functions
-def run_command(command: list[str], **kwargs) -> dict[str, Any]:
+def run_command(command: list[str], **kwargs: Any) -> dict[str, Any]:
     """Convenience function for running commands with defaults."""
     return run_subprocess(command, **kwargs)
 
 
-def run_shell_command(command: str, **kwargs) -> dict[str, Any]:
+def run_shell_command(command: str, **kwargs: Any) -> dict[str, Any]:
     """Convenience function for running shell commands."""
     return run_subprocess(command, shell=True, **kwargs)
 
@@ -453,12 +458,12 @@ def check_command_exists(command: str) -> bool:
     """Check if a command exists in PATH."""
     try:
         result = run_subprocess(["which", command], check=False, log_command=False)
-        return result["success"]
+        return bool(result["success"])
     except ProcessNotFoundError:
         # 'which' itself not found (Windows?)
         try:
             result = run_subprocess(["where", command], check=False, log_command=False)
-            return result["success"]
+            return bool(result["success"])
         except ProcessNotFoundError:
             return False
 
