@@ -41,7 +41,7 @@ class DeployCommand:
         """Initialize deploy command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="deploy_project_in_container", cache_policy=NO_CACHE)
+    @task(name="deploy_project_in_container", cache_policy=NO_CACHE)  # type: ignore[misc]
     def deploy_project_in_container(
         self,
         project_path: str | None = None,
@@ -71,12 +71,14 @@ class DeployCommand:
         """
         # Use current directory if not specified
         if project_path is None:
-            project_path = os.getcwd()
+            project_path_str = os.getcwd()
+        else:
+            project_path_str = project_path
 
-        project_path = Path(project_path).resolve()
+        project_path_obj = Path(project_path_str).resolve()
 
-        if not project_path.exists():  # type: ignore[attr-defined]
-            return {"success": False, "error": f"Project path does not exist: {project_path}"}
+        if not project_path_obj.exists():
+            return {"success": False, "error": f"Project path does not exist: {project_path_obj}"}
 
         # Initialize components
         docker_mgr = DockerManager()
@@ -88,20 +90,20 @@ class DeployCommand:
             docker_mgr.check_docker_requirements()
 
             # Analyze project
-            self.logger.info(f"Analyzing project: {project_path}")
-            project_info = dockerfile_gen.analyze_project(project_path)
+            self.logger.info(f"Analyzing project: {project_path_obj}")
+            project_info = dockerfile_gen.analyze_project(project_path_obj)
 
             # Override Python version if specified
             if python_version:
                 project_info["python_version"] = python_version
 
             # Generate image tag
-            project_name = project_info.get("name", project_path.name)  # type: ignore[attr-defined]
+            project_name = project_info.get("name", project_path_obj.name)
             image_tag = f"dht-{project_name}:latest"
             container_name = f"dht-{project_name}-container"
 
             # Check for existing Dockerfile
-            dockerfile_path = project_path / "Dockerfile"
+            dockerfile_path: Path = project_path_obj / "Dockerfile"
             if dockerfile_path.exists():
                 self.logger.info("Using existing Dockerfile")
                 dockerfile_content = dockerfile_path.read_text()
@@ -118,7 +120,7 @@ class DeployCommand:
 
             # Build Docker image
             self.logger.info(f"Building Docker image: {image_tag}")
-            success, build_logs = docker_mgr.build_image(project_path, image_tag, dockerfile=str(dockerfile_path))
+            success, build_logs = docker_mgr.build_image(project_path_obj, image_tag, dockerfile=str(dockerfile_path))
 
             if not success:
                 return {"success": False, "error": "Failed to build Docker image", "build_logs": build_logs}
@@ -188,7 +190,7 @@ class DeployCommand:
                 print(result["test_summary"])
 
                 # Save detailed results
-                results_path = project_path / "container_test_results.json"
+                results_path = project_path_obj / "container_test_results.json"
                 test_runner.save_results(test_results, results_path)
                 result["test_results_file"] = str(results_path)
 

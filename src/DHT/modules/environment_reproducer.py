@@ -72,10 +72,10 @@ class EnvironmentReproducer:
     def __init__(self) -> None:
         """Initialize the environment reproducer."""
         self.logger: logging.Logger | None = None
-        self.configurator = EnvironmentConfigurator()  # type: ignore[no-untyped-call]
-        self.lock_manager = LockFileManager()  # type: ignore[no-untyped-call]
+        self.configurator = EnvironmentConfigurator()
+        self.lock_manager = LockFileManager()
         self.validator = EnvironmentValidator()
-        self.tool_manager = ToolVersionManager()  # type: ignore[no-untyped-call]
+        self.tool_manager = ToolVersionManager()
         self.snapshot_io = EnvironmentSnapshotIO()
 
         # Use tool manager's categorization
@@ -86,10 +86,10 @@ class EnvironmentReproducer:
         self.artifact_creator = ReproductionArtifactCreator(self.version_critical_tools)
         self.steps_generator = ReproductionStepsGenerator(self.version_critical_tools)
         self.deps_installer = DependenciesInstaller()
-        self.env_capture_utils = EnvironmentCaptureUtils()  # type: ignore[no-untyped-call]
-        self.project_capture_utils = ProjectCaptureUtils()  # type: ignore[no-untyped-call]
-        self.env_verification_utils = EnvironmentVerificationUtils()  # type: ignore[no-untyped-call]
-        self.flow_utils = ReproductionFlowUtils(self)  # type: ignore[no-untyped-call]
+        self.env_capture_utils = EnvironmentCaptureUtils()
+        self.project_capture_utils = ProjectCaptureUtils()
+        self.env_verification_utils = EnvironmentVerificationUtils()
+        self.flow_utils = ReproductionFlowUtils(self)
 
     def _get_logger(self) -> logging.Logger:
         """Get logger with fallback."""

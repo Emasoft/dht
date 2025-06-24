@@ -69,7 +69,7 @@ class ProjectTypeDetector:
         self.analyzer = ProjectAnalyzer()
         self.heuristics = ProjectHeuristics()
 
-    @task
+    @task  # type: ignore[misc]
     def analyze(self, project_path: Path) -> ProjectAnalysis:
         """
         Analyze project and detect its type with confidence scoring.
@@ -149,7 +149,7 @@ class ProjectTypeDetector:
             analysis_timestamp=datetime.now().isoformat(),
         )
 
-    @task
+    @task  # type: ignore[misc]
     def generate_configurations(self, analysis: ProjectAnalysis) -> dict[str, str]:
         """
         Generate configuration files based on project type.
@@ -178,7 +178,7 @@ class ProjectTypeDetector:
 
         return configs
 
-    @task
+    @task  # type: ignore[misc]
     def get_setup_recommendations(self, analysis: ProjectAnalysis) -> dict[str, Any]:
         """
         Get setup recommendations based on project type.
@@ -189,9 +189,10 @@ class ProjectTypeDetector:
         Returns:
             Dictionary of recommendations by category
         """
-        return get_setup_recommendations(analysis)
+        result: dict[str, Any] = get_setup_recommendations(analysis)
+        return result
 
-    @task
+    @task  # type: ignore[misc]
     def validate_configurations(self, configs: dict[str, str], analysis: ProjectAnalysis) -> ValidationResult:
         """
         Validate generated configurations.
@@ -239,7 +240,7 @@ class ProjectTypeDetector:
         markers = int(confidence_boost / 0.04)  # Reverse calculation from boost
 
         # Calculate final confidence, capped at 1.0
-        final_confidence = min(base_confidence + confidence_boost, 1.0)
+        final_confidence: float = min(base_confidence + confidence_boost, 1.0)
 
         # Round to avoid floating point precision issues (e.g., 0.6000000000000001)
         final_confidence = round(final_confidence, 3)
