@@ -24,7 +24,7 @@ This module generates configuration files for various development tools.
 
 from pathlib import Path
 
-import yaml  # type: ignore
+import yaml
 
 
 def generate_ruff_config(project_path: Path) -> None:

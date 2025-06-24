@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Any
 
 from prefect import task
-from tabulate import tabulate  # type: ignore
+from tabulate import tabulate
 
 from .docker_manager import DockerError, DockerManager
 
@@ -49,7 +49,7 @@ class ContainerTestRunner:
         self.logger = logging.getLogger(__name__)
         self.docker_manager = DockerManager()
 
-    @task
+    @task  # type: ignore[misc]
     def run_all_tests(self, container_name: str, frameworks: list[TestFramework] | None = None) -> dict[str, Any]:
         """
         Run all tests in container.
@@ -79,11 +79,11 @@ class ContainerTestRunner:
                 self.logger.warning(f"Unknown framework: {framework}")
                 continue
 
-            all_results[framework] = results
+            all_results[framework.value] = results
 
         return all_results
 
-    @task
+    @task  # type: ignore[misc]
     def run_pytest(
         self, container_name: str, test_path: str | None = None, verbose: bool = True, coverage: bool = True
     ) -> dict[str, Any]:
@@ -130,7 +130,7 @@ class ContainerTestRunner:
             self.logger.error(f"Failed to run pytest: {e}")
             return {"error": str(e), "exit_code": 1, "total": 0, "passed": 0, "failed": 0, "skipped": 0}
 
-    @task
+    @task  # type: ignore[misc]
     def run_playwright(
         self, container_name: str, test_path: str | None = None, browser: str = "chromium"
     ) -> dict[str, Any]:
@@ -180,7 +180,7 @@ class ContainerTestRunner:
             self.logger.error(f"Failed to run Playwright: {e}")
             return {"error": str(e), "exit_code": 1, "total": 0, "passed": 0, "failed": 0, "browser": browser}
 
-    @task
+    @task  # type: ignore[misc]
     def run_puppeteer(self, container_name: str, test_path: str | None = None) -> dict[str, Any]:
         """
         Run Puppeteer tests in container.

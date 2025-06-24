@@ -24,10 +24,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from DHT.modules.dhtconfig_models import HAS_YAML, DHTConfigConstants
 
 if HAS_YAML:
-    import yaml  # type: ignore
+    import yaml
 
 
 class ConfigIOUtils:

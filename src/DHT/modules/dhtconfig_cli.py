@@ -25,7 +25,7 @@ from DHT.modules.dhtconfig import DHTConfig
 from DHT.modules.dhtconfig_models import HAS_YAML
 
 if HAS_YAML:
-    import yaml  # type: ignore
+    import yaml
 
 
 def main() -> None:

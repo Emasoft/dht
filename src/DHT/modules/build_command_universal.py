@@ -15,7 +15,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # Add the current directory to Python path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -39,7 +39,7 @@ def detect_build_config(project_path: Path) -> dict[str, Any]:
     detector = UniversalBuildDetector(project_path)
     summary = detector.get_build_summary()
 
-    return summary
+    return cast(dict[str, Any], summary)
 
 
 @task(name="run_pre_build_commands")  # type: ignore[misc]
@@ -154,13 +154,13 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
         Dictionary with build results
     """
     logger = get_run_logger()
-    project_path = Path(project_path).resolve()
+    project_dir = Path(project_path).resolve()
 
-    console.print(Panel.fit(f"🏗️  DHT Universal Build System\n📁 Project: {project_path.name}", style="bold blue"))
+    console.print(Panel.fit(f"🏗️  DHT Universal Build System\n📁 Project: {project_dir.name}", style="bold blue"))
 
     # 1. Detect build configuration
     console.print("\n[yellow]🔍 Detecting project type...[/yellow]")
-    config = detect_build_config(project_path)
+    config = detect_build_config(project_dir)
 
     if not config["can_build"]:
         # No build needed
@@ -192,13 +192,13 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
     pre_commands = config.get("pre_build_commands", [])
     if pre_commands and not skip_checks:
         console.print("\n[yellow]📋 Running pre-build steps...[/yellow]")
-        success = run_pre_build_commands(pre_commands, project_path)
+        success = run_pre_build_commands(pre_commands, project_dir)
         if not success:
             return {"success": False, "error": "Pre-build commands failed"}
 
     # 4. Clean previous artifacts
     if config.get("artifacts_path"):
-        artifacts_dir = project_path / config["artifacts_path"]
+        artifacts_dir = project_dir / config["artifacts_path"]
         if artifacts_dir.exists():
             console.print(f"\n[yellow]🧹 Cleaning {config['artifacts_path']}...[/yellow]")
             import shutil
@@ -207,7 +207,7 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
 
     # 5. Run build commands
     console.print("\n[cyan]🔨 Building project...[/cyan]")
-    build_results = run_build_commands(config["build_commands"], project_path)
+    build_results = run_build_commands(config["build_commands"], project_dir)
 
     if not build_results["all_success"]:
         return {"success": False, "error": "Build failed", "details": build_results["results"]}
@@ -216,7 +216,7 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
     artifacts: list[Any] = []
     if config.get("artifacts_path"):
         console.print("\n[yellow]📦 Checking build artifacts...[/yellow]")
-        artifacts = check_artifacts(config["artifacts_path"], project_path)
+        artifacts = check_artifacts(config["artifacts_path"], project_dir)
 
         if artifacts:
             console.print("\n[green]✅ Build artifacts created:[/green]")
@@ -238,7 +238,7 @@ def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: 
     )
 
     # 8. Check for GitHub Actions workflows
-    act_integration = ActIntegration(project_path)
+    act_integration = ActIntegration(project_dir)
     if act_integration.has_workflows():
         console.print("\n[yellow]🎬 GitHub Actions detected![/yellow]")
         workflows = act_integration.get_workflows()

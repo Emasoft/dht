@@ -321,10 +321,12 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
     }
 
     # Add workflow-specific steps
-    if "test" in ci_config.get("workflows", []):
+    workflows = ci_config.get("workflows", [])
+    workflows = list(workflows) if workflows else []
+    if isinstance(workflows, list) and "test" in workflows:
         workflow["jobs"]["test"]["steps"].append({"name": "Run tests", "run": "pytest"})
 
-    if "lint" in ci_config.get("workflows", []):
+    if isinstance(workflows, list) and "lint" in workflows:
         workflow["jobs"]["test"]["steps"].extend(
             [
                 {"name": "Run linting", "run": "ruff check ."},
@@ -333,7 +335,7 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
             ]
         )
 
-    if "build" in ci_config.get("workflows", []):
+    if isinstance(workflows, list) and "build" in workflows:
         workflow["jobs"]["test"]["steps"].append({"name": "Build package", "run": "uv build"})
 
     # Ensure .github/workflows directory exists

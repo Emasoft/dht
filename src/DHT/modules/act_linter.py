@@ -45,7 +45,7 @@ class ActLinter:
         Returns:
             Dict with linting results
         """
-        result = {
+        result: dict[str, Any] = {
             "success": True,
             "method": "docker" if use_docker else "native",
             "errors": [],
@@ -55,19 +55,25 @@ class ActLinter:
 
         if not self.workflows_path.exists():
             result["success"] = False
-            result["errors"].append("No .github/workflows directory found")
+            error_list = result.get("errors", [])
+            if isinstance(error_list, list):
+                error_list.append("No .github/workflows directory found")
             return result
 
         # Check if actionlint is available
         if not use_docker and not shutil.which("actionlint"):
             result["success"] = False
-            result["errors"].append("actionlint not found. Install with: brew install actionlint")
+            error_list = result.get("errors", [])
+            if isinstance(error_list, list):
+                error_list.append("actionlint not found. Install with: brew install actionlint")
             return result
 
         # Get workflow files
         workflow_files = list(self.workflows_path.glob("*.y*ml"))
         if not workflow_files:
-            result["warnings"].append("No workflow files found")
+            warning_list = result.get("warnings", [])
+            if isinstance(warning_list, list):
+                warning_list.append("No workflow files found")
             return result
 
         if use_docker:

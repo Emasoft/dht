@@ -22,8 +22,9 @@ This module contains utility functions used by the UV Manager.
 
 import logging
 import shutil
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from DHT.modules.subprocess_utils import (
     CommandTimeoutError,
@@ -67,7 +68,7 @@ def find_uv_executable(logger: logging.Logger) -> Path | None:
     return None
 
 
-def verify_uv_version(uv_path: Path, min_version: str, run_command_func) -> None:
+def verify_uv_version(uv_path: Path, min_version: str, run_command_func: Callable[..., dict[str, Any]]) -> None:
     """Verify UV version meets minimum requirements."""
     logger = logging.getLogger(__name__)
     try:
@@ -121,7 +122,7 @@ def load_toml(file_path: Path) -> dict[str, Any]:
         import tomli as tomllib
 
     with open(file_path, "rb") as f:
-        return tomllib.load(f)
+        return cast(dict[str, Any], tomllib.load(f))
 
 
 def is_dev_dependency(package_name: str) -> bool:
@@ -187,15 +188,18 @@ def run_uv_command(
 
     try:
         # Use enhanced subprocess utilities
-        return run_subprocess(
-            cmd,
-            cwd=cwd,
-            capture_output=capture_output,
-            check=check,
-            timeout=timeout,
-            retry_count=2,  # Retry UV commands up to 2 times
-            retry_delay=0.5,
-            log_command=False,  # Already logged above
+        return cast(
+            dict[str, Any],
+            run_subprocess(
+                cmd,
+                cwd=cwd,
+                capture_output=capture_output,
+                check=check,
+                timeout=timeout,
+                retry_count=2,  # Retry UV commands up to 2 times
+                retry_delay=0.5,
+                log_command=False,  # Already logged above
+            ),
         )
     except ProcessNotFoundError as e:
         # Convert to UV-specific error

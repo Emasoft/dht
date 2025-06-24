@@ -25,6 +25,7 @@ environment variables.
 
 
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -41,9 +42,9 @@ class EnvironmentCaptureUtils:
 
     def __init__(self) -> None:
         """Initialize environment capture utilities."""
-        self.logger = None
+        self.logger: logging.Logger | None = None
 
-    def _get_logger(self) -> None:
+    def _get_logger(self) -> logging.Logger:
         """Get logger with fallback."""
         if self.logger is None:
             try:

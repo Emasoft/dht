@@ -21,6 +21,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 from DHT.modules.act_integration_models import ActConfig, ContainerSetupResult
 
@@ -83,7 +84,11 @@ class ActContainerManager:
             if result.runtime == "podman":
                 # Try to start podman service
                 try:
-                    subprocess.run(["podman", "system", "service", "--time=0"], capture_output=True, background=True)
+                    subprocess.Popen(
+                        ["podman", "system", "service", "--time=0"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
                 except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
                     result.error = f"Podman socket not found at {socket_path}: {str(e)}"
                     return result
@@ -152,7 +157,9 @@ class ActContainerManager:
 
         return cmd
 
-    def run_in_container(self, act_args: list[str], config: ActConfig | None = None) -> subprocess.CompletedProcess:
+    def run_in_container(
+        self, act_args: list[str], config: ActConfig | None = None
+    ) -> subprocess.CompletedProcess[Any]:
         """Run act command in container.
 
         Args:
@@ -168,4 +175,4 @@ class ActContainerManager:
         cmd = self._get_container_act_command(config)
         cmd.extend(act_args)
 
-        return subprocess.run(cmd, cwd=self.project_path)
+        return subprocess.run(cmd, cwd=self.project_path, text=True, capture_output=True)

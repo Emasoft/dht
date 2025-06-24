@@ -21,6 +21,7 @@ This module contains functionality for running Python scripts with UV.
 
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -30,7 +31,7 @@ from prefect import task
 class ScriptExecutor:
     """Manages script execution for UV."""
 
-    def __init__(self, run_command_func) -> None:
+    def __init__(self, run_command_func: Callable[..., Any]) -> None:
         """
         Initialize script executor.
 

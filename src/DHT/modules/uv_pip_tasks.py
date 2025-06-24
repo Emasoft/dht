@@ -31,7 +31,7 @@ from DHT.modules.uv_task_models import INSTALL_TIMEOUT, UV_MEMORY_LIMITS, UVTask
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(
+@task(  # type: ignore[misc]
     name="pip_install_requirements",
     description="Install from requirements file using uv pip",
     retries=3,
@@ -70,7 +70,7 @@ def pip_install_requirements(project_path: Path, requirements_file: Path) -> dic
     }
 
 
-@task(
+@task(  # type: ignore[misc]
     name="pip_install_project",
     description="Install project with optional extras",
     retries=3,

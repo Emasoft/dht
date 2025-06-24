@@ -1,0 +1,200 @@
+lint	Run pre-commit on all files	﻿2025-06-24T22:25:59.8063470Z ##[group]Run source .venv/bin/activate
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8063795Z [36;1msource .venv/bin/activate[0m
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8064135Z [36;1mpre-commit run --all-files --show-diff-on-failure[0m
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8116991Z shell: /usr/bin/bash -e {0}
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8117243Z env:
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8117521Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8118008Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8118477Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8118903Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8119451Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8119883Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8120283Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+lint	Run pre-commit on all files	2025-06-24T22:25:59.8120604Z ##[endgroup]
+lint	Run pre-commit on all files	2025-06-24T22:26:00.1137925Z [INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	Run pre-commit on all files	2025-06-24T22:26:00.2891779Z [INFO] Initializing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	Run pre-commit on all files	2025-06-24T22:26:00.4628653Z [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	Run pre-commit on all files	2025-06-24T22:26:00.6943665Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	Run pre-commit on all files	2025-06-24T22:26:00.8444107Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-pyyaml,types-requests,types-toml,types-tabulate.
+lint	Run pre-commit on all files	2025-06-24T22:26:01.0070132Z [INFO] Initializing environment for https://github.com/fpgmaas/deptry.
+lint	Run pre-commit on all files	2025-06-24T22:26:01.2101134Z [INFO] Initializing environment for https://github.com/google/yamlfmt.
+lint	Run pre-commit on all files	2025-06-24T22:26:01.4237261Z [INFO] Initializing environment for https://github.com/adrienverge/yamllint.
+lint	Run pre-commit on all files	2025-06-24T22:26:01.6395647Z [INFO] Initializing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	Run pre-commit on all files	2025-06-24T22:26:01.8126868Z [INFO] Initializing environment for https://github.com/rhysd/actionlint.
+lint	Run pre-commit on all files	2025-06-24T22:26:02.1193472Z [INFO] Initializing environment for https://github.com/zricethezav/gitleaks.
+lint	Run pre-commit on all files	2025-06-24T22:26:02.4221903Z [INFO] Initializing environment for https://github.com/commitizen-tools/commitizen.
+lint	Run pre-commit on all files	2025-06-24T22:26:02.7093260Z [INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	Run pre-commit on all files	2025-06-24T22:26:02.7094201Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:02.7094789Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:07.2865347Z [INFO] Installing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	Run pre-commit on all files	2025-06-24T22:26:07.2865969Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:07.2866546Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:10.7026930Z [INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	Run pre-commit on all files	2025-06-24T22:26:10.7027494Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:10.7027808Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:14.2572467Z [INFO] Installing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	Run pre-commit on all files	2025-06-24T22:26:14.2573436Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:14.2574098Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:18.7583743Z [INFO] Installing environment for https://github.com/google/yamlfmt.
+lint	Run pre-commit on all files	2025-06-24T22:26:18.7584299Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:18.7584627Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:25.8842863Z [INFO] Installing environment for https://github.com/adrienverge/yamllint.
+lint	Run pre-commit on all files	2025-06-24T22:26:25.8843692Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:25.8844207Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:28.9089917Z [INFO] Installing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	Run pre-commit on all files	2025-06-24T22:26:28.9090728Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:28.9091235Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:33.9182559Z [INFO] Installing environment for https://github.com/rhysd/actionlint.
+lint	Run pre-commit on all files	2025-06-24T22:26:33.9183155Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:33.9183494Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:42.8841666Z [INFO] Installing environment for https://github.com/zricethezav/gitleaks.
+lint	Run pre-commit on all files	2025-06-24T22:26:42.8842776Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-24T22:26:42.8843270Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-24T22:26:53.3048144Z trim trailing whitespace.................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.3737277Z fix end of files.........................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.5143660Z check yaml...............................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.5938074Z check for added large files..............................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.6704618Z check toml...............................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.7222006Z check json...............................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.7964612Z check for merge conflicts................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.8411603Z uv-lock..................................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.9048401Z uv-export................................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.9336504Z Export dev requirements..................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:53.9864022Z ruff.....................................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:54.0477551Z ruff-format..............................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8668108Z mypy.....................................................................Failed
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8668844Z - hook id: mypy
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8670997Z - exit code: 1
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8671884Z
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8673045Z examples/workspace-demo/packages/experimental/experimental/benchmark.py:28: error: Call to untyped function (unknown) in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8674309Z src/DHT/modules/uv_manager_script.py:33: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8675527Z src/DHT/modules/environment_verification_utils.py:55: error: Incompatible types in assignment (expression has type "Logger", variable has type "None")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8677000Z src/DHT/modules/environment_verification_utils.py:102: error: "_get_logger" of "EnvironmentVerificationUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8678869Z src/DHT/modules/environment_verification_utils.py:171: error: "_get_logger" of "EnvironmentVerificationUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8680424Z src/DHT/modules/build_command_universal.py:42: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8681618Z src/DHT/modules/build_command_universal.py:157: error: Incompatible types in assignment (expression has type "Path", variable has type "str")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8682673Z src/DHT/modules/build_command_universal.py:159: error: "str" has no attribute "name"  [attr-defined]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8683394Z src/DHT/modules/act_linter.py:48: error: Need type annotation for "result"  [var-annotated]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8684056Z src/DHT/modules/act_linter.py:58: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8684746Z src/DHT/modules/act_linter.py:58: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8685418Z src/DHT/modules/act_linter.py:64: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8686076Z src/DHT/modules/act_linter.py:64: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8686920Z src/DHT/modules/act_linter.py:70: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8687583Z src/DHT/modules/act_linter.py:70: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8688369Z src/DHT/modules/act_container_manager.py:86: error: No overload variant of "run" matches argument types "list[str]", "bool", "bool"  [call-overload]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8689095Z src/DHT/modules/act_container_manager.py:86: note: Possible overload variants:
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8692998Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: str | None = ..., text: Literal[True], timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8698826Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str, errors: str | None = ..., input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8704949Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str, input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8711651Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., *, universal_newlines: Literal[True], startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8718576Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: Literal[False] | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: None = ..., errors: None = ..., input: Buffer | None = ..., text: Literal[False] | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[bytes]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8727866Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: Buffer | str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[Any]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8734152Z src/DHT/modules/act_container_manager.py:155: error: Missing type parameters for generic type "CompletedProcess"  [type-arg]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8735710Z dhtl_entry_windows.py:31: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8736678Z dhtl_entry_windows.py:69: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8737676Z dhtl_entry_windows.py:96: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8738798Z dhtl_entry_windows.py:99: error: Call to untyped function "find_python_launcher" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8740602Z dhtl_entry_windows.py:124: error: Call to untyped function "get_python_executable" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8741766Z dhtl_entry_windows.py:154: error: Call to untyped function "main" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8742776Z dhtl_entry.py:30: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8743638Z dhtl_entry.py:59: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8744510Z dhtl_entry.py:73: error: Function is missing a return type annotation  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8745469Z dhtl_entry.py:76: error: Call to untyped function "find_python_launcher" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8746560Z dhtl_entry.py:100: error: Call to untyped function "get_python_executable" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8747615Z dhtl_entry.py:124: error: Call to untyped function "main" in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8748728Z src/DHT/modules/uv_pip_tasks.py:34: error: Untyped decorator makes function "pip_install_requirements" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8750211Z src/DHT/modules/uv_pip_tasks.py:73: error: Untyped decorator makes function "pip_install_project" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8751525Z src/DHT/modules/uv_manager_utils.py:70: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8752920Z src/DHT/modules/uv_manager_utils.py:124: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8754290Z src/DHT/modules/uv_manager_utils.py:190: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8755587Z src/DHT/modules/uv_manager_improvements.py:22: error: Class cannot subclass "UVManager" (has type "Any")  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8756905Z src/DHT/modules/uv_manager_improvements.py:42: error: Unused "type: ignore[import-not-found, no-redef]" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8758246Z src/DHT/modules/project_file_generators.py:325: error: Value of type "Collection[str]" is not indexable  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8759892Z src/DHT/modules/project_file_generators.py:328: error: Value of type "Collection[str]" is not indexable  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8761125Z src/DHT/modules/project_file_generators.py:337: error: Value of type "Collection[str]" is not indexable  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8762362Z src/DHT/modules/parsers/base_parser.py:23: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8763790Z src/DHT/modules/parsers/base_parser.py:25: error: Incompatible types in assignment (expression has type "None", variable has type Module)  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8765188Z src/DHT/modules/parsers/base_parser.py:283: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8766613Z src/DHT/modules/environment_capture_utils.py:54: error: Incompatible types in assignment (expression has type "Logger", variable has type "None")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8768322Z src/DHT/modules/environment_capture_utils.py:79: error: "_get_logger" of "EnvironmentCaptureUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8770068Z src/DHT/modules/environment_analyzer.py:197: error: Need type annotation for "requirements"  [var-annotated]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8771564Z src/DHT/modules/environment_analyzer.py:236: error: Incompatible types in assignment (expression has type "str", target has type "list[Any] | None")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8773220Z src/DHT/modules/dockerfile_generator.py:175: error: Argument 1 to "_get_system_deps" of "DockerfileGenerator" has incompatible type "object"; expected "list[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8774552Z src/DHT/modules/dockerfile_generator.py:179: error: Argument 2 to "_detect_ports" of "DockerfileGenerator" has incompatible type "object"; expected "str | None"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8775497Z src/DHT/modules/dockerfile_generator.py:470: error: Untyped decorator makes function "generate_dockerfile" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8776309Z src/DHT/modules/dhtl_commands_init.py:136: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8776999Z src/DHT/modules/dhtconfig_models.py:27: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8777708Z src/DHT/modules/dhtconfig_models.py:93: error: Returning Any from function declared to return "dict[str, Any] | None"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8778407Z src/DHT/modules/dhtconfig_io_utils.py:30: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8779055Z src/DHT/modules/dhtconfig_io_utils.py:57: error: Returning Any from function declared to return "Path"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8780052Z src/DHT/modules/dhtconfig_io_utils.py:85: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8780833Z src/DHT/modules/dhtconfig_io_utils.py:91: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8781512Z src/DHT/modules/dhtconfig_cli.py:28: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8782089Z src/DHT/modules/container_test_runner.py:31: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8782757Z src/DHT/modules/container_test_runner.py:52: error: Untyped decorator makes function "run_all_tests" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8783410Z src/DHT/modules/container_test_runner.py:79: error: Statement is unreachable  [unreachable]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8784188Z src/DHT/modules/container_test_runner.py:84: error: Incompatible return value type (got "dict[TestFramework, Any]", expected "dict[str, Any]")  [return-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8785025Z src/DHT/modules/container_test_runner.py:86: error: Untyped decorator makes function "run_pytest" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8785755Z src/DHT/modules/container_test_runner.py:133: error: Untyped decorator makes function "run_playwright" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8786495Z src/DHT/modules/container_test_runner.py:183: error: Untyped decorator makes function "run_puppeteer" untyped  [misc]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8787389Z src/DHT/modules/container_test_runner.py:238: error: Unsupported left operand type for + ("object")  [operator]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8788098Z src/DHT/modules/container_test_runner.py:249: error: Unsupported target for indexed assignment ("object")  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8788765Z src/DHT/modules/config_file_generators.py:27: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8789613Z src/DHT/modules/act_workflow_manager.py:22: error: Unused "type: ignore" comment  [unused-ignore]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8790255Z src/DHT/modules/act_workflow_manager.py:100: error: Unsupported target for indexed assignment ("object")  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8790945Z src/DHT/modules/act_workflow_manager.py:102: error: Unsupported target for indexed assignment ("object")  [index]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8791649Z src/DHT/modules/act_workflow_manager.py:107: error: Unsupported operand types for + ("object" and "int")  [operator]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8792414Z src/DHT/modules/act_workflow_manager.py:118: error: Need type annotation for "events" (hint: "events: set[<type>] = ...")  [var-annotated]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8793203Z src/DHT/modules/dhtl_test.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8794041Z src/DHT/modules/dhtl_test.py:120: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8794809Z src/DHT/modules/dhtl_guardian_command.py:41: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8795662Z src/DHT/modules/dhtl_guardian_command.py:54: error: Argument 1 to "guardian_run" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8796566Z src/DHT/modules/dhtl_guardian_command.py:56: error: Argument 1 to "guardian_batch" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8797484Z src/DHT/modules/dhtl_guardian_command.py:58: error: Argument 1 to "guardian_config" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8798400Z src/DHT/modules/dhtl_guardian_command.py:60: error: Argument 1 to "guardian_status" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8799433Z src/DHT/modules/dhtl_guardian_command.py:349: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8800262Z src/DHT/modules/dhtl_commands_standalone.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8801082Z src/DHT/modules/dhtl_commands_standalone.py:50: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8801932Z src/DHT/modules/dhtl_commands_standalone.py:54: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8802783Z src/DHT/modules/dhtl_commands_standalone.py:99: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8803629Z src/DHT/modules/dhtl_commands_standalone.py:103: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8804489Z src/DHT/modules/dhtl_commands_standalone.py:148: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8805330Z src/DHT/modules/dhtl_commands_standalone.py:152: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8806330Z src/DHT/modules/dhtl_commands_standalone.py:178: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8807607Z src/DHT/modules/dhtl_commands_standalone.py:182: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8808610Z src/DHT/modules/dhtl_commands_standalone.py:227: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8809729Z src/DHT/modules/dhtl_commands_7.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8810602Z src/DHT/modules/dhtl_commands_7.py:134: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8811361Z src/DHT/modules/dhtl_commands_5.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8812202Z src/DHT/modules/dhtl_commands_5.py:89: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8812946Z src/DHT/modules/dhtl_commands_2.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8813686Z src/DHT/modules/dhtl_commands_2.py:86: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8814427Z src/DHT/modules/dhtl_commands_1.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8815302Z src/DHT/modules/dhtl_commands_1.py:193: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8816187Z src/DHT/modules/dht_flows/test_flow.py:117: error: Argument 1 to "extend" of "list" has incompatible type "Generator[Path, None, None]"; expected "Iterable[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8817177Z src/DHT/modules/dht_flows/test_flow.py:118: error: Argument 1 to "extend" of "list" has incompatible type "Generator[Path, None, None]"; expected "Iterable[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8818269Z src/DHT/modules/dht_flows/test_flow.py:119: error: Argument 1 to "extend" of "list" has incompatible type "list[Path]"; expected "Iterable[str]"  [arg-type]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8819818Z src/DHT/modules/command_dispatcher.py:265: error: Incompatible default for argument "args" (default has type "None", argument has type "list[str]")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8821023Z src/DHT/modules/command_dispatcher.py:265: note: PEP 484 prohibits implicit Optional. Accordingly, mypy has changed its default to no_implicit_optional=True
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8822081Z src/DHT/modules/command_dispatcher.py:265: note: Use https://github.com/hauntsaninja/no_implicit_optional to automatically upgrade your codebase
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8823591Z src/DHT/modules/command_dispatcher.py:293: error: Incompatible default for argument "args" (default has type "None", argument has type "list[str]")  [assignment]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8825156Z src/DHT/modules/command_dispatcher.py:293: note: PEP 484 prohibits implicit Optional. Accordingly, mypy has changed its default to no_implicit_optional=True
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8826455Z src/DHT/modules/command_dispatcher.py:293: note: Use https://github.com/hauntsaninja/no_implicit_optional to automatically upgrade your codebase
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8827705Z src/DHT/launcher.py:31: error: Name "Colors" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8828806Z src/DHT/launcher.py:207: error: Name "CommandDispatcher" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8830092Z src/DHT/dhtl.py:37: error: Name "DHTLauncher" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8830735Z src/DHT/dhtl.py:43: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8831219Z Found 107 errors in 34 files (checked 209 source files)
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8831458Z
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8831731Z deptry...................................................................Failed
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8832280Z - hook id: deptry
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8832597Z - exit code: 1
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8832741Z
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8832914Z Executable `deptry` not found
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8833418Z
+lint	Run pre-commit on all files	2025-06-24T22:26:58.8833685Z yamlfmt..................................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:59.1733810Z yamllint.................................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:26:59.3530827Z shellcheck...............................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:27:00.0327647Z Lint GitHub Actions workflow files.......................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:27:00.3057883Z Detect hardcoded secrets.................................................Passed
+lint	Run pre-commit on all files	2025-06-24T22:27:00.3223735Z ##[error]Process completed with exit code 1.

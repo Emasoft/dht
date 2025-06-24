@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 
-def find_python_launcher():
+def find_python_launcher() -> str | None:
     """Find the DHT Python launcher in various locations."""
     # Get the directory containing this script
     script_path = Path(__file__).resolve()
@@ -66,7 +66,7 @@ def find_python_launcher():
     return None
 
 
-def get_python_executable():
+def get_python_executable() -> str | None:
     """Get the appropriate Python executable for Windows."""
     # If in virtual environment, use its Python
     if os.environ.get("VIRTUAL_ENV"):
@@ -93,7 +93,7 @@ def get_python_executable():
     return sys.executable
 
 
-def main():
+def main() -> int:
     """Main entry point."""
     # Find the launcher
     launcher = find_python_launcher()

@@ -19,7 +19,7 @@ Licensed under the MIT License. See LICENSE file for details.
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore
+import yaml
 
 from DHT.modules.act_integration_models import WorkflowInfo
 
@@ -115,7 +115,7 @@ class ActWorkflowManager:
         Returns:
             List of unique event names
         """
-        events = set()
+        events: set[str] = set()
         workflows = self.get_workflows()
 
         for workflow in workflows:

@@ -23,6 +23,7 @@ including platform, Python version, and tool version verification.
 #
 
 
+import logging
 import platform
 import shutil
 import subprocess
@@ -41,18 +42,17 @@ class EnvironmentVerificationUtils:
 
     def __init__(self) -> None:
         """Initialize environment verification utilities."""
-        self.logger = None
+        self.logger: logging.Logger | None = None
         self.tool_manager = ToolVersionManager()
 
-    def _get_logger(self) -> None:
+    def _get_logger(self) -> logging.Logger:
         """Get logger with fallback."""
         if self.logger is None:
             try:
                 self.logger = get_run_logger()
             except Exception:
-                import logging
-
                 self.logger = logging.getLogger(__name__)
+        assert self.logger is not None
         return self.logger
 
     def verify_platform_compatibility(self, snapshot: EnvironmentSnapshot, result: ReproductionResult) -> None:

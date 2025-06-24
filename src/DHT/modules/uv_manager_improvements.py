@@ -16,7 +16,13 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from DHT.modules.uv_manager import UVManager, UVNotFoundError
+try:
+    from DHT.modules.uv_manager import UVManager, UVNotFoundError
+except ImportError:
+    UVManager = object  # type: ignore[assignment,misc]
+
+    class UVNotFoundError(Exception):
+        pass
 
 
 class UVManagerImproved(UVManager):
@@ -39,7 +45,7 @@ class UVManagerImproved(UVManager):
         try:
             import tomllib
         except ImportError:
-            import tomli as tomllib  # type: ignore[import-not-found,no-redef]
+            import tomli as tomllib
 
         with open(file_path, "rb") as f:
             data: dict[str, Any] = tomllib.load(f)

@@ -20,9 +20,9 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import yaml  # type: ignore[import-untyped]
+    import yaml
 except ImportError:
-    yaml = None
+    yaml = None  # type: ignore[assignment]
 
 try:
     import tree_sitter
@@ -77,7 +77,7 @@ class BaseParser(ABC):
                 try:
                     language_obj = tree_sitter.Language(str(lib_path), language)
                     self.parser = tree_sitter.Parser()
-                    self.parser.set_language(language_obj)
+                    self.parser.language = language_obj
                     self.language_obj = language_obj
                     self.logger.info(f"Initialized tree-sitter for {language} from {lib_path}")
                     return
@@ -151,12 +151,12 @@ class BaseParser(ABC):
         """
         return []
 
-    @task(
+    @task(  # type: ignore[misc]
         name="parse-file",
         description="Parse a file with appropriate parser",
         retries=2,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def parse_with_prefect(self, file_path: str | Path) -> dict[str, Any]:
         """
         Prefect task wrapper for parsing files.
@@ -280,7 +280,7 @@ class BaseParser(ABC):
     def load_toml(file_path: Path) -> dict[str, Any]:
         """Load and parse TOML file"""
         try:
-            import toml  # type: ignore
+            import toml
         except ImportError as e:
             raise ImportError("toml package required for TOML parsing. Install with: pip install toml") from e
 

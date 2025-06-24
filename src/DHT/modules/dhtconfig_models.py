@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import yaml  # type: ignore
+    import yaml
 
     HAS_YAML = True
 except ImportError:
