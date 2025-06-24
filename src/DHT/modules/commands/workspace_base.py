@@ -24,7 +24,7 @@ import logging
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 try:
     import tomllib
@@ -80,7 +80,7 @@ class WorkspaceBase:
         try:
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
-            return data.get("tool", {}).get("uv", {}).get("workspace", {})
+            return cast(dict[str, Any], data.get("tool", {}).get("uv", {}).get("workspace", {}))
         except Exception as e:
             self.logger.error(f"Failed to parse workspace config: {e}")
             return {}

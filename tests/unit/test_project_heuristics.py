@@ -25,7 +25,8 @@ from typing import Any
 
 import pytest
 
-from DHT.modules.project_heuristics import FRAMEWORK_PATTERNS, IMPORT_TO_SYSTEM_DEPS, ProjectHeuristics
+from DHT.modules.project_heuristics import ProjectHeuristics
+from DHT.modules.project_heuristics_patterns import FRAMEWORK_PATTERNS, IMPORT_TO_SYSTEM_DEPS
 
 
 class TestProjectHeuristics:

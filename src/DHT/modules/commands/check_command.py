@@ -22,7 +22,7 @@ separate from the broader lint command.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -42,8 +42,8 @@ class CheckCommand:
         tags=["dht", "check", "typecheck", "mypy"],
         retries=1,
         retry_delay_seconds=5,
-    )
-    def execute(self, path: str = ".", strict: bool = True, **kwargs) -> dict[str, Any]:
+    )  # type: ignore[misc]
+    def execute(self, path: str = ".", strict: bool = True, **kwargs: Any) -> dict[str, Any]:
         """
         Execute check command for type checking.
 
@@ -127,7 +127,7 @@ class CheckCommand:
 
 
 # Module-level function for command registry
-def check_command(**kwargs) -> dict[str, Any]:
+def check_command(**kwargs: Any) -> dict[str, Any]:
     """Execute check command."""
     cmd = CheckCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

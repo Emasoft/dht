@@ -20,7 +20,7 @@ for users coming from other development tools.
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -40,8 +40,8 @@ class FmtCommand:
         tags=["dht", "fmt", "format"],
         retries=1,
         retry_delay_seconds=5,
-    )
-    def execute(self, **kwargs) -> dict[str, Any]:
+    )  # type: ignore[misc]
+    def execute(self, **kwargs: Any) -> dict[str, Any]:
         """
         Execute fmt command (delegates to format).
 
@@ -70,7 +70,7 @@ class FmtCommand:
 
 
 # Module-level function for command registry
-def fmt_command(**kwargs) -> dict[str, Any]:
+def fmt_command(**kwargs: Any) -> dict[str, Any]:
     """Execute fmt command."""
     cmd = FmtCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

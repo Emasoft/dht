@@ -21,7 +21,7 @@ wrapping the UV package manager's remove functionality.
 
 import logging
 import subprocess
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -41,8 +41,8 @@ class RemoveCommand:
         tags=["dht", "remove", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )
-    def execute(self, packages: list[str], dev: bool = False, **kwargs) -> dict[str, Any]:
+    )  # type: ignore[misc]
+    def execute(self, packages: list[str], dev: bool = False, **kwargs: Any) -> dict[str, Any]:
         """
         Execute remove command to remove dependencies.
 
@@ -99,7 +99,7 @@ class RemoveCommand:
 
 
 # Module-level function for command registry
-def remove_command(packages: list[str], **kwargs) -> dict[str, Any]:
+def remove_command(packages: list[str], **kwargs: Any) -> dict[str, Any]:
     """Execute remove command."""
     cmd = RemoveCommand()
-    return cmd.execute(packages, **kwargs)
+    return cast(dict[str, Any], cmd.execute(packages, **kwargs))

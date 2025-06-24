@@ -20,7 +20,7 @@ for users coming from other package managers.
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -40,7 +40,7 @@ class InstallCommand:
         tags=["dht", "install", "setup"],
         retries=1,
         retry_delay_seconds=5,
-    )
+    )  # type: ignore[misc]
     def execute(
         self,
         path: str = ".",
@@ -52,7 +52,7 @@ class InstallCommand:
         editable: bool = True,
         index_url: str | None = None,
         install_pre_commit: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Execute install command (delegates to setup).
@@ -83,22 +83,25 @@ class InstallCommand:
         uv_manager = UVManager()
 
         # Delegate to setup with same arguments
-        return setup_cmd.setup(
-            uv_manager=uv_manager,
-            path=path,
-            python=python,
-            dev=dev,
-            from_requirements=from_requirements,
-            all_packages=all_packages,
-            compile_bytecode=compile_bytecode,
-            editable=editable,
-            index_url=index_url,
-            install_pre_commit=install_pre_commit,
+        return cast(
+            dict[str, Any],
+            setup_cmd.setup(
+                uv_manager=uv_manager,
+                path=path,
+                python=python,
+                dev=dev,
+                from_requirements=from_requirements,
+                all_packages=all_packages,
+                compile_bytecode=compile_bytecode,
+                editable=editable,
+                index_url=index_url,
+                install_pre_commit=install_pre_commit,
+            ),
         )
 
 
 # Module-level function for command registry
-def install_command(**kwargs) -> dict[str, Any]:
+def install_command(**kwargs: Any) -> dict[str, Any]:
     """Execute install command."""
     cmd = InstallCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

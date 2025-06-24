@@ -21,7 +21,7 @@ wrapping the UV package manager's upgrade functionality.
 
 import logging
 import subprocess
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -41,9 +41,9 @@ class UpgradeCommand:
         tags=["dht", "upgrade", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )
+    )  # type: ignore[misc]
     def execute(
-        self, packages: list[str] | None = None, all: bool = False, dev: bool = False, **kwargs
+        self, packages: list[str] | None = None, all: bool = False, dev: bool = False, **kwargs: Any
     ) -> dict[str, Any]:
         """
         Execute upgrade command to upgrade dependencies.
@@ -103,7 +103,7 @@ class UpgradeCommand:
 
 
 # Module-level function for command registry
-def upgrade_command(packages: list[str] | None = None, **kwargs) -> dict[str, Any]:
+def upgrade_command(packages: list[str] | None = None, **kwargs: Any) -> dict[str, Any]:
     """Execute upgrade command."""
     cmd = UpgradeCommand()
-    return cmd.execute(packages, **kwargs)
+    return cast(dict[str, Any], cmd.execute(packages, **kwargs))

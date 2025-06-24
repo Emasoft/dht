@@ -22,7 +22,7 @@ typically the virtual environment's bin or Scripts directory.
 import logging
 import platform
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -41,8 +41,8 @@ class BinCommand:
         description="Print executable files installation folder",
         tags=["dht", "bin", "executables"],
         retries=0,
-    )
-    def execute(self, **kwargs) -> dict[str, Any]:
+    )  # type: ignore[misc]
+    def execute(self, **kwargs: Any) -> dict[str, Any]:
         """
         Execute bin command to show executable directory.
 
@@ -100,7 +100,7 @@ class BinCommand:
 
 
 # Module-level function for command registry
-def bin_command(**kwargs) -> dict[str, Any]:
+def bin_command(**kwargs: Any) -> dict[str, Any]:
     """Execute bin command."""
     cmd = BinCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

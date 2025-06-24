@@ -21,7 +21,7 @@ wrapping the UV package manager's add functionality.
 
 import logging
 import subprocess
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -41,7 +41,7 @@ class AddCommand:
         tags=["dht", "add", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )
+    )  # type: ignore[misc]
     def execute(
         self,
         packages: list[str],
@@ -50,7 +50,7 @@ class AddCommand:
         platform: str | None = None,
         python: str | None = None,
         editable: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Execute add command to add dependencies.
@@ -124,7 +124,7 @@ class AddCommand:
 
 
 # Module-level function for command registry
-def add_command(packages: list[str], **kwargs) -> dict[str, Any]:
+def add_command(packages: list[str], **kwargs: Any) -> dict[str, Any]:
     """Execute add command."""
     cmd = AddCommand()
-    return cmd.execute(packages, **kwargs)
+    return cast(dict[str, Any], cmd.execute(packages, **kwargs))

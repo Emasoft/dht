@@ -22,7 +22,7 @@ automatically detecting which tool is configured.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -62,8 +62,8 @@ class DocCommand:
         tags=["dht", "doc", "documentation"],
         retries=1,
         retry_delay_seconds=5,
-    )
-    def execute(self, path: str = ".", format: str | None = None, serve: bool = False, **kwargs) -> dict[str, Any]:
+    )  # type: ignore[misc]
+    def execute(self, path: str = ".", format: str | None = None, serve: bool = False, **kwargs: Any) -> dict[str, Any]:
         """
         Execute doc command to generate documentation.
 
@@ -217,7 +217,7 @@ class DocCommand:
 
 
 # Module-level function for command registry
-def doc_command(**kwargs) -> dict[str, Any]:
+def doc_command(**kwargs: Any) -> dict[str, Any]:
     """Execute doc command."""
     cmd = DocCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))
