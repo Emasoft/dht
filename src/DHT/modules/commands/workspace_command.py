@@ -22,7 +22,7 @@ Provides functionality to run commands in a specific workspace member.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -39,9 +39,9 @@ class WorkspaceCommand(WorkspaceBase):
         description="Run command in specific workspace member",
         tags=["dht", "workspace"],
         retries=0,
-    )
+    )  # type: ignore[misc]
     def execute(
-        self, name: str, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs
+        self, name: str, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs: Any
     ) -> dict[str, Any]:
         """
         Execute workspace command in specific member.
@@ -196,7 +196,7 @@ class WorkspaceCommand(WorkspaceBase):
 
 
 # Module-level function for command registry
-def workspace_command(**kwargs) -> dict[str, Any]:
+def workspace_command(**kwargs: Any) -> dict[str, Any]:
     """Execute workspace command."""
     cmd = WorkspaceCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

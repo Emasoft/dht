@@ -23,7 +23,7 @@ excluding workspace members.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -40,9 +40,9 @@ class ProjectCommand(WorkspaceBase):
         description="Run command in root project only",
         tags=["dht", "project"],
         retries=0,
-    )
+    )  # type: ignore[misc]
     def execute(
-        self, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs
+        self, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs: Any
     ) -> dict[str, Any]:
         """
         Execute project command in root only.
@@ -119,7 +119,7 @@ class ProjectCommand(WorkspaceBase):
 
 
 # Module-level function for command registry
-def project_command(**kwargs) -> dict[str, Any]:
+def project_command(**kwargs: Any) -> dict[str, Any]:
     """Execute project command."""
     cmd = ProjectCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))

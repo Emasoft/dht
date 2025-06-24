@@ -21,8 +21,9 @@ leveraging UV's workspace support.
 """
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -54,7 +55,7 @@ class WorkspacesCommand(WorkspaceBase):
         description="Run commands across workspace members",
         tags=["dht", "workspaces", "workspace"],
         retries=0,
-    )
+    )  # type: ignore[misc]
     def execute(
         self,
         subcommand: str,
@@ -64,7 +65,7 @@ class WorkspacesCommand(WorkspaceBase):
         ignore: list[str] | None = None,
         only_fs: list[str] | None = None,
         ignore_fs: list[str] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Execute workspaces command.
@@ -105,7 +106,7 @@ class WorkspacesCommand(WorkspaceBase):
         self.logger.info(f"Running in {len(filtered_members)} workspace members")
 
         # Route to appropriate handler
-        handlers = {
+        handlers: dict[str, Callable[[], dict[str, Any]]] = {
             "run": lambda: self._handle_run(filtered_members, script, args),
             "exec": lambda: self._handle_exec(filtered_members, script, args),
             "upgrade": lambda: self._handle_package_operation(filtered_members, "upgrade", script, args),
@@ -204,7 +205,7 @@ class WorkspacesCommand(WorkspaceBase):
 
 
 # Module-level function for command registry
-def workspaces_command(**kwargs) -> dict[str, Any]:
+def workspaces_command(**kwargs: Any) -> dict[str, Any]:
     """Execute workspaces command."""
     cmd = WorkspacesCommand()
-    return cmd.execute(**kwargs)
+    return cast(dict[str, Any], cmd.execute(**kwargs))
