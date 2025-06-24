@@ -196,7 +196,7 @@ def run_subprocess(
     check: bool = True,
     capture_output: bool = True,
     text: bool = True,
-    input_data: str | None = None,
+    input_data: str | bytes | None = None,
     shell: bool = False,
     stderr_mode: str = "capture",  # "capture", "merge", "discard"
     retry_count: int = 0,
@@ -309,10 +309,16 @@ def run_subprocess(
                 if input_data:
                     if text:
                         # When text=True, communicate expects str input
-                        comm_input = input_data if isinstance(input_data, str) else input_data.decode()
+                        if isinstance(input_data, str):
+                            comm_input = input_data
+                        else:  # isinstance(input_data, bytes)
+                            comm_input = input_data.decode()
                     else:
                         # When text=False, communicate expects bytes input
-                        comm_input = input_data if isinstance(input_data, bytes) else input_data.encode()
+                        if isinstance(input_data, bytes):
+                            comm_input = input_data
+                        else:  # isinstance(input_data, str)
+                            comm_input = input_data.encode()
                 else:
                     comm_input = None
 

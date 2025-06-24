@@ -50,7 +50,7 @@ jobs:
         file: ./docker/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: false
-        target: dht
+        target: {REPO_NAME}
 
     - name: Build Docker images (Push)
       if: ${{ github.event_name != 'pull_request' }}
@@ -61,7 +61,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}:dev
-        target: dht
+        target: {REPO_NAME}
 
     - name: Build Docker full image (PR)
       if: ${{ github.event_name == 'pull_request' }}
@@ -71,7 +71,7 @@ jobs:
         file: ./docker/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: false
-        target: dht-full
+        target: {REPO_NAME}-full
 
     - name: Build Docker full image (Push)
       if: ${{ github.event_name != 'pull_request' }}
@@ -82,4 +82,4 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/{REPO_NAME}-full:dev
-        target: dht-full
+        target: {REPO_NAME}-full

@@ -30,10 +30,10 @@ import signal
 import sys
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import psutil
 from prefect import flow, task
@@ -49,13 +49,13 @@ class CommandRunner:
         """Initialize the command runner."""
         self.logger = logging.getLogger(__name__)
         self._setup_signal_handlers()
-        self._active_threads = set()
+        self._active_threads: set[threading.Thread] = set()
         self._cleanup_lock = threading.Lock()
 
     def _setup_signal_handlers(self) -> None:
         """Set up signal handlers for graceful shutdown."""
 
-        def signal_handler(signum, frame) -> None:
+        def signal_handler(signum: int, frame: Any) -> None:
             self.logger.info(f"Received signal {signum}, initiating graceful shutdown...")
             self._cleanup_resources()
             sys.exit(0)
@@ -94,7 +94,7 @@ class CommandRunner:
                     self.logger.debug(f"Failed to clean up {path}: {e}")
 
     @contextmanager
-    def _resource_guard(self, command_name: str) -> None:
+    def _resource_guard(self, command_name: str) -> Iterator[None]:
         """Context manager to ensure resource cleanup."""
         # Record start state
         start_memory = psutil.Process().memory_info().rss / 1024 / 1024  # MB
@@ -124,9 +124,9 @@ class CommandRunner:
         retries=0,  # Commands handle their own retries
         timeout_seconds=1800,  # 30 minutes default timeout
         tags=["dht", "command"],
-    )
+    )  # type: ignore[misc]
     def execute_command(
-        self, command_name: str, command_func: Callable, args: dict[str, Any] | None = None
+        self, command_name: str, command_func: Callable[..., Any], args: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         """
         Execute a command with Prefect task management.
@@ -140,11 +140,18 @@ class CommandRunner:
             Result dictionary with success status and any output
         """
         if args is None:
-            args: dict[str, Any] = {}
+            args = {}
 
         self.logger.info(f"Executing command: {command_name}")
 
-        result = {"success": False, "command": command_name, "start_time": time.time(), "error": None, "output": None}
+        start_time = time.time()
+        result: dict[str, Any] = {
+            "success": False,
+            "command": command_name,
+            "start_time": start_time,
+            "error": None,
+            "output": None,
+        }
 
         with self._resource_guard(command_name):
             try:
@@ -168,8 +175,9 @@ class CommandRunner:
                 result["error"] = str(e)
                 self.logger.error(f"Command '{command_name}' failed: {e}", exc_info=True)
             finally:
-                result["end_time"] = time.time()
-                result["duration"] = result["end_time"] - result["start_time"]
+                end_time = time.time()
+                result["end_time"] = end_time
+                result["duration"] = end_time - start_time
 
         return result
 
@@ -178,9 +186,9 @@ class CommandRunner:
         description="Main flow for DHT command execution",
         persist_result=True,
         result_storage_key_fn=lambda context, parameters: f"dht-{parameters['command_name']}-{context.start_time}",
-    )
+    )  # type: ignore[misc]
     def run_command_flow(
-        self, command_name: str, command_func: Callable, args: dict[str, Any] | None = None
+        self, command_name: str, command_func: Callable[..., Any], args: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         """
         Run a command as a Prefect flow.
@@ -205,7 +213,7 @@ class CommandRunner:
         try:
             FlowRunContext.get()
             # We're already in a flow, just execute the task
-            return self.execute_command(command_name, command_func, args)
+            return cast(dict[str, Any], self.execute_command(command_name, command_func, args))
         except Exception:
             # Not in a flow, create one
             pass
@@ -227,7 +235,7 @@ class CommandRunner:
             if checkpoint_file.exists():
                 checkpoint_file.unlink()
 
-            return result
+            return cast(dict[str, Any], result)
 
         except Exception as e:
             self.logger.error(f"Flow execution failed: {e}")
@@ -271,7 +279,7 @@ command_runner = CommandRunner()
 
 
 def run_command_safely(
-    command_name: str, command_func: Callable, args: dict[str, Any] | None = None, use_flow: bool = True
+    command_name: str, command_func: Callable[..., Any], args: dict[str, Any] | None = None, use_flow: bool = True
 ) -> dict[str, Any]:
     """
     Convenience function to run a command safely.
@@ -286,6 +294,6 @@ def run_command_safely(
         Result dictionary
     """
     if use_flow:
-        return command_runner.run_command_flow(command_name, command_func, args)
+        return cast(dict[str, Any], command_runner.run_command_flow(command_name, command_func, args))
     else:
-        return command_runner.execute_command(command_name, command_func, args)
+        return cast(dict[str, Any], command_runner.execute_command(command_name, command_func, args))

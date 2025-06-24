@@ -22,12 +22,13 @@ Provides git commit functionality with smart defaults and automation.
 import os
 import shutil
 import subprocess
+from typing import Any
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def commit_command(*args, **kwargs) -> int:
+def commit_command(*args: Any, **kwargs: Any) -> int:
     """Create a git commit with smart defaults."""
     log_info("💾 Creating git commit...")
 
@@ -63,8 +64,8 @@ def commit_command(*args, **kwargs) -> int:
     # Stage all changes if requested
     if "--all" in args or "-a" in args:
         log_info("Staging all changes...")
-        result = subprocess.run(["git", "add", "-A"])
-        if result.returncode != 0:
+        add_result: Any = subprocess.run(["git", "add", "-A"])
+        if add_result.returncode != 0:
             log_error("Failed to stage changes")
             return 1
 
@@ -122,7 +123,7 @@ def commit_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return commit_command(*args, **kwargs)
 

@@ -33,7 +33,7 @@ from DHT.modules.uv_manager_utils import load_toml
 class DependencyManager:
     """Manages dependency operations for UV."""
 
-    def __init__(self, run_command_func) -> None:
+    def __init__(self, run_command_func: Any) -> None:
         """
         Initialize dependency manager.
 
@@ -166,7 +166,7 @@ class DependencyManager:
 
         return {"success": True, "method": "uv pip install -e", "message": "Dependencies installed successfully"}
 
-    @task
+    @task  # type: ignore[misc]
     def generate_lock_file(self, project_path: Path) -> Path:
         """
         Generate uv.lock file for reproducible installs.
@@ -189,7 +189,7 @@ class DependencyManager:
 
         return lock_file
 
-    @task
+    @task  # type: ignore[misc]
     def add_dependency(
         self, project_path: Path, package: str, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:

@@ -18,10 +18,12 @@ DHT Dhtl Commands 3 Module.
 Converted from shell to Python for the pure Python DHT implementation.
 """
 
+from typing import Any
+
 from .dhtl_error_handling import log_info, log_warning
 
 
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     log_info("Running dhtl_commands_3 command...")
 

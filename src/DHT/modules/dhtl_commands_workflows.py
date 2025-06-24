@@ -22,14 +22,15 @@ Provides GitHub Actions workflow management functionality.
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
-import yaml  # type: ignore
+import yaml
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def workflows_command(*args, **kwargs) -> int:
+def workflows_command(*args: Any, **kwargs: Any) -> int:
     """Manage GitHub Actions workflows."""
     log_info("🔄 Managing GitHub Actions workflows...")
 
@@ -43,13 +44,13 @@ def workflows_command(*args, **kwargs) -> int:
     if subcommand == "list":
         return list_workflows()
     elif subcommand == "create":
-        return create_workflow(remaining_args)
+        return create_workflow(list(remaining_args))
     elif subcommand == "validate":
-        return validate_workflows(remaining_args)
+        return validate_workflows(list(remaining_args))
     elif subcommand == "enable":
-        return enable_workflow(remaining_args)
+        return enable_workflow(list(remaining_args))
     elif subcommand == "disable":
-        return disable_workflow(remaining_args)
+        return disable_workflow(list(remaining_args))
     else:
         log_error(f"Unknown workflows subcommand: {subcommand}")
         show_workflows_help()
@@ -463,7 +464,7 @@ def disable_workflow(args: list[str]) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return workflows_command(*args, **kwargs)
 

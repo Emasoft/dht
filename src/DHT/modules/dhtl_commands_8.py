@@ -22,12 +22,13 @@ Provides project cleanup functionality to remove build artifacts and temporary f
 import os
 import shutil
 from pathlib import Path
+from typing import Any
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_debug, log_info, log_success, log_warning
 
 
-def clean_command(*args, **kwargs) -> int:
+def clean_command(*args: Any, **kwargs: Any) -> int:
     """Clean project by removing build artifacts and temporary files."""
     log_info("🧹 Cleaning project...")
 
@@ -154,7 +155,7 @@ def clean_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return clean_command(*args, **kwargs)
 

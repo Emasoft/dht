@@ -24,11 +24,12 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def clone_command(*args, **kwargs) -> int:
+def clone_command(*args: Any, **kwargs: Any) -> int:
     """Clone a GitHub repository."""
     log_info("📥 Cloning GitHub repository...")
 
@@ -40,7 +41,7 @@ def clone_command(*args, **kwargs) -> int:
             log_info("Install gh CLI: https://cli.github.com/")
             return 1
         else:
-            return git_clone_fallback(args)
+            return git_clone_fallback(list(args))
 
     # Parse arguments
     repo_url = None
@@ -100,8 +101,8 @@ def clone_command(*args, **kwargs) -> int:
         from .dhtl_commands import DHTLCommands
 
         commands = DHTLCommands()
-        result = commands.setup(path=str(clone_dir))
-        if result.get("success"):
+        setup_result: dict[str, Any] = commands.setup(path=str(clone_dir))
+        if setup_result.get("success"):
             log_success("Project setup completed")
         else:
             log_warning("Project setup failed")
@@ -109,7 +110,7 @@ def clone_command(*args, **kwargs) -> int:
     return 0
 
 
-def fork_command(*args, **kwargs) -> int:
+def fork_command(*args: Any, **kwargs: Any) -> int:
     """Fork a GitHub repository."""
     log_info("🍴 Forking GitHub repository...")
 
@@ -163,9 +164,9 @@ def fork_command(*args, **kwargs) -> int:
         fork_cmd.append("--remote=false")
 
     # Fork the repository
-    result = subprocess.run(fork_cmd)
+    fork_result = subprocess.run(fork_cmd)
 
-    if result.returncode == 0:
+    if fork_result.returncode == 0:
         log_success(f"Repository forked: {owner_repo}")
 
         # If cloned, run dhtl setup if .dhtconfig exists
@@ -178,8 +179,8 @@ def fork_command(*args, **kwargs) -> int:
                 from .dhtl_commands import DHTLCommands
 
                 commands = DHTLCommands()
-                result = commands.setup(path=str(clone_dir))
-                if result.get("success"):
+                setup_result: dict[str, Any] = commands.setup(path=str(clone_dir))
+                if setup_result.get("success"):
                     log_success("Project setup completed")
                 else:
                     log_warning("Project setup failed")

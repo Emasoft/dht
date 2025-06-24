@@ -36,7 +36,7 @@ from .common_utils import find_project_root
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def tag_command(*args, **kwargs) -> int:
+def tag_command(*args: Any, **kwargs: Any) -> int:
     """Create a git tag for the current version."""
     log_info("🏷️  Creating git tag...")
 
@@ -111,16 +111,16 @@ def tag_command(*args, **kwargs) -> int:
     else:
         tag_cmd.append(tag_name)
 
-    result = subprocess.run(tag_cmd)
+    tag_result: Any = subprocess.run(tag_cmd)
 
-    if result.returncode == 0:
+    if tag_result.returncode == 0:
         log_success(f"Created tag: {tag_name}")
 
         # Push if requested
         if push:
             log_info("Pushing tag to remote...")
-            result = subprocess.run(["git", "push", "origin", tag_name])
-            if result.returncode == 0:
+            push_result: Any = subprocess.run(["git", "push", "origin", tag_name])
+            if push_result.returncode == 0:
                 log_success("Tag pushed successfully")
             else:
                 log_error("Failed to push tag")
@@ -132,7 +132,7 @@ def tag_command(*args, **kwargs) -> int:
     return 0
 
 
-def bump_command(*args, **kwargs) -> int:
+def bump_command(*args: Any, **kwargs: Any) -> int:
     """Bump project version."""
     log_info("📈 Bumping project version...")
 
@@ -276,11 +276,11 @@ def get_project_version(project_root: Path) -> str | None:
 
             # Try [project] section
             if "project" in data and "version" in data["project"]:
-                return data["project"]["version"]
+                return str(data["project"]["version"])
 
             # Try [tool.poetry] section
             if "tool" in data and "poetry" in data["tool"] and "version" in data["tool"]["poetry"]:
-                return data["tool"]["poetry"]["version"]
+                return str(data["tool"]["poetry"]["version"])
         except Exception as e:
             log_warning(f"Could not parse pyproject.toml: {e}")
 
@@ -291,7 +291,7 @@ def get_project_version(project_root: Path) -> str | None:
             with open(package_json) as f:
                 data = json.load(f)
             if "version" in data:
-                return data["version"]
+                return str(data["version"])
         except Exception as e:
             log_warning(f"Could not parse package.json: {e}")
 

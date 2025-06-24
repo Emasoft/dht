@@ -22,7 +22,7 @@ This module contains Python version detection and management functionality.
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import task
 
@@ -33,7 +33,7 @@ from DHT.modules.uv_manager_utils import extract_min_version, load_toml
 class PythonVersionManager:
     """Manages Python version operations for UV."""
 
-    def __init__(self, run_command_func) -> None:
+    def __init__(self, run_command_func: Any) -> None:
         """
         Initialize Python version manager.
 
@@ -77,7 +77,7 @@ class PythonVersionManager:
                     # For now, extract minimum version
                     version = extract_min_version(requires_python)
                     self.logger.info(f"Found Python requirement in pyproject.toml: {version}")
-                    return version
+                    return cast(str, version)
             except Exception as e:
                 self.logger.warning(f"Failed to parse pyproject.toml: {e}")
 
@@ -90,7 +90,7 @@ class PythonVersionManager:
 
         return None
 
-    @task
+    @task  # type: ignore[misc]
     def list_python_versions(self) -> list[dict[str, Any]]:
         """List all available Python versions (installed and downloadable)."""
         result = self.run_command(["python", "list", "--all-versions"])
@@ -114,7 +114,7 @@ class PythonVersionManager:
 
         return versions
 
-    @task
+    @task  # type: ignore[misc]
     def ensure_python_version(self, version: str) -> Path:
         """
         Ensure specific Python version is available, installing if needed.

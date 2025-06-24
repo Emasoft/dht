@@ -25,7 +25,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore
+import yaml
 from prefect import get_run_logger, task
 
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
@@ -34,7 +34,7 @@ from DHT.modules.environment_snapshot_models import EnvironmentSnapshot
 class EnvironmentSnapshotIO:
     """Handles environment snapshot I/O operations."""
 
-    @task(name="save_environment_snapshot", description="Save environment snapshot to file")
+    @task(name="save_environment_snapshot", description="Save environment snapshot to file")  # type: ignore[misc]
     def save_snapshot(self, snapshot: EnvironmentSnapshot, output_path: Path, format: str = "json") -> Path:
         """
         Save environment snapshot to file.
@@ -66,7 +66,7 @@ class EnvironmentSnapshotIO:
         logger.info(f"Environment snapshot saved to {output_path}")
         return output_path
 
-    @task(name="load_environment_snapshot", description="Load environment snapshot from file")
+    @task(name="load_environment_snapshot", description="Load environment snapshot from file")  # type: ignore[misc]
     def load_snapshot(self, snapshot_path: Path) -> EnvironmentSnapshot:
         """
         Load environment snapshot from file.

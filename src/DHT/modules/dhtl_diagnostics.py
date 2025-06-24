@@ -30,7 +30,7 @@ from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def diagnostics_command(*args, **kwargs) -> int:
+def diagnostics_command(*args: Any, **kwargs: Any) -> int:
     """Run system and project diagnostics."""
     log_info("🔍 Running DHT Diagnostics...")
     log_info("=" * 60)
@@ -159,6 +159,6 @@ def diagnostics_command(*args, **kwargs) -> int:
         return 1 if errors > 0 else 0
 
 
-def placeholder_function(*args, **kwargs) -> Any:
+def placeholder_function(*args: Any, **kwargs: Any) -> Any:
     """Placeholder for backward compatibility."""
     return diagnostics_command(*args, **kwargs)

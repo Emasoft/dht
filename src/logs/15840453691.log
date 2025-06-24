@@ -1,0 +1,702 @@
+lint	UNKNOWN STEP	﻿2025-06-24T03:26:23.7927900Z Current runner version: '2.325.0'
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7952958Z ##[group]Runner Image Provisioner
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7953934Z Hosted Compute Agent
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7954511Z Version: 20250620.352
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7955106Z Commit: f262f3aba23b10ea191b2a62bdee1ca4c3d344da
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7955910Z Build Date: 2025-06-20T19:27:17Z
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7956473Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7957032Z ##[group]Operating System
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7957618Z Ubuntu
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7958120Z 24.04.2
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7958556Z LTS
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7959077Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7959572Z ##[group]Runner Image
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7960151Z Image: ubuntu-24.04
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7960704Z Version: 20250602.3.0
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7961686Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250602.3/images/ubuntu/Ubuntu2404-Readme.md
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7964189Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250602.3
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7966044Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7967913Z ##[group]GITHUB_TOKEN Permissions
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7970861Z Contents: read
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7971745Z Metadata: read
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7972874Z Packages: read
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7973874Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7976613Z Secret source: Actions
+lint	UNKNOWN STEP	2025-06-24T03:26:23.7977570Z Prepare workflow directory
+lint	UNKNOWN STEP	2025-06-24T03:26:23.8442945Z Prepare all required actions
+lint	UNKNOWN STEP	2025-06-24T03:26:23.8498567Z Getting action download info
+lint	UNKNOWN STEP	2025-06-24T03:26:24.2291670Z ##[group]Download immutable action package 'actions/checkout@v4'
+lint	UNKNOWN STEP	2025-06-24T03:26:24.2293177Z Version: 4.2.2
+lint	UNKNOWN STEP	2025-06-24T03:26:24.2294204Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+lint	UNKNOWN STEP	2025-06-24T03:26:24.2295459Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+lint	UNKNOWN STEP	2025-06-24T03:26:24.2296306Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:24.3173333Z ##[group]Download immutable action package 'actions/setup-python@v5'
+lint	UNKNOWN STEP	2025-06-24T03:26:24.3174295Z Version: 5.6.0
+lint	UNKNOWN STEP	2025-06-24T03:26:24.3175116Z Digest: sha256:0b35a0c11c97499e4e0576589036d450b9f5f9da74b7774225b3614b57324404
+lint	UNKNOWN STEP	2025-06-24T03:26:24.3176061Z Source commit SHA: a26af69be951a213d495a4c3e4e4022e16d87065
+lint	UNKNOWN STEP	2025-06-24T03:26:24.3176843Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:24.5625304Z Download action repository 'astral-sh/setup-uv@v5' (SHA:d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86)
+lint	UNKNOWN STEP	2025-06-24T03:26:25.0489854Z Complete job name: lint
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1181165Z ##[group]Run actions/checkout@v4
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1182060Z with:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1182744Z   repository: Emasoft/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1183411Z   token: ***
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1183834Z   ssh-strict: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1184266Z   ssh-user: git
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1184708Z   persist-credentials: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1185180Z   clean: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1185612Z   sparse-checkout-cone-mode: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1186123Z   fetch-depth: 1
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1186546Z   fetch-tags: false
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1186981Z   show-progress: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1187416Z   lfs: false
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1187845Z   submodules: false
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1188287Z   set-safe-directory: true
+lint	UNKNOWN STEP	2025-06-24T03:26:25.1189049Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2294839Z Syncing repository: Emasoft/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2297807Z ##[group]Getting Git version info
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2299027Z Working directory is '/home/runner/work/dht/dht'
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2300131Z [command]/usr/bin/git version
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2326684Z git version 2.49.0
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2354171Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2369981Z Temporarily overriding HOME='/home/runner/work/_temp/4226da29-25e5-4fc1-8c0f-42d869b9e224' before making global git config changes
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2372991Z Adding repository directory to the temporary git global config as a safe directory
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2385163Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/dht/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2420106Z Deleting the contents of '/home/runner/work/dht/dht'
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2424475Z ##[group]Initializing the repository
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2429084Z [command]/usr/bin/git init /home/runner/work/dht/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2491565Z hint: Using 'master' as the name for the initial branch. This default branch name
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2493457Z hint: is subject to change. To configure the initial branch name to use in all
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2495233Z hint: of your new repositories, which will suppress this warning, call:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2496481Z hint:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2497528Z hint: 	git config --global init.defaultBranch <name>
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2498200Z hint:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2498794Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2499712Z hint: 'development'. The just-created branch can be renamed via this command:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2500431Z hint:
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2500834Z hint: 	git branch -m <name>
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2501698Z Initialized empty Git repository in /home/runner/work/dht/dht/.git/
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2507851Z [command]/usr/bin/git remote add origin https://github.com/Emasoft/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2538678Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2539479Z ##[group]Disabling automatic garbage collection
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2542612Z [command]/usr/bin/git config --local gc.auto 0
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2569949Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2570666Z ##[group]Setting up auth
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2576989Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2606033Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2866638Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	UNKNOWN STEP	2025-06-24T03:26:25.2897448Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	UNKNOWN STEP	2025-06-24T03:26:25.3114765Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+lint	UNKNOWN STEP	2025-06-24T03:26:25.3148885Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.3150298Z ##[group]Fetching the repository
+lint	UNKNOWN STEP	2025-06-24T03:26:25.3168195Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9e28cba42a5e017a8ffce6a32c5a1418bccf730:refs/remotes/origin/main
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9466588Z From https://github.com/Emasoft/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9468236Z  * [new ref]         a9e28cba42a5e017a8ffce6a32c5a1418bccf730 -> origin/main
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9493516Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9495558Z ##[group]Determining the checkout info
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9497712Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9501626Z [command]/usr/bin/git sparse-checkout disable
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9541123Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9570393Z ##[group]Checking out the ref
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9573887Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9984045Z Switched to a new branch 'main'
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9985869Z branch 'main' set up to track 'origin/main'.
+lint	UNKNOWN STEP	2025-06-24T03:26:25.9995497Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0032902Z [command]/usr/bin/git log -1 --format=%H
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0055226Z a9e28cba42a5e017a8ffce6a32c5a1418bccf730
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0354937Z ##[group]Run actions/setup-python@v5
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0356095Z with:
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0356901Z   python-version: 3.10
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0357841Z   check-latest: false
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0358996Z   token: ***
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0359853Z   update-environment: true
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0360874Z   allow-prereleases: false
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0361872Z   freethreaded: false
+lint	UNKNOWN STEP	2025-06-24T03:26:26.0362941Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2036026Z ##[group]Installed versions
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2160402Z Successfully set up CPython (3.10.17)
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2163831Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2377319Z ##[group]Run astral-sh/setup-uv@v5
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2378339Z with:
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2379059Z   enable-cache: true
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2379922Z   cache-dependency-glob: uv.lock
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2381252Z   github-token: ***
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2382065Z   prune-cache: true
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2383175Z   ignore-nothing-to-cache: false
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2384199Z   ignore-empty-workdir: false
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2385107Z env:
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2386043Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2387717Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2389347Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2390821Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2392525Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2394029Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	UNKNOWN STEP	2025-06-24T03:26:26.2395325Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:26.6995390Z Downloading uv from "https://github.com/astral-sh/uv/releases/download/0.7.14/uv-x86_64-unknown-linux-gnu.tar.gz" ...
+lint	UNKNOWN STEP	2025-06-24T03:26:27.0875505Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/762f65da-dee7-467b-b83c-e93267ca2507 -f /home/runner/work/_temp/511afe70-095f-42b2-94b7-5471997a231f
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4572013Z Added /home/runner/.local/bin to the path
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4575127Z Added /opt/hostedtoolcache/uv/0.7.14/x86_64 to the path
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4598034Z Set UV_CACHE_DIR to /home/runner/work/_temp/setup-uv-cache
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4600099Z Successfully installed uv version 0.7.14
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4601984Z Searching files using cache dependency glob: uv.lock
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4621415Z /home/runner/work/dht/dht/uv.lock
+lint	UNKNOWN STEP	2025-06-24T03:26:27.4647428Z Found 1 files to hash.
+lint	UNKNOWN STEP	2025-06-24T03:26:28.3630797Z Trying to restore uv cache from GitHub Actions cache with key: setup-uv-1-x86_64-unknown-linux-gnu-3.10.17-c7af35bcf2f4dc3c306105774cc47799d7f169ae340186a26a32a23720898ead
+lint	UNKNOWN STEP	2025-06-24T03:26:28.4992460Z No GitHub Actions cache found for key: setup-uv-1-x86_64-unknown-linux-gnu-3.10.17-c7af35bcf2f4dc3c306105774cc47799d7f169ae340186a26a32a23720898ead
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5188374Z ##[group]Run uv venv
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5188664Z [36;1muv venv[0m
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5257227Z shell: /usr/bin/bash -e {0}
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5257489Z env:
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5257744Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5258196Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5258632Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5259003Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5259378Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5259735Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5260101Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5260375Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5429595Z Using CPython 3.10.17 interpreter at: /opt/hostedtoolcache/Python/3.10.17/x64/bin/python3.10
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5430454Z Creating virtual environment at: .venv
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5436041Z Activate with: source .venv/bin/activate
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5482493Z ##[group]Run uv sync --all-extras
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5482845Z [36;1muv sync --all-extras[0m
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5483085Z [36;1muv pip install pre-commit[0m
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5536132Z shell: /usr/bin/bash -e {0}
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5536370Z env:
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5536657Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5537121Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5537541Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5537902Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5538514Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5538880Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5539229Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+lint	UNKNOWN STEP	2025-06-24T03:26:28.5539511Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:28.6560929Z Resolved 138 packages in 0.93ms
+lint	UNKNOWN STEP	2025-06-24T03:26:28.6697883Z    Building dht-toolkit @ file:///home/runner/work/dht/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:28.6983712Z Downloading sqlalchemy (3.0MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.6998816Z Downloading apprise (1.3MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7009434Z Downloading prefect (5.7MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7015913Z Downloading mypy (12.0MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7018583Z Downloading cryptography (4.2MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7023352Z Downloading pygments (1.2MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7030108Z Downloading uv (17.0MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7035669Z Downloading ruff (11.0MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7043101Z Downloading tree-sitter-language-pack (16.6MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7048460Z Downloading pydantic-core (1.9MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:28.7054200Z Downloading asyncpg (2.8MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:29.2233886Z  Downloading pydantic-core
+lint	UNKNOWN STEP	2025-06-24T03:26:29.4360173Z  Downloading asyncpg
+lint	UNKNOWN STEP	2025-06-24T03:26:29.4742326Z  Downloading apprise
+lint	UNKNOWN STEP	2025-06-24T03:26:29.6943307Z  Downloading ruff
+lint	UNKNOWN STEP	2025-06-24T03:26:29.7005662Z  Downloading cryptography
+lint	UNKNOWN STEP	2025-06-24T03:26:29.7157408Z  Downloading sqlalchemy
+lint	UNKNOWN STEP	2025-06-24T03:26:29.7921846Z  Downloading pygments
+lint	UNKNOWN STEP	2025-06-24T03:26:29.8453231Z  Downloading uv
+lint	UNKNOWN STEP	2025-06-24T03:26:29.8764990Z       Built dht-toolkit @ file:///home/runner/work/dht/dht
+lint	UNKNOWN STEP	2025-06-24T03:26:29.8771212Z  Downloading tree-sitter-language-pack
+lint	UNKNOWN STEP	2025-06-24T03:26:29.9667336Z  Downloading prefect
+lint	UNKNOWN STEP	2025-06-24T03:26:30.0525591Z  Downloading mypy
+lint	UNKNOWN STEP	2025-06-24T03:26:30.0528344Z Prepared 136 packages in 1.39s
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1316851Z Installed 136 packages in 78ms
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1318606Z  + aiosqlite==0.21.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1319024Z  + alembic==1.16.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1319423Z  + annotated-types==0.7.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1320054Z  + anyio==4.9.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1320531Z  + apprise==1.9.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1321066Z  + asgi-lifespan==2.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1321603Z  + async-timeout==5.0.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1322292Z  + asyncpg==0.30.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1322725Z  + attrs==25.3.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1323156Z  + bracex==2.5.post1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1323625Z  + bump-my-version==1.1.4
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1324082Z  + cachetools==5.5.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1324505Z  + certifi==2025.4.26
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1324931Z  + cffi==1.17.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1325346Z  + charset-normalizer==3.4.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1325851Z  + click==8.1.8
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1326252Z  + cloudpickle==3.1.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1326678Z  + colorama==0.4.6
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1327082Z  + coolname==2.2.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1327480Z  + coverage==7.9.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1327889Z  + cryptography==45.0.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1328342Z  + dateparser==1.2.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1328934Z  + dht-toolkit==1.0.0 (from file:///home/runner/work/dht/dht)
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1329606Z  + distro==1.9.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1329987Z  + docker==7.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1330399Z  + exceptiongroup==1.3.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1330868Z  + fastapi==0.115.12
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1331276Z  + flake8==7.2.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1331648Z  + fsspec==2025.3.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1331940Z  + gitdb==4.0.12
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1332690Z  + gitpython==3.1.44
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1333040Z  + graphviz==0.20.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1333356Z  + greenlet==3.2.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1333652Z  + griffe==1.7.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1333945Z  + h11==0.16.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1334232Z  + h2==4.2.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1334512Z  + hpack==4.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1334816Z  + httpcore==1.0.9
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1335114Z  + httpx==0.28.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1335411Z  + humanize==4.12.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1335717Z  + hyperframe==6.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1336029Z  + idna==3.10
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1336347Z  + importlib-metadata==7.2.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1336723Z  + iniconfig==2.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1337211Z  + jinja2==3.1.6
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1337549Z  + jinja2-humanize-extension==0.4.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1337948Z  + jsonpatch==1.33
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1338264Z  + jsonpointer==3.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1338596Z  + jsonschema==4.23.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1338948Z  + jsonschema-specifications==2025.4.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1339368Z  + mako==1.3.10
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1339662Z  + markdown==3.8
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1339978Z  + markdown-it-py==3.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1340321Z  + markupsafe==3.0.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1340640Z  + mccabe==0.7.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1340929Z  + mdurl==0.1.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1341230Z  + mypy==1.16.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1341544Z  + mypy-extensions==1.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1341884Z  + oauthlib==3.2.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1342377Z  + opentelemetry-api==1.34.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1342738Z  + orjson==3.10.18
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1343052Z  + packaging==24.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1343488Z  + pathspec==0.12.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1343825Z  + pendulum==3.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1344140Z  + pexpect==4.9.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1344442Z  + pluggy==1.6.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1344744Z  + prefect==3.4.5
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1345059Z  + prefect-shell==0.3.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1345420Z  + prometheus-client==0.22.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1345794Z  + prompt-toolkit==3.0.51
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1346143Z  + psutil==7.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1346456Z  + ptyprocess==0.7.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1346790Z  + pycodestyle==2.13.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1347122Z  + pycparser==2.22
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1347422Z  + pydantic==2.11.4
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1347745Z  + pydantic-core==2.33.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1348107Z  + pydantic-extra-types==2.10.5
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1348532Z  + pydantic-settings==2.9.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1348885Z  + pyflakes==3.3.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1349202Z  + pygments==2.19.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1349505Z  + pytest==8.4.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1349812Z  + pytest-asyncio==1.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1350158Z  + pytest-cov==6.2.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1350495Z  + python-dateutil==2.9.0.post0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1350883Z  + python-dotenv==1.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1351222Z  + python-slugify==8.0.4
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1351574Z  + python-socks==2.7.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1351890Z  + pytz==2025.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1352340Z  + pyyaml==6.0.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1352657Z  + questionary==2.1.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1352972Z  + readchar==4.2.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1353292Z  + referencing==0.36.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1353610Z  + regex==2024.11.6
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1353941Z  + requests==2.32.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1354287Z  + requests-oauthlib==2.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1354668Z  + rfc3339-validator==0.1.4
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1355128Z  + rich==14.0.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1355607Z  + rich-click==1.8.9
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1355924Z  + rpds-py==0.24.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1356245Z  + ruamel-yaml==0.18.13
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1356589Z  + ruamel-yaml-clib==0.2.12
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1356932Z  + ruff==0.11.13
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1357232Z  + shellingham==1.5.4
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1357551Z  + six==1.17.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1357855Z  + smmap==5.0.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1358150Z  + sniffio==1.3.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1358464Z  + sqlalchemy==2.0.41
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1358786Z  + starlette==0.46.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1359103Z  + tabulate==0.9.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1359418Z  + text-unidecode==1.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1359742Z  + toml==0.10.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1360037Z  + tomli==2.2.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1360584Z  + tomli-w==1.2.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1360897Z  + tomlkit==0.13.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1361203Z  + tree-sitter==0.24.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1361662Z  + tree-sitter-bash==0.25.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1362382Z  + tree-sitter-c-sharp==0.23.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1362812Z  + tree-sitter-embedded-template==0.23.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1363287Z  + tree-sitter-language-pack==0.7.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1363706Z  + tree-sitter-yaml==0.7.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1364049Z  + typer==0.16.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1364376Z  + types-pyyaml==6.0.12.20250516
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1364761Z  + types-tabulate==0.9.0.20241207
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1365155Z  + types-toml==0.10.8.20240310
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1365697Z  + typing-extensions==4.13.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1366081Z  + typing-inspection==0.4.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1366442Z  + tzdata==2025.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1366740Z  + tzlocal==5.3.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1367039Z  + ujson==5.10.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1367326Z  + urllib3==2.4.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1367626Z  + uv==0.7.12
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1367915Z  + uvicorn==0.34.3
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1371148Z  + wcmatch==10.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1371802Z  + wcwidth==0.2.13
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1372496Z  + websockets==15.0.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.1372798Z  + zipp==3.21.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2041764Z Resolved 9 packages in 51ms
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2160854Z Downloading virtualenv (5.8MiB)
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2642354Z  Downloading virtualenv
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2644288Z Prepared 8 packages in 60ms
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2713920Z Installed 8 packages in 6ms
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2714357Z  + cfgv==3.4.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2714678Z  + distlib==0.3.9
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2714993Z  + filelock==3.18.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2715367Z  + identify==2.6.12
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2715690Z  + nodeenv==1.9.1
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2716031Z  + platformdirs==4.3.8
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2716399Z  + pre-commit==4.2.0
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2716669Z  + virtualenv==20.31.2
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2776297Z ##[group]Run source .venv/bin/activate
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2776610Z [36;1msource .venv/bin/activate[0m
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2776939Z [36;1mpre-commit run --all-files --show-diff-on-failure[0m
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2827132Z shell: /usr/bin/bash -e {0}
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2827363Z env:
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2827615Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2828037Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2828436Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2828785Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2829152Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2829519Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2829853Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+lint	UNKNOWN STEP	2025-06-24T03:26:30.2830144Z ##[endgroup]
+lint	UNKNOWN STEP	2025-06-24T03:26:30.8763761Z [INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	UNKNOWN STEP	2025-06-24T03:26:31.1434633Z [INFO] Initializing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	UNKNOWN STEP	2025-06-24T03:26:31.4041035Z [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	UNKNOWN STEP	2025-06-24T03:26:31.6406151Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	UNKNOWN STEP	2025-06-24T03:26:31.8627857Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-pyyaml,types-requests,types-toml,types-tabulate.
+lint	UNKNOWN STEP	2025-06-24T03:26:32.1106745Z [INFO] Initializing environment for https://github.com/fpgmaas/deptry.
+lint	UNKNOWN STEP	2025-06-24T03:26:32.4034112Z [INFO] Initializing environment for https://github.com/google/yamlfmt.
+lint	UNKNOWN STEP	2025-06-24T03:26:32.7977553Z [INFO] Initializing environment for https://github.com/adrienverge/yamllint.
+lint	UNKNOWN STEP	2025-06-24T03:26:33.0954642Z [INFO] Initializing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	UNKNOWN STEP	2025-06-24T03:26:33.3468461Z [INFO] Initializing environment for https://github.com/rhysd/actionlint.
+lint	UNKNOWN STEP	2025-06-24T03:26:33.7666130Z [INFO] Initializing environment for https://github.com/zricethezav/gitleaks.
+lint	UNKNOWN STEP	2025-06-24T03:26:34.1562461Z [INFO] Initializing environment for https://github.com/commitizen-tools/commitizen.
+lint	UNKNOWN STEP	2025-06-24T03:26:34.5540379Z [INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	UNKNOWN STEP	2025-06-24T03:26:34.5541217Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:26:34.5541746Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:26:40.0772897Z [INFO] Installing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	UNKNOWN STEP	2025-06-24T03:26:40.0773494Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:26:40.0774095Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:26:43.6728964Z [INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	UNKNOWN STEP	2025-06-24T03:26:43.6729962Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:26:43.6730516Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:26:47.3736175Z [INFO] Installing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	UNKNOWN STEP	2025-06-24T03:26:47.3736970Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:26:47.3737474Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:26:52.4602369Z [INFO] Installing environment for https://github.com/google/yamlfmt.
+lint	UNKNOWN STEP	2025-06-24T03:26:52.4603053Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:26:52.4603383Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:27:03.3130182Z [INFO] Installing environment for https://github.com/adrienverge/yamllint.
+lint	UNKNOWN STEP	2025-06-24T03:27:03.3130889Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:27:03.3131289Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:27:06.5167052Z [INFO] Installing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	UNKNOWN STEP	2025-06-24T03:27:06.5168077Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:27:06.5169054Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:27:11.2976902Z [INFO] Installing environment for https://github.com/rhysd/actionlint.
+lint	UNKNOWN STEP	2025-06-24T03:27:11.2977968Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:27:11.2978692Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:27:20.4250932Z [INFO] Installing environment for https://github.com/zricethezav/gitleaks.
+lint	UNKNOWN STEP	2025-06-24T03:27:20.4251761Z [INFO] Once installed this environment will be reused.
+lint	UNKNOWN STEP	2025-06-24T03:27:20.4252438Z [INFO] This may take a few minutes...
+lint	UNKNOWN STEP	2025-06-24T03:27:30.2406045Z trim trailing whitespace.................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.3102588Z fix end of files.........................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4540750Z check yaml...............................................................Failed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4541532Z - hook id: check-yaml
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4542004Z - exit code: 1
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4542499Z
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4542799Z mapping values are not allowed in this context
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4543620Z   in "src/DHT/GITHUB_WORKFLOWS/windows-tests.yml", line 32, column 13
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4544451Z mapping values are not allowed in this context
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4545272Z   in "src/DHT/GITHUB_WORKFLOWS/docker-build-test.yml", line 28, column 13
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4546132Z mapping values are not allowed in this context
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4546995Z   in "src/DHT/GITHUB_WORKFLOWS/release.yml", line 14, column 13
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4547701Z while scanning a simple key
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4548479Z   in "src/DHT/GITHUB_WORKFLOWS/windows_check_pypi_version.yml", line 35, column 9
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4549337Z could not find expected ':'
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4550115Z   in "src/DHT/GITHUB_WORKFLOWS/windows_check_pypi_version.yml", line 36, column 9
+lint	UNKNOWN STEP	2025-06-24T03:27:30.4550809Z
+lint	UNKNOWN STEP	2025-06-24T03:27:30.5340978Z check for added large files..............................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.6111322Z check toml...............................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.6637525Z check json...............................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.7386572Z check for merge conflicts................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.7835089Z uv-lock..................................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.8459969Z uv-export................................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.8754166Z Export dev requirements..................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.9274217Z ruff.....................................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:30.9887029Z ruff-format..............................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0283013Z mypy.....................................................................Failed
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0283887Z - hook id: mypy
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0284325Z - exit code: 1
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0284606Z
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0285911Z examples/workspace-demo/packages/experimental/experimental/benchmark.py:28: error: Call to untyped function (unknown) in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0288262Z src/DHT/modules/uv_manager_script.py:33: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0290273Z src/DHT/modules/uv_manager_python.py:36: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0292447Z src/DHT/modules/uv_manager_python.py:80: error: Returning Any from function declared to return "str | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0294227Z src/DHT/modules/uv_manager_python.py:93: error: Untyped decorator makes function "list_python_versions" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0295895Z src/DHT/modules/uv_manager_python.py:117: error: Untyped decorator makes function "ensure_python_version" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0297942Z src/DHT/modules/uv_manager_deps.py:36: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0299734Z src/DHT/modules/uv_manager_deps.py:169: error: Untyped decorator makes function "generate_lock_file" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0301263Z src/DHT/modules/uv_manager_deps.py:192: error: Untyped decorator makes function "add_dependency" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0302492Z src/DHT/modules/uv_manager.py:108: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0303233Z src/DHT/modules/uv_manager.py:113: error: Returning Any from function declared to return "str | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0304338Z src/DHT/modules/uv_manager.py:117: error: Returning Any from function declared to return "list[dict[str, Any]]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0305143Z src/DHT/modules/uv_manager.py:137: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0305849Z src/DHT/modules/uv_manager.py:147: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0306537Z src/DHT/modules/uv_manager.py:151: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0307247Z src/DHT/modules/uv_manager.py:155: error: Returning Any from function declared to return "list[dict[str, Any]]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0307947Z src/DHT/modules/uv_manager.py:160: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0308623Z src/DHT/modules/uv_manager.py:167: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0309306Z src/DHT/modules/uv_manager.py:172: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0309994Z src/DHT/modules/uv_manager.py:176: error: Returning Any from function declared to return "bool"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0310754Z src/DHT/modules/subprocess_utils.py:315: error: Subclass of "str" and "bytes" cannot exist: would have incompatible method signatures  [unreachable]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0311546Z src/DHT/modules/dhtl_commands.py:86: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0312469Z src/DHT/modules/dhtl_commands.py:129: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0313216Z src/DHT/modules/dhtl_commands.py:162: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0313936Z src/DHT/modules/dhtl_commands.py:198: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0314872Z src/DHT/modules/dhtl_commands.py:237: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0315589Z src/DHT/modules/commands/upgrade_command.py:38: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0316374Z src/DHT/modules/commands/upgrade_command.py:45: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0317200Z src/DHT/modules/commands/upgrade_command.py:106: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0318026Z src/DHT/modules/commands/upgrade_command.py:109: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0318775Z src/DHT/modules/commands/remove_command.py:38: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0319526Z src/DHT/modules/commands/remove_command.py:45: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0320446Z src/DHT/modules/commands/remove_command.py:102: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0321252Z src/DHT/modules/commands/remove_command.py:105: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0321991Z src/DHT/modules/commands/doc_command.py:59: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0322881Z src/DHT/modules/commands/doc_command.py:66: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0323662Z src/DHT/modules/commands/doc_command.py:220: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0324445Z src/DHT/modules/commands/doc_command.py:223: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0325173Z src/DHT/modules/commands/check_command.py:39: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0325916Z src/DHT/modules/commands/check_command.py:46: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0326704Z src/DHT/modules/commands/check_command.py:130: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0328060Z src/DHT/modules/commands/check_command.py:133: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0329409Z src/DHT/modules/commands/bin_command.py:39: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0330706Z src/DHT/modules/commands/bin_command.py:45: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0332277Z src/DHT/modules/commands/bin_command.py:103: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0333761Z src/DHT/modules/commands/bin_command.py:106: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0335079Z src/DHT/modules/commands/add_command.py:38: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0336433Z src/DHT/modules/commands/add_command.py:45: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0337803Z src/DHT/modules/commands/add_command.py:127: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0339190Z src/DHT/modules/commands/add_command.py:130: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0340690Z src/DHT/modules/environment_verification_utils.py:55: error: Incompatible types in assignment (expression has type "Logger", variable has type "None")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0341991Z src/DHT/modules/environment_verification_utils.py:102: error: "_get_logger" of "EnvironmentVerificationUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0343313Z src/DHT/modules/environment_verification_utils.py:171: error: "_get_logger" of "EnvironmentVerificationUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0344301Z src/DHT/modules/command_runner.py:52: error: Need type annotation for "_active_threads" (hint: "_active_threads: set[<type>] = ...")  [var-annotated]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0345322Z src/DHT/modules/command_runner.py:58: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0347047Z src/DHT/modules/command_runner.py:96: error: Argument 1 to "contextmanager" has incompatible type "Callable[[CommandRunner, str], None]"; expected "Callable[[CommandRunner, str], Iterator[Never]]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0348111Z src/DHT/modules/command_runner.py:97: error: The return type of a generator function should be "Generator" or one of its supertypes  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0349163Z src/DHT/modules/command_runner.py:121: error: Untyped decorator makes function "execute_command" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0350054Z src/DHT/modules/command_runner.py:129: error: Missing type parameters for generic type "Callable"  [type-arg]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0350680Z src/DHT/modules/command_runner.py:143: error: Name "args" already defined on line 129  [no-redef]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0351318Z src/DHT/modules/command_runner.py:154: error: Argument after ** must be a mapping, not "dict[str, Any] | None"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0351982Z src/DHT/modules/command_runner.py:172: error: Unsupported left operand type for - ("object")  [operator]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0352935Z src/DHT/modules/command_runner.py:176: error: Untyped decorator makes function "run_command_flow" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0353603Z src/DHT/modules/command_runner.py:183: error: Missing type parameters for generic type "Callable"  [type-arg]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0354309Z src/DHT/modules/command_runner.py:208: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0355050Z src/DHT/modules/command_runner.py:230: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0355760Z src/DHT/modules/command_runner.py:274: error: Missing type parameters for generic type "Callable"  [type-arg]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0356447Z src/DHT/modules/command_runner.py:289: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0357165Z src/DHT/modules/command_runner.py:291: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0357933Z src/DHT/modules/build_command_universal.py:42: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0359293Z src/DHT/modules/build_command_universal.py:157: error: Incompatible types in assignment (expression has type "Path", variable has type "str")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0360703Z src/DHT/modules/build_command_universal.py:159: error: "str" has no attribute "name"  [attr-defined]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0361631Z src/DHT/modules/act_linter.py:48: error: Need type annotation for "result"  [var-annotated]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0362868Z src/DHT/modules/act_linter.py:58: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0364067Z src/DHT/modules/act_linter.py:58: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0365271Z src/DHT/modules/act_linter.py:64: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0366403Z src/DHT/modules/act_linter.py:64: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0367743Z src/DHT/modules/act_linter.py:70: error: Item "bool" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0368847Z src/DHT/modules/act_linter.py:70: error: Item "str" of "list[Any] | bool | str" has no attribute "append"  [union-attr]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0370130Z src/DHT/modules/act_container_manager.py:86: error: No overload variant of "run" matches argument types "list[str]", "bool", "bool"  [call-overload]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0371288Z src/DHT/modules/act_container_manager.py:86: note: Possible overload variants:
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0378768Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: str | None = ..., text: Literal[True], timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0389449Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str, errors: str | None = ..., input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0396408Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str, input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0406561Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., *, universal_newlines: Literal[True], startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[str]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0415703Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: Literal[False] | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: None = ..., errors: None = ..., input: Buffer | None = ..., text: Literal[False] | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[bytes]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0421512Z src/DHT/modules/act_container_manager.py:86: note:     def run(args: str | bytes | PathLike[str] | PathLike[bytes] | Sequence[str | bytes | PathLike[str] | PathLike[bytes]], bufsize: int = ..., executable: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., stdin: int | IO[Any] | None = ..., stdout: int | IO[Any] | None = ..., stderr: int | IO[Any] | None = ..., preexec_fn: Callable[[], Any] | None = ..., close_fds: bool = ..., shell: bool = ..., cwd: str | bytes | PathLike[str] | PathLike[bytes] | None = ..., env: Mapping[bytes, str | bytes | PathLike[str] | PathLike[bytes]] | Mapping[str, str | bytes | PathLike[str] | PathLike[bytes]] | None = ..., universal_newlines: bool | None = ..., startupinfo: Any = ..., creationflags: int = ..., restore_signals: bool = ..., start_new_session: bool = ..., pass_fds: Collection[int] = ..., *, capture_output: bool = ..., check: bool = ..., encoding: str | None = ..., errors: str | None = ..., input: Buffer | str | None = ..., text: bool | None = ..., timeout: float | None = ..., user: str | int | None = ..., group: str | int | None = ..., extra_groups: Iterable[str | int] | None = ..., umask: int = ..., pipesize: int = ...) -> CompletedProcess[Any]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0424973Z src/DHT/modules/act_container_manager.py:155: error: Missing type parameters for generic type "CompletedProcess"  [type-arg]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0425816Z dhtl_entry_windows.py:31: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0426363Z dhtl_entry_windows.py:69: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0426886Z dhtl_entry_windows.py:96: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0427470Z dhtl_entry_windows.py:99: error: Call to untyped function "find_python_launcher" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0428301Z dhtl_entry_windows.py:124: error: Call to untyped function "get_python_executable" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0428910Z dhtl_entry_windows.py:154: error: Call to untyped function "main" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0429437Z dhtl_entry.py:30: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0429917Z dhtl_entry.py:59: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0430390Z dhtl_entry.py:73: error: Function is missing a return type annotation  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0431047Z dhtl_entry.py:76: error: Call to untyped function "find_python_launcher" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0431653Z dhtl_entry.py:100: error: Call to untyped function "get_python_executable" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0432464Z dhtl_entry.py:124: error: Call to untyped function "main" in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0433076Z src/DHT/modules/uv_pip_tasks.py:34: error: Untyped decorator makes function "pip_install_requirements" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0433746Z src/DHT/modules/uv_pip_tasks.py:73: error: Untyped decorator makes function "pip_install_project" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0434450Z src/DHT/modules/uv_manager_utils.py:70: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0435189Z src/DHT/modules/uv_manager_utils.py:124: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0436116Z src/DHT/modules/uv_manager_utils.py:190: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0436815Z src/DHT/modules/uv_manager_improvements.py:22: error: Class cannot subclass "UVManager" (has type "Any")  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0437519Z src/DHT/modules/uv_manager_improvements.py:42: error: Unused "type: ignore[import-not-found, no-redef]" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0438221Z src/DHT/modules/project_file_generators.py:325: error: Value of type "Collection[str]" is not indexable  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0439420Z src/DHT/modules/project_file_generators.py:328: error: Value of type "Collection[str]" is not indexable  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0440590Z src/DHT/modules/project_file_generators.py:337: error: Value of type "Collection[str]" is not indexable  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0441695Z src/DHT/modules/parsers/base_parser.py:23: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0443195Z src/DHT/modules/parsers/base_parser.py:25: error: Incompatible types in assignment (expression has type "None", variable has type Module)  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0444534Z src/DHT/modules/parsers/base_parser.py:283: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0445588Z src/DHT/modules/environment_snapshot_io.py:28: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0446772Z src/DHT/modules/environment_snapshot_io.py:37: error: Untyped decorator makes function "save_snapshot" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0448090Z src/DHT/modules/environment_snapshot_io.py:69: error: Untyped decorator makes function "load_snapshot" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0449631Z src/DHT/modules/environment_capture_utils.py:54: error: Incompatible types in assignment (expression has type "Logger", variable has type "None")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0451679Z src/DHT/modules/environment_capture_utils.py:79: error: "_get_logger" of "EnvironmentCaptureUtils" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0453450Z src/DHT/modules/environment_analyzer.py:197: error: Need type annotation for "requirements"  [var-annotated]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0454855Z src/DHT/modules/environment_analyzer.py:236: error: Incompatible types in assignment (expression has type "str", target has type "list[Any] | None")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0456598Z src/DHT/modules/dockerfile_generator.py:175: error: Argument 1 to "_get_system_deps" of "DockerfileGenerator" has incompatible type "object"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0458345Z src/DHT/modules/dockerfile_generator.py:179: error: Argument 2 to "_detect_ports" of "DockerfileGenerator" has incompatible type "object"; expected "str | None"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0459354Z src/DHT/modules/dockerfile_generator.py:470: error: Untyped decorator makes function "generate_dockerfile" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0460595Z src/DHT/modules/dhtl_version.py:39: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0462539Z src/DHT/modules/dhtl_version.py:114: error: Incompatible types in assignment (expression has type "CompletedProcess[bytes]", variable has type "CompletedProcess[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0464349Z src/DHT/modules/dhtl_version.py:122: error: Incompatible types in assignment (expression has type "CompletedProcess[bytes]", variable has type "CompletedProcess[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0465997Z src/DHT/modules/dhtl_version.py:135: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0466730Z src/DHT/modules/dhtl_version.py:279: error: Returning Any from function declared to return "str | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0467429Z src/DHT/modules/dhtl_version.py:283: error: Returning Any from function declared to return "str | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0468131Z src/DHT/modules/dhtl_version.py:294: error: Returning Any from function declared to return "str | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0469323Z src/DHT/modules/dhtl_github.py:31: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0470429Z src/DHT/modules/dhtl_github.py:43: error: Argument 1 to "git_clone_fallback" has incompatible type "tuple[Any, ...]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0472028Z src/DHT/modules/dhtl_github.py:103: error: Incompatible types in assignment (expression has type "dict[str, Any]", variable has type "CompletedProcess[bytes]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0473691Z src/DHT/modules/dhtl_github.py:104: error: "CompletedProcess[bytes]" has no attribute "get"  [attr-defined]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0475035Z src/DHT/modules/dhtl_github.py:112: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0476680Z src/DHT/modules/dhtl_github.py:166: error: Incompatible types in assignment (expression has type "CompletedProcess[bytes]", variable has type "CompletedProcess[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0478550Z src/DHT/modules/dhtl_github.py:181: error: Incompatible types in assignment (expression has type "dict[str, Any]", variable has type "CompletedProcess[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0479983Z src/DHT/modules/dhtl_github.py:182: error: "CompletedProcess[str]" has no attribute "get"  [attr-defined]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0481241Z src/DHT/modules/dhtl_environment_2.py:42: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0482800Z src/DHT/modules/dhtl_environment_2.py:91: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0484152Z src/DHT/modules/dhtl_diagnostics.py:33: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0485743Z src/DHT/modules/dhtl_diagnostics.py:162: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0486982Z src/DHT/modules/dhtl_commands_workflows.py:26: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0488249Z src/DHT/modules/dhtl_commands_workflows.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0489795Z src/DHT/modules/dhtl_commands_workflows.py:46: error: Argument 1 to "create_workflow" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0491451Z src/DHT/modules/dhtl_commands_workflows.py:48: error: Argument 1 to "validate_workflows" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0493320Z src/DHT/modules/dhtl_commands_workflows.py:50: error: Argument 1 to "enable_workflow" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0494976Z src/DHT/modules/dhtl_commands_workflows.py:52: error: Argument 1 to "disable_workflow" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0496778Z src/DHT/modules/dhtl_commands_workflows.py:466: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0498079Z src/DHT/modules/dhtl_commands_sync.py:42: error: Untyped decorator makes function "sync" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0499321Z src/DHT/modules/dhtl_commands_init.py:136: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0500710Z src/DHT/modules/dhtl_commands_act.py:29: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0502298Z src/DHT/modules/dhtl_commands_act.py:160: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0503704Z src/DHT/modules/dhtl_commands_8.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0505077Z src/DHT/modules/dhtl_commands_8.py:157: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0506419Z src/DHT/modules/dhtl_commands_6.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0508097Z src/DHT/modules/dhtl_commands_6.py:66: error: Incompatible types in assignment (expression has type "CompletedProcess[bytes]", variable has type "CompletedProcess[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0509761Z src/DHT/modules/dhtl_commands_6.py:125: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0511115Z src/DHT/modules/dhtl_commands_4.py:24: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0512704Z src/DHT/modules/dhtl_commands_3.py:24: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0513941Z src/DHT/modules/dhtconfig_models.py:27: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0515185Z src/DHT/modules/dhtconfig_models.py:93: error: Returning Any from function declared to return "dict[str, Any] | None"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0516395Z src/DHT/modules/dhtconfig_io_utils.py:30: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0517543Z src/DHT/modules/dhtconfig_io_utils.py:57: error: Returning Any from function declared to return "Path"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0518967Z src/DHT/modules/dhtconfig_io_utils.py:85: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0520338Z src/DHT/modules/dhtconfig_io_utils.py:91: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0521773Z src/DHT/modules/dhtconfig_cli.py:28: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0523009Z src/DHT/modules/container_test_runner.py:31: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0524169Z src/DHT/modules/container_test_runner.py:52: error: Untyped decorator makes function "run_all_tests" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0525309Z src/DHT/modules/container_test_runner.py:79: error: Statement is unreachable  [unreachable]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0526653Z src/DHT/modules/container_test_runner.py:84: error: Incompatible return value type (got "dict[TestFramework, Any]", expected "dict[str, Any]")  [return-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0528093Z src/DHT/modules/container_test_runner.py:86: error: Untyped decorator makes function "run_pytest" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0529377Z src/DHT/modules/container_test_runner.py:133: error: Untyped decorator makes function "run_playwright" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0530677Z src/DHT/modules/container_test_runner.py:183: error: Untyped decorator makes function "run_puppeteer" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0531940Z src/DHT/modules/container_test_runner.py:238: error: Unsupported left operand type for + ("object")  [operator]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0533639Z src/DHT/modules/container_test_runner.py:249: error: Unsupported target for indexed assignment ("object")  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0534868Z src/DHT/modules/config_file_generators.py:27: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0536137Z src/DHT/modules/commands/workspace_base.py:83: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0537415Z src/DHT/modules/act_workflow_manager.py:22: error: Unused "type: ignore" comment  [unused-ignore]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0538557Z src/DHT/modules/act_workflow_manager.py:100: error: Unsupported target for indexed assignment ("object")  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0539800Z src/DHT/modules/act_workflow_manager.py:102: error: Unsupported target for indexed assignment ("object")  [index]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0541059Z src/DHT/modules/act_workflow_manager.py:107: error: Unsupported operand types for + ("object" and "int")  [operator]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0542623Z src/DHT/modules/act_workflow_manager.py:118: error: Need type annotation for "events" (hint: "events: set[<type>] = ...")  [var-annotated]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0544038Z src/DHT/modules/dhtl_test.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0545347Z src/DHT/modules/dhtl_test.py:120: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0546690Z src/DHT/modules/dhtl_guardian_command.py:41: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0548165Z src/DHT/modules/dhtl_guardian_command.py:54: error: Argument 1 to "guardian_run" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0549852Z src/DHT/modules/dhtl_guardian_command.py:56: error: Argument 1 to "guardian_batch" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0551538Z src/DHT/modules/dhtl_guardian_command.py:58: error: Argument 1 to "guardian_config" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0553415Z src/DHT/modules/dhtl_guardian_command.py:60: error: Argument 1 to "guardian_status" has incompatible type "Sequence[Any]"; expected "list[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0554953Z src/DHT/modules/dhtl_guardian_command.py:349: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0556452Z src/DHT/modules/dhtl_commands_standalone.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0557913Z src/DHT/modules/dhtl_commands_standalone.py:50: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0559671Z src/DHT/modules/dhtl_commands_standalone.py:54: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0561189Z src/DHT/modules/dhtl_commands_standalone.py:99: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0562853Z src/DHT/modules/dhtl_commands_standalone.py:103: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0564372Z src/DHT/modules/dhtl_commands_standalone.py:148: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0565893Z src/DHT/modules/dhtl_commands_standalone.py:152: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0567454Z src/DHT/modules/dhtl_commands_standalone.py:178: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0568999Z src/DHT/modules/dhtl_commands_standalone.py:182: error: "_normalize_args" does not return a value (it only ever returns None)  [func-returns-value]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0570735Z src/DHT/modules/dhtl_commands_standalone.py:227: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0572313Z src/DHT/modules/commands/workspaces_command.py:52: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0573769Z src/DHT/modules/commands/workspaces_command.py:58: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0575291Z src/DHT/modules/commands/workspaces_command.py:122: error: Call to untyped function (unknown) in typed context  [no-untyped-call]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0576815Z src/DHT/modules/commands/workspaces_command.py:207: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0578382Z src/DHT/modules/commands/workspaces_command.py:210: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0579819Z src/DHT/modules/commands/project_command.py:38: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0581236Z src/DHT/modules/commands/project_command.py:44: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0582917Z src/DHT/modules/commands/project_command.py:122: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0584450Z src/DHT/modules/commands/project_command.py:125: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0585877Z src/DHT/modules/commands/install_command.py:37: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0587323Z src/DHT/modules/commands/install_command.py:44: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0588835Z src/DHT/modules/commands/install_command.py:86: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0590325Z src/DHT/modules/commands/install_command.py:101: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0591861Z src/DHT/modules/commands/install_command.py:104: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0593550Z src/DHT/modules/dhtl_commands_7.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0594904Z src/DHT/modules/dhtl_commands_7.py:134: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0596266Z src/DHT/modules/dhtl_commands_5.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0597831Z src/DHT/modules/dhtl_commands_5.py:89: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0599183Z src/DHT/modules/dhtl_commands_2.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0600502Z src/DHT/modules/dhtl_commands_2.py:86: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0601883Z src/DHT/modules/dhtl_commands_1.py:32: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0603409Z src/DHT/modules/dhtl_commands_1.py:193: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0604992Z src/DHT/modules/dht_flows/test_flow.py:117: error: Argument 1 to "extend" of "list" has incompatible type "Generator[Path, None, None]"; expected "Iterable[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0606786Z src/DHT/modules/dht_flows/test_flow.py:118: error: Argument 1 to "extend" of "list" has incompatible type "Generator[Path, None, None]"; expected "Iterable[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0608707Z src/DHT/modules/dht_flows/test_flow.py:119: error: Argument 1 to "extend" of "list" has incompatible type "list[Path]"; expected "Iterable[str]"  [arg-type]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0610246Z src/DHT/modules/commands/workspace_command.py:37: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0611704Z src/DHT/modules/commands/workspace_command.py:43: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0613489Z src/DHT/modules/commands/workspace_command.py:199: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0615083Z src/DHT/modules/commands/workspace_command.py:202: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0616516Z src/DHT/modules/commands/fmt_command.py:37: error: Untyped decorator makes function "execute" untyped  [misc]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0617893Z src/DHT/modules/commands/fmt_command.py:44: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0619373Z src/DHT/modules/commands/fmt_command.py:73: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0620802Z src/DHT/modules/commands/fmt_command.py:76: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0646554Z src/DHT/modules/command_dispatcher.py:265: error: Incompatible default for argument "args" (default has type "None", argument has type "list[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0648473Z src/DHT/modules/command_dispatcher.py:265: note: PEP 484 prohibits implicit Optional. Accordingly, mypy has changed its default to no_implicit_optional=True
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0650275Z src/DHT/modules/command_dispatcher.py:265: note: Use https://github.com/hauntsaninja/no_implicit_optional to automatically upgrade your codebase
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0652042Z src/DHT/modules/command_dispatcher.py:293: error: Incompatible default for argument "args" (default has type "None", argument has type "list[str]")  [assignment]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0653984Z src/DHT/modules/command_dispatcher.py:293: note: PEP 484 prohibits implicit Optional. Accordingly, mypy has changed its default to no_implicit_optional=True
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0655806Z src/DHT/modules/command_dispatcher.py:293: note: Use https://github.com/hauntsaninja/no_implicit_optional to automatically upgrade your codebase
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0657226Z src/DHT/launcher.py:31: error: Name "Colors" already defined (possibly by an import)  [no-redef]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0658367Z src/DHT/launcher.py:207: error: Name "CommandDispatcher" already defined (possibly by an import)  [no-redef]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0659689Z src/DHT/dhtl.py:37: error: Name "DHTLauncher" already defined (possibly by an import)  [no-redef]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0660792Z src/DHT/dhtl.py:43: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0661706Z Found 233 errors in 64 files (checked 202 source files)
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0662281Z
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0663589Z deptry...................................................................Failed
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0664166Z - hook id: deptry
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0664495Z - exit code: 1
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0664681Z
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0664857Z Executable `deptry` not found
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0665134Z
+lint	UNKNOWN STEP	2025-06-24T03:27:36.0665409Z yamlfmt..................................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:36.3060574Z yamllint.................................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:36.4859948Z shellcheck...............................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:37.5385780Z Lint GitHub Actions workflow files.......................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:37.8068287Z Detect hardcoded secrets.................................................Passed
+lint	UNKNOWN STEP	2025-06-24T03:27:37.8242009Z ##[error]Process completed with exit code 1.
+lint	UNKNOWN STEP	2025-06-24T03:27:37.8343305Z Post job cleanup.
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9280329Z [command]/usr/bin/git version
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9317408Z git version 2.49.0
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9361488Z Temporarily overriding HOME='/home/runner/work/_temp/2d1ea9f6-1b50-48f3-9e6c-080e53debb5f' before making global git config changes
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9362966Z Adding repository directory to the temporary git global config as a safe directory
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9374734Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/dht/dht
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9410014Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9442880Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9668448Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9690140Z http.https://github.com/.extraheader
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9703343Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+lint	UNKNOWN STEP	2025-06-24T03:27:37.9733509Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+lint	UNKNOWN STEP	2025-06-24T03:27:38.0067636Z Cleaning up orphan processes

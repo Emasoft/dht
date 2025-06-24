@@ -21,12 +21,13 @@ Provides local GitHub Actions execution using act.
 
 import shutil
 import subprocess
+from typing import Any
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_debug, log_error, log_info, log_success, log_warning
 
 
-def act_command(*args, **kwargs) -> int:
+def act_command(*args: Any, **kwargs: Any) -> int:
     """Run GitHub Actions locally with act."""
     log_info("🎬 Running GitHub Actions locally with act...")
 
@@ -157,7 +158,7 @@ def act_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return act_command(*args, **kwargs)
 

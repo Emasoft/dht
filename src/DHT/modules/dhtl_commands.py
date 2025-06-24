@@ -24,7 +24,7 @@ following UV documentation best practices.
 
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 from DHT.modules.dhtl_commands_build import BuildCommand
 from DHT.modules.dhtl_commands_deploy import DeployCommand
@@ -83,18 +83,21 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and message
         """
-        return self._init_cmd.init(
-            self.uv_manager,
-            path=path,
-            name=name,
-            python=python,
-            package=package,
-            with_dev=with_dev,
-            author=author,
-            email=email,
-            license=license,
-            with_ci=with_ci,
-            from_requirements=from_requirements,
+        return cast(
+            dict[str, Any],
+            self._init_cmd.init(
+                self.uv_manager,
+                path=path,
+                name=name,
+                python=python,
+                package=package,
+                with_dev=with_dev,
+                author=author,
+                email=email,
+                license=license,
+                with_ci=with_ci,
+                from_requirements=from_requirements,
+            ),
         )
 
     def setup(
@@ -126,17 +129,20 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and details
         """
-        return self._setup_cmd.setup(
-            self.uv_manager,
-            path=path,
-            python=python,
-            dev=dev,
-            from_requirements=from_requirements,
-            all_packages=all_packages,
-            compile_bytecode=compile_bytecode,
-            editable=editable,
-            index_url=index_url,
-            install_pre_commit=install_pre_commit,
+        return cast(
+            dict[str, Any],
+            self._setup_cmd.setup(
+                self.uv_manager,
+                path=path,
+                python=python,
+                dev=dev,
+                from_requirements=from_requirements,
+                all_packages=all_packages,
+                compile_bytecode=compile_bytecode,
+                editable=editable,
+                index_url=index_url,
+                install_pre_commit=install_pre_commit,
+            ),
         )
 
     def build(
@@ -159,13 +165,16 @@ class DHTLCommands:
         Returns:
             Dict with build results
         """
-        return self._build_cmd.build(
-            self.uv_manager,
-            path=path,
-            wheel=wheel,
-            sdist=sdist,
-            no_checks=no_checks,
-            out_dir=out_dir,
+        return cast(
+            dict[str, Any],
+            self._build_cmd.build(
+                self.uv_manager,
+                path=path,
+                wheel=wheel,
+                sdist=sdist,
+                no_checks=no_checks,
+                out_dir=out_dir,
+            ),
         )
 
     def sync(
@@ -195,16 +204,19 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and message
         """
-        return self._sync_cmd.sync(
-            self.uv_manager,
-            path=path,
-            locked=locked,
-            dev=dev,
-            no_dev=no_dev,
-            extras=extras,
-            upgrade=upgrade,
-            all_extras=all_extras,
-            package=package,
+        return cast(
+            dict[str, Any],
+            self._sync_cmd.sync(
+                self.uv_manager,
+                path=path,
+                locked=locked,
+                dev=dev,
+                no_dev=no_dev,
+                extras=extras,
+                upgrade=upgrade,
+                all_extras=all_extras,
+                package=package,
+            ),
         )
 
     def deploy_project_in_container(
@@ -234,15 +246,18 @@ class DHTLCommands:
         Returns:
             Result dictionary with deployment info and test results
         """
-        return self._deploy_cmd.deploy_project_in_container(
-            project_path=project_path,
-            run_tests=run_tests,
-            python_version=python_version,
-            detach=detach,
-            port_mapping=port_mapping,
-            environment=environment,
-            multi_stage=multi_stage,
-            production=production,
+        return cast(
+            dict[str, Any],
+            self._deploy_cmd.deploy_project_in_container(
+                project_path=project_path,
+                run_tests=run_tests,
+                python_version=python_version,
+                detach=detach,
+                port_mapping=port_mapping,
+                environment=environment,
+                multi_stage=multi_stage,
+                production=production,
+            ),
         )
 
 

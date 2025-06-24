@@ -39,7 +39,7 @@ def setup_environment() -> dict[str, str]:
     return env
 
 
-def env_command(*args, **kwargs) -> int:
+def env_command(*args: Any, **kwargs: Any) -> int:
     """Show environment information."""
     log_info("🌍 Environment Information")
     log_info("=" * 50)
@@ -88,6 +88,6 @@ def env_command(*args, **kwargs) -> int:
     return 0
 
 
-def placeholder_function(*args, **kwargs) -> Any:
+def placeholder_function(*args: Any, **kwargs: Any) -> Any:
     """Placeholder for backward compatibility."""
     return env_command(*args, **kwargs)
