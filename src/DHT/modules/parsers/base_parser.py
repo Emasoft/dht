@@ -19,7 +19,10 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+try:
+    import yaml  # type: ignore[import-untyped]
+except ImportError:
+    yaml = None
 
 try:
     import tree_sitter
@@ -50,7 +53,8 @@ class BaseParser(ABC):
             language: Tree-sitter language name if applicable
         """
         self.language = language
-        self.parser = None
+        self.parser: Any | None = None
+        self.language_obj: Any | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
 
         if language and TREE_SITTER_AVAILABLE:
@@ -73,7 +77,7 @@ class BaseParser(ABC):
                 try:
                     language_obj = tree_sitter.Language(str(lib_path), language)
                     self.parser = tree_sitter.Parser()
-                    self.parser.set_language(language_obj)  # type: ignore[attr-defined]
+                    self.parser.set_language(language_obj)
                     self.language_obj = language_obj
                     self.logger.info(f"Initialized tree-sitter for {language} from {lib_path}")
                     return
@@ -96,7 +100,7 @@ class BaseParser(ABC):
         pass
 
     @abstractmethod
-    def extract_dependencies(self, file_path: Path) -> list[str]:
+    def extract_dependencies(self, file_path: Path) -> Any:
         """
         Extract dependencies from a file.
 
@@ -104,7 +108,7 @@ class BaseParser(ABC):
             file_path: Path to the file to parse
 
         Returns:
-            List of dependency names
+            Dependencies (format depends on parser implementation)
         """
         pass
 
@@ -152,7 +156,7 @@ class BaseParser(ABC):
         description="Parse a file with appropriate parser",
         retries=2,
         retry_delay_seconds=5,
-    )
+    )  # type: ignore[misc]
     def parse_with_prefect(self, file_path: str | Path) -> dict[str, Any]:
         """
         Prefect task wrapper for parsing files.
@@ -219,11 +223,14 @@ class BaseParser(ABC):
         if not self.parser:
             return None
 
+        # Convert to bytes if needed
         if isinstance(content, str):
-            content = content.encode("utf-8")
+            content_bytes = content.encode("utf-8")
+        else:
+            content_bytes = content
 
         try:
-            return self.parser.parse(content)
+            return self.parser.parse(content_bytes)
         except Exception as e:
             self.logger.error(f"Tree-sitter parsing failed: {e}")
             return None
@@ -245,7 +252,7 @@ class BaseParser(ABC):
         try:
             query = self.language_obj.query(query_string)
             captures = query.captures(tree.root_node)
-            return captures
+            return list(captures)  # Ensure we return a list
         except Exception as e:
             self.logger.error(f"Tree query failed: {e}")
             return []
@@ -255,7 +262,8 @@ class BaseParser(ABC):
         """Load and parse JSON file"""
         try:
             with open(file_path) as f:
-                return json.load(f)
+                data: dict[str, Any] = json.load(f)
+                return data
         except Exception as e:
             raise ValueError(f"Failed to parse JSON from {file_path}: {e}") from e
 
@@ -272,13 +280,14 @@ class BaseParser(ABC):
     def load_toml(file_path: Path) -> dict[str, Any]:
         """Load and parse TOML file"""
         try:
-            import toml  # type: ignore[import-untyped]
+            import toml  # type: ignore
         except ImportError as e:
             raise ImportError("toml package required for TOML parsing. Install with: pip install toml") from e
 
         try:
             with open(file_path) as f:
-                return toml.load(f)
+                data: dict[str, Any] = toml.load(f)
+                return data
         except Exception as e:
             raise ValueError(f"Failed to parse TOML from {file_path}: {e}") from e
 

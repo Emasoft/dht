@@ -32,7 +32,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from tabulate import tabulate  # type: ignore[import-untyped]
+from tabulate import tabulate  # type: ignore
 
 
 @dataclass

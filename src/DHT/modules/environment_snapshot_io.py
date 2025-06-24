@@ -25,7 +25,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml  # type: ignore
 from prefect import get_run_logger, task
 
 from DHT.modules.environment_snapshot_models import EnvironmentSnapshot

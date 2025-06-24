@@ -19,7 +19,10 @@ from pathlib import Path
 from typing import Any
 
 import click
-import yaml  # type: ignore[import-untyped]
+try:
+    import yaml
+except ImportError:
+    yaml = None  # type: ignore[assignment]
 from prefect import serve
 from prefect.deployments import run_deployment
 

@@ -59,7 +59,7 @@ class PackageJsonParser(BaseParser):
         except json.JSONDecodeError as e:
             return {"error": f"Invalid JSON: {e}"}
 
-        result = {
+        result: dict[str, Any] = {
             "file_metadata": self.get_file_metadata(file_path),
             "format": "package.json",
         }
@@ -82,7 +82,7 @@ class PackageJsonParser(BaseParser):
         if "author" in data:
             result["author"] = self._parse_person(data["author"])
 
-        if "contributors" in data:
+        if "contributors" in data and isinstance(data["contributors"], list):
             result["contributors"] = [self._parse_person(p) for p in data["contributors"]]
 
         # Main entry points
@@ -220,7 +220,8 @@ class PackageJsonParser(BaseParser):
         if isinstance(workspaces, list):
             return workspaces
         elif isinstance(workspaces, dict) and "packages" in workspaces:
-            return workspaces["packages"]
+            packages = workspaces["packages"]
+            return packages if isinstance(packages, list) else []
         return []
 
     def read_file_safe(self, file_path: Path, encoding: str = "utf-8") -> str | None:

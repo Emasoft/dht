@@ -19,7 +19,7 @@ Licensed under the MIT License. See LICENSE file for details.
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml  # type: ignore
 
 from DHT.modules.act_integration_models import WorkflowInfo
 

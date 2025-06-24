@@ -199,9 +199,10 @@ class BashParser(BaseParser):
             List of function definitions
         """
         result = self.parse_file(file_path)
-        return result.get("functions", [])
+        functions = result.get("functions", [])
+        return functions if isinstance(functions, list) else []
 
-    def extract_dependencies(self, file_path: Path) -> dict[str, list[str]]:
+    def extract_dependencies(self, file_path: Path) -> Any:
         """
         Extract dependencies from a Bash script.
 
@@ -209,10 +210,11 @@ class BashParser(BaseParser):
             file_path: Path to the Bash script
 
         Returns:
-            Dictionary of dependencies
+            Dictionary of dependencies (commands, packages, files)
         """
         result = self.parse_file(file_path)
-        return result.get("dependencies", {"commands": [], "packages": [], "files": []})
+        deps = result.get("dependencies", {"commands": [], "packages": [], "files": []})
+        return deps
 
 
 # Export public API

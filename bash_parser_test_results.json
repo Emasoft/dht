@@ -1,11 +1,11 @@
 {
   "file_metadata": {
-    "size": 933,
-    "modified": 1750260331.6867876,
-    "created": 1750260331.6867876,
+    "size": 929,
+    "modified": 1750731168.8148649,
+    "created": 1750731168.8148649,
     "permissions": "0o100600",
-    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpej31uy43.sh",
-    "name": "tmpej31uy43.sh",
+    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpc99qq1a0.sh",
+    "name": "tmpc99qq1a0.sh",
     "extension": ".sh"
   },
   "functions": [
@@ -17,7 +17,7 @@
     },
     {
       "name": "setup_environment",
-      "body": "    local env_type=$1\n    local config_file=\"config.ini\"\n    \n    if [ \"$env_type\" = \"production\" ]; then\n        export NODE_ENV=\"production\"\n    else\n        export NODE_ENV=\"development\"\n    fi",
+      "body": "    local env_type=$1\n    local config_file=\"config.ini\"\n\n    if [ \"$env_type\" = \"production\" ]; then\n        export NODE_ENV=\"production\"\n    else\n        export NODE_ENV=\"development\"\n    fi",
       "line": 19,
       "local_vars": [
         "env_type",
@@ -154,8 +154,8 @@
   },
   "dependencies": {
     "commands": [
-      "docker",
       "git",
+      "docker",
       "npm"
     ],
     "packages": [],
@@ -163,3 +163,4 @@
   },
   "parser_type": "regex"
 }
+

@@ -216,7 +216,7 @@ class PythonParser(BaseParser):
 
     def _extract_arguments(self, args: ast.arguments) -> dict[str, Any]:
         """Extract function arguments"""
-        arg_info = {
+        arg_info: dict[str, Any] = {
             "args": [],
             "vararg": None,
             "kwarg": None,
@@ -453,7 +453,7 @@ class PythonParser(BaseParser):
             except Exception:
                 return str(node)
 
-    def _is_method(self, node: ast.FunctionDef) -> bool:
+    def _is_method(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
         """Check if function is a method (has self/cls as first arg)"""
         if not node.args.args:
             return False
@@ -461,7 +461,7 @@ class PythonParser(BaseParser):
         first_arg = node.args.args[0].arg
         return first_arg in ("self", "cls")
 
-    def _has_decorator(self, node: ast.FunctionDef, decorator_name: str) -> bool:
+    def _has_decorator(self, node: ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef, decorator_name: str) -> bool:
         """Check if function has specific decorator"""
         for decorator in node.decorator_list:
             if self._get_decorator_name(decorator) == decorator_name:
@@ -493,7 +493,7 @@ class PythonParser(BaseParser):
                                 return True
         return False
 
-    def _calculate_complexity(self, node: ast.FunctionDef) -> int:
+    def _calculate_complexity(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> int:
         """
         Calculate cyclomatic complexity of a function.
         This is a simplified version that counts decision points.

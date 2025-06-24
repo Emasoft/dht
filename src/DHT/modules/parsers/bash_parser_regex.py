@@ -51,7 +51,7 @@ class RegexBashParser:
             match2 = re.match(REGEX_PATTERNS["function_def2"], line)
 
             if match1 or match2:
-                func_name = match1.group(1) if match1 else match2.group(1)
+                func_name = match1.group(1) if match1 else match2.group(1) if match2 else ""
                 start_line = i + 1  # 1-based line number
 
                 # Find the matching closing brace

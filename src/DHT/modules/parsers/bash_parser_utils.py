@@ -146,7 +146,7 @@ class BashParserUtils:
 
         # Look for command usage
         for cmd in COMMON_COMMANDS:
-            if re.search(rf"\b{cmd}\b", content):
+            if re.search(rf"\b{re.escape(cmd)}\b", content):
                 dependencies["commands"].append(cmd)
 
         # Look for package installation commands

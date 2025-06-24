@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from tabulate import tabulate  # type: ignore[import-untyped]
+from tabulate import tabulate  # type: ignore
 
 
 @dataclass

@@ -126,7 +126,7 @@ def test_diagnostic_main_function(mock_build_report, tmp_path) -> Any:
     assert output_file.exists()
 
     # Verify YAML content
-    import yaml  # type: ignore[import-untyped]
+    import yaml  # type: ignore
 
     with open(output_file) as f:
         data = yaml.safe_load(f)

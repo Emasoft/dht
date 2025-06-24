@@ -122,7 +122,7 @@ def setup_project_environment(
         Dict with setup results
     """
     logger = get_logger()
-    results = {"success": False, "steps": {}, "errors": []}
+    results: dict[str, Any] = {"success": False, "steps": {}, "errors": []}
 
     try:
         # Check UV availability

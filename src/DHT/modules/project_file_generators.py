@@ -22,7 +22,10 @@ This module generates project files like gitignore, Dockerfile, and CI workflows
 
 from pathlib import Path
 
-import yaml  # type: ignore[import-untyped]
+try:
+    import yaml
+except ImportError:
+    yaml = None  # type: ignore[assignment]
 
 from DHT.modules.environment_config_models import EnvironmentConfig
 

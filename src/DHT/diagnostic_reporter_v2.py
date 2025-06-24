@@ -72,7 +72,7 @@ except ImportError:
     print("Warning: distro not available. Linux distribution info will be limited.", file=sys.stderr)
 
 try:
-    import yaml
+    import yaml  # type: ignore[import-untyped]
 
     HAS_YAML = True
 except ImportError:

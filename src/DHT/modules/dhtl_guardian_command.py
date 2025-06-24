@@ -21,8 +21,12 @@ Provides process management with resource limits using Prefect.
 
 import sys
 from pathlib import Path
+from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+try:
+    import yaml
+except ImportError:
+    yaml = None  # type: ignore[assignment]
 
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .guardian_prefect import (
@@ -259,7 +263,7 @@ def guardian_config(args: list[str]) -> int:
         i += 1
 
     # Load existing config
-    config = {}
+    config: dict[str, Any] = {}
     if config_path.exists():
         try:
             with open(config_path) as f:

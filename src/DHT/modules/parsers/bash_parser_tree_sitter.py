@@ -69,9 +69,9 @@ class TreeSitterBashParser:
             return None
 
         try:
-            if isinstance(content, str):
-                content = content.encode("utf-8")
-            return self.parser.parse(content)
+            # Convert to bytes for tree-sitter
+            content_bytes = content.encode("utf-8") if isinstance(content, str) else content
+            return self.parser.parse(content_bytes)
         except Exception as e:
             self.logger.error(f"Tree-sitter parsing failed: {e}")
             return None
@@ -84,7 +84,7 @@ class TreeSitterBashParser:
         try:
             query = self.language_obj.query(query_string)
             captures = query.captures(tree.root_node)
-            return captures
+            return list(captures)  # Ensure we return a list, not Any
         except Exception as e:
             self.logger.error(f"Tree query failed: {e}")
             return []

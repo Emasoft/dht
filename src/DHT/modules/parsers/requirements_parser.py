@@ -56,7 +56,7 @@ class RequirementsParser(BaseParser):
         if content is None:
             return {"error": f"Could not read file {file_path}"}
 
-        result = {
+        result: dict[str, Any] = {
             "file_metadata": self.get_file_metadata(file_path),
             "dependencies": [],
             "comments": [],
@@ -208,7 +208,7 @@ class RequirementsParser(BaseParser):
 
         return dep
 
-    def _parse_package_dependency(self, line: str, line_num: int) -> dict[str, Any]:
+    def _parse_package_dependency(self, line: str, line_num: int) -> dict[str, Any] | None:
         """Parse a regular package dependency line."""
         # Handle environment markers (e.g., ; python_version >= "3.6")
         marker = None
