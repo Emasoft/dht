@@ -33,7 +33,7 @@ def run_pytest_json(test_path: str | Path) -> dict[str, Any] | None:
     # Try to load JSON report
     try:
         with open("/tmp/pytest_report.json") as f:
-            return json.load(f)  # type: ignore[no-any-return]
+            return json.load(f)  # type: ignore[no-any-return]  # type: ignore[no-any-return]
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 

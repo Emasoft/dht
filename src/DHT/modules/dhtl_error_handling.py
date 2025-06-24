@@ -49,8 +49,10 @@ class ErrorCode(IntEnum):
     ENVIRONMENT = 10
     UNEXPECTED = 99
 
+    # Color codes for terminal output
+    CUSTOM = 1000  # For custom errors
 
-# Color codes for terminal output
+
 class Colors:
     """ANSI color codes for terminal output."""
 
@@ -382,7 +384,11 @@ class DHTErrorHandler:
             if exit_code == 0:
                 self.log_success(message)
             else:
-                self.log_error(message, exit_code)
+                # Use CUSTOM error code for custom errors with numeric exit codes
+                if isinstance(exit_code, int) and exit_code not in [e.value for e in ErrorCode]:
+                    self.log_error(message, ErrorCode.CUSTOM)
+                else:
+                    self.log_error(message, ErrorCode(exit_code))
 
         sys.exit(exit_code)
 

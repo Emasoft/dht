@@ -27,20 +27,20 @@ from pathlib import Path
 from typing import Any
 
 
-def ensure_tree_sitter_installed() -> None:
+def ensure_tree_sitter_installed() -> bool:
     """Ensure the tree-sitter Python package is installed"""
     try:
         import tree_sitter
 
         # Get version if available, otherwise just acknowledge it's installed
         try:
-            version = tree_sitter.__version__
+            version = getattr(tree_sitter, "__version__", "unknown")
             version_str = f"(version: {version})"
         except AttributeError:
             version_str = "(version information not available)"
 
         print(f"✅ tree-sitter Python package is installed {version_str}")
-        return True  # type: ignore[return-value]
+        return True
     except ImportError:
         print("❌ tree-sitter Python package is not installed")
         try:
@@ -49,13 +49,13 @@ def ensure_tree_sitter_installed() -> None:
             import tree_sitter
 
             print("✅ tree-sitter Python package installed successfully")
-            return True  # type: ignore[return-value]
+            return True
         except Exception as e:
             print(f"❌ Failed to install tree-sitter Python package: {e}")
-            return False  # type: ignore[return-value]
+            return False
 
 
-def ensure_build_directory(project_root) -> Any:
+def ensure_build_directory(project_root: Path) -> Path:
     """Ensure the build directory exists"""
     build_dir = project_root / "build"
     if not build_dir.exists():
@@ -66,7 +66,7 @@ def ensure_build_directory(project_root) -> Any:
     return build_dir
 
 
-def ensure_tree_sitter_bash(project_root) -> None:
+def ensure_tree_sitter_bash(project_root: Path) -> bool:
     """Ensure tree-sitter-bash grammar is cloned and set up"""
     ts_bash_dir = project_root / "tree-sitter-bash"
 
@@ -99,19 +99,19 @@ def ensure_tree_sitter_bash(project_root) -> None:
             # Verify the clone worked correctly
             if not (ts_bash_dir / "src" / "parser.c").exists():
                 print("❌ Cloned repository is missing expected structure")
-                return False  # type: ignore[return-value]
+                return False
 
             print("✅ tree-sitter-bash repository cloned successfully")
         except Exception as e:
             print(f"❌ Failed to clone tree-sitter-bash repository: {e}")
-            return False  # type: ignore[return-value]
+            return False
     else:
         print("✅ tree-sitter-bash directory already exists and contains expected files")
 
-    return True  # type: ignore[return-value]
+    return True
 
 
-def build_language_library(project_root) -> None:
+def build_language_library(project_root: Path) -> bool:
     """Build the language library using tree-sitter"""
     try:
         import tree_sitter
@@ -126,7 +126,7 @@ def build_language_library(project_root) -> None:
 
             if importlib.util.find_spec("tree_sitter_bash") is not None:
                 print("✅ tree-sitter-bash Python bindings already installed")
-                return True  # type: ignore[return-value]
+                return True
         except ImportError:
             pass
 
@@ -140,7 +140,7 @@ def build_language_library(project_root) -> None:
             try:
                 language = tree_sitter.Language(str(lib_path), "bash")
                 print("✅ Successfully loaded Bash language from existing library")
-                return True  # type: ignore[return-value]
+                return True
             except Exception:
                 print("❌ Existing language library is invalid. Rebuilding...")
                 if lib_path.exists():
@@ -168,32 +168,32 @@ def build_language_library(project_root) -> None:
 
                     if importlib.util.find_spec("tree_sitter_bash") is not None:
                         print("✅ Successfully installed tree-sitter-bash Python bindings")
-                        return True  # type: ignore[return-value]
+                        return True
                     else:
                         print("❌ tree-sitter-bash installation verification failed")
-                        return False  # type: ignore[return-value]
+                        return False
                 except Exception as install_error:
                     print(f"❌ Failed to install tree-sitter-bash: {install_error}")
-                    return False  # type: ignore[return-value]
+                    return False
 
         # Validate the built library
         try:
             language = tree_sitter.Language(str(lib_path), "bash")
             print("✅ Successfully built and loaded Bash language library")
-            return True  # type: ignore[return-value]
+            return True
         except Exception as e:
             print(f"❌ Failed to load the built language library: {e}")
-            return False  # type: ignore[return-value]
+            return False
 
     except ImportError:
         print("❌ tree-sitter Python package is not installed")
-        return False  # type: ignore[return-value]
+        return False
     except Exception as e:
         print(f"❌ Failed to build language library: {e}")
-        return False  # type: ignore[return-value]
+        return False
 
 
-def test_bash_parsing(project_root) -> None:
+def test_bash_parsing(project_root: Path) -> bool:
     """Test if bash parsing works with a simple example"""
     try:
         import tree_sitter
@@ -237,14 +237,14 @@ def test_bash_parsing(project_root) -> None:
                     if part.type == "word":
                         func_name = bash_code[part.start_byte : part.end_byte]
                         print(f"    Function name: {func_name}")
-            return True  # type: ignore[return-value]
+            return True
         else:
             print("❌ Failed to identify function definitions in Bash code")
-            return False  # type: ignore[return-value]
+            return False
 
     except Exception as e:
         print(f"❌ Failed to test Bash parsing: {e}")
-        return False  # type: ignore[return-value]
+        return False
 
 
 def main() -> None:

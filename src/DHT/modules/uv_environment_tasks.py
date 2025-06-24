@@ -99,7 +99,7 @@ def create_virtual_environment(
         raise UVTaskError(f"Failed to create virtual environment: {e}") from e
 
 
-@flow(name="setup_project_environment", description="Complete project environment setup with UV")  # type: ignore[misc]
+@flow(name="setup_project_environment", description="Complete project environment setup with UV")  # type: ignore[misc]  # type: ignore[misc]
 def setup_project_environment(
     project_path: Path, python_version: str | None = None, install_deps: bool = True, force_recreate: bool = False
 ) -> dict[str, Any]:
