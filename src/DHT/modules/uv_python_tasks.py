@@ -117,7 +117,10 @@ def detect_python_version(project_path: Path) -> str | None:
     pyproject_file = project_path / "pyproject.toml"
     if pyproject_file.exists():
         try:
-            import tomllib
+            try:
+                import tomllib
+            except ImportError:
+                import tomli as tomllib
 
             with open(pyproject_file, "rb") as f:
                 data = tomllib.load(f)
@@ -125,9 +128,9 @@ def detect_python_version(project_path: Path) -> str | None:
             # Check project.requires-python
             requires_python = data.get("project", {}).get("requires-python")
             if requires_python:
-                version = extract_min_python_version(requires_python)
-                logger.info(f"Found Python version {version} from pyproject.toml")
-                return version
+                py_version: str = extract_min_python_version(requires_python)
+                logger.info(f"Found Python version {py_version} from pyproject.toml")
+                return py_version
         except Exception as e:
             logger.warning(f"Error parsing pyproject.toml: {e}")
 
@@ -140,9 +143,9 @@ def detect_python_version(project_path: Path) -> str | None:
             match = re.search(r'python_requires\s*=\s*["\']([^"\']+)["\']', content)
             if match:
                 constraint = match.group(1)
-                version = extract_min_python_version(constraint)
-                logger.info(f"Found Python version {version} from setup.py")
-                return version
+                setup_version: str = extract_min_python_version(constraint)
+                logger.info(f"Found Python version {setup_version} from setup.py")
+                return setup_version
         except Exception as e:
             logger.warning(f"Error parsing setup.py: {e}")
 

@@ -34,7 +34,7 @@ class ValidationUtils:
 
     def generate_validation_info(self, project_path: Path, project_info: dict[str, Any]) -> dict[str, Any]:
         """Generate validation checksums and metadata."""
-        validation: dict[str, dict[str, str]] = {"checksums": {}, "tool_behaviors": {}}
+        validation: dict[str, Any] = {"checksums": {}, "tool_behaviors": {}}
 
         # Generate checksums for key files
         for filename in DHTConfigConstants.KEY_FILES:

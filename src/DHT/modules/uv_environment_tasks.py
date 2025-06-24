@@ -99,7 +99,7 @@ def create_virtual_environment(
         raise UVTaskError(f"Failed to create virtual environment: {e}") from e
 
 
-@flow(name="setup_project_environment", description="Complete project environment setup with UV")
+@flow(name="setup_project_environment", description="Complete project environment setup with UV")  # type: ignore[misc]
 def setup_project_environment(
     project_path: Path, python_version: str | None = None, install_deps: bool = True, force_recreate: bool = False
 ) -> dict[str, Any]:
@@ -130,7 +130,7 @@ def setup_project_environment(
         results["steps"]["uv_check"] = uv_check
 
         if not uv_check["available"]:
-            results["errors"].append("UV not available")  # type: ignore[attr-defined]
+            results["errors"].append("UV not available")
             return results
 
         # Detect or ensure Python version
@@ -178,7 +178,7 @@ def setup_project_environment(
 - Path: {venv_result.get("path", "N/A")}
 
 ## Dependencies
-- Installed: {results["steps"].get("dependencies", {}).get("success", False)}  # type: ignore[attr-defined]
+- Installed: {results["steps"].get("dependencies", {}).get("success", False)}
 
 ## Status
 Setup completed {"successfully" if results["success"] else "with errors"}
@@ -187,6 +187,6 @@ Setup completed {"successfully" if results["success"] else "with errors"}
 
     except Exception as e:
         logger.error(f"Setup failed: {e}")
-        results["errors"].append(str(e))  # type: ignore[attr-defined]
+        results["errors"].append(str(e))
 
     return results

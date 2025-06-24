@@ -31,7 +31,7 @@ from prefect import flow
 class ProjectWorkflowManager:
     """Manages project setup workflows for UV."""
 
-    def __init__(self, python_manager, venv_manager, deps_manager) -> None:
+    def __init__(self, python_manager: Any, venv_manager: Any, deps_manager: Any) -> None:
         """
         Initialize project workflow manager.
 
@@ -77,7 +77,7 @@ class ProjectWorkflowManager:
     ) -> Path | None:
         """Set up virtual environment and return path."""
         try:
-            venv_path = self.venv_manager.create_venv(project_path, python_version)
+            venv_path: Path = self.venv_manager.create_venv(project_path, python_version)
             results["venv_path"] = str(venv_path)
             results["steps"].append({"step": "create_venv", "success": True, "path": str(venv_path)})
             return venv_path
@@ -128,11 +128,15 @@ class ProjectWorkflowManager:
             Setup result information
         """
         project_path = Path(project_path)
-        results = {"project_path": str(project_path), "timestamp": datetime.now().isoformat(), "steps": []}
+        results: dict[str, Any] = {
+            "project_path": str(project_path),
+            "timestamp": datetime.now().isoformat(),
+            "steps": [],
+        }
 
         # Setup Python environment
         python_version = self._setup_python_environment(project_path, python_version, results)
-        if results.get("success") is False:
+        if not results.get("success"):
             return results
 
         # Create virtual environment
@@ -148,6 +152,6 @@ class ProjectWorkflowManager:
         self._generate_lock_if_needed(project_path, results)
 
         # Set overall success
-        results["success"] = all(step.get("success", False) for step in results["steps"]) if results["steps"] else True  # type: ignore[attr-defined]
+        results["success"] = all(step.get("success", False) for step in results["steps"]) if results["steps"] else True
 
         return results

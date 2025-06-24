@@ -12,9 +12,10 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
-def run_pytest_json(test_path) -> None:
+def run_pytest_json(test_path: str | Path) -> dict[str, Any] | None:
     """Run pytest and get JSON output."""
     cmd = [
         sys.executable,
@@ -32,12 +33,12 @@ def run_pytest_json(test_path) -> None:
     # Try to load JSON report
     try:
         with open("/tmp/pytest_report.json") as f:
-            return json.load(f)
+            return json.load(f)  # type: ignore[no-any-return]
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
 
-def run_tests_summary() -> None:
+def run_tests_summary() -> int:
     """Run all tests and generate summary."""
     test_dir = Path("DHT/tests/unit")
 
