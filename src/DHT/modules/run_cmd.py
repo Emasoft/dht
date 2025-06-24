@@ -17,7 +17,9 @@ import pexpect
 import psutil
 
 
-def run_cmd(command, verbose=False, error_print=None, cwd=None) -> Any:
+def run_cmd(
+    command: str | list[str], verbose: bool = False, error_print: Any = None, cwd: str | None = None
+) -> tuple[int, str]:
     try:
         if sys.stdin.isatty() and hasattr(pexpect, "spawn") and platform.system() != "Windows":
             return run_cmd_pexpect(command, verbose, cwd)
@@ -48,7 +50,9 @@ def get_windows_parent_process_name() -> str | None:
         return None
 
 
-def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.encoding) -> None:
+def run_cmd_subprocess(
+    command: str | list[str], verbose: bool = False, cwd: str | None = None, encoding: str | None = None
+) -> tuple[int, str]:
     if verbose:
         print("Using run_cmd_subprocess:", command)
 
@@ -83,19 +87,19 @@ def run_cmd_subprocess(command, verbose=False, cwd=None, encoding=sys.stdout.enc
 
         output: list[Any] = []
         while True:
-            chunk = process.stdout.read(1)
+            chunk = process.stdout.read(1) if process.stdout else ""
             if not chunk:
                 break
             print(chunk, end="", flush=True)  # Print the chunk in real-time
             output.append(chunk)  # Store the chunk for later use
 
         process.wait()
-        return process.returncode, "".join(output)  # type: ignore[return-value]
+        return process.returncode, "".join(output)
     except Exception as e:
-        return 1, str(e)  # type: ignore[return-value]
+        return 1, str(e)
 
 
-def run_cmd_pexpect(command, verbose=False, cwd=None) -> None:
+def run_cmd_pexpect(command: str | list[str], verbose: bool = False, cwd: str | None = None) -> tuple[int, str]:
     """
     Run a shell command interactively using pexpect, capturing all output.
 
@@ -108,7 +112,7 @@ def run_cmd_pexpect(command, verbose=False, cwd=None) -> None:
 
     output = BytesIO()
 
-    def output_callback(b) -> Any:
+    def output_callback(b: bytes) -> bytes:
         output.write(b)
         return b
 
@@ -134,8 +138,8 @@ def run_cmd_pexpect(command, verbose=False, cwd=None) -> None:
 
         # Wait for the command to finish and get the exit status
         child.close()
-        return child.exitstatus, output.getvalue().decode("utf-8", errors="replace")  # type: ignore[return-value]
+        return child.exitstatus or 0, output.getvalue().decode("utf-8", errors="replace")
 
     except (pexpect.ExceptionPexpect, TypeError, ValueError) as e:
         error_msg = f"Error running command {command}: {e}"
-        return 1, error_msg  # type: ignore[return-value]
+        return 1, error_msg

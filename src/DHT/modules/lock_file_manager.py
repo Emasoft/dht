@@ -26,6 +26,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from prefect import get_run_logger, task
 
@@ -156,11 +157,11 @@ class LockFileManager:
 
     def _parse_uv_lock(self, content: str) -> dict[str, str]:
         """Parse UV lock file to extract package versions."""
-        packages = {}
+        packages: dict[str, str] = {}
 
         # UV lock files use TOML format
         lines = content.splitlines()
-        current_package = None
+        current_package: dict[str, Any] | None = None
 
         for line in lines:
             line = line.strip()
@@ -178,7 +179,7 @@ class LockFileManager:
 
     def _parse_requirements_txt(self, content: str) -> dict[str, str]:
         """Parse requirements.txt to extract package versions."""
-        packages = {}
+        packages: dict[str, str] = {}
 
         for line in content.splitlines():
             line = line.strip()
@@ -202,7 +203,7 @@ class LockFileManager:
         """Parse package-lock.json to extract package versions."""
         try:
             data = json.loads(content)
-            packages = {}
+            packages: dict[str, str] = {}
 
             for name, info in data.get("dependencies", {}).items():
                 if isinstance(info, dict) and "version" in info:
@@ -214,7 +215,7 @@ class LockFileManager:
 
     def _parse_yarn_lock(self, content: str) -> dict[str, str]:
         """Parse yarn.lock to extract package versions."""
-        packages = {}
+        packages: dict[str, str] = {}
 
         # Simplified yarn.lock parsing
         lines = content.splitlines()
@@ -240,7 +241,7 @@ class LockFileManager:
         """Parse Pipfile.lock to extract package versions."""
         try:
             data = json.loads(content)
-            packages = {}
+            packages: dict[str, str] = {}
 
             # Combine default and develop dependencies
             for section in ["default", "develop"]:
@@ -254,11 +255,11 @@ class LockFileManager:
 
     def _parse_poetry_lock(self, content: str) -> dict[str, str]:
         """Parse poetry.lock to extract package versions."""
-        packages = {}
+        packages: dict[str, str] = {}
 
         # Poetry lock files use TOML format
         lines = content.splitlines()
-        current_package = None
+        current_package: dict[str, Any] | None = None
 
         for line in lines:
             line = line.strip()

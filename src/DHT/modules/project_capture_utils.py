@@ -42,7 +42,7 @@ class ProjectCaptureUtils:
         self.configurator = EnvironmentConfigurator()
         self.lock_manager = LockFileManager()
 
-    def _get_logger(self) -> None:
+    def _get_logger(self) -> Any:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -50,7 +50,7 @@ class ProjectCaptureUtils:
             except Exception:
                 import logging
 
-                self.logger = logging.getLogger(__name__)
+                self.logger = logging.getLogger(__name__)  # type: ignore[assignment]
         return self.logger
 
     def capture_project_info(self, snapshot: EnvironmentSnapshot, project_path: Path, include_configs: bool) -> None:

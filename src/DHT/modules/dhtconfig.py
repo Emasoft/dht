@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any, cast
+
 """
 Dhtconfig module.
 
@@ -32,7 +34,6 @@ regeneration across different platforms.
 import platform
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 # Import DHT modules - use try/except for flexibility in import paths
 try:
@@ -84,31 +85,31 @@ class DHTConfig:
 
     def _extract_version(self, version_output: str) -> str:
         """Extract version from command output (backward compatibility)."""
-        return self.validation_utils._extract_version(version_output)
+        return cast(str, self.validation_utils._extract_version(version_output))
 
     def _generate_validation_info(self, project_path: Path, config: dict[str, Any]) -> dict[str, Any]:
         """Generate validation info for config (backward compatibility)."""
-        return self.validation_utils.generate_validation_info(project_path, config)
+        return cast(dict[str, Any], self.validation_utils.generate_validation_info(project_path, config))
 
     def _extract_dependencies(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract dependencies from project info (backward compatibility)."""
-        return self.dependency_extractor.extract_dependencies(project_info)
+        return cast(dict[str, Any], self.dependency_extractor.extract_dependencies(project_info))
 
     def _extract_tool_requirements(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract tool requirements from project info (backward compatibility)."""
-        return self.tool_extractor.extract_tool_requirements(project_info)
+        return cast(dict[str, Any], self.tool_extractor.extract_tool_requirements(project_info))
 
     def _extract_build_config(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Extract build config from project info (backward compatibility)."""
-        return self.build_extractor.extract_build_config(project_info)
+        return cast(dict[str, Any], self.build_extractor.extract_build_config(project_info))
 
     def _extract_environment_vars(self, project_path: Path) -> dict[str, Any]:
         """Extract environment variables from project path (backward compatibility)."""
-        return self.env_extractor.extract_environment_vars(project_path)
+        return cast(dict[str, Any], self.env_extractor.extract_environment_vars(project_path))
 
     def _deep_merge(self, base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
         """Deep merge dictionaries (backward compatibility)."""
-        return self.platform_utils._deep_merge(base, overlay)
+        return cast(dict[str, Any], self.platform_utils._deep_merge(base, overlay))
 
     def generate_from_project(
         self, project_path: Path, include_system_info: bool = True, include_checksums: bool = True
@@ -181,7 +182,7 @@ class DHTConfig:
         Returns:
             Path to saved config file
         """
-        return self.io_utils.save_config(config, project_path, format)
+        return cast(Path, self.io_utils.save_config(config, project_path, format))
 
     def load_config(self, config_path: Path) -> dict[str, Any]:
         """
@@ -197,7 +198,7 @@ class DHTConfig:
             FileNotFoundError: If config file doesn't exist
             ValueError: If config file is invalid
         """
-        return self.io_utils.load_config(config_path)
+        return cast(dict[str, Any], self.io_utils.load_config(config_path))
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, list[str]]:
         """
@@ -209,7 +210,7 @@ class DHTConfig:
         Returns:
             Tuple of (is_valid, list_of_errors)
         """
-        return self.validation_utils.validate_config(config, self.schema)
+        return cast(tuple[bool, list[str]], self.validation_utils.validate_config(config, self.schema))
 
     def merge_platform_config(self, base_config: dict[str, Any], platform_name: str | None = None) -> dict[str, Any]:
         """
@@ -222,7 +223,7 @@ class DHTConfig:
         Returns:
             Merged configuration
         """
-        return self.platform_utils.merge_platform_config(base_config, platform_name)
+        return cast(dict[str, Any], self.platform_utils.merge_platform_config(base_config, platform_name))
 
 
 # Export public API

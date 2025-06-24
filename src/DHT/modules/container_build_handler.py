@@ -121,7 +121,7 @@ class ContainerBuildHandler:
 
         return []
 
-    def install_container_tools(self) -> dict[str, str]:
+    def install_container_tools(self) -> dict[str, Any]:
         """
         Provide instructions for installing container tools.
         Cannot install system-level tools in venv.
@@ -146,7 +146,7 @@ class ContainerBuildHandler:
 
         return instructions
 
-    def create_rootless_config(self) -> None:
+    def create_rootless_config(self) -> Path:
         """Create configuration for rootless container builds."""
         config_dir = self.container_config_path / "rootless"
         config_dir.mkdir(exist_ok=True)
@@ -197,7 +197,7 @@ class ContainerBuildHandler:
         return env
 
 
-def get_container_build_info(project_path: Path) -> dict[str, any]:
+def get_container_build_info(project_path: Path) -> dict[str, Any]:
     """Get container build information for a project."""
     handler = ContainerBuildHandler(project_path)
 
@@ -212,14 +212,15 @@ def get_container_build_info(project_path: Path) -> dict[str, any]:
         }
 
     commands = handler.get_build_commands()
-    config = handler.setup_container_config()
+    handler.setup_container_config()
+    compose_files = handler.find_compose_files()
 
     return {
         "can_build": True,
         "builder": builder,
         "commands": commands,
         "config_path": str(handler.container_config_path),
-        "compose_files": config["compose_files"],
+        "compose_files": compose_files,
         "rootless": builder in ["podman", "buildah"],
     }
 

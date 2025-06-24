@@ -33,12 +33,12 @@ from prefect import get_run_logger
 class ReproductionFlowUtils:
     """Utilities for orchestrating reproduction flows."""
 
-    def __init__(self, reproducer) -> None:
+    def __init__(self, reproducer: Any) -> None:
         """Initialize flow utilities with reference to main reproducer."""
         self.reproducer = reproducer
         self.logger = None
 
-    def _get_logger(self) -> None:
+    def _get_logger(self) -> Any:
         """Get logger with fallback."""
         if self.logger is None:
             try:
@@ -46,7 +46,7 @@ class ReproductionFlowUtils:
             except Exception:
                 import logging
 
-                self.logger = logging.getLogger(__name__)
+                self.logger = logging.getLogger(__name__)  # type: ignore[assignment]
         return self.logger
 
     def create_reproducible_environment(
@@ -81,7 +81,11 @@ class ReproductionFlowUtils:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        results = {"project_path": str(project_path), "timestamp": datetime.now().isoformat(), "steps": []}
+        results: dict[str, Any] = {
+            "project_path": str(project_path),
+            "timestamp": datetime.now().isoformat(),
+            "steps": [],
+        }
 
         try:
             # Step 1: Capture environment snapshot

@@ -129,7 +129,7 @@ class ProjectAnalyzer:
             return {"error": f"Project path does not exist: {project_path}"}
 
         # Collect basic project information
-        project_info = {
+        project_info: dict[str, Any] = {
             "name": project_path.name,
             "root_path": str(project_path),
             "project_type": "unknown",
@@ -205,7 +205,7 @@ class ProjectAnalyzer:
             return "unknown"
 
         # Return type with highest score
-        return max(type_scores, key=type_scores.get)
+        return max(type_scores, key=lambda x: type_scores[x])
 
     def _detect_configurations(self, found_files: set[str]) -> dict[str, bool]:
         """Detect various configuration aspects."""
@@ -244,7 +244,7 @@ class ProjectAnalyzer:
 
     def _analyze_python_dependencies(self, project_path: Path, found_files: set[str]) -> dict[str, Any]:
         """Analyze Python dependencies from various sources."""
-        dependencies = {
+        dependencies: dict[str, Any] = {
             "python": {
                 "runtime": [],
                 "development": [],

@@ -11,7 +11,7 @@ on:
     branches:
       - "main"
     paths:
-      - "{REPO_NAME}/website/**"
+      - "website/**"
       - ".github/workflows/pages.yml"
 
   # Allows you to run this workflow manually from the Actions tab
@@ -33,8 +33,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-        run:
-        working-directory: {REPO_NAME}/website
+      run:
+        working-directory: website
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
           ruby-version: '3.3' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
-          working-directory: '${{ github.workspace }}/{REPO_NAME}/website'
+          working-directory: '${{ github.workspace }}/website'
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -58,7 +58,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "{REPO_NAME}/website/_site"
+          path: "website/_site"
 
   # Deployment job
   deploy:
@@ -79,12 +79,9 @@ jobs:
 
       - name: Install linkchecker
         run: |
-        python -m pip install --upgrade pip
-        python -m pip install linkchecker
           python -m pip install --upgrade pip
           python -m pip install linkchecker
 
       - name: Run linkchecker
         run: |
-        linkchecker --ignore-url='.+\.(mp4|mov|avi)' https://{REPO_NAME}.chat
-          linkchecker --ignore-url='.+\.(mp4|mov|avi)' https://{REPO_NAME}.chat
+          linkchecker --ignore-url='.+\.(mp4|mov|avi)' ${{ steps.deployment.outputs.page_url }}

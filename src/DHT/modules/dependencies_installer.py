@@ -30,7 +30,7 @@ from DHT.modules.guardian_prefect import ResourceLimits, run_with_guardian
 class DependenciesInstaller:
     """Handles installation of project dependencies."""
 
-    @task(name="install_project_dependencies")
+    @task(name="install_project_dependencies", description="Install project dependencies")  # type: ignore[misc]  # type: ignore[misc]
     def install_project_dependencies(
         self, snapshot: EnvironmentSnapshot, result: ReproductionResult, target_path: Path
     ) -> Any:

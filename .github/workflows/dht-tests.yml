@@ -103,8 +103,10 @@ jobs:
     - name: Set up Python
       run: uv python install 3.11
 
-    - name: Install coverage tools
-      run: uv pip install coverage[toml]
+    - name: Create virtual environment and install coverage
+      run: |
+        uv venv
+        uv pip install coverage[toml]
 
     - name: Download all coverage reports
       uses: actions/download-artifact@v4

@@ -29,34 +29,28 @@ jobs:
 
     steps:
     - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: Install system dependencies
-        run: |
-        sudo apt-get update
-        sudo apt-get install -y libportaudio2
+      run: |
         sudo apt-get update
         sudo apt-get install -y libportaudio2
 
     - name: Install dependencies
-        run: |
-        python -m pip install --upgrade pip
-        pip install pytest
-        pip install .
+      run: |
         python -m pip install --upgrade pip
         pip install pytest
         pip install .
 
     - name: Run tests
-        env:
-        {REPO_NAME}_ANALYTICS: false
-          run: |
-          pytest
-          pytest
+      env:
+        ANALYTICS: false
+      run: |
+        pytest
