@@ -69,8 +69,8 @@ def test_build_system_report(mock_subprocess) -> Any:
     # Check system info
     system_info = report["system"]
     assert "platform" in system_info
-    assert "machine" in system_info  # Architecture info is in 'machine' field
-    assert "network" in system_info  # Hostname is in network.hostname
+    assert "architecture" in system_info  # Architecture info
+    assert "hostname" in system_info  # Hostname is directly in system_info
 
     # Check tools were detected
     tools = report["tools"]
