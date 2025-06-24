@@ -240,7 +240,7 @@ class DockerManager:
             self.logger.error(f"Failed to stop container: {e}")
             raise DockerError(f"Failed to stop container: {e}") from e
 
-    def stream_logs(self, name_or_id: str, follow: bool = False, tail: int | None = None) -> str:
+    def stream_logs(self, name_or_id: str, follow: bool = False, tail: int | None = None) -> Any:
         """
         Stream logs from a container.
 
@@ -250,7 +250,7 @@ class DockerManager:
             tail: Number of lines to tail
 
         Returns:
-            Log output as string
+            Log output as string or generator
         """
         try:
             container = self.client.containers.get(name_or_id)
@@ -343,11 +343,11 @@ class DockerManager:
     def close(self) -> None:
         """Close Docker client connection."""
         if self._client:
-            try:
+            try:  # type: ignore[unreachable]
                 self._client.close()
-                self._client = None
             except Exception as e:
                 self.logger.debug(f"Error closing Docker client: {e}")
+            self._client = None
 
     def cleanup_containers(self, name_prefix: str) -> int:
         """

@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 import click
+
 try:
     import yaml
 except ImportError:
