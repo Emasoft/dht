@@ -76,8 +76,10 @@ class ContainerTestRunner:
             elif framework == TestFramework.PUPPETEER:
                 results = self.run_puppeteer(container_name)
             else:
-                self.logger.warning(f"Unknown framework: {framework}")
-                continue
+                # This case should never happen as TestFramework enum has only 3 values
+                # Added for exhaustiveness
+                raise ValueError(f"Unknown framework: {framework}")
+
             all_results[framework.value] = results
 
         return all_results
@@ -218,7 +220,15 @@ class ContainerTestRunner:
 
     def _parse_pytest_output(self, output: str) -> dict[str, Any]:
         """Parse pytest output to extract results."""
-        results = {"total": 0, "passed": 0, "failed": 0, "skipped": 0, "errors": 0, "tests": {}, "coverage": None}
+        results: dict[str, Any] = {
+            "total": 0,
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "errors": 0,
+            "tests": {},
+            "coverage": None,
+        }
 
         # Parse test results
         # Look for summary line like "3 passed, 1 failed, 1 skipped"
@@ -234,7 +244,7 @@ class ContainerTestRunner:
             elif match.group(4):  # errors
                 results["errors"] = int(match.group(4))
 
-        total = int(results.get("passed", 0)) + int(results.get("failed", 0)) + int(results.get("skipped", 0)) + int(results.get("errors", 0))
+        total = results["passed"] + results["failed"] + results["skipped"] + results["errors"]
         results["total"] = total
 
         # Parse individual test results
@@ -248,7 +258,7 @@ class ContainerTestRunner:
             test_key = f"{test_file}::{test_name}"
             if "tests" not in results:
                 results["tests"] = {}
-            results["tests"][test_name] = status
+            results["tests"][test_key] = status
 
         # Parse coverage if present
         coverage_pattern = r"TOTAL\s+\d+\s+\d+\s+(\d+%)"
