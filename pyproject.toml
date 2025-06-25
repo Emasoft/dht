@@ -174,6 +174,14 @@ exclude_lines = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/DHT"]
+# Exclude unnecessary files from wheel
+exclude = [
+    "*.pyc",
+    "__pycache__",
+    ".DS_Store",
+    "*.so",
+    "*.dylib",
+]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -184,6 +192,20 @@ include = [
     "/LICENSE",
     "/CHANGELOG.md",
     "/CONTRIBUTING.md",
+    "/build-constraints.txt",
+    "/.python-version",
+    "/requirements*.txt",
+]
+exclude = [
+    "*.pyc",
+    "__pycache__",
+    ".DS_Store",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "*.egg-info",
+    "dist/",
+    "build/",
 ]
 
 [tool.deptry]
@@ -230,3 +252,42 @@ dev = [
     "pre-commit>=4.0.0",
     "yamllint>=1.37.0",
 ]
+
+[tool.uv]
+# Package indexes configuration
+index-url = "https://pypi.org/simple"
+extra-index-url = []
+
+# Build configuration
+compile-bytecode = true
+upgrade = false
+
+# Development settings
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "mypy>=1.0.0",
+    "ruff>=0.11.0",
+    "types-pyyaml>=6.0.12.20250516",
+    "types-tabulate>=0.9.0.20241207",
+    "types-toml>=0.10.8.20240310",
+    "deptry>=0.23.0",
+    "pre-commit>=4.0.0",
+    "yamllint>=1.37.0",
+]
+
+# Package sources for specific dependencies
+[tool.uv.sources]
+# Example: tree-sitter-bash = { git = "https://github.com/tree-sitter/tree-sitter-bash" }
+
+# Environment configuration
+[tool.uv.pip]
+index-strategy = "first-index"
+keyring-provider = "subprocess"
+no-build-isolation-package = []
+
+# Constraint environments for platform-specific builds
+# This is specified as a list of environment markers
+# [tool.uv.environments]
+# default = ["sys_platform != 'win32'", "python_version >= '3.10'"]

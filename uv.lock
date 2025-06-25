@@ -578,8 +578,12 @@ test = [
 [package.dev-dependencies]
 dev = [
     { name = "deptry" },
+    { name = "mypy" },
     { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "pytest-cov" },
+    { name = "ruff" },
     { name = "types-pyyaml" },
     { name = "types-tabulate" },
     { name = "types-toml" },
@@ -632,8 +636,12 @@ provides-extras = ["test", "lint", "all"]
 [package.metadata.requires-dev]
 dev = [
     { name = "deptry", specifier = ">=0.23.0" },
+    { name = "mypy", specifier = ">=1.0.0" },
     { name = "pre-commit", specifier = ">=4.0.0" },
+    { name = "pytest", specifier = ">=8.0.0" },
+    { name = "pytest-asyncio", specifier = ">=1.0.0" },
     { name = "pytest-cov", specifier = ">=6.2.1" },
+    { name = "ruff", specifier = ">=0.11.0" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20250516" },
     { name = "types-tabulate", specifier = ">=0.9.0.20241207" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
