@@ -19,3 +19,5 @@ ignore: |
   tree-sitter-bash/
   src/DHT/GITHUB_WORKFLOWS/
   logs/
+  system_diagnostic.yaml
+  .dht/guardian_results.yaml
