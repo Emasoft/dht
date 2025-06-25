@@ -1,47 +1,21 @@
-# YAML linting configuration for DHT project
-
 extends: default
 
 rules:
-  # Line length
   line-length:
-    max: 180
+    max: 120
     level: warning
-
-  # Indentation
-  indentation:
-    spaces: 2
-    indent-sequences: false
-
-  # Comments
-  comments:
-    require-starting-space: true
-    min-spaces-from-content: 2
-
-  # Empty lines
-  empty-lines:
-    max: 2
-    max-start: 0
-    max-end: 0
-
-  # Truthy values
   truthy:
     allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+  comments:
+    min-spaces-from-content: 1
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+  document-start: disable
 
-  # Brackets
-  brackets:
-    forbid: false
-    min-spaces-inside: 0
-    max-spaces-inside: 1
-
-  # Document start
-  document-start:
-    present: false
-
-ignore: |-
-  .venv/
+ignore: |
   node_modules/
+  .venv/
   tree-sitter-bash/
-  dist/
-  build/
-  system_diagnostic.yaml
+  src/DHT/GITHUB_WORKFLOWS/
+  logs/

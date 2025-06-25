@@ -40,12 +40,15 @@ certifi==2025.4.26
     #   requests
 cffi==1.17.1 ; platform_python_implementation != 'PyPy'
     # via cryptography
+cfgv==3.4.0
+    # via pre-commit
 charset-normalizer==3.4.2
     # via requests
 click==8.1.8
     # via
     #   apprise
     #   bump-my-version
+    #   deptry
     #   dht-toolkit
     #   prefect
     #   rich-click
@@ -56,6 +59,7 @@ cloudpickle==3.1.1
 colorama==0.4.6
     # via
     #   click
+    #   deptry
     #   dht-toolkit
     #   griffe
     #   pytest
@@ -67,6 +71,9 @@ cryptography==45.0.3
     # via prefect
 dateparser==1.2.1
     # via prefect
+deptry==0.23.0
+distlib==0.3.9
+    # via virtualenv
 distro==1.9.0
     # via dht-toolkit
 docker==7.1.0
@@ -80,6 +87,8 @@ exceptiongroup==1.3.0
     #   pytest
 fastapi==0.115.12
     # via prefect
+filelock==3.18.0
+    # via virtualenv
 fsspec==2025.3.2
     # via prefect
 gitdb==4.0.12
@@ -114,6 +123,8 @@ humanize==4.12.3
     #   prefect
 hyperframe==6.1.0
     # via h2
+identify==2.6.12
+    # via pre-commit
 idna==3.10
     # via
     #   anyio
@@ -152,6 +163,8 @@ markupsafe==3.0.2
     #   mako
 mdurl==0.1.2
     # via markdown-it-py
+nodeenv==1.9.1
+    # via pre-commit
 oauthlib==3.2.2
     # via requests-oauthlib
 opentelemetry-api==1.34.0
@@ -160,21 +173,27 @@ orjson==3.10.18
     # via prefect
 packaging==24.2
     # via
+    #   deptry
     #   dht-toolkit
     #   prefect
     #   pytest
+    #   requirements-parser
 pathspec==0.12.1
     # via
     #   dht-toolkit
     #   prefect
+    #   yamllint
 pendulum==3.1.0 ; python_full_version < '3.13'
     # via prefect
 pexpect==4.9.0
     # via dht-toolkit
+platformdirs==4.3.8
+    # via virtualenv
 pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
+pre-commit==4.2.0
 prefect==3.4.5
     # via
     #   dht-toolkit
@@ -237,7 +256,9 @@ pyyaml==6.0.2
     # via
     #   apprise
     #   dht-toolkit
+    #   pre-commit
     #   prefect
+    #   yamllint
 questionary==2.1.0
     # via bump-my-version
 readchar==4.2.1
@@ -256,6 +277,8 @@ requests==2.32.3
     #   requests-oauthlib
 requests-oauthlib==2.0.0
     # via apprise
+requirements-parser==0.13.0
+    # via deptry
 rfc3339-validator==0.1.4
     # via prefect
 rich==14.0.0
@@ -306,6 +329,7 @@ tomli==2.2.1 ; python_full_version <= '3.11'
     # via
     #   alembic
     #   coverage
+    #   deptry
     #   dht-toolkit
     #   pytest
 tomli-w==1.2.0
@@ -376,6 +400,8 @@ uv==0.7.12
     #   prefect
 uvicorn==0.34.3
     # via prefect
+virtualenv==20.31.2
+    # via pre-commit
 wcmatch==10.0
     # via bump-my-version
 wcwidth==0.2.13
@@ -384,5 +410,6 @@ websockets==15.0.1
     # via prefect
 whenever==0.8.4 ; python_full_version >= '3.13'
     # via prefect
+yamllint==1.37.1
 zipp==3.21.0
     # via importlib-metadata

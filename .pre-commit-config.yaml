@@ -42,11 +42,15 @@ repos:
     exclude: ^(tests/|tree-sitter-bash/)
     files: \.py$
 
-- repo: https://github.com/fpgmaas/deptry
-  rev: 0.23.0
+- repo: local
   hooks:
   - id: deptry
+    name: deptry
+    entry: uv run deptry
+    language: system
+    pass_filenames: false
     args: [src, --config, pyproject.toml]
+    files: \.(py|toml)$
 
 - repo: https://github.com/google/yamlfmt
   rev: v0.17.1

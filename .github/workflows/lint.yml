@@ -49,3 +49,6 @@ jobs:
 
         echo "Running formatting checks..."
         pre-commit run ruff-format --all-files --show-diff-on-failure || true
+
+        echo "Running dependency checks..."
+        pre-commit run deptry --all-files || true
