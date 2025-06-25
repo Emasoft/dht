@@ -1,0 +1,14 @@
+# .yamlfmt-general - Configuration for general YAML files (non-GitHub)
+# This configuration is for all YAML files except those in .github/
+formatter:
+  type: basic
+  indent: 2                               # Standard YAML: 2 spaces
+  line_ending: lf                         # Use LF line endings
+  retain_line_breaks: true                # Preserve user-intentional line breaks
+  disallow_anchors: false                 # Allow YAML anchors
+  max_line_length: 120                    # Standard line length
+  scan_folded_as_literal: false           # Don't change folded scalars
+  indentless_arrays: false                # Standard YAML: arrays are indented
+  drop_merge_tag: false                   # Keep merge tags
+  pad_line_comments: 2                    # Two spaces before line comments
+  trim_trailing_whitespace: true          # Clean up trailing whitespace

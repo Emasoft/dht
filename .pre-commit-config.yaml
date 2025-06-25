@@ -1,93 +1,104 @@
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
-  hooks:
-  - id: trailing-whitespace
-  - id: end-of-file-fixer
-  - id: check-yaml
-  - id: check-added-large-files
-  - id: check-toml
-  - id: check-json
-  - id: check-merge-conflict
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
 
-- repo: https://github.com/astral-sh/uv-pre-commit
-  rev: 0.7.13
-  hooks:
-  - id: uv-lock
-    args: [--locked]
-  - id: uv-export
-    args: [--no-hashes, --output-file=requirements.txt]
-  - id: uv-export
-    name: Export dev requirements
-    args: [--no-hashes, --output-file=requirements-dev.txt, --all-extras]
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.13
+    hooks:
+      - id: uv-lock
+        args: [--locked]
+      - id: uv-export
+        args: [--no-hashes, --output-file=requirements.txt]
+      - id: uv-export
+        name: Export dev requirements
+        args: [--no-hashes, --output-file=requirements-dev.txt, --all-extras]
 
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.9.4
-  hooks:
-  - id: ruff
-    alias: ruff (legacy alias)
-    args: [--fix, --exit-non-zero-on-fix]
-    exclude: ^(tree-sitter-bash/|node_modules/)
-    files: \.py$
-  - id: ruff-format
-    exclude: ^(tree-sitter-bash/|node_modules/)
-    files: \.py$
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.4
+    hooks:
+      - id: ruff
+        alias: ruff (legacy alias)
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^(tree-sitter-bash/|node_modules/)
+        files: \.py$
+      - id: ruff-format
+        exclude: ^(tree-sitter-bash/|node_modules/)
+        files: \.py$
 
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.16.1
-  hooks:
-  - id: mypy
-    additional_dependencies: [types-pyyaml, types-requests, types-toml, types-tabulate]
-    args: [--ignore-missing-imports, --strict]
-    exclude: ^(tests/|tree-sitter-bash/)
-    files: \.py$
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-pyyaml, types-requests, types-toml, types-tabulate]
+        args: [--ignore-missing-imports, --strict]
+        exclude: ^(tests/|tree-sitter-bash/)
+        files: \.py$
 
-- repo: local
-  hooks:
-  - id: deptry
-    name: deptry
-    entry: uv run deptry
-    language: system
-    pass_filenames: false
-    args: [src, --config, pyproject.toml]
-    files: \.(py|toml)$
+  - repo: local
+    hooks:
+      - id: deptry
+        name: deptry
+        entry: uv run deptry
+        language: system
+        pass_filenames: false
+        args: [src, --config, pyproject.toml]
+        files: \.(py|toml)$
 
-- repo: https://github.com/google/yamlfmt
-  rev: v0.17.1
-  hooks:
-  - id: yamlfmt
-    files: ^\.github/.*\.ya?ml$
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.1
+    hooks:
+      - id: yamlfmt
+        name: yamlfmt (GitHub workflows)
+        files: ^\.github/.*\.ya?ml$
+        args: [-conf, .yamlfmt]
 
-- repo: https://github.com/adrienverge/yamllint
-  rev: v1.37.1
-  hooks:
-  - id: yamllint
-    args: [--strict, -c, .yamllint.yml]
-    exclude: ^(tree-sitter-bash/|node_modules/|src/DHT/GITHUB_WORKFLOWS/)
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.1
+    hooks:
+      - id: yamlfmt
+        name: yamlfmt (general YAML)
+        files: \.ya?ml$
+        exclude: ^(\.github/|tree-sitter-bash/|node_modules/|logs/|.venv/)
+        args: [-conf, .yamlfmt-general]
 
-- repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.10.0.1
-  hooks:
-  - id: shellcheck
-    args: [--severity=error, --extended-analysis=true]
-    exclude: ^(tree-sitter-bash/|node_modules/)
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args: [--strict, -c, .yamllint.yml]
+        exclude: ^(tree-sitter-bash/|node_modules/|src/DHT/GITHUB_WORKFLOWS/)
 
-- repo: https://github.com/rhysd/actionlint
-  rev: v1.7.7
-  hooks:
-  - id: actionlint
-    exclude: ^src/DHT/GITHUB_WORKFLOWS/
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=error, --extended-analysis=true]
+        exclude: ^(tree-sitter-bash/|node_modules/)
 
-- repo: https://github.com/zricethezav/gitleaks
-  rev: v8.23.1
-  hooks:
-  - id: gitleaks
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+        exclude: ^src/DHT/GITHUB_WORKFLOWS/
 
-- repo: https://github.com/commitizen-tools/commitizen
-  rev: v4.8.3
-  hooks:
-  - id: commitizen
-    stages: [commit-msg]
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.23.1
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.8.3
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
 
 ci:
   autofix_commit_msg: |
@@ -99,7 +110,7 @@ ci:
   autofix_prs: true
   autoupdate_schedule: weekly
   skip:
-  - uv-lock
-  - uv-export
-  - mypy
-  - deptry
+    - uv-lock
+    - uv-export
+    - mypy
+    - deptry

@@ -124,7 +124,10 @@ yamlfmt -path .github/workflows
 - You should place the .yamlfmt file in the root directory of the project.
 - You must check the .yamlfmt configuration file to see if you are using different settings (i.e. indent 2 or 4 spaces, etc.)
 - Add yamlfmt to the git hooks/uv-pre-commit, so it is automatically executed at each commit.
-- IMPORTANT: yamlfmt must not format all yaml files, but only those inside the .github subfolder, since it is configured for the github workflows formatting style. Other yaml files may exist outside the .github folder using different formatting styles. Do not format those files.
+- IMPORTANT: yamlfmt is configured with two separate configurations:
+  - `.yamlfmt` - For GitHub workflow files only (.github/*.yml) with GitHub Actions specific formatting
+  - `.yamlfmt-general` - For all other YAML files in the project with standard YAML formatting
+- The pre-commit hooks run yamlfmt twice with different configs to handle both types of YAML files properly.
 
 
 
