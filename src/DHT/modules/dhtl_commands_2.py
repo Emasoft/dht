@@ -21,13 +21,14 @@ Provides test command functionality for running project tests.
 import os
 import shutil
 import sys
+from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def test_command(*args, **kwargs) -> int:
+def test_command(*args: Any, **kwargs: Any) -> int:
     """Run project tests."""
     log_info("🧪 Running project tests...")
 
@@ -83,7 +84,7 @@ def test_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return test_command(*args, **kwargs)
 

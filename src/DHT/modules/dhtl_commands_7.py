@@ -21,13 +21,14 @@ Provides package publishing functionality for Python projects.
 
 import os
 import shutil
+from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def publish_command(*args, **kwargs) -> int:
+def publish_command(*args: Any, **kwargs: Any) -> int:
     """Publish Python package to PyPI or other repositories."""
     log_info("🚀 Publishing Python package...")
 
@@ -131,7 +132,7 @@ def publish_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return publish_command(*args, **kwargs)
 

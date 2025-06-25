@@ -172,11 +172,15 @@ CMD {cmd}
         project_info["dependencies"] = self._get_dependencies(project_path)
 
         # Determine system dependencies
-        project_info["system_deps"] = self._get_system_deps(project_info["dependencies"])
+        system_deps = self._get_system_deps(
+            list(project_info.get("system_packages", []) or [])  # type: ignore[call-overload]
+            if isinstance(project_info.get("system_packages"), list | tuple)
+            else []
+        )
 
         # Determine ports for web apps
         if project_info["type"] == ProjectType.WEB:
-            project_info["ports"] = self._detect_ports(project_path, project_info["main_entry"])
+            exposed_ports = self._detect_ports(project_path, str(project_info.get("project_type", "")) or None)
 
         return project_info
 

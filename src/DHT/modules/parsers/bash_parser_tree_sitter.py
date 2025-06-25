@@ -31,7 +31,7 @@ try:
 except ImportError:
     TREE_SITTER_BASH_AVAILABLE = False
     tree_sitter = None
-    tree_sitter_bash = None  # type: ignore[assignment]
+    tree_sitter_bash = None
 
 from .bash_parser_models import SHELL_KEYWORDS, TREE_SITTER_QUERIES
 from .bash_parser_utils import BashParserUtils

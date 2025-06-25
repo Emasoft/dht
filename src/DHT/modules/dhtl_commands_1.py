@@ -23,13 +23,14 @@ import os
 import shutil
 import subprocess
 import sys
+from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def restore_command(*args, **kwargs) -> int:
+def restore_command(*args: Any, **kwargs: Any) -> int:
     """Restore project dependencies from lock files."""
     log_info("📦 Restoring project dependencies...")
 
@@ -190,7 +191,7 @@ def restore_command(*args, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return restore_command(*args, **kwargs)
 

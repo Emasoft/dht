@@ -29,7 +29,7 @@ from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .guardian_prefect import ResourceLimits, guardian_sequential_flow
 
 
-def test_dht_command(*args, **kwargs) -> int:
+def test_dht_command(args: list[str]) -> int:
     """Run tests for the DHT toolkit itself."""
     log_info("🧪 Testing DHT toolkit...")
 
@@ -117,7 +117,7 @@ def test_dht_command(*args, **kwargs) -> int:
         return 1
 
 
-def verify_dht_command(*args, **kwargs) -> int:
+def verify_dht_command(*args: Any, **kwargs: Any) -> int:
     """Verify the DHT installation."""
     log_info("🔍 Verifying DHT installation...")
 

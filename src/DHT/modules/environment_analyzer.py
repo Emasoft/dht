@@ -194,7 +194,7 @@ class EnvironmentAnalyzer:
 
     def _determine_python_requirements(self, project_path: Path, project_info: dict[str, Any]) -> dict[str, Any]:
         """Determine Python version and package requirements."""
-        requirements = {"version": None, "runtime_packages": [], "dev_packages": [], "build_packages": []}
+        requirements: dict[str, Any] = {"version": None, "runtime_packages": [], "dev_packages": []}
 
         # Detect Python version
         if project_info.get("project_type") == "python":
@@ -233,7 +233,7 @@ class EnvironmentAnalyzer:
                         # Continue without version if pyproject.toml can't be parsed
                         print(f"Warning: Could not parse pyproject.toml: {e}")
 
-            requirements["version"] = version or "3.11"  # Default to 3.11
+            requirements["version"] = str(version) if version else "3.11"  # Default to Python 3.11
 
             # Standard development packages
             requirements["dev_packages"] = ["pip", "setuptools", "wheel", "build"]

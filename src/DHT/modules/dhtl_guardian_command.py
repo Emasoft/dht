@@ -38,7 +38,7 @@ from .guardian_prefect import (
 )
 
 
-def guardian_command(*args, **kwargs) -> int:
+def guardian_command(args: list[str]) -> int:
     """Manage process guardian for resource-limited execution."""
     log_info("🛡️  Process Guardian Management")
 
@@ -346,7 +346,7 @@ def guardian_status(args: list[str]) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     return guardian_command(*args, **kwargs)
 

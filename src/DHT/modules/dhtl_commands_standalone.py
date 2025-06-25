@@ -23,13 +23,14 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from typing import Any
 
 from .common_utils import get_venv_executable
 from .dhtl_error_handling import log_error, log_info, log_warning
 from .guardian_prefect import ResourceLimits, guardian_sequential_flow
 
 
-def _normalize_args(args, kwargs) -> None:
+def _normalize_args(args: Any, kwargs: Any) -> list[Any]:
     """Normalize arguments to handle both list and *args calling conventions.
 
     Args:
@@ -40,14 +41,14 @@ def _normalize_args(args, kwargs) -> None:
         list: Normalized list of arguments
     """
     if args is None:
-        return []  # type: ignore[return-value]
+        return []
     elif not isinstance(args, list):
         # If called with *args, convert to list
-        return [args] + list(kwargs.get("args", []))  # type: ignore[return-value]
-    return args  # type: ignore[return-value]
+        return [args] + list(kwargs.get("args", []))
+    return args
 
 
-def python_command(args=None, **kwargs) -> int:
+def python_command(args: Any = None, **kwargs: Any) -> int:
     """Run a Python script with resource management."""
     log_info("🐍 Running Python script with guardian protection...")
 
@@ -96,7 +97,7 @@ def python_command(args=None, **kwargs) -> int:
         return 1
 
 
-def node_command(args=None, **kwargs) -> int:
+def node_command(args: Any = None, **kwargs: Any) -> int:
     """Run a Node.js script with resource management."""
     log_info("📦 Running Node.js script with guardian protection...")
 
@@ -145,7 +146,7 @@ def node_command(args=None, **kwargs) -> int:
         return 1
 
 
-def run_command(args=None, **kwargs) -> int:
+def run_command(args: Any = None, **kwargs: Any) -> int:
     """Run any command with resource management."""
     log_info("🚀 Running command with guardian protection...")
 
@@ -175,7 +176,7 @@ def run_command(args=None, **kwargs) -> int:
         return 1
 
 
-def script_command(args=None, **kwargs) -> int:
+def script_command(args: Any = None, **kwargs: Any) -> int:
     """Run a shell script with resource management."""
     log_info("📜 Running shell script with guardian protection...")
 
@@ -224,7 +225,7 @@ def script_command(args=None, **kwargs) -> int:
 
 
 # For backward compatibility
-def placeholder_command(*args, **kwargs) -> int:
+def placeholder_command(*args: Any, **kwargs: Any) -> int:
     """Placeholder command implementation."""
     log_warning("This is a placeholder command")
     return 0

@@ -114,9 +114,9 @@ def discover_tests(project_root: Path, test_pattern: str | None = None) -> dict[
     # Count test files
     all_test_files: list[str] = []
     for test_dir in test_dirs:
-        all_test_files.extend(test_dir.rglob("test_*.py"))
-        all_test_files.extend(test_dir.rglob("*_test.py"))
-    all_test_files.extend(test_files)
+        all_test_files.extend(str(p) for p in test_dir.rglob("test_*.py"))
+        all_test_files.extend(str(p) for p in test_dir.rglob("*_test.py"))
+    # Add any additional test files from test directories
 
     # Remove duplicates
     all_test_files = list(set(all_test_files))

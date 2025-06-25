@@ -53,7 +53,7 @@ class EnvironmentVerificationUtils:
             except Exception:
                 self.logger = logging.getLogger(__name__)
         assert self.logger is not None
-        return cast(logging.Logger, self.logger)
+        return self.logger
 
     def verify_platform_compatibility(self, snapshot: EnvironmentSnapshot, result: ReproductionResult) -> None:
         """Verify platform compatibility."""

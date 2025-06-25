@@ -28,9 +28,6 @@ import yaml
 
 from DHT.modules.dhtconfig_models import HAS_YAML, DHTConfigConstants
 
-if HAS_YAML:
-    import yaml
-
 
 class ConfigIOUtils:
     """Handles I/O operations for DHT configuration files."""
@@ -56,7 +53,7 @@ class ConfigIOUtils:
             with open(config_path, "w") as f:
                 json.dump(config, f, indent=2, sort_keys=False)
 
-        return config_path
+        return config_path  # type: ignore[no-any-return]
 
     def load_config(self, config_path: Path) -> dict[str, Any]:
         """
@@ -84,13 +81,13 @@ class ConfigIOUtils:
                 try:
                     config = yaml.safe_load(content)
                     if config:
-                        return config
+                        return config  # type: ignore[no-any-return]
                 except yaml.YAMLError:
                     pass
 
             # Fall back to JSON
             try:
-                return json.loads(content)
+                return json.loads(content)  # type: ignore[no-any-return]
             except json.JSONDecodeError as e:
                 raise ValueError(f"Invalid config file format: {e}") from e
 

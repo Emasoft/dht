@@ -90,7 +90,7 @@ class SchemaLoader:
 
         try:
             with open(schema_path) as f:
-                return yaml.safe_load(f)
+                return yaml.safe_load(f)  # type: ignore[no-any-return]
         except Exception as e:
             import sys
 

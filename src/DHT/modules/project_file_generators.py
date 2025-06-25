@@ -324,10 +324,10 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
     workflows_raw = ci_config.get("workflows", [])
     workflows = list(workflows_raw) if isinstance(workflows_raw, list | tuple) else []
     if isinstance(workflows, list) and "test" in workflows:
-        workflow["jobs"]["test"]["steps"].append({"name": "Run tests", "run": "pytest"})
+        workflow["jobs"]["test"]["steps"].append({"name": "Run tests", "run": "pytest"})  # type: ignore[index]
 
     if isinstance(workflows, list) and "lint" in workflows:
-        workflow["jobs"]["test"]["steps"].extend(
+        workflow["jobs"]["test"]["steps"].extend(  # type: ignore[index]
             [
                 {"name": "Run linting", "run": "ruff check ."},
                 {"name": "Check formatting", "run": "black --check ."},
@@ -336,7 +336,7 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
         )
 
     if isinstance(workflows, list) and "build" in workflows:
-        workflow["jobs"]["test"]["steps"].append({"name": "Build package", "run": "uv build"})
+        workflow["jobs"]["test"]["steps"].append({"name": "Build package", "run": "uv build"})  # type: ignore[index]
 
     # Ensure .github/workflows directory exists
     workflows_dir = config.project_path / ".github" / "workflows"

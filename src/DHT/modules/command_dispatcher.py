@@ -262,7 +262,7 @@ class CommandDispatcher:
         parsed = parser.parse_args(args)
         return vars(parsed)
 
-    def show_help(self, args: list[str] = None) -> int:
+    def show_help(self, args: list[str] | None = None) -> int:
         """Show help message."""
         print("Development Helper Toolkit (DHT)")
         print("================================")
@@ -290,7 +290,7 @@ class CommandDispatcher:
         print("\nFor command-specific help: dhtl <command> --help")
         return 0
 
-    def show_version(self, args: list[str] = None) -> int:
+    def show_version(self, args: list[str] | None = None) -> int:
         """Show version information."""
         from .. import __version__
 

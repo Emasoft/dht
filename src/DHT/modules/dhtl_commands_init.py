@@ -133,7 +133,7 @@ class InitCommand:
 
             result = uv_manager.run_command(init_args, cwd=project_path)
             if not result["success"]:
-                return result
+                return dict(result)
 
             # Enhance pyproject.toml if needed
             pyproject_path = project_path / "pyproject.toml"
