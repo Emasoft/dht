@@ -9,7 +9,9 @@ Licensed under the MIT License. See LICENSE file for details.
 """Experimental benchmark module."""
 
 import time
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 
 def run() -> None:
@@ -17,7 +19,7 @@ def run() -> None:
     print("⚡ Experimental Benchmark Suite")
     print("=" * 40)
 
-    benchmarks = [
+    benchmarks: list[tuple[str, Callable[[], Any]]] = [
         ("String concatenation", lambda: "".join(["a"] * 1000)),
         ("List comprehension", lambda: [i**2 for i in range(1000)]),
         ("Dictionary creation", lambda: {i: i**2 for i in range(100)}),

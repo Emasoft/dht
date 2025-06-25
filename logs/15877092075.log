@@ -1,0 +1,81 @@
+lint	Run pre-commit on all files	﻿2025-06-25T13:02:47.2996725Z ##[group]Run source .venv/bin/activate
+lint	Run pre-commit on all files	2025-06-25T13:02:47.2997061Z [36;1msource .venv/bin/activate[0m
+lint	Run pre-commit on all files	2025-06-25T13:02:47.2997370Z [36;1mpre-commit run --all-files --show-diff-on-failure[0m
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3047453Z shell: /usr/bin/bash -e {0}
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3047690Z env:
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3047931Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3048333Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib/pkgconfig
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3048729Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3049090Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3049592Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.17/x64
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3049929Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.17/x64/lib
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3050264Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+lint	Run pre-commit on all files	2025-06-25T13:02:47.3050524Z ##[endgroup]
+lint	Run pre-commit on all files	2025-06-25T13:02:47.7946970Z [INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	Run pre-commit on all files	2025-06-25T13:02:48.3052351Z [INFO] Initializing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	Run pre-commit on all files	2025-06-25T13:02:49.0583749Z [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	Run pre-commit on all files	2025-06-25T13:02:49.5992584Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	Run pre-commit on all files	2025-06-25T13:02:50.0582028Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-pyyaml,types-requests,types-toml,types-tabulate.
+lint	Run pre-commit on all files	2025-06-25T13:02:50.5110354Z [INFO] Initializing environment for https://github.com/google/yamlfmt.
+lint	Run pre-commit on all files	2025-06-25T13:02:51.0709450Z [INFO] Initializing environment for https://github.com/adrienverge/yamllint.
+lint	Run pre-commit on all files	2025-06-25T13:02:51.5960639Z [INFO] Initializing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	Run pre-commit on all files	2025-06-25T13:02:52.0140220Z [INFO] Initializing environment for https://github.com/rhysd/actionlint.
+lint	Run pre-commit on all files	2025-06-25T13:02:52.6808596Z [INFO] Initializing environment for https://github.com/zricethezav/gitleaks.
+lint	Run pre-commit on all files	2025-06-25T13:02:53.2814581Z [INFO] Initializing environment for https://github.com/commitizen-tools/commitizen.
+lint	Run pre-commit on all files	2025-06-25T13:02:53.8846660Z [INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+lint	Run pre-commit on all files	2025-06-25T13:02:53.8847304Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:02:53.8847622Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:02:59.6690304Z [INFO] Installing environment for https://github.com/astral-sh/uv-pre-commit.
+lint	Run pre-commit on all files	2025-06-25T13:02:59.6690835Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:02:59.6691397Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:03.0919605Z [INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.
+lint	Run pre-commit on all files	2025-06-25T13:03:03.0920452Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:03.0920958Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:06.6793803Z [INFO] Installing environment for https://github.com/pre-commit/mirrors-mypy.
+lint	Run pre-commit on all files	2025-06-25T13:03:06.6794349Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:06.6794655Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:11.3033686Z [INFO] Installing environment for https://github.com/google/yamlfmt.
+lint	Run pre-commit on all files	2025-06-25T13:03:11.3034412Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:11.3034906Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:21.2844281Z [INFO] Installing environment for https://github.com/adrienverge/yamllint.
+lint	Run pre-commit on all files	2025-06-25T13:03:21.2845076Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:21.2845466Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:24.3524030Z [INFO] Installing environment for https://github.com/shellcheck-py/shellcheck-py.
+lint	Run pre-commit on all files	2025-06-25T13:03:24.3524929Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:24.3525469Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:29.2270727Z [INFO] Installing environment for https://github.com/rhysd/actionlint.
+lint	Run pre-commit on all files	2025-06-25T13:03:29.2271530Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:38.3170739Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:38.3171460Z [INFO] Installing environment for https://github.com/zricethezav/gitleaks.
+lint	Run pre-commit on all files	2025-06-25T13:03:38.3172042Z [INFO] Once installed this environment will be reused.
+lint	Run pre-commit on all files	2025-06-25T13:03:38.3172436Z [INFO] This may take a few minutes...
+lint	Run pre-commit on all files	2025-06-25T13:03:48.0097918Z trim trailing whitespace.................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.0806817Z fix end of files.........................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.2187390Z check yaml...............................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.2987347Z check for added large files..............................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.3753905Z check toml...............................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.4272460Z check json...............................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.5017876Z check for merge conflicts................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.5463867Z uv-lock..................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.6109481Z uv-export................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.6408933Z Export dev requirements..................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.6951312Z ruff.....................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:48.7572718Z ruff-format..............................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7904686Z mypy.....................................................................Failed
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7905301Z - hook id: mypy
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7905623Z - exit code: 1
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7905793Z
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7906646Z examples/workspace-demo/packages/experimental/experimental/benchmark.py:28: error: Call to untyped function (unknown) in typed context  [no-untyped-call]
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7907698Z src/DHT/launcher.py:31: error: Name "Colors" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7908325Z src/DHT/launcher.py:207: error: Name "CommandDispatcher" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7908929Z src/DHT/dhtl.py:37: error: Name "DHTLauncher" already defined (possibly by an import)  [no-redef]
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7909788Z src/DHT/dhtl.py:43: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7910538Z Found 5 errors in 3 files (checked 208 source files)
+lint	Run pre-commit on all files	2025-06-25T13:03:53.7910741Z
+lint	Run pre-commit on all files	2025-06-25T13:03:54.0718860Z deptry...................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:54.0815019Z yamlfmt..................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:54.3364724Z yamllint.................................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:54.5178263Z shellcheck...............................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:55.4282846Z Lint GitHub Actions workflow files.......................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:55.6962532Z Detect hardcoded secrets.................................................Passed
+lint	Run pre-commit on all files	2025-06-25T13:03:55.7126762Z ##[error]Process completed with exit code 1.

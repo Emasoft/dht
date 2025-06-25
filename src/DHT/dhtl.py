@@ -34,13 +34,13 @@ except ImportError:
     parent_dir = Path(__file__).parent
     if str(parent_dir) not in sys.path:
         sys.path.insert(0, str(parent_dir))
-    from launcher import DHTLauncher
+    from launcher import DHTLauncher  # type: ignore[no-redef]
 
 # Version information
 __version__ = "1.0.0"
 
 
-def main(argv=None) -> None:
+def main(argv: list[str] | None = None) -> None:
     """Main entry point for DHT."""
     if argv is None:
         argv = sys.argv

@@ -28,7 +28,8 @@ from pathlib import Path
 try:
     from .colors import Colors
 except ImportError:
-    from colors import Colors
+    # When running as script, use absolute import
+    from colors import Colors  # type: ignore[no-redef]
 
 
 class DHTLauncher:
@@ -204,7 +205,7 @@ class DHTLauncher:
         except ImportError:
             # Try absolute import when running as script
             try:
-                from modules.command_dispatcher import CommandDispatcher
+                from modules.command_dispatcher import CommandDispatcher  # type: ignore[no-redef]
             except ImportError as e:
                 # Fallback if command dispatcher not available
                 self.logger.warning(f"Command dispatcher not available: {e}")
