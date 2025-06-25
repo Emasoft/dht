@@ -171,17 +171,26 @@ def set_resource_limits(memory_limit_mb: int | None = None) -> None:
         return
 
     try:
-        import resource
+        import sys
+
+        if sys.platform != "win32":
+            import resource
+        else:
+            resource = None  # type: ignore[assignment]
 
         # Convert MB to bytes
         memory_bytes = memory_limit_mb * 1024 * 1024
 
         # Get current limits
-        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+        if sys.platform != "win32" and resource is not None:
+            soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+        else:
+            soft, hard = (0, 0)
 
         # Set memory limit (not exceeding hard limit)
         new_limit = min(memory_bytes, hard)
-        resource.setrlimit(resource.RLIMIT_AS, (new_limit, hard))
+        if sys.platform != "win32" and resource is not None:
+            resource.setrlimit(resource.RLIMIT_AS, (new_limit, hard))
     except ImportError:
         logger.warning("Resource module not available (Windows?), skipping memory limits")
     except Exception as e:

@@ -20,9 +20,7 @@ try:
     from DHT.modules.uv_manager import UVManager, UVNotFoundError
 except ImportError:
     UVManager = object  # type: ignore[assignment,misc]
-
-    class UVNotFoundError(Exception):
-        pass
+    UVNotFoundError = Exception  # type: ignore[no-redef,assignment,misc]
 
 
 class UVManagerImproved(UVManager):

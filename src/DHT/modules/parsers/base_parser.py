@@ -75,7 +75,7 @@ class BaseParser(ABC):
         for lib_path in lib_paths:
             if lib_path.exists():
                 try:
-                    language_obj = tree_sitter.Language(str(lib_path), language)
+                    language_obj = tree_sitter.Language(lib_path, language)
                     self.parser = tree_sitter.Parser()
                     self.parser.language = language_obj
                     self.language_obj = language_obj

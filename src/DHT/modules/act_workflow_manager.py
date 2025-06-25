@@ -97,14 +97,16 @@ class ActWorkflowManager:
 
         for workflow in workflows:
             if workflow.error:
-                result["workflows"][workflow.file] = {"name": workflow.name, "error": workflow.error}
+                workflows_dict = result.get("workflows", {})
+                workflows_dict[workflow.file] = {"name": workflow.name, "error": workflow.error}
             else:
-                result["workflows"][workflow.file] = {
+                workflows_dict = result.get("workflows", {})
+                workflows_dict[workflow.file] = {
                     "name": workflow.name,
                     "jobs": workflow.jobs,
                     "triggers": list(workflow.on.keys()) if isinstance(workflow.on, dict) else [workflow.on],
                 }
-                result["total_jobs"] += len(workflow.jobs)
+                result["total_jobs"] = result.get("total_jobs", 0) + len(workflow.jobs or [])
 
         result["total_workflows"] = len(workflows)
         return result

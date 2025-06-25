@@ -20,12 +20,12 @@ reproduction flow including snapshot creation, saving, and verification.
 # - Contains reproduction flow orchestration logic
 #
 
-
+import logging
 import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from prefect import get_run_logger
 
@@ -36,17 +36,15 @@ class ReproductionFlowUtils:
     def __init__(self, reproducer: Any) -> None:
         """Initialize flow utilities with reference to main reproducer."""
         self.reproducer = reproducer
-        self.logger = None
+        self.logger: logging.Logger | None = None
 
     def _get_logger(self) -> Any:
         """Get logger with fallback."""
         if self.logger is None:
             try:
-                self.logger = get_run_logger()
+                self.logger = cast(logging.Logger, get_run_logger())
             except Exception:
-                import logging
-
-                self.logger = logging.getLogger(__name__)  # type: ignore[assignment]
+                self.logger = logging.getLogger(__name__)
         return self.logger
 
     def create_reproducible_environment(

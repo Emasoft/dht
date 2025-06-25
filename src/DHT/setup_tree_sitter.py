@@ -115,7 +115,6 @@ def build_language_library(project_root: Path) -> bool:
     """Build the language library using tree-sitter"""
     try:
         import tree_sitter
-        from tree_sitter import Language
 
         build_dir = project_root / "build"
         ts_bash_dir = project_root / "tree-sitter-bash"
@@ -151,11 +150,11 @@ def build_language_library(project_root: Path) -> bool:
 
         # Try the newer API first
         try:
-            Language.build(str(lib_path), [str(ts_bash_dir)])
+            tree_sitter.build_library(str(lib_path), str(lib_path), [str(ts_bash_dir)])
         except AttributeError:
             # Fall back to older API
             try:
-                Language.build_library(str(lib_path), [str(ts_bash_dir)])
+                tree_sitter.build_library(str(lib_path), [str(ts_bash_dir)])
             except Exception as e:
                 print(f"❌ Neither Language.build nor Language.build_library available: {e}")
                 print("🔄 Attempting to use pre-installed tree-sitter-bash bindings...")
@@ -202,7 +201,7 @@ def test_bash_parsing(project_root: Path) -> bool:
         language = tree_sitter.Language(str(lib_path), "bash")
 
         parser = tree_sitter.Parser()
-        parser.set_language(language)
+        parser.language = language
 
         # Sample bash function to parse
         bash_code = """

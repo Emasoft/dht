@@ -225,7 +225,12 @@ class CommandRunner:
             # Save checkpoint
             import json
 
-            checkpoint_data = {"command": command_name, "args": args, "pid": os.getpid(), "start_time": time.time()}
+            checkpoint_data = {
+                "command": command_name,
+                "args": args,
+                "pid": os.getpid(),
+                "start_time": float(time.time()),
+            }
             checkpoint_file.write_text(json.dumps(checkpoint_data))
 
             # Execute command

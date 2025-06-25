@@ -171,7 +171,7 @@ def run_command_with_limits(
             text=True,
             cwd=working_dir,
             env=cmd_env,
-            preexec_fn=os.setsid if sys.platform != "win32" else None,
+            preexec_fn=os.setsid if hasattr(os, "setsid") else None if sys.platform != "win32" else None,
         )
 
         # Monitor process

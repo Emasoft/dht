@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 """
 project_capture_utils.py - Utilities for capturing project information  This module contains utilities for capturing project-specific information including configuration files, lock files, and project metadata.
@@ -22,8 +22,8 @@ including configuration files, lock files, and project metadata.
 # - Contains project information capture utilities
 #
 
-
 import hashlib
+import logging
 from pathlib import Path
 
 from prefect import get_run_logger
@@ -38,7 +38,7 @@ class ProjectCaptureUtils:
 
     def __init__(self) -> None:
         """Initialize project capture utilities."""
-        self.logger = None
+        self.logger: logging.Logger | None = None
         self.configurator = EnvironmentConfigurator()
         self.lock_manager = LockFileManager()
 
@@ -46,11 +46,9 @@ class ProjectCaptureUtils:
         """Get logger with fallback."""
         if self.logger is None:
             try:
-                self.logger = get_run_logger()
+                self.logger = cast(logging.Logger, get_run_logger())
             except Exception:
-                import logging
-
-                self.logger = logging.getLogger(__name__)  # type: ignore[assignment]
+                self.logger = logging.getLogger(__name__)
         return self.logger
 
     def capture_project_info(self, snapshot: EnvironmentSnapshot, project_path: Path, include_configs: bool) -> None:

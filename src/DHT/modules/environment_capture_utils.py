@@ -48,10 +48,8 @@ class EnvironmentCaptureUtils:
         """Get logger with fallback."""
         if self.logger is None:
             try:
-                self.logger = get_run_logger()
+                self.logger = cast(logging.Logger, get_run_logger())
             except Exception:
-                import logging
-
                 self.logger = logging.getLogger(__name__)
         return self.logger
 

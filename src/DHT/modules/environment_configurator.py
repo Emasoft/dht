@@ -27,7 +27,7 @@ configure development environments based on detected tools, project structure,
 and platform capabilities.
 """
 
-
+import logging
 from pathlib import Path
 from typing import Any, cast
 
@@ -65,7 +65,7 @@ class EnvironmentConfigurator:
 
     def __init__(self) -> None:
         """Initialize the environment configurator."""
-        self.logger = None
+        self.logger: logging.Logger | None = None
         self.analyzer = ProjectAnalyzer()
         self.env_analyzer = EnvironmentAnalyzer()
         self.installer = EnvironmentInstaller()
@@ -80,9 +80,7 @@ class EnvironmentConfigurator:
             try:
                 self.logger = get_run_logger()
             except Exception:
-                import logging
-
-                self.logger = logging.getLogger(__name__)  # type: ignore[assignment]
+                self.logger = logging.getLogger(__name__)
         return self.logger
 
     @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")  # type: ignore[misc]

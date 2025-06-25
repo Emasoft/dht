@@ -24,7 +24,6 @@ try:
     import yaml
 except ImportError:
     yaml = None  # type: ignore[assignment]
-from prefect import serve
 from prefect.deployments import run_deployment
 
 from .guardian_prefect import (
@@ -76,7 +75,8 @@ def start(name: str, interval: int | None, cron: str | None) -> None:
 
     # Serve deployments
     click.echo(f"Serving {len(deployments)} deployments...")
-    serve(*deployments)
+    for deployment in deployments:
+        deployment.serve()
 
 
 @cli.command()  # type: ignore[misc]

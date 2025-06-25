@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 """
 environment_verification_utils.py - Utilities for environment verification  This module contains utilities for verifying environment compatibility including platform, Python version, and tool version verification.
@@ -49,11 +49,11 @@ class EnvironmentVerificationUtils:
         """Get logger with fallback."""
         if self.logger is None:
             try:
-                self.logger = get_run_logger()
+                self.logger = cast(logging.Logger, get_run_logger())
             except Exception:
                 self.logger = logging.getLogger(__name__)
         assert self.logger is not None
-        return self.logger
+        return cast(logging.Logger, self.logger)
 
     def verify_platform_compatibility(self, snapshot: EnvironmentSnapshot, result: ReproductionResult) -> None:
         """Verify platform compatibility."""

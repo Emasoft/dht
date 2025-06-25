@@ -467,7 +467,7 @@ CMD {cmd}
         project_info = self.analyze_project(project_path)
         return cast(str, self.generate_dockerfile(project_info))
 
-    @task
+    @task  # type: ignore[misc]
     def generate_dockerfile(
         self, project_info: dict[str, Any], multi_stage: bool = False, production: bool = False
     ) -> str:

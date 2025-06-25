@@ -31,7 +31,7 @@ try:
 except ImportError:
     TREE_SITTER_BASH_AVAILABLE = False
     tree_sitter = None
-    tree_sitter_bash = None
+    tree_sitter_bash = None  # type: ignore[assignment]
 
 from .bash_parser_models import SHELL_KEYWORDS, TREE_SITTER_QUERIES
 from .bash_parser_utils import BashParserUtils
@@ -52,7 +52,8 @@ class TreeSitterBashParser:
                 # Get the Bash language object
                 self.language_obj = tree_sitter.Language(tree_sitter_bash.language())
                 # Create parser and set language
-                self.parser = tree_sitter.Parser(self.language_obj)
+                self.parser = tree_sitter.Parser()
+                self.parser.language = self.language_obj
                 self.logger.info("Successfully initialized tree-sitter Bash parser")
             except Exception as e:
                 self.logger.warning(f"Failed to initialize tree-sitter Bash parser: {e}")

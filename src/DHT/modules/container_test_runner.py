@@ -78,7 +78,6 @@ class ContainerTestRunner:
             else:
                 self.logger.warning(f"Unknown framework: {framework}")
                 continue
-
             all_results[framework.value] = results
 
         return all_results
@@ -235,7 +234,8 @@ class ContainerTestRunner:
             elif match.group(4):  # errors
                 results["errors"] = int(match.group(4))
 
-        results["total"] = results["passed"] + results["failed"] + results["skipped"] + results["errors"]
+        total = int(results.get("passed", 0)) + int(results.get("failed", 0)) + int(results.get("skipped", 0)) + int(results.get("errors", 0))
+        results["total"] = total
 
         # Parse individual test results
         test_pattern = r"([\w/]+\.py)::([\w_]+)(?:\[[\w-]+\])?\s+(PASSED|FAILED|SKIPPED|ERROR)"
@@ -246,6 +246,8 @@ class ContainerTestRunner:
             status = match.group(3).lower()
 
             test_key = f"{test_file}::{test_name}"
+            if "tests" not in results:
+                results["tests"] = {}
             results["tests"][test_name] = status
 
         # Parse coverage if present

@@ -430,7 +430,7 @@ def test_command_flow(
     )
 
     # Generate coverage report if requested
-    coverage_info = {}
+    coverage_info: dict[str, Any] = {}
     if coverage:
         coverage_info = generate_coverage_report(project_root, venv_path)
 

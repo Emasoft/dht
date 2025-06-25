@@ -321,8 +321,8 @@ def generate_github_workflow(config: EnvironmentConfig) -> None:
     }
 
     # Add workflow-specific steps
-    workflows = ci_config.get("workflows", [])
-    workflows = list(workflows) if workflows else []
+    workflows_raw = ci_config.get("workflows", [])
+    workflows = list(workflows_raw) if isinstance(workflows_raw, list | tuple) else []
     if isinstance(workflows, list) and "test" in workflows:
         workflow["jobs"]["test"]["steps"].append({"name": "Run tests", "run": "pytest"})
 

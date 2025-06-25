@@ -50,7 +50,7 @@ class ActContainerManager:
         """
         if runtime == "podman":
             # Check for rootless podman socket
-            xdg_runtime = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+            xdg_runtime = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid() if hasattr(os, 'getuid') else 0}")
             return f"{xdg_runtime}/podman/podman.sock"
         else:
             return "/var/run/docker.sock"

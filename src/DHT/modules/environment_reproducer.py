@@ -98,7 +98,7 @@ class EnvironmentReproducer:
                 self.logger = get_run_logger()
             except Exception:
                 self.logger = logging.getLogger(__name__)
-        return self.logger
+        return self.logger or logging.getLogger(__name__)
 
     def _capture_environment_snapshot_impl(
         self, project_path: Path | None = None, include_system_info: bool = True, include_configs: bool = True
