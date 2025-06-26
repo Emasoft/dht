@@ -5,6 +5,32 @@ All notable changes to DHT (Development Helper Toolkit) will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-06-26
+
+### Added
+- Comprehensive template action system with fully parameterized Prefect tasks
+- Project generator flow that orchestrates complete project creation
+- Configuration generation tasks for Django, FastAPI, Flask, CLI, and library projects
+- Database configuration generators (Alembic, SQLAlchemy, Redis, MongoDB)
+- Testing framework configuration generators (pytest, Factory Boy, coverage, tox, Hypothesis)
+- Docker multi-stage build templates with best practices
+- GitHub Actions workflow generators with matrix testing support
+- Environment file templates with common configuration patterns
+- Makefile generators with development commands
+- Project requirements detection based on project type and features
+- Tests for all new template generation functionality
+
+### Changed
+- Converted all hardcoded templates to parameterized Prefect tasks
+- Templates now accept variables for complete customization
+- Identified and extracted reusable template components
+- Improved project structure generation with framework-specific layouts
+
+### Fixed
+- Type annotation errors in flow modules
+- Missing imports in various modules
+- Pre-commit hook compliance issues
+
 ## [1.0.0] - 2024-06-10
 
 ### Added
