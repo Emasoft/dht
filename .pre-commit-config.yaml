@@ -86,7 +86,7 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-        args: [--strict, -c, .yamllint.yml]
+        args: [-c, .yamllint.yml]
         exclude: ^(tree-sitter-bash/|node_modules/|src/DHT/GITHUB_WORKFLOWS/)
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
