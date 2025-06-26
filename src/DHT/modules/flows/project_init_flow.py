@@ -18,7 +18,7 @@ import subprocess
 from pathlib import Path
 
 from prefect import flow, task
-from prefect.task_runners import ConcurrentTaskRunner
+from prefect.task_runners import ThreadPoolTaskRunner
 
 from ..dhtl_error_handling import log_error, log_info, log_success
 from .template_tasks import (
@@ -74,6 +74,7 @@ def create_virtual_env_task(project_path: Path, use_uv: bool = True) -> bool:
                 # Install dev dependencies
                 subprocess.run(["uv", "sync", "--dev"], cwd=project_path)
                 return True
+            return False
         else:
             # Fallback to standard venv
             import sys
@@ -108,7 +109,7 @@ def create_python_version_file_task(project_path: Path, python_version: str = "3
 @flow(
     name="initialize_project",
     description="Initialize a new Python project with DHT",
-    task_runner=ConcurrentTaskRunner(),
+    task_runner=ThreadPoolTaskRunner(),
 )
 def initialize_project_flow(
     project_path: Path,

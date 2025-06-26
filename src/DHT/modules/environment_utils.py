@@ -25,13 +25,13 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 from .common_utils import detect_platform, find_project_root, find_virtual_env
 from .dhtl_error_handling import log_info
 
 
-def setup_environment() -> dict[str, str]:
+def setup_environment() -> Dict[str, str]:
     """Set up environment variables for DHT.
 
     Returns:
@@ -61,13 +61,13 @@ def setup_environment() -> dict[str, str]:
     return env
 
 
-def get_environment_info() -> dict[str, Any]:
+def get_environment_info() -> Dict[str, Any]:
     """Get comprehensive environment information.
 
     Returns:
         Dictionary with environment details
     """
-    info = {
+    info: Dict[str, Any] = {
         "platform": {
             "system": platform.system(),
             "release": platform.release(),

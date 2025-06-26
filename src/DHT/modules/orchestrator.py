@@ -93,12 +93,9 @@ class DHTOrchestrator:
     def _initialize_prefect(self) -> None:
         """Initialize Prefect if available."""
         try:
-            from prefect.settings import PREFECT_API_ENABLE_HTTP2
+            import prefect
 
-            # Disable HTTP2 for compatibility
-            PREFECT_API_ENABLE_HTTP2.value = False
-
-            log_debug("Prefect initialized")
+            log_debug(f"Prefect {prefect.__version__} initialized")
         except ImportError:
             log_debug("Prefect not available, some features may be limited")
 

@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from prefect import flow, task
-from prefect.task_runners import ConcurrentTaskRunner
+from prefect.task_runners import ThreadPoolTaskRunner
 
 from ..common_utils import find_project_root
 from ..dhtl_error_handling import log_error, log_info, log_success, log_warning
@@ -105,7 +105,7 @@ def detect_python_version_task(project_path: Path) -> str:
                 if requires_python:
                     # Extract version from >=3.10 format
                     if ">=" in requires_python:
-                        return requires_python.split(">=")[1].strip()
+                        return str(requires_python.split(">=")[1].strip())
         except Exception:
             pass
 
@@ -217,7 +217,7 @@ yarn-error.log*
     return True
 
 
-@flow(name="setup_project", description="Setup DHT for an existing project", task_runner=ConcurrentTaskRunner())
+@flow(name="setup_project", description="Setup DHT for an existing project", task_runner=ThreadPoolTaskRunner())
 def setup_project_flow(project_path: Path | None = None, force: bool = False) -> bool:
     """Setup DHT for an existing project.
 
