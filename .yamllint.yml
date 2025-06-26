@@ -13,7 +13,7 @@ rules:
     indent-sequences: consistent
   document-start: disable
 
-ignore: |
+ignore: |-
   node_modules/
   .venv/
   tree-sitter-bash/

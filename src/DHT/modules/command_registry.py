@@ -187,7 +187,7 @@ class CommandRegistry:
 
     def _env_command(self, *args: Any, **kwargs: Any) -> int:
         """Show environment."""
-        from .dhtl_environment_2 import env_command
+        from .environment_utils import env_command
 
         return env_command(*args, **kwargs)
 

@@ -1,4 +1,3 @@
----
 name: pre-commit
 on:
   pull_request:
@@ -8,8 +7,8 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     env:
-        RAW_LOG: pre-commit.log
-        CS_XML: pre-commit.xml
+      RAW_LOG: pre-commit.log
+      CS_XML: pre-commit.xml
     steps:
       - run: sudo apt-get update && sudo apt-get install cppcheck uncrustify
         if: false

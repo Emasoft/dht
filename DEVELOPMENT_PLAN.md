@@ -1,261 +1,186 @@
-# DHT Development Plan & Architecture
+# DHT Shell-to-Python Transition Development Plan
 
-## 🏗️ **ARCHITECTURAL UNDERSTANDING**
+## Overview
+This plan outlines the complete transition of DHT from shell scripts to Python, including converting templates to Prefect flows/tasks and implementing all placeholder functions.
 
-### **DHT Repository vs User Repository**
+## Phase 1: Template Conversion Strategy (High Priority)
 
-| **Aspect** | **DHT Repository** | **User Repository** |
-|------------|-------------------|---------------------|
-| **Purpose** | The development toolkit itself | User's actual project |
-| **Location** | `/Users/emanuelesabetta/Code/DHT/dht/` | User's project directory |
-| **CI/CD** | `.github/workflows/` (DHT's own) | `.github/workflows/` (generated from DHT templates) |
-| **Templates** | `src/DHT/GITHUB_WORKFLOWS/*.yml` with `{REPO_NAME}` | Customized workflows with actual repo name |
-| **Configuration** | `pyproject.toml` (DHT as package) | `.dhtconfig` + `pyproject.toml` (user's project) |
+### 1.1 Identify Template Types
+Currently, we have these template generators:
+- **Project Templates** (`dhtl_project_templates.py`):
+  - `.gitignore` template
+  - License templates (MIT, Apache)
+  - GitHub Actions CI/CD workflow
 
-### **Template System Workflow**
+### 1.2 Convert Templates to Prefect Flows
+Each template should be:
+1. A Prefect task for individual file generation
+2. Grouped into flows for project initialization workflows
+3. Reusable across different commands (init, setup, regenerate)
+
+**Proposed Architecture:**
 ```
-1. User runs: dhtl init
-2. DHT reads: src/DHT/GITHUB_WORKFLOWS/ubuntu-tests.yml
-   Content: paths-ignore: - '{REPO_NAME}/website/**'
-3. DHT replaces: {REPO_NAME} → user-project-name
-4. DHT writes: user-project/.github/workflows/ubuntu-tests.yml
-   Content: paths-ignore: - 'user-project-name/website/**'
-5. User gets: Fully customized CI/CD for their project
+flows/
+  project_init_flow.py     - Initialize new project
+  project_setup_flow.py    - Setup existing project
+  ci_cd_setup_flow.py      - Setup CI/CD workflows
+  regenerate_flow.py       - Regenerate project from .dhtconfig
 ```
 
----
+## Phase 2: Command Module Implementation (High Priority)
 
-## ✅ **COMPLETED TASKS**
+### 2.1 Commands Status
+- ✅ `dhtl_commands_1.py` - restore command (IMPLEMENTED)
+- ✅ `dhtl_commands_2.py` - test command (IMPLEMENTED)
+- ❌ `dhtl_commands_3.py` - PLACEHOLDER (needs implementation)
+- ❌ `dhtl_commands_4.py` - PLACEHOLDER (needs implementation)
+- ⚠️  `dhtl_commands_5.py` - coverage command (CHECK STATUS)
+- ⚠️  `dhtl_commands_6.py` - commit command (CHECK STATUS)
+- ⚠️  `dhtl_commands_7.py` - publish command (CHECK STATUS)
+- ⚠️  `dhtl_commands_8.py` - clean command (CHECK STATUS)
 
-### **1. Template System Restoration**
-- ✅ **Restored GitHub workflow templates** with proper `{REPO_NAME}` placeholders
-- ✅ **Restored pre-commit template** with `{REPO_NAME}` placeholder
-- ✅ **Updated tests** to verify templates contain placeholders (not remove them)
-- ✅ **Fixed critical architectural misunderstanding**
+### 2.2 Missing Command Implementations
+Based on the registry, commands 3 & 4 are unused placeholders. We should:
+1. Remove these unused modules
+2. Focus on implementing actual missing functionality
 
-### **2. DHT Infrastructure**
-- ✅ **Created DHT's own CI/CD** in `.github/workflows/`
-  - `dht-tests.yml`: Tests DHT itself across Python 3.10-3.12
-  - `dht-release.yml`: Publishes DHT to PyPI
-- ✅ **Separated DHT's workflows from user templates**
-- ✅ **Resolved duplicate function issues** (lint_command)
+## Phase 3: Placeholder Function Replacement (High Priority)
 
-### **3. Code Quality**
-- ✅ **Shell script modularity** verified and improved
-- ✅ **Template placeholder integrity** maintained
-- ✅ **Test coverage** for template system
+### 3.1 Critical Modules with Placeholders
+1. **orchestrator.py** - Core module coordination
+2. **dhtl_init.py** - Project initialization
+3. **dhtl_uv.py** - UV package manager integration
+4. **dhtl_secrets.py** - Secrets management
+5. **dhtl_github.py** - GitHub operations
+6. **dhtl_commands_workflows.py** - Workflow management
+7. **dhtl_commands_act.py** - Act (GitHub Actions locally)
+8. **dhtl_commands_standalone.py** - Standalone commands
 
----
+### 3.2 Implementation Priority
+1. **orchestrator.py** - Critical for module loading
+2. **dhtl_init.py** - Essential for project creation
+3. **dhtl_uv.py** - Core dependency management
+4. **dhtl_github.py** - Clone/fork functionality
 
-## 🎯 **PRIORITY DEVELOPMENT ROADMAP**
+## Phase 4: Code Consolidation (Medium Priority)
 
-### **Phase 1: Core Template System (HIGH PRIORITY)**
+### 4.1 Duplicate Environment Modules
+Consolidate these into `environment_utils.py`:
+- `environment.py`
+- `environment_2.py`
+- `dhtl_environment_1.py`
+- `dhtl_environment_2.py`
+- `dhtl_environment_3.py`
 
-#### **Task 1: Design Template Rendering Engine**
+### 4.2 Common Utilities
+Create shared modules:
+- `subprocess_runner.py` - Unified subprocess execution
+- `logging_config.py` - Centralized logging setup
+- `exception_handlers.py` - Common error handling
+- `path_utils.py` - Path manipulation utilities
+
+## Phase 5: Error Handling Improvements (Medium Priority)
+
+### 5.1 Replace Empty Exception Handlers
+Files with empty `except: pass` blocks:
+- guardian_prefect.py
+- dhtconfig.py
+- command_runner.py
+- environment_capture_utils.py
+- docker_manager.py
+(30+ more files)
+
+### 5.2 Implement Proper Error Handling
+1. Create custom exception hierarchy
+2. Add logging to all exception handlers
+3. Provide meaningful error messages
+4. Implement retry logic where appropriate
+
+## Phase 6: Prefect Integration (High Priority)
+
+### 6.1 Convert Templates to Tasks
 ```python
-# src/DHT/modules/template_renderer.py
-class TemplateRenderer:
-    def render_template(self, template_path: Path, variables: dict) -> str:
-        """Replace placeholders with actual values"""
+@task(name="generate_gitignore")
+def generate_gitignore_task() -> str:
+    """Generate Python .gitignore content."""
+    return get_python_gitignore()
 
-    def deploy_templates(self, user_project_path: Path, repo_name: str):
-        """Deploy all templates to user project"""
+@task(name="generate_license")
+def generate_license_task(license_type: str, author: str) -> str:
+    """Generate license content."""
+    if license_type == "MIT":
+        return get_mit_license(author)
+    elif license_type == "Apache":
+        return get_apache_license(author)
 ```
 
-**Placeholders to support:**
-- `{REPO_NAME}` → User's repository name
-- `{REPO_OWNER_OR_ORGANIZATION}` → GitHub username/org
-- `{AUTHOR_NAME_OR_REPO_OWNER}` → Author name
-- `{PYTHON_VERSION}` → Detected Python version
-- `{PROJECT_TYPE}` → Detected project type (web-api, cli, library)
-
-#### **Task 2: Implement `dhtl init` Command**
-```bash
-# User workflow:
-cd my-awesome-project/
-dhtl init
-
-# DHT actions:
-1. Analyze project structure
-2. Create .dhtconfig with minimal settings
-3. Deploy GitHub workflows from templates
-4. Deploy git hooks from templates
-5. Set up Python environment with uv
-6. Install development tools
-```
-
-#### **Task 3: Implement `dhtl setup` Command**
-```bash
-# User workflow:
-git clone user-repo
-cd user-repo
-dhtl setup
-
-# DHT actions:
-1. Read .dhtconfig
-2. Regenerate exact environment
-3. Install dependencies with uv sync
-4. Validate environment matches expectations
-```
-
----
-
-### **Phase 2: Project Intelligence (MEDIUM PRIORITY)**
-
-#### **Task 4: Project Type Detection**
-- **Framework Detection**: Django, Flask, FastAPI, CLI tools, libraries
-- **Language Detection**: Multi-language projects (Python + Node.js, etc.)
-- **Dependency Analysis**: Parse requirements, detect system dependencies
-
-#### **Task 5: Smart Configuration Generation**
-- **Minimal .dhtconfig**: Only store non-inferrable settings
-- **Auto-detect**: Python version, project type, required tools
-- **Platform Mapping**: System dependencies for different OS
-
-#### **Task 6: Environment Regeneration**
-- **Deterministic Builds**: Exact tool versions across platforms
-- **UV Integration**: Python version management and virtual environments
-- **Validation**: Verify environment matches original developer's setup
-
----
-
-### **Phase 3: Advanced Features (LOW PRIORITY)**
-
-#### **Task 7: Multi-Platform Support**
-- **Windows Compatibility**: Git Bash, PowerShell, WSL
-- **macOS/Linux**: Native shell integration
-- **Docker Integration**: Containerized development environments
-
-#### **Task 8: CI/CD Enhancement**
-- **Multiple CI Providers**: GitHub Actions, GitLab CI, Azure DevOps
-- **Testing Strategies**: Unit, integration, end-to-end
-- **Security Scanning**: Automated vulnerability detection
-
----
-
-## 📋 **CURRENT FILE STRUCTURE**
-
-### **DHT Repository Structure**
-```
-dht/                                    # DHT repository
-├── .github/workflows/                  # DHT's own CI/CD ✅
-│   ├── dht-tests.yml                  # Tests DHT itself ✅
-│   └── dht-release.yml                # Publishes DHT to PyPI ✅
-├── src/DHT/
-│   ├── modules/                        # DHT core functionality
-│   ├── GITHUB_WORKFLOWS/              # TEMPLATES for users ✅
-│   │   ├── ubuntu-tests.yml           # Template with {REPO_NAME} ✅
-│   │   ├── docker-release.yml         # Template with {REPO_NAME} ✅
-│   │   └── ...                        # More templates ✅
-│   ├── hooks/                         # TEMPLATES for git hooks ✅
-│   │   └── .pre-commit-config.yaml    # Template with {REPO_NAME} ✅
-│   └── ...
-├── tests/                             # DHT's own tests ✅
-│   ├── unit/test_critical_fixes.py    # Validates template system ✅
-│   └── ...
-└── pyproject.toml                     # DHT as installable package
-```
-
-### **Generated User Repository Structure**
-```
-user-project/                          # User's project (generated by DHT)
-├── .github/workflows/                 # Generated FROM DHT templates
-│   ├── ubuntu-tests.yml              # Customized for user-project
-│   └── ...
-├── .dhtconfig                         # DHT configuration
-├── .pre-commit-config.yaml           # Generated FROM DHT template
-├── pyproject.toml                    # User's project config
-└── ...
-```
-
----
-
-## 🔧 **IMPLEMENTATION DETAILS**
-
-### **Template Variables System**
-```yaml
-# Example .dhtconfig generated by DHT
-version: "1.0"
-project:
-  name: "my-awesome-project"
-  type: "web-api"
-  owner: "username"
-  organization: "my-org"
-python:
-  version: "3.11"
-templates:
-  github_workflows: true
-  pre_commit_hooks: true
-  docker_support: false
-```
-
-### **Template Rendering Logic**
+### 6.2 Create Project Workflows
 ```python
-def render_github_workflows(project_config: dict):
-    """Render all GitHub workflow templates for user project"""
-    template_dir = Path("src/DHT/GITHUB_WORKFLOWS")
-    user_workflows_dir = Path(project_config['path']) / ".github" / "workflows"
-
-    variables = {
-        'REPO_NAME': project_config['name'],
-        'REPO_OWNER_OR_ORGANIZATION': project_config['owner'],
-        'PYTHON_VERSION': project_config['python']['version'],
-    }
-
-    for template_file in template_dir.glob("*.yml"):
-        rendered_content = render_template(template_file, variables)
-        output_file = user_workflows_dir / template_file.name
-        output_file.write_text(rendered_content)
+@flow(name="initialize_project")
+def initialize_project_flow(
+    project_path: Path,
+    project_name: str,
+    author: str,
+    license_type: str = "MIT"
+):
+    """Initialize a new DHT project."""
+    # Create directory structure
+    # Generate project files
+    # Setup git repository
+    # Create virtual environment
+    # Install base dependencies
 ```
 
----
+## Phase 7: Testing Strategy (High Priority)
 
-## 🚨 **CRITICAL LESSONS LEARNED**
+### 7.1 Test Coverage for New Implementations
+- Unit tests for each new function
+- Integration tests for workflows
+- Mock external dependencies (git, uv, etc.)
+- Test error handling paths
 
-### **1. Template Files Are Not Broken Code**
-- ❌ **Wrong**: `{REPO_NAME}` is a syntax error that needs fixing
-- ✅ **Correct**: `{REPO_NAME}` is a template placeholder for user substitution
+### 7.2 Fix Existing Test Issues
+- Fix path references in test files
+- Remove hardcoded paths
+- Ensure tests are platform-independent
 
-### **2. DHT vs User Repository Separation**
-- ❌ **Wrong**: `src/DHT/GITHUB_WORKFLOWS/` are DHT's own workflows
-- ✅ **Correct**: They are templates that DHT deploys to user projects
+## Implementation Order
 
-### **3. Template System Architecture**
-- ❌ **Wrong**: Fix placeholders to make files compile
-- ✅ **Correct**: Preserve placeholders for template rendering system
+1. **Week 1: Core Infrastructure**
+   - Implement orchestrator.py
+   - Create shared utilities
+   - Setup Prefect task/flow structure
 
-### **4. Testing Strategy**
-- ❌ **Wrong**: Test that templates have no placeholders
-- ✅ **Correct**: Test that templates maintain proper placeholders
+2. **Week 2: Essential Commands**
+   - Implement dhtl_init.py
+   - Implement dhtl_uv.py
+   - Create project initialization flow
 
----
+3. **Week 3: GitHub & Workflows**
+   - Implement dhtl_github.py
+   - Implement workflow commands
+   - Create CI/CD setup flows
 
-## 📊 **SUCCESS METRICS**
+4. **Week 4: Cleanup & Testing**
+   - Consolidate duplicate code
+   - Fix error handling
+   - Write comprehensive tests
+   - Update documentation
 
-### **Phase 1 Success Criteria**
-- [ ] `dhtl init` creates working user project with customized workflows
-- [ ] `dhtl setup` reproduces exact environment from .dhtconfig
-- [ ] Templates render correctly with user-specific values
-- [ ] All template placeholders work across different project types
+## Success Criteria
 
-### **Phase 2 Success Criteria**
-- [ ] Auto-detection works for 10+ common project patterns
-- [ ] Cross-platform environment reproduction (Windows, macOS, Linux)
-- [ ] Minimal .dhtconfig contains only non-inferrable settings
+1. All placeholder functions replaced with implementations
+2. All shell script functionality converted to Python
+3. Templates converted to reusable Prefect tasks/flows
+4. 90%+ test coverage for new code
+5. No empty exception handlers
+6. No duplicate implementations
+7. All commands working with Prefect orchestration
 
-### **Phase 3 Success Criteria**
-- [ ] DHT manages complex multi-language projects
-- [ ] Integration with multiple CI/CD providers
-- [ ] Docker containerization support
+## Next Steps
 
----
-
-## 🔄 **NEXT IMMEDIATE ACTIONS**
-
-1. **Design Template Renderer** - Core engine for placeholder substitution
-2. **Implement `dhtl init`** - User project initialization with template deployment
-3. **Implement `dhtl setup`** - Environment regeneration from .dhtconfig
-4. **Create Template Tests** - Validate template rendering works correctly
-5. **Document Template System** - Guide for adding new templates
-
-This development plan ensures DHT evolves into a comprehensive development toolkit while maintaining the correct architectural understanding of templates vs DHT's own code.
+1. Get user approval for this plan
+2. Start with Phase 1: Template conversion
+3. Implement in small, testable increments
+4. Commit after each successful implementation
+5. Run linters and tests after each change

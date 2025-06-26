@@ -6,7 +6,7 @@ name: Windows Check PyPI Version
 
 on:
   schedule:
-  - cron: '0 1 * * *'  # Run once a day at 1 AM UTC (offset from Ubuntu check)
+    - cron: '0 1 * * *'  # Run once a day at 1 AM UTC (offset from Ubuntu check)
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -20,70 +20,70 @@ jobs:
         shell: pwsh  # Use PowerShell for all run steps
 
     steps:
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install {REPO_NAME}
-      run: pip install {REPO_NAME}
+      - name: Install {REPO_NAME}
+        run: pip install {REPO_NAME}
 
-    - name: Get installed {REPO_NAME} version
-      id: installed_version
-      run: |
-        Write-Host "Running '{REPO_NAME} --version'..."
-        ${REPO_NAME}_version_output = {REPO_NAME} --version
-        if ($LASTEXITCODE -ne 0) {
-          Write-Error "Error: '{REPO_NAME} --version' command failed."
-          exit 1
-        }
-        Write-Host "Raw {REPO_NAME} --version output: ${REPO_NAME}_version_output"
+      - name: Get installed {REPO_NAME} version
+        id: installed_version
+        run: |
+          Write-Host "Running '{REPO_NAME} --version'..."
+          ${REPO_NAME}_version_output = {REPO_NAME} --version
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Error: '{REPO_NAME} --version' command failed."
+            exit 1
+          }
+          Write-Host "Raw {REPO_NAME} --version output: ${REPO_NAME}_version_output"
 
-        # Extract version number (format X.Y.Z) using PowerShell regex
-        $match = [regex]::Match(${REPO_NAME}_version_output, '\d+\.\d+\.\d+')
+          # Extract version number (format X.Y.Z) using PowerShell regex
+          $match = [regex]::Match(${REPO_NAME}_version_output, '\d+\.\d+\.\d+')
 
-        if (-not $match.Success) {
-          Write-Error "Error: Could not extract version number using regex '\d+\.\d+\.\d+' from output: ${REPO_NAME}_version_output"
-          exit 1
-        }
-        $version_num = $match.Value
+          if (-not $match.Success) {
+            Write-Error "Error: Could not extract version number using regex '\d+\.\d+\.\d+' from output: ${REPO_NAME}_version_output"
+            exit 1
+          }
+          $version_num = $match.Value
 
-        Write-Host "Extracted version number: $version_num"
-        echo "version=$version_num" >> $env:GITHUB_OUTPUT
+          Write-Host "Extracted version number: $version_num"
+          echo "version=$version_num" >> $env:GITHUB_OUTPUT
 
-    - name: Check out code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch all history for all tags
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all tags
 
-    - name: Get latest tag
-      id: latest_tag
-      run: |
-        Write-Host "Fetching tags..."
-        # Fetch all tags from remote just in case
-        git fetch --tags origin main
-        Write-Host "Getting latest non-dev tag..."
-        # Get the latest tag that strictly matches vX.Y.Z (no suffixes like .dev)
-        # List all tags, sort by version descending, filter for exact pattern, take the first one
-        $latest_tag = (git tag --sort=-v:refname | Select-String -Pattern '^v\d+\.\d+\.\d+$' | Select-Object -First 1).Line
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          Write-Host "Fetching tags..."
+          # Fetch all tags from remote just in case
+          git fetch --tags origin main
+          Write-Host "Getting latest non-dev tag..."
+          # Get the latest tag that strictly matches vX.Y.Z (no suffixes like .dev)
+          # List all tags, sort by version descending, filter for exact pattern, take the first one
+          $latest_tag = (git tag --sort=-v:refname | Select-String -Pattern '^v\d+\.\d+\.\d+$' | Select-Object -First 1).Line
 
-        if (-not $latest_tag) {
-          Write-Error "Error: Could not find any tags matching the pattern '^v\d+\.\d+\.\d+$'"
-          exit 1
-        }
+          if (-not $latest_tag) {
+            Write-Error "Error: Could not find any tags matching the pattern '^v\d+\.\d+\.\d+$'"
+            exit 1
+          }
 
-        Write-Host "Latest non-dev tag: $latest_tag"
-        # Remove 'v' prefix for comparison
-        $tag_num = $latest_tag.Substring(1)
-        Write-Host "Extracted tag number: $tag_num"
-        echo "tag=$tag_num" >> $env:GITHUB_OUTPUT
+          Write-Host "Latest non-dev tag: $latest_tag"
+          # Remove 'v' prefix for comparison
+          $tag_num = $latest_tag.Substring(1)
+          Write-Host "Extracted tag number: $tag_num"
+          echo "tag=$tag_num" >> $env:GITHUB_OUTPUT
 
-    - name: Compare versions
-      run: |
-        Write-Host "Installed version: ${{ steps.installed_version.outputs.version }}"
-        Write-Host "Latest tag version: ${{ steps.latest_tag.outputs.tag }}"
-        if ("${{ steps.installed_version.outputs.version }}" -ne "${{ steps.latest_tag.outputs.tag }}") {
-          Write-Error "Error: Installed {REPO_NAME} version (${{ steps.installed_version.outputs.version }}) does not match the latest tag (${{ steps.latest_tag.outputs.tag }})."
-          exit 1
-        }
-        Write-Host "Versions match."
+      - name: Compare versions
+        run: |-
+          Write-Host "Installed version: ${{ steps.installed_version.outputs.version }}"
+          Write-Host "Latest tag version: ${{ steps.latest_tag.outputs.tag }}"
+          if ("${{ steps.installed_version.outputs.version }}" -ne "${{ steps.latest_tag.outputs.tag }}") {
+            Write-Error "Error: Installed {REPO_NAME} version (${{ steps.installed_version.outputs.version }}) does not match the latest tag (${{ steps.latest_tag.outputs.tag }})."
+            exit 1
+          }
+          Write-Host "Versions match."

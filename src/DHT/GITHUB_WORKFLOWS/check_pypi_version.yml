@@ -8,7 +8,7 @@ on:
   schedule:
     # Run once a day at midnight UTC
     - cron: '0 0 * * *'
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   check_version:
@@ -52,7 +52,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for all tags
+          fetch-depth: 0  # Fetch all history for all tags
 
       - name: Get latest tag
         id: latest_tag
@@ -76,7 +76,7 @@ jobs:
           echo "tag=$tag_num" >> $GITHUB_OUTPUT
 
       - name: Compare versions
-        run: |
+        run: |-
           echo "Installed version: ${{ steps.installed_version.outputs.version }}"
           echo "Latest tag version: ${{ steps.latest_tag.outputs.tag }}"
           if [ "${{ steps.installed_version.outputs.version }}" != "${{ steps.latest_tag.outputs.tag }}" ]; then
