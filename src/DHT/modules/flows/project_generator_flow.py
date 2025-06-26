@@ -14,6 +14,7 @@ Licensed under the MIT License. See LICENSE file for details.
 #
 
 from pathlib import Path
+from typing import Any
 
 from prefect import flow, task
 from prefect.task_runners import ThreadPoolTaskRunner
@@ -54,7 +55,7 @@ from .testing_config_tasks import (
 def detect_project_requirements_task(
     project_type: str,
     features: list[str] | None = None,
-) -> dict[str, any]:
+) -> dict[str, Any]:
     """Detect what configurations are needed based on project type.
 
     Args:
