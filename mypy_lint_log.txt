@@ -1,0 +1,26 @@
+Bytecode compiled 4643 files in 166ms
+src/DHT/modules/flows/project_setup_flow.py:220: error: Argument 1 has incompatible type "Callable[[Path | None, bool], bool]"; expected "Callable[[Path | None, bool], Never]"  [arg-type]
+    @flow(name="setup_project", description="Setup DHT for an existing project", task_runner=ThreadPoolTaskRunner())
+     ^
+src/DHT/modules/flows/project_setup_flow.py:220: error: Argument "task_runner" to "__call__" of "FlowDecorator" has incompatible type "ThreadPoolTaskRunner[Never]"; expected "TaskRunner[PrefectFuture[Never]] | None"  [arg-type]
+    @flow(name="setup_project", description="Setup DHT for an existing project", task_runner=ThreadPoolTaskRunner())
+                                                                                             ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/flows/project_init_flow.py:109: error: Argument 1 has incompatible type "Callable[[Path, str, str, str | None, str | None, str, str, bool], bool]"; expected "Callable[[Path, str, str, str | None, str | None, str, str, bool], Never]"  [arg-type]
+    @flow(
+     ^
+src/DHT/modules/flows/project_init_flow.py:112: error: Argument "task_runner" to "__call__" of "FlowDecorator" has incompatible type "ThreadPoolTaskRunner[Never]"; expected "TaskRunner[PrefectFuture[Never]] | None"  [arg-type]
+        task_runner=ThreadPoolTaskRunner(),
+                    ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/flows/project_generator_flow.py: note: In function "detect_project_requirements_task":
+src/DHT/modules/flows/project_generator_flow.py:57: error: Function "builtins.any" is not valid as a type  [valid-type]
+    ) -> dict[str, any]:
+                   ^
+src/DHT/modules/flows/project_generator_flow.py:57: note: Perhaps you meant "typing.Any" instead of "any"?
+src/DHT/modules/flows/project_generator_flow.py:57: note: See https://mypy.rtfd.io/en/stable/_refs.html#code-valid-type for more info
+src/DHT/modules/flows/project_generator_flow.py: note: At top level:
+src/DHT/modules/flows/project_generator_flow.py:94: error: Argument 1 has incompatible type "Callable[[Path, str, str, str, str | None, str | None, str, str, list[str] | None, int], bool]"; expected "Callable[[Path, str, str, str, str | None, str | None, str, str, list[str] | None, int], Never]"  [arg-type]
+    @flow(
+     ^
+src/DHT/modules/flows/project_generator_flow.py:97: error: Argument "task_runner" to "__call__" of "FlowDecorator" has incompatible type "ThreadPoolTaskRunner[Never]"; expected "TaskRunner[PrefectFuture[Never]] | None"  [arg-type]
+        task_runner=ThreadPoolTaskRunner(),
+                    ^~~~~~~~~~~~~~~~~~~~~~

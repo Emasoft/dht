@@ -527,4 +527,3 @@ __all__ = [
     "generate_redis_config_task",
     "generate_mongodb_config_task",
 ]
-

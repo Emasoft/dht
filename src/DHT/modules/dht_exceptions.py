@@ -20,7 +20,7 @@ Provides a comprehensive set of exceptions for all DHT modules,
 replacing scattered empty exception classes with meaningful ones.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 
 class DHTError(Exception):

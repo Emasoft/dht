@@ -42,7 +42,7 @@ def generate_django_settings_task(
 
     secret_key = secret_key or secrets.token_urlsafe(50)
     allowed_hosts = allowed_hosts or ["localhost", "127.0.0.1"]
-    database_url = database_url or f"postgresql://user:password@localhost:5432/{project_name}_db"
+    database_url = database_url or f"postgresql://user:<CHANGE-ME-db-password>@localhost:5432/{project_name}_db"
 
     hosts_str = ", ".join(f'"{host}"' for host in allowed_hosts)
 
@@ -348,7 +348,7 @@ services:
     image: postgres:15-alpine
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=<CHANGE-ME-postgres-password>
       - POSTGRES_DB={project_name}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -423,8 +423,8 @@ LOG_LEVEL=INFO
     if include_secrets:
         env_content += """
 # Security
-SECRET_KEY=your-secret-key-here
-API_KEY=your-api-key-here
+SECRET_KEY=<CHANGE-ME-generate-secret-key>
+API_KEY=<CHANGE-ME-your-api-key>
 """
 
     if project_type == "web":
@@ -439,14 +439,14 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:8080
     if database_type == "postgresql":
         env_content += """
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+DATABASE_URL=postgresql://user:<CHANGE-ME-db-password>@localhost:5432/dbname
 DB_POOL_SIZE=5
 DB_MAX_OVERFLOW=10
 """
     elif database_type == "mysql":
         env_content += """
 # Database
-DATABASE_URL=mysql://user:password@localhost:3306/dbname
+DATABASE_URL=mysql://user:<CHANGE-ME-db-password>@localhost:3306/dbname
 DB_POOL_SIZE=5
 DB_MAX_OVERFLOW=10
 """
@@ -462,15 +462,15 @@ REDIS_URL=redis://localhost:6379/0
 CACHE_TTL=3600
 
 # External services
-AWS_ACCESS_KEY_ID=your-aws-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret
+AWS_ACCESS_KEY_ID=<CHANGE-ME-aws-access-key>
+AWS_SECRET_ACCESS_KEY=<CHANGE-ME-aws-secret-key>
 AWS_REGION=us-east-1
 
 # Email
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-password
+SMTP_PASSWORD=<CHANGE-ME-email-password>
 """
 
     if custom_vars:
@@ -700,4 +700,3 @@ __all__ = [
     "generate_makefile_task",
     "generate_github_workflow_task",
 ]
-
