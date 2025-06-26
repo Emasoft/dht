@@ -1,11 +1,11 @@
 {
   "file_metadata": {
     "size": 929,
-    "modified": 1750731168.8148649,
-    "created": 1750731168.8148649,
+    "modified": 1750939278.6330428,
+    "created": 1750939278.6330428,
     "permissions": "0o100600",
-    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpc99qq1a0.sh",
-    "name": "tmpc99qq1a0.sh",
+    "absolute_path": "/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/tmpx39m_bfu.sh",
+    "name": "tmpx39m_bfu.sh",
     "extension": ".sh"
   },
   "functions": [
@@ -154,9 +154,9 @@
   },
   "dependencies": {
     "commands": [
+      "npm",
       "git",
-      "docker",
-      "npm"
+      "docker"
     ],
     "packages": [],
     "files": []

@@ -12,14 +12,14 @@ from typing import Any
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DHTL = PROJECT_ROOT / "dhtl.sh"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DHTL = PROJECT_ROOT / "dhtl_entry.py"
 
 
-@pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
+@pytest.mark.skipif(not DHTL.exists(), reason="dhtl_entry.py not found")
 def test_version() -> Any:
     res = subprocess.run(
-        [str(DHTL), "--no-guardian", "--quiet", "version"],
+        ["python", str(DHTL), "--no-guardian", "--quiet", "version"],
         capture_output=True,
         text=True,
         check=True,
@@ -28,10 +28,10 @@ def test_version() -> Any:
     assert "Development Helper Toolkit Launcher" in res.stdout
 
 
-@pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
+@pytest.mark.skipif(not DHTL.exists(), reason="dhtl_entry.py not found")
 def test_help() -> Any:
     res = subprocess.run(
-        [str(DHTL), "--no-guardian", "--quiet", "help"],
+        ["python", str(DHTL), "--no-guardian", "--quiet", "help"],
         capture_output=True,
         text=True,
         check=True,
@@ -40,10 +40,10 @@ def test_help() -> Any:
     assert "Available commands" in res.stdout
 
 
-@pytest.mark.skipif(not DHTL.exists(), reason="dhtl.sh non trovato")
+@pytest.mark.skipif(not DHTL.exists(), reason="dhtl_entry.py not found")
 def test_unknown_command_exit_code() -> Any:
     res = subprocess.run(
-        [str(DHTL), "--no-guardian", "--quiet", "totally_unknown"],
+        ["python", str(DHTL), "--no-guardian", "--quiet", "totally_unknown"],
         capture_output=True,
         text=True,
         cwd=PROJECT_ROOT,

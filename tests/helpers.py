@@ -70,7 +70,7 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
     source_dht_dir = Path(
         os.environ.get("DHT_SOURCE_DIR", Path(__file__).parent.parent.parent)
     )  # Assumes helpers.py is in DHT/tests/
-    if not (source_dht_dir / "dhtl.sh").exists():
+    if not (source_dht_dir / "dhtl_entry.py").exists():
         # Fallback if DHT_SOURCE_DIR is not set and script is not in expected location
         source_dht_dir = Path(os.environ.get("DHT_DIR", source_dht_dir))
 
@@ -81,13 +81,13 @@ def run_dhtl_command_shell(command, cwd=None, env=None, check=True, capture_outp
         temp_dht_dir = temp_project_root / "DHT"
         temp_dht_dir.mkdir(parents=True, exist_ok=True)
 
-        # Copy dhtl.sh
-        source_dhtl_script = source_dht_dir / "dhtl.sh"
+        # Copy dhtl_entry.py
+        source_dhtl_script = source_dht_dir / "dhtl_entry.py"
         if source_dhtl_script.exists():
-            shutil.copy(source_dhtl_script, temp_dht_dir / "dhtl.sh")
-            (temp_dht_dir / "dhtl.sh").chmod(0o755)
+            shutil.copy(source_dhtl_script, temp_dht_dir / "dhtl_entry.py")
+            (temp_dht_dir / "dhtl_entry.py").chmod(0o755)
         else:
-            raise FileNotFoundError(f"Source dhtl.sh not found at {source_dhtl_script}")
+            raise FileNotFoundError(f"Source dhtl_entry.py not found at {source_dhtl_script}")
 
         # Copy modules directory
         source_modules_dir = source_dht_dir / "modules"

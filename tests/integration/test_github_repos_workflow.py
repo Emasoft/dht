@@ -79,8 +79,8 @@ class TestGitHubReposWorkflow:
 
     @pytest.fixture(scope="class")
     def dhtl_path(self) -> Path:
-        """Get path to dhtl.sh script."""
-        return Path("/Users/emanuelesabetta/Code/DHT/dht/dhtl.sh")
+        """Get path to dhtl_entry.py script."""
+        return Path(__file__).parent.parent.parent / "dhtl_entry.py"
 
     @pytest.fixture(scope="class")
     def test_dir(self, tmp_path_factory) -> Path:

@@ -82,8 +82,8 @@ class TestRealDHTWorkflow:
     ]
 
     def __init__(self) -> Any:
-        self.dhtl_path = Path("/Users/emanuelesabetta/Code/DHT/dht/dhtl.sh")
-        self.test_dir = Path("/Users/emanuelesabetta/Code/DHT/dht/temp_test/real_workflow_test")
+        self.dhtl_path = Path(__file__).parent.parent.parent / "dhtl_entry.py"
+        self.test_dir = Path(__file__).parent.parent.parent / "temp_test" / "real_workflow_test"
         self.original_dir = Path.cwd()
 
     def setup(self) -> Any:
