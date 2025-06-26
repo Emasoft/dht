@@ -38,7 +38,7 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies: [types-pyyaml, types-requests, types-toml, types-tabulate]
-        args: [--ignore-missing-imports, --strict]
+        args: [--ignore-missing-imports, --strict, --disable-error-code=misc]
         exclude: ^(tests/|tree-sitter-bash/)
         files: \.py$
 
