@@ -34,7 +34,7 @@ from .restore_flow import detect_virtual_environment, find_project_root
 from .utils import get_default_resource_limits, get_venv_python_path
 
 
-@task(name="check-test-resources", retries=2)  # type: ignore[misc]
+@task(name="check-test-resources", retries=2)
 def check_test_resources() -> dict[str, Any]:
     """
     Check system resources before running tests.
@@ -82,7 +82,7 @@ def check_test_resources() -> dict[str, Any]:
         return {"has_resources": True, "warning": "Could not check resources"}
 
 
-@task(name="discover-tests")  # type: ignore[misc]
+@task(name="discover-tests")
 def discover_tests(project_root: Path, test_pattern: str | None = None) -> dict[str, Any]:
     """
     Discover tests in the project.
@@ -136,7 +136,7 @@ def discover_tests(project_root: Path, test_pattern: str | None = None) -> dict[
     return result
 
 
-@task(name="prepare-test-command")  # type: ignore[misc]
+@task(name="prepare-test-command")
 def prepare_test_command(
     project_root: Path,
     venv_path: Path,
@@ -223,7 +223,7 @@ def prepare_test_command(
     return cmd_parts
 
 
-@task(name="run-tests")  # type: ignore[misc]
+@task(name="run-tests")
 def run_tests(
     cmd_parts: list[str],
     project_root: Path,
@@ -271,7 +271,7 @@ def run_tests(
     }
 
 
-@task(name="parse-test-output")  # type: ignore[misc]
+@task(name="parse-test-output")
 def parse_test_output(stdout: str, stderr: str) -> dict[str, Any]:
     """
     Parse test output to extract summary information.
@@ -315,7 +315,7 @@ def parse_test_output(stdout: str, stderr: str) -> dict[str, Any]:
     return summary
 
 
-@task(name="generate-coverage-report")  # type: ignore[misc]
+@task(name="generate-coverage-report")
 def generate_coverage_report(project_root: Path, venv_path: Path) -> dict[str, Any]:
     """
     Generate coverage report if coverage was enabled.
@@ -357,7 +357,7 @@ def generate_coverage_report(project_root: Path, venv_path: Path) -> dict[str, A
     return {"has_coverage": True, "coverage_percent": coverage_percent, "report": result.stdout}
 
 
-@flow(name="test-command", description="Run project tests with resource management", retries=1)  # type: ignore[misc]
+@flow(name="test-command", description="Run project tests with resource management", retries=1)
 def test_command_flow(
     project_path: str | None = None,
     test_pattern: str | None = None,

@@ -41,7 +41,7 @@ class RemoveCommand:
         tags=["dht", "remove", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(self, packages: list[str], dev: bool = False, **kwargs: Any) -> dict[str, Any]:
         """
         Execute remove command to remove dependencies.

@@ -108,7 +108,7 @@ class ProjectHeuristics:
         """
         return cast(dict[str, Any], self.quality_analyzer.analyze_code_quality(analysis_result))
 
-    @flow(name="analyze_project_heuristics")  # type: ignore[misc]
+    @flow(name="analyze_project_heuristics")
     def analyze(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Run complete heuristic analysis on a project.

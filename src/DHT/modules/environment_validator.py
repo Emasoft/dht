@@ -47,7 +47,7 @@ class EnvironmentValidator:
             "docker": self._extract_docker_version,
         }
 
-    @task(name="verify_python_version")  # type: ignore[misc]
+    @task(name="verify_python_version")
     def verify_python_version(
         self, expected_version: str, python_executable: str | None = None
     ) -> tuple[bool, str, list[str]]:
@@ -90,7 +90,7 @@ class EnvironmentValidator:
         except Exception as e:
             return False, "unknown", [f"Error verifying Python version: {str(e)}"]
 
-    @task(name="verify_tools")  # type: ignore[misc]
+    @task(name="verify_tools")
     def verify_tools(
         self, expected_tools: dict[str, str], platform_name: str | None = None
     ) -> dict[str, dict[str, Any]]:
@@ -157,7 +157,7 @@ class EnvironmentValidator:
 
         return results
 
-    @task(name="verify_python_packages")  # type: ignore[misc]
+    @task(name="verify_python_packages")
     def verify_python_packages(
         self, expected_packages: dict[str, str], python_executable: str | None = None
     ) -> dict[str, dict[str, Any]]:

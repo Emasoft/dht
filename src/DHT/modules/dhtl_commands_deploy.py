@@ -41,7 +41,7 @@ class DeployCommand:
         """Initialize deploy command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="deploy_project_in_container", cache_policy=NO_CACHE)  # type: ignore[misc]
+    @task(name="deploy_project_in_container", cache_policy=NO_CACHE)
     def deploy_project_in_container(
         self,
         project_path: str | None = None,

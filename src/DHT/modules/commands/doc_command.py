@@ -62,7 +62,7 @@ class DocCommand:
         tags=["dht", "doc", "documentation"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(self, path: str = ".", format: str | None = None, serve: bool = False, **kwargs: Any) -> dict[str, Any]:
         """
         Execute doc command to generate documentation.

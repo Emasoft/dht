@@ -35,16 +35,16 @@ from .guardian_prefect import (
 )
 
 
-@click.group()  # type: ignore[misc]
+@click.group()
 def cli() -> None:
     """DHT Guardian - Prefect-based process management"""
     pass
 
 
-@cli.command()  # type: ignore[misc]
-@click.option("--name", default="dht-guardian", help="Deployment name")  # type: ignore[misc]
-@click.option("--interval", type=int, help="Run interval in seconds")  # type: ignore[misc]
-@click.option("--cron", help="Cron schedule")  # type: ignore[misc]
+@cli.command()
+@click.option("--name", default="dht-guardian", help="Deployment name")
+@click.option("--interval", type=int, help="Run interval in seconds")
+@click.option("--cron", help="Cron schedule")
 def start(name: str, interval: int | None, cron: str | None) -> None:
     """Start the Prefect guardian server"""
     click.echo("Starting Prefect guardian server...")
@@ -79,7 +79,7 @@ def start(name: str, interval: int | None, cron: str | None) -> None:
         deployment.serve()
 
 
-@cli.command()  # type: ignore[misc]
+@cli.command()
 def stop() -> None:
     """Stop the Prefect guardian server"""
     click.echo("Stopping Prefect guardian server...")
@@ -88,7 +88,7 @@ def stop() -> None:
     click.echo("Guardian server stopped")
 
 
-@cli.command()  # type: ignore[misc]
+@cli.command()
 def status() -> None:
     """Check guardian server status"""
     try:
@@ -125,18 +125,18 @@ def status() -> None:
         click.echo("Guardian server may not be running")
 
 
-@cli.command()  # type: ignore[misc]
-@click.argument("commands", nargs=-1, required=False)  # type: ignore[misc]
-@click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")  # type: ignore[misc]
-@click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")  # type: ignore[misc]
-@click.option("--batch", "-b", type=int, help="Run commands in batches")  # type: ignore[misc]
-@click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")  # type: ignore[misc]
-@click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")  # type: ignore[misc]
-@click.option("--cpu", type=int, default=80, help="CPU limit percentage")  # type: ignore[misc]
-@click.option("--output", "-o", type=click.Path(), help="Output file for results")  # type: ignore[misc]
-@click.option("--json", "output_json", is_flag=True, help="Output results as JSON")  # type: ignore[misc]
-@click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")  # type: ignore[misc]
-@click.option("--deployment", "-d", help="Run via deployment instead of directly")  # type: ignore[misc]
+@cli.command()
+@click.argument("commands", nargs=-1, required=False)
+@click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")
+@click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")
+@click.option("--batch", "-b", type=int, help="Run commands in batches")
+@click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")
+@click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")
+@click.option("--cpu", type=int, default=80, help="CPU limit percentage")
+@click.option("--output", "-o", type=click.Path(), help="Output file for results")
+@click.option("--json", "output_json", is_flag=True, help="Output results as JSON")
+@click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")
+@click.option("--deployment", "-d", help="Run via deployment instead of directly")
 def run(
     commands: tuple[str, ...],
     file: str | None,
@@ -223,8 +223,8 @@ def run(
         sys.exit(1)
 
 
-@cli.command()  # type: ignore[misc]
-@click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")  # type: ignore[misc]
+@cli.command()
+@click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")
 def example(format: str) -> None:
     """Show example command file"""
 
@@ -243,8 +243,8 @@ def example(format: str) -> None:
         click.echo(yaml.dump(example_data, default_flow_style=False))
 
 
-@cli.command()  # type: ignore[misc]
-@click.argument("result_file", type=click.Path(exists=True))  # type: ignore[misc]
+@cli.command()
+@click.argument("result_file", type=click.Path(exists=True))
 def show_results(result_file: str) -> None:
     """Display results from a previous run"""
 

@@ -40,7 +40,7 @@ class FmtCommand:
         tags=["dht", "fmt", "format"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(self, **kwargs: Any) -> dict[str, Any]:
         """
         Execute fmt command (delegates to format).

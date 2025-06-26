@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+
+# HERE IS THE CHANGELOG FOR THIS VERSION OF THE FILE:
+# - Fixed mypy type annotation error for tree_sitter.Language call by adding type: ignore comment
+# - The old API pattern (path, language_name) conflicts with new type signatures
+#
+
 """
 base_parser.py - Base class for all DHT file parsers  This module provides the abstract base class for all language and file parsers. It includes Prefect integration for task-based parallel processing.
 
@@ -75,7 +81,7 @@ class BaseParser(ABC):
         for lib_path in lib_paths:
             if lib_path.exists():
                 try:
-                    language_obj = tree_sitter.Language(lib_path, language)
+                    language_obj = tree_sitter.Language(str(lib_path), language)  # type: ignore[call-overload]
                     self.parser = tree_sitter.Parser()
                     self.parser.language = language_obj
                     self.language_obj = language_obj
@@ -151,7 +157,7 @@ class BaseParser(ABC):
         """
         return []
 
-    @task(  # type: ignore[misc]
+    @task(
         name="parse-file",
         description="Parse a file with appropriate parser",
         retries=2,

@@ -52,7 +52,7 @@ class InitCommand:
         """Initialize init command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_init", cache_policy=NO_CACHE)  # type: ignore[misc]
+    @task(name="dhtl_init", cache_policy=NO_CACHE)
     def init(
         self,
         uv_manager: UVManager,

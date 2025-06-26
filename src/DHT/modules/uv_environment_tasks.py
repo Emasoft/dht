@@ -33,7 +33,7 @@ from DHT.modules.uv_task_models import DEFAULT_TIMEOUT, RETRY_DELAYS, UV_MEMORY_
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(  # type: ignore[misc]
+@task(
     name="create_virtual_environment",
     description="Create a virtual environment using UV",
     retries=2,
@@ -99,7 +99,7 @@ def create_virtual_environment(
         raise UVTaskError(f"Failed to create virtual environment: {e}") from e
 
 
-@flow(name="setup_project_environment", description="Complete project environment setup with UV")  # type: ignore[misc]  # type: ignore[misc]
+@flow(name="setup_project_environment", description="Complete project environment setup with UV")
 def setup_project_environment(
     project_path: Path, python_version: str | None = None, install_deps: bool = True, force_recreate: bool = False
 ) -> dict[str, Any]:

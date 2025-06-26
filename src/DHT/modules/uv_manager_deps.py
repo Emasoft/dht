@@ -166,7 +166,7 @@ class DependencyManager:
 
         return {"success": True, "method": "uv pip install -e", "message": "Dependencies installed successfully"}
 
-    @task  # type: ignore[misc]
+    @task
     def generate_lock_file(self, project_path: Path) -> Path:
         """
         Generate uv.lock file for reproducible installs.
@@ -189,7 +189,7 @@ class DependencyManager:
 
         return lock_file
 
-    @task  # type: ignore[misc]
+    @task
     def add_dependency(
         self, project_path: Path, package: str, dev: bool = False, extras: list[str] | None = None
     ) -> dict[str, Any]:

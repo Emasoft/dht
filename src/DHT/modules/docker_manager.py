@@ -92,7 +92,7 @@ class DockerManager:
             except OSError:
                 return False
 
-    @task  # type: ignore[misc]
+    @task
     def build_image(
         self, context_path: Path, tag: str, dockerfile: str | None = None, buildargs: dict[str, str] | None = None
     ) -> tuple[bool, str]:
@@ -153,7 +153,7 @@ class DockerManager:
             self.logger.error(f"Unexpected error during build: {e}")
             raise DockerError(f"Failed to build image: {e}") from e
 
-    @task  # type: ignore[misc]
+    @task
     def run_container(
         self,
         image: str,

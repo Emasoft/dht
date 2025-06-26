@@ -111,7 +111,7 @@ class ProjectWorkflowManager:
             except Exception as e:
                 results["steps"].append({"step": "generate_lock", "success": False, "error": str(e)})
 
-    @flow(name="setup_project", description="Complete project setup flow")  # type: ignore[misc]
+    @flow(name="setup_project", description="Complete project setup flow")
     def setup_project(
         self, project_path: Path, python_version: str | None = None, install_deps: bool = True, dev: bool = False
     ) -> dict[str, Any]:

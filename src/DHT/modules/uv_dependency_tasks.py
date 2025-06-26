@@ -30,7 +30,7 @@ from DHT.modules.uv_task_models import DEFAULT_TIMEOUT, INSTALL_TIMEOUT, RETRY_D
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(  # type: ignore[misc]
+@task(
     name="install_dependencies",
     description="Install project dependencies using UV",
     retries=2,
@@ -99,7 +99,7 @@ def install_dependencies(project_path: Path, extras: list[str] | None = None, de
         raise UVTaskError(f"Failed to install dependencies: {e}") from e
 
 
-@task(  # type: ignore[misc]
+@task(
     name="sync_dependencies",
     description="Sync dependencies to match lock file",
     retries=2,
@@ -146,7 +146,7 @@ def sync_dependencies(project_path: Path, frozen: bool = True) -> dict[str, Any]
         raise UVTaskError(f"Failed to sync dependencies: {e}") from e
 
 
-@task(  # type: ignore[misc]
+@task(
     name="generate_lock_file",
     description="Generate UV lock file for reproducible installs",
     retries=2,
@@ -192,7 +192,7 @@ def generate_lock_file(project_path: Path) -> dict[str, Any]:
         raise UVTaskError(f"Failed to generate lock file: {e}") from e
 
 
-@task(  # type: ignore[misc]
+@task(
     name="add_dependency",
     description="Add a dependency to the project",
     retries=2,
@@ -261,7 +261,7 @@ def add_dependency(
         raise UVTaskError(f"Failed to add dependency {package}: {e}") from e
 
 
-@task(  # type: ignore[misc]
+@task(
     name="remove_dependency",
     description="Remove a dependency from the project",
     retries=2,

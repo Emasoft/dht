@@ -90,7 +90,7 @@ class PythonVersionManager:
 
         return None
 
-    @task  # type: ignore[misc]
+    @task
     def list_python_versions(self) -> list[dict[str, Any]]:
         """List all available Python versions (installed and downloadable)."""
         result = self.run_command(["python", "list", "--all-versions"])
@@ -114,7 +114,7 @@ class PythonVersionManager:
 
         return versions
 
-    @task  # type: ignore[misc]
+    @task
     def ensure_python_version(self, version: str) -> Path:
         """
         Ensure specific Python version is available, installing if needed.

@@ -30,7 +30,7 @@ from universal_build_detector import UniversalBuildDetector
 console = Console()
 
 
-@task(name="detect_build_config")  # type: ignore[misc]
+@task(name="detect_build_config")
 def detect_build_config(project_path: Path) -> dict[str, Any]:
     """Detect build configuration for the project."""
     logger = get_run_logger()
@@ -42,7 +42,7 @@ def detect_build_config(project_path: Path) -> dict[str, Any]:
     return cast(dict[str, Any], summary)
 
 
-@task(name="run_pre_build_commands")  # type: ignore[misc]
+@task(name="run_pre_build_commands")
 def run_pre_build_commands(commands: list[str], project_path: Path) -> bool:
     """Run pre-build commands like dependency installation."""
     logger = get_run_logger()
@@ -62,7 +62,7 @@ def run_pre_build_commands(commands: list[str], project_path: Path) -> bool:
     return True
 
 
-@task(name="run_build_commands")  # type: ignore[misc]
+@task(name="run_build_commands")
 def run_build_commands(commands: list[str], project_path: Path) -> dict[str, Any]:
     """Run the actual build commands."""
     logger = get_run_logger()
@@ -120,7 +120,7 @@ def run_build_commands(commands: list[str], project_path: Path) -> dict[str, Any
     return {"all_success": all(r["success"] for r in results), "results": results}
 
 
-@task(name="check_artifacts")  # type: ignore[misc]
+@task(name="check_artifacts")
 def check_artifacts(artifacts_path: str | None, project_path: Path) -> list[str]:
     """Check what artifacts were created."""
     if not artifacts_path:
@@ -140,7 +140,7 @@ def check_artifacts(artifacts_path: str | None, project_path: Path) -> list[str]
     return sorted(artifacts)
 
 
-@flow(name="universal_build")  # type: ignore[misc]
+@flow(name="universal_build")
 def universal_build_flow(project_path: str, skip_checks: bool = False, verbose: bool = False) -> dict[str, Any]:
     """
     Universal build flow for any project type.

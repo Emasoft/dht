@@ -47,7 +47,7 @@ class EnvironmentAnalyzer:
             "pre-commit": {"config_files": [".pre-commit-config.yaml"], "command": "pre-commit"},
         }
 
-    @task(name="analyze_environment_requirements", description="Analyze project and determine environment requirements")  # type: ignore[misc]
+    @task(name="analyze_environment_requirements", description="Analyze project and determine environment requirements")
     def analyze_environment_requirements(
         self, project_path: Path, custom_requirements: dict[str, Any] | None = None
     ) -> dict[str, Any]:

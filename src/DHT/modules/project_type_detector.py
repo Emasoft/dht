@@ -69,7 +69,7 @@ class ProjectTypeDetector:
         self.analyzer = ProjectAnalyzer()
         self.heuristics = ProjectHeuristics()
 
-    @task  # type: ignore[misc]
+    @task
     def analyze(self, project_path: Path) -> ProjectAnalysis:
         """
         Analyze project and detect its type with confidence scoring.
@@ -149,7 +149,7 @@ class ProjectTypeDetector:
             analysis_timestamp=datetime.now().isoformat(),
         )
 
-    @task  # type: ignore[misc]
+    @task
     def generate_configurations(self, analysis: ProjectAnalysis) -> dict[str, str]:
         """
         Generate configuration files based on project type.
@@ -178,7 +178,7 @@ class ProjectTypeDetector:
 
         return configs
 
-    @task  # type: ignore[misc]
+    @task
     def get_setup_recommendations(self, analysis: ProjectAnalysis) -> dict[str, Any]:
         """
         Get setup recommendations based on project type.
@@ -192,7 +192,7 @@ class ProjectTypeDetector:
         result: dict[str, Any] = get_setup_recommendations(analysis)
         return result
 
-    @task  # type: ignore[misc]
+    @task
     def validate_configurations(self, configs: dict[str, str], analysis: ProjectAnalysis) -> ValidationResult:
         """
         Validate generated configurations.

@@ -51,7 +51,7 @@ def _get_logger() -> Any:
 class EnvironmentInstaller:
     """Handles environment installation and setup."""
 
-    @task(name="install_python_environment", description="Install Python environment based on configuration")  # type: ignore[misc]
+    @task(name="install_python_environment", description="Install Python environment based on configuration")
     def install_python_environment(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Install Python environment based on configuration.
@@ -198,7 +198,7 @@ class EnvironmentInstaller:
         if packages_to_install:
             self._install_additional_packages(project_path, packages_to_install)
 
-    @task(name="install_system_packages", description="Install system-level packages")  # type: ignore[misc]
+    @task(name="install_system_packages", description="Install system-level packages")
     def install_system_packages(self, config: EnvironmentConfig, result: ConfigurationResult, platform: str) -> bool:
         """
         Install system-level packages.
@@ -256,7 +256,7 @@ class EnvironmentInstaller:
 
         return len(failed_packages) == 0
 
-    @task(name="run_post_install_commands", description="Run post-installation commands")  # type: ignore[misc]
+    @task(name="run_post_install_commands", description="Run post-installation commands")
     def run_post_install_commands(self, config: EnvironmentConfig, result: ConfigurationResult) -> bool:
         """
         Run post-installation commands.

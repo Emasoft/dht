@@ -26,7 +26,7 @@ class DependencyInferrer:
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-    @task  # type: ignore[misc]
+    @task
     def infer_system_dependencies(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Infer system dependencies based on Python imports.

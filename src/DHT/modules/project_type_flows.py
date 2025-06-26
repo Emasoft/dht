@@ -27,7 +27,7 @@ from DHT.modules.project_analysis_models import ProjectAnalysis
 from DHT.modules.project_type_detector import ProjectTypeDetector
 
 
-@flow(name="detect_and_configure_project")  # type: ignore[misc]
+@flow(name="detect_and_configure_project")
 def detect_and_configure_project(project_path: Path) -> tuple[ProjectAnalysis, dict[str, str]]:
     """
     Complete flow for project detection and configuration generation.

@@ -40,7 +40,7 @@ class ProjectCommand(WorkspaceBase):
         description="Run command in root project only",
         tags=["dht", "project"],
         retries=0,
-    )  # type: ignore[misc]
+    )
     def execute(
         self, subcommand: str, script: str | None = None, args: list[str] | None = None, **kwargs: Any
     ) -> dict[str, Any]:

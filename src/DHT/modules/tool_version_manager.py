@@ -79,7 +79,7 @@ class ToolVersionManager:
             },
         }
 
-    @task(name="capture_tool_versions")  # type: ignore[misc]
+    @task(name="capture_tool_versions")
     def capture_tool_versions(self) -> dict[str, dict[str, str]]:
         """Capture versions of all installed development tools."""
         logger = get_run_logger()
@@ -195,7 +195,7 @@ class ToolVersionManager:
 
         return command
 
-    @task(name="verify_tool_compatibility")  # type: ignore[misc]
+    @task(name="verify_tool_compatibility")
     def verify_tool_compatibility(
         self, expected_tools: dict[str, str], actual_tools: dict[str, str], strict_mode: bool = True
     ) -> dict[str, dict[str, Any]]:

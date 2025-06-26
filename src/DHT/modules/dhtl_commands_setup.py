@@ -49,7 +49,7 @@ class SetupCommand:
         """Initialize setup command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_setup", cache_policy=NO_CACHE)  # type: ignore[misc]
+    @task(name="dhtl_setup", cache_policy=NO_CACHE)
     def setup(
         self,
         uv_manager: UVManager,

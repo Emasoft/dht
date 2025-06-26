@@ -27,7 +27,7 @@ class CodeQualityAnalyzer:
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-    @task  # type: ignore[misc]
+    @task
     def suggest_configurations(
         self, project_type_info: dict[str, Any], analysis_result: dict[str, Any]
     ) -> dict[str, Any]:
@@ -141,7 +141,7 @@ class CodeQualityAnalyzer:
 
         return suggestions
 
-    @task  # type: ignore[misc]
+    @task
     def analyze_code_quality(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Analyze code quality indicators and suggest improvements.

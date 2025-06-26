@@ -55,7 +55,7 @@ class WorkspacesCommand(WorkspaceBase):
         description="Run commands across workspace members",
         tags=["dht", "workspaces", "workspace"],
         retries=0,
-    )  # type: ignore[misc]
+    )
     def execute(
         self,
         subcommand: str,

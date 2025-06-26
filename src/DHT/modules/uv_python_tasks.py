@@ -31,7 +31,7 @@ from DHT.modules.uv_task_models import RETRY_DELAYS, UV_MEMORY_LIMITS, UVTaskErr
 from DHT.modules.uv_task_utils import extract_min_python_version, find_uv_executable, get_logger
 
 
-@task(  # type: ignore[misc]
+@task(
     name="check_uv_available",
     description="Check if UV is available and return version info",
     retries=2,
@@ -77,7 +77,7 @@ def check_uv_available() -> dict[str, Any]:
         return {"available": False, "error": str(e)}
 
 
-@task(  # type: ignore[misc]
+@task(
     name="detect_python_version",
     description="Detect required Python version from project files",
     retries=2,
@@ -152,7 +152,7 @@ def detect_python_version(project_path: Path) -> str | None:
     return None
 
 
-@task(  # type: ignore[misc]
+@task(
     name="list_python_versions",
     description="List available Python versions",
     retries=2,
@@ -205,7 +205,7 @@ def list_python_versions() -> list[dict[str, Any]]:
         raise UVTaskError(f"Failed to list Python versions: {e}") from e
 
 
-@task(  # type: ignore[misc]
+@task(
     name="ensure_python_version",
     description="Ensure specific Python version is available",
     retries=2,

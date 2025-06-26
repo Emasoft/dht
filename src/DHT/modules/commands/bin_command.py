@@ -41,7 +41,7 @@ class BinCommand:
         description="Print executable files installation folder",
         tags=["dht", "bin", "executables"],
         retries=0,
-    )  # type: ignore[misc]
+    )
     def execute(self, **kwargs: Any) -> dict[str, Any]:
         """
         Execute bin command to show executable directory.

@@ -26,7 +26,7 @@ class ProjectTypeAnalyzer:
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-    @task  # type: ignore[misc]
+    @task
     def detect_project_type(self, analysis_result: dict[str, Any]) -> dict[str, Any]:
         """
         Detect the primary project type and characteristics.

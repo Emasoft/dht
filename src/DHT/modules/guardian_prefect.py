@@ -74,7 +74,7 @@ class ResourceLimits:
         self.timeout = timeout
 
 
-@task(name="check-resources", retries=2, retry_delay_seconds=5, description="Check available system resources")  # type: ignore[misc]
+@task(name="check-resources", retries=2, retry_delay_seconds=5, description="Check available system resources")
 def check_system_resources() -> dict[str, float]:
     """Check current system resource usage"""
     logger = get_run_logger()
@@ -93,7 +93,7 @@ def check_system_resources() -> dict[str, float]:
     return resources
 
 
-@task(name="validate-command", description="Validate command before execution")  # type: ignore[misc]
+@task(name="validate-command", description="Validate command before execution")
 def validate_command(cmd: str | list[str], limits: Any) -> bool:
     """Validate command and check if resources are available"""
     logger = get_run_logger()
@@ -122,7 +122,7 @@ def validate_command(cmd: str | list[str], limits: Any) -> bool:
     return True
 
 
-@task(name="run-command", retries=3, retry_delay_seconds=10, description="Execute command with resource limits")  # type: ignore[misc]
+@task(name="run-command", retries=3, retry_delay_seconds=10, description="Execute command with resource limits")
 def run_command_with_limits(
     cmd: str | list[str],
     limits: Any | None = None,
@@ -364,7 +364,7 @@ def run_with_guardian(
     )
 
 
-@flow(name="guardian-sequential", description="Run commands sequentially with resource management")  # type: ignore[misc]
+@flow(name="guardian-sequential", description="Run commands sequentially with resource management")
 def guardian_sequential_flow(
     commands: list[str | dict[str, Any]], stop_on_failure: bool = True, default_limits: Any | None = None
 ) -> list[dict[str, Any]]:
@@ -427,7 +427,7 @@ def guardian_sequential_flow(
     return results
 
 
-@flow(name="guardian-batch", description="Run commands in parallel batches")  # type: ignore[misc]
+@flow(name="guardian-batch", description="Run commands in parallel batches")
 def guardian_batch_flow(
     commands: list[str | dict[str, Any]], batch_size: int = 5, default_limits: Any | None = None
 ) -> list[dict[str, Any]]:
@@ -501,7 +501,7 @@ def guardian_batch_flow(
     return results
 
 
-@task(name="save-results", description="Save execution results to file")  # type: ignore[misc]
+@task(name="save-results", description="Save execution results to file")
 def save_results(results: list[dict[str, Any]], output_path: Path) -> None:
     """Save execution results to YAML file"""
     logger = get_run_logger()

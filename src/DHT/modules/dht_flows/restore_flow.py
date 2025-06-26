@@ -35,7 +35,7 @@ from ..uv_manager import UVManager
 from .utils import get_default_resource_limits, get_venv_pip_path, get_venv_python_path
 
 
-@task(name="find-project-root", retries=2)  # type: ignore[misc]
+@task(name="find-project-root", retries=2)
 def find_project_root(start_path: Path | None = None) -> Path:
     """
     Find the project root directory.
@@ -62,7 +62,7 @@ def find_project_root(start_path: Path | None = None) -> Path:
         raise ValueError(f"Could not find project root from {start_path or os.getcwd()}: {e}") from e
 
 
-@task(name="detect-virtual-environment", retries=2)  # type: ignore[misc]
+@task(name="detect-virtual-environment", retries=2)
 def detect_virtual_environment(project_root: Path) -> tuple[bool, Path | None]:
     """
     Detect existing virtual environment or determine where to create one.
@@ -95,7 +95,7 @@ def detect_virtual_environment(project_root: Path) -> tuple[bool, Path | None]:
     return False, venv_path
 
 
-@task(name="create-virtual-environment")  # type: ignore[misc]
+@task(name="create-virtual-environment")
 def create_virtual_environment(venv_path: Path, python_version: str | None = None) -> Path:
     """
     Create a new virtual environment using UV.
@@ -133,7 +133,7 @@ def create_virtual_environment(venv_path: Path, python_version: str | None = Non
     return venv_path
 
 
-@task(name="install-project-dependencies")  # type: ignore[misc]
+@task(name="install-project-dependencies")
 def install_dependencies(
     project_root: Path, venv_path: Path, extras: str | None = None, upgrade: bool = False
 ) -> dict[str, Any]:
@@ -210,7 +210,7 @@ def install_dependencies(
     }
 
 
-@task(name="install-dht-dependencies")  # type: ignore[misc]
+@task(name="install-dht-dependencies")
 def install_dht_dependencies(venv_path: Path) -> dict[str, Any]:
     """
     Install DHT-specific dependencies.
@@ -248,7 +248,7 @@ def install_dht_dependencies(venv_path: Path) -> dict[str, Any]:
     }
 
 
-@task(name="verify-installation")  # type: ignore[misc]
+@task(name="verify-installation")
 def verify_installation(project_root: Path, venv_path: Path) -> dict[str, Any]:
     """
     Verify that the installation was successful.
@@ -294,7 +294,7 @@ def verify_installation(project_root: Path, venv_path: Path) -> dict[str, Any]:
     }
 
 
-@flow(name="restore-dependencies", description="Restore project dependencies using UV package manager", retries=1)  # type: ignore[misc]
+@flow(name="restore-dependencies", description="Restore project dependencies using UV package manager", retries=1)
 def restore_dependencies_flow(
     project_path: str | None = None,
     python_version: str | None = None,

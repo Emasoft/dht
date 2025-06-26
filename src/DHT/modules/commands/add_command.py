@@ -41,7 +41,7 @@ class AddCommand:
         tags=["dht", "add", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(
         self,
         packages: list[str],

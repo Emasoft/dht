@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+# HERE IS THE CHANGELOG FOR THIS VERSION OF THE FILE:
+# - Fixed mypy type annotation errors for optional imports by adding type: ignore comments
+# - tree_sitter and tree_sitter_bash are set to None when imports fail
+#
+
 """
 bash_parser_tree_sitter.py - Tree-sitter based parsing for Bash scripts  This module contains all tree-sitter specific parsing functionality for Bash scripts.
 
@@ -30,8 +35,8 @@ try:
     TREE_SITTER_BASH_AVAILABLE = True
 except ImportError:
     TREE_SITTER_BASH_AVAILABLE = False
-    tree_sitter = None
-    tree_sitter_bash = None
+    tree_sitter = None  # type: ignore[assignment]
+    tree_sitter_bash = None  # type: ignore[assignment]
 
 from .bash_parser_models import SHELL_KEYWORDS, TREE_SITTER_QUERIES
 from .bash_parser_utils import BashParserUtils

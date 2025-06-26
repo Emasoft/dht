@@ -1,0 +1,544 @@
+Bytecode compiled 4642 files in 150ms
+src/DHT/modules/parsers/bash_parser_tree_sitter.py:33: error: Incompatible types in assignment (expression has type "None", variable has type Module)  [assignment]
+        tree_sitter = None
+                      ^~~~
+src/DHT/modules/parsers/bash_parser_tree_sitter.py:34: error: Incompatible types in assignment (expression has type "None", variable has type Module)  [assignment]
+        tree_sitter_bash = None
+                           ^~~~
+src/DHT/setup_tree_sitter.py: note: In function "build_language_library":
+src/DHT/setup_tree_sitter.py:140: error: No overload variant of "Language" matches argument types "str", "str"  [call-overload]
+                    language = tree_sitter.Language(str(lib_path), "bash")
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/setup_tree_sitter.py:140: note: Possible overload variants:
+src/DHT/setup_tree_sitter.py:140: note:     def __init__(self, int, /) -> Language
+src/DHT/setup_tree_sitter.py:140: note:     def __init__(self, object, /) -> Language
+src/DHT/setup_tree_sitter.py:140: note: See https://mypy.rtfd.io/en/stable/_refs.html#code-call-overload for more info
+src/DHT/setup_tree_sitter.py:153: error: Module has no attribute "build_library"  [attr-defined]
+                tree_sitter.build_library(str(lib_path), str(lib_path), [str(ts_bash_dir)])
+                ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/setup_tree_sitter.py:157: error: Module has no attribute "build_library"  [attr-defined]
+                    tree_sitter.build_library(str(lib_path), [str(ts_bash_dir)])
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/setup_tree_sitter.py:180: error: No overload variant of "Language" matches argument types "str", "str"  [call-overload]
+                language = tree_sitter.Language(str(lib_path), "bash")
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/setup_tree_sitter.py:180: note: Possible overload variants:
+src/DHT/setup_tree_sitter.py:180: note:     def __init__(self, int, /) -> Language
+src/DHT/setup_tree_sitter.py:180: note:     def __init__(self, object, /) -> Language
+src/DHT/setup_tree_sitter.py: note: In function "test_bash_parsing":
+src/DHT/setup_tree_sitter.py:201: error: No overload variant of "Language" matches argument types "str", "str"  [call-overload]
+            language = tree_sitter.Language(str(lib_path), "bash")
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/setup_tree_sitter.py:201: note: Possible overload variants:
+src/DHT/setup_tree_sitter.py:201: note:     def __init__(self, int, /) -> Language
+src/DHT/setup_tree_sitter.py:201: note:     def __init__(self, object, /) -> Language
+src/DHT/modules/uv_script_tasks.py:33: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_python_tasks.py:34: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_python_tasks.py:80: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_python_tasks.py:155: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_python_tasks.py:208: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_pip_tasks.py:34: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_pip_tasks.py:73: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_workflow.py:114: error: Unused "type: ignore" comment  [unused-ignore]
+        @flow(name="setup_project", description="Complete project setup flow")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_venv.py:38: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_script.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_python.py:93: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_python.py:117: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_deps.py:169: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_manager_deps.py:192: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_dependency_tasks.py:33: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_dependency_tasks.py:102: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_dependency_tasks.py:149: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_dependency_tasks.py:195: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_dependency_tasks.py:264: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_build_tasks.py:26: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/tool_version_manager.py:82: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="capture_tool_versions")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/tool_version_manager.py:198: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="verify_tool_compatibility")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_type_flows.py:30: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="detect_and_configure_project")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_type_detector.py:72: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_type_detector.py:152: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_type_detector.py:181: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_type_detector.py:195: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_heuristics_quality.py:30: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_heuristics_quality.py:144: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_heuristics_deps.py:29: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_heuristics_analyzer.py:29: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/platform_normalizer.py:119: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="verify_platform_compatibility")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/lock_file_manager.py:61: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="generate_project_lock_files")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/lock_file_manager.py:128: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="verify_lock_files")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:77: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="check-resources", retries=2, retry_delay_seconds=5, description="Check available system resources")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:96: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="validate-command", description="Validate command before execution")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:125: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="run-command", retries=3, retry_delay_seconds=10, description="Execute command with resource limits")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py: note: In function "run_with_guardian":
+src/DHT/modules/guardian_prefect.py:361: error: Argument 1 to "float" has incompatible type "Any | None"; expected "str | Buffer | SupportsFloat | SupportsIndex"  [arg-type]
+            peak_memory_mb=float(result.get("peak_memory_mb")) if result.get("peak_memory_mb") is not None else None,
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py: note: At top level:
+src/DHT/modules/guardian_prefect.py:367: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="guardian-sequential", description="Run commands sequentially with resource management")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:430: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="guardian-batch", description="Run commands in parallel batches")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:504: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="save-results", description="Save execution results to file")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/guardian_prefect.py:576: error: Argument 1 to "__call__" of "Flow" has incompatible type "list[Collection[str]]"; expected "list[str | dict[str, Any]]"  [arg-type]
+        results = guardian_sequential_flow(example_commands)
+                                           ^~~~~~~~~~~~~~~~
+src/DHT/modules/environment_validator.py:50: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="verify_python_version")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_validator.py:93: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="verify_tools")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_validator.py:160: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="verify_python_packages")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_snapshot_io.py:37: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="save_environment_snapshot", description="Save environment snapshot to file")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_snapshot_io.py:69: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="load_environment_snapshot", description="Load environment snapshot from file")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_reproducer.py: note: In member "_get_logger" of class "EnvironmentReproducer":
+src/DHT/modules/environment_reproducer.py:98: error: Incompatible types in assignment (expression has type "Logger | LoggerAdapter[Logger]", variable has type "Logger | None")  [assignment]
+                    self.logger = get_run_logger()
+                                  ^~~~~~~~~~~~~~~~
+src/DHT/modules/environment_reproducer.py: note: At top level:
+src/DHT/modules/environment_reproducer.py:158: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="capture_environment_snapshot", description="Capture complete environment snapshot for reproduction")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_reproducer.py:241: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="reproduce_environment", description="Reproduce environment from snapshot")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_reproducer.py:307: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="save_environment_snapshot", description="Save environment snapshot to file")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_reproducer.py:415: error: Unused "type: ignore" comment  [unused-ignore]
+        @flow(name="create_reproducible_environment", description="Complete flow for creating reproducible environments")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_installer.py:54: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="install_python_environment", description="Install Python environment based on configuration")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_installer.py:201: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="install_system_packages", description="Install system-level packages")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_installer.py:259: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="run_post_install_commands", description="Run post-installation commands")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py: note: In member "_get_logger" of class "EnvironmentConfigurator":
+src/DHT/modules/environment_configurator.py:81: error: Incompatible types in assignment (expression has type "Logger | LoggerAdapter[Logger]", variable has type "Logger | None")  [assignment]
+                    self.logger = get_run_logger()
+                                  ^~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py: note: At top level:
+src/DHT/modules/environment_configurator.py:86: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py:151: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="generate_environment_config", description="Generate environment configuration from analysis")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py:237: error: Unused "type: ignore" comment  [unused-ignore]
+        @flow(name="configure_development_environment", description="Complete development environment configuration flow")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py: note: In member "configure_development_environment" of class "EnvironmentConfigurator":
+src/DHT/modules/environment_configurator.py:279: error: "State[dict[str, Any]]" has no attribute "get"  [attr-defined]
+                result.info_tree = analysis.get("info_tree")
+                                   ^~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py:290: error: "None" has no attribute "project_type"  [attr-defined]
+                if auto_install and config.project_type == "python":
+                                    ^~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_configurator.py:299: error: "None" has no attribute "quality_tools"  [attr-defined]
+                if config.quality_tools:
+                   ^~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/environment_analyzer.py:50: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="analyze_environment_requirements", description="Analyze project and determine environment requirements")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dockerfile_generator.py:474: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/docker_manager.py:95: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/docker_manager.py:156: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_commands_sync.py:42: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="dhtl_sync", cache_policy=NO_CACHE)  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_commands_setup.py:52: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="dhtl_setup", cache_policy=NO_CACHE)  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_commands_init.py:55: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="dhtl_init", cache_policy=NO_CACHE)  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_commands_deploy.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="deploy_project_in_container", cache_policy=NO_CACHE)  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_commands_build.py:35: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="dhtl_build", log_prints=True, cache_policy=NO_CACHE)  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dependencies_installer.py:33: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(name="install_project_dependencies", description="Install project dependencies")  # type: ignore[misc]  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/build_command_universal.py:33: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="detect_build_config")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/build_command_universal.py:45: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="run_pre_build_commands")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/build_command_universal.py:65: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="run_build_commands")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/build_command_universal.py:123: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="check_artifacts")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/build_command_universal.py:143: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="universal_build")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/act_container_setup.py:125: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="build_act_container")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/act_container_setup.py:170: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="check_act_image")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/act_container_setup.py:292: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="act_container_workflow")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/parsers/base_parser.py: note: In member "_init_tree_sitter" of class "BaseParser":
+src/DHT/modules/parsers/base_parser.py:78: error: No overload variant of "Language" matches argument types "Path", "str"  [call-overload]
+                        language_obj = tree_sitter.Language(lib_path, language)
+                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/parsers/base_parser.py:78: note: Possible overload variants:
+src/DHT/modules/parsers/base_parser.py:78: note:     def __init__(self, int, /) -> Language
+src/DHT/modules/parsers/base_parser.py:78: note:     def __init__(self, object, /) -> Language
+src/DHT/modules/parsers/base_parser.py: note: At top level:
+src/DHT/modules/parsers/base_parser.py:154: error: Unused "type: ignore" comment  [unused-ignore]
+        @task(  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/workspaces_command.py:58: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/upgrade_command.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/remove_command.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/project_command.py:43: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/fmt_command.py:43: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/doc_command.py:65: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/check_command.py:45: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/bin_command.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/add_command.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_environment_tasks.py:36: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/uv_environment_tasks.py:102: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="setup_project_environment", description="Complete project environment setup with UV")  # type: ignore[misc]  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/project_heuristics.py:111: error: Unused "type: ignore" comment  [unused-ignore]
+        @flow(name="analyze_project_heuristics")  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/container_test_runner.py:52: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/container_test_runner.py:87: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/container_test_runner.py:134: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/container_test_runner.py:184: error: Unused "type: ignore" comment  [unused-ignore]
+        @task  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:38: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="find-project-root", retries=2)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:65: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="detect-virtual-environment", retries=2)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:98: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="create-virtual-environment")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:136: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="install-project-dependencies")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:213: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="install-dht-dependencies")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:251: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="verify-installation")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:297: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="restore-dependencies", description="Restore project dependencies using UV package manager", retries=1)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py: note: In function "restore_dependencies_flow":
+src/DHT/modules/dht_flows/restore_flow.py:346: error: Unsupported target for indexed assignment ("State[dict[str, Any]]")  [index]
+            install_result["dht_dependencies"] = dht_result
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:346: note: See https://mypy.rtfd.io/en/stable/_refs.html#code-index for more info
+src/DHT/modules/dht_flows/restore_flow.py:353: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+            "success": install_result["success"] and verification["success"],
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:364: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+            logger.info(f"   Python version: {verification['python_version']}")
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:367: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+            logger.error(f"   Install success: {install_result['success']}")
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/restore_flow.py:368: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+            logger.error(f"   Verification success: {verification['success']}")
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/workspace_command.py:42: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/commands/install_command.py:43: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:38: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.group()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:44: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:45: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--name", default="dht-guardian", help="Deployment name")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:46: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--interval", type=int, help="Run interval in seconds")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:47: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--cron", help="Cron schedule")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py: note: In function "start":
+src/DHT/modules/dhtl_guardian_prefect.py:63: error: Item "RunnerDeployment" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "interval"  [union-attr]
+            seq_deployment.interval = interval
+            ^~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:63: error: Item "Coroutine[Any, Any, RunnerDeployment]" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "interval"  [union-attr]
+            seq_deployment.interval = interval
+            ^~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:63: note: See https://mypy.rtfd.io/en/stable/_refs.html#code-union-attr for more info
+src/DHT/modules/dhtl_guardian_prefect.py:65: error: Item "RunnerDeployment" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "cron"  [union-attr]
+            seq_deployment.cron = cron
+            ^~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:65: error: Item "Coroutine[Any, Any, RunnerDeployment]" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "cron"  [union-attr]
+            seq_deployment.cron = cron
+            ^~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:79: error: Item "RunnerDeployment" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "serve"  [union-attr]
+            deployment.serve()
+            ^~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:79: error: Item "Coroutine[Any, Any, RunnerDeployment]" of "RunnerDeployment | Coroutine[Any, Any, RunnerDeployment]" has no attribute "serve"  [union-attr]
+            deployment.serve()
+            ^~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py: note: At top level:
+src/DHT/modules/dhtl_guardian_prefect.py:82: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:91: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:128: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:129: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.argument("commands", nargs=-1, required=False)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:130: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--file", "-f", type=click.Path(exists=True), help="File containing commands")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:131: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--sequential", "-s", is_flag=True, default=True, help="Run commands sequentially")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:132: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--batch", "-b", type=int, help="Run commands in batches")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:133: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--memory", "-m", type=int, default=2048, help="Memory limit in MB")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:134: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--timeout", "-t", type=int, default=900, help="Timeout in seconds")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:135: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--cpu", type=int, default=80, help="CPU limit percentage")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:136: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--output", "-o", type=click.Path(), help="Output file for results")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:137: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--json", "output_json", is_flag=True, help="Output results as JSON")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:138: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--stop-on-failure", is_flag=True, default=True, help="Stop on first failure")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:139: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--deployment", "-d", help="Run via deployment instead of directly")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py: note: In function "run":
+src/DHT/modules/dhtl_guardian_prefect.py:180: error: Value of type "Coroutine[Any, Any, R?]" must be used  [unused-coroutine]
+                run_deployment(
+                ^
+src/DHT/modules/dhtl_guardian_prefect.py:180: note: Are you missing an await?
+src/DHT/modules/dhtl_guardian_prefect.py:180: note: See https://mypy.rtfd.io/en/stable/_refs.html#code-unused-coroutine for more info
+src/DHT/modules/dhtl_guardian_prefect.py:206: error: Value of type "Any | None" is not indexable  [index]
+                                click.echo(f"    Error: {r.get('stderr')[:100]}...")
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py: note: At top level:
+src/DHT/modules/dhtl_guardian_prefect.py:226: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:227: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.option("--format", type=click.Choice(["yaml", "json"]), default="yaml", help="Output format")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:246: error: Unused "type: ignore" comment  [unused-ignore]
+    @cli.command()  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dhtl_guardian_prefect.py:247: error: Unused "type: ignore" comment  [unused-ignore]
+    @click.argument("result_file", type=click.Path(exists=True))  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:37: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="check-test-resources", retries=2)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:85: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="discover-tests")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:139: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="prepare-test-command")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:226: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="run-tests")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:274: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="parse-test-output")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:318: error: Unused "type: ignore" comment  [unused-ignore]
+    @task(name="generate-coverage-report")  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:360: error: Unused "type: ignore" comment  [unused-ignore]
+    @flow(name="test-command", description="Run project tests with resource management", retries=1)  # type: ignore[misc]
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py: note: In function "test_command_flow":
+src/DHT/modules/dht_flows/test_flow.py:435: error: Incompatible types in assignment (expression has type "State[dict[str, Any]]", variable has type "dict[str, Any]")  [assignment]
+            coverage_info = generate_coverage_report(project_root, venv_path)
+                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:439: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+            "success": test_result["success"],
+                       ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:448: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+        summary = test_result["summary"]
+                  ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:449: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+        if test_result["success"]:
+           ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/dht_flows/test_flow.py:457: error: Value of type "State[dict[str, Any]]" is not indexable  [index]
+        logger.info(f"   Execution time: {test_result['execution_time']:.2f}s")
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/command_runner.py:127: error: Unused "type: ignore" comment  [unused-ignore]
+        )  # type: ignore[misc]
+        ^~~~~~~~~~~~~~~~~~~~~~
+src/DHT/modules/command_runner.py: note: In class "CommandRunner":
+src/DHT/modules/command_runner.py:184: error: No overload variant of "__call__" of "FlowDecorator" matches argument types "str", "str", "bool", "Callable[[Any, Any], str]"  [call-overload]
+        @flow(
+         ^
+src/DHT/modules/command_runner.py:184: note: Possible overload variants:
+src/DHT/modules/command_runner.py:184: note:     def [P`50534, R] __call__(self, Callable[P, R], /) -> Flow[P, R]
+src/DHT/modules/command_runner.py:184: note:     def __call__(self, None = ..., /, *, name: str | None = ..., version: str | None = ..., flow_run_name: Callable[[], str] | str | None = ..., retries: int | None = ..., retry_delay_seconds: int | float | None = ..., task_runner: None = ..., description: str | None = ..., timeout_seconds: int | float | None = ..., validate_parameters: bool = ..., persist_result: bool | None = ..., result_storage: WritableFileSystem | str | None = ..., result_serializer: Serializer[Any] | str | None = ..., cache_result_in_memory: bool = ..., log_prints: bool | None = ..., on_completion: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_failure: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_cancellation: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_crashed: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_running: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ...) -> Callable[[Callable[P, R]], Flow[P, R]]
+src/DHT/modules/command_runner.py:184: note:     def [R] __call__(self, None = ..., /, *, name: str | None = ..., version: str | None = ..., flow_run_name: Callable[[], str] | str | None = ..., retries: int | None = ..., retry_delay_seconds: int | float | None = ..., task_runner: TaskRunner[PrefectFuture[R]] | None = ..., description: str | None = ..., timeout_seconds: int | float | None = ..., validate_parameters: bool = ..., persist_result: bool | None = ..., result_storage: WritableFileSystem | str | None = ..., result_serializer: Serializer[Any] | str | None = ..., cache_result_in_memory: bool = ..., log_prints: bool | None = ..., on_completion: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_failure: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_cancellation: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_crashed: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ..., on_running: list[FlowStateHook[[VarArg(Any), KwArg(Any)], Any]] | None = ...) -> Callable[[Callable[P, R]], Flow[P, R]]
+
+Installing missing stub packages:
+/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3 -m pip install types-PyMySQL types-cachetools types-dateparser types-python-dateutil types-pytz types-requests types-ujson
+
+Install? [yN] Traceback (most recent call last):
+  File "/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/mypy", line 10, in <module>
+    sys.exit(console_entry())
+  File "/Users/emanuelesabetta/Code/DHT/dht/.venv/lib/python3.10/site-packages/mypy/__main__.py", line 15, in console_entry
+    main()
+  File "mypy/main.py", line 160, in main
+  File "mypy/main.py", line 1672, in install_types
+EOFError: EOF when reading a line

@@ -42,7 +42,7 @@ class CheckCommand:
         tags=["dht", "check", "typecheck", "mypy"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(self, path: str = ".", strict: bool = True, **kwargs: Any) -> dict[str, Any]:
         """
         Execute check command for type checking.

@@ -49,7 +49,7 @@ class ContainerTestRunner:
         self.logger = logging.getLogger(__name__)
         self.docker_manager = DockerManager()
 
-    @task  # type: ignore[misc]
+    @task
     def run_all_tests(self, container_name: str, frameworks: list[TestFramework] | None = None) -> dict[str, Any]:
         """
         Run all tests in container.
@@ -84,7 +84,7 @@ class ContainerTestRunner:
 
         return all_results
 
-    @task  # type: ignore[misc]
+    @task
     def run_pytest(
         self, container_name: str, test_path: str | None = None, verbose: bool = True, coverage: bool = True
     ) -> dict[str, Any]:
@@ -131,7 +131,7 @@ class ContainerTestRunner:
             self.logger.error(f"Failed to run pytest: {e}")
             return {"error": str(e), "exit_code": 1, "total": 0, "passed": 0, "failed": 0, "skipped": 0}
 
-    @task  # type: ignore[misc]
+    @task
     def run_playwright(
         self, container_name: str, test_path: str | None = None, browser: str = "chromium"
     ) -> dict[str, Any]:
@@ -181,7 +181,7 @@ class ContainerTestRunner:
             self.logger.error(f"Failed to run Playwright: {e}")
             return {"error": str(e), "exit_code": 1, "total": 0, "passed": 0, "failed": 0, "browser": browser}
 
-    @task  # type: ignore[misc]
+    @task
     def run_puppeteer(self, container_name: str, test_path: str | None = None) -> dict[str, Any]:
         """
         Run Puppeteer tests in container.

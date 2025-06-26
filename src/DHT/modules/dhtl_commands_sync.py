@@ -39,7 +39,7 @@ class SyncCommand:
         """Initialize sync command."""
         self.logger = logging.getLogger(__name__)
 
-    @task(name="dhtl_sync", cache_policy=NO_CACHE)  # type: ignore[misc]
+    @task(name="dhtl_sync", cache_policy=NO_CACHE)
     def sync(
         self,
         uv_manager: UVManager,

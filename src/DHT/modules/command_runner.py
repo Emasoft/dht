@@ -124,7 +124,7 @@ class CommandRunner:
         retries=0,  # Commands handle their own retries
         timeout_seconds=1800,  # 30 minutes default timeout
         tags=["dht", "command"],
-    )  # type: ignore[misc]
+    )
     def execute_command(
         self, command_name: str, command_func: Callable[..., Any], args: dict[str, Any] | None = None
     ) -> dict[str, Any]:
@@ -186,7 +186,7 @@ class CommandRunner:
         description="Main flow for DHT command execution",
         persist_result=True,
         result_storage_key_fn=lambda context, parameters: f"dht-{parameters['command_name']}-{context.start_time}",
-    )  # type: ignore[misc]
+    )
     def run_command_flow(
         self, command_name: str, command_func: Callable[..., Any], args: dict[str, Any] | None = None
     ) -> dict[str, Any]:

@@ -40,7 +40,7 @@ class InstallCommand:
         tags=["dht", "install", "setup"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(
         self,
         path: str = ".",

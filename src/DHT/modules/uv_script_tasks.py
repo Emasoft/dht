@@ -30,7 +30,7 @@ from DHT.modules.uv_task_models import DEFAULT_TIMEOUT, RETRY_DELAYS, UVTaskErro
 from DHT.modules.uv_task_utils import find_uv_executable, get_logger
 
 
-@task(  # type: ignore[misc]
+@task(
     name="run_python_script",
     description="Run a Python script in the project environment",
     retries=2,

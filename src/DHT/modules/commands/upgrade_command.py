@@ -41,7 +41,7 @@ class UpgradeCommand:
         tags=["dht", "upgrade", "dependencies"],
         retries=1,
         retry_delay_seconds=5,
-    )  # type: ignore[misc]
+    )
     def execute(
         self, packages: list[str] | None = None, all: bool = False, dev: bool = False, **kwargs: Any
     ) -> dict[str, Any]:

@@ -116,7 +116,7 @@ def get_tool_command(tool: str, platform_name: str | None = None) -> list[str] |
     return tool_commands.get(platform_name)
 
 
-@task(name="verify_platform_compatibility")  # type: ignore[misc]
+@task(name="verify_platform_compatibility")
 def verify_platform_compatibility(
     snapshot_platform: str, current_platform: str | None = None
 ) -> tuple[bool, list[str]]:

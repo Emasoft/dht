@@ -83,7 +83,7 @@ class EnvironmentConfigurator:
                 self.logger = logging.getLogger(__name__)
         return self.logger
 
-    @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")  # type: ignore[misc]
+    @task(name="analyze_environment_requirements", description="Analyze project to determine environment requirements")
     def analyze_environment_requirements(self, project_path: Path, include_system_info: bool = True) -> dict[str, Any]:
         """
         Analyze project and system to determine environment requirements.
@@ -148,7 +148,7 @@ class EnvironmentConfigurator:
         """Delegate to environment analyzer."""
         return cast(dict[str, Any], self.env_analyzer.recommend_ci_setup(project_info))
 
-    @task(name="generate_environment_config", description="Generate environment configuration from analysis")  # type: ignore[misc]
+    @task(name="generate_environment_config", description="Generate environment configuration from analysis")
     def generate_environment_config(
         self, project_path: Path, analysis: dict[str, Any], custom_requirements: dict[str, Any] | None = None
     ) -> EnvironmentConfig:
@@ -234,7 +234,7 @@ class EnvironmentConfigurator:
         logger.info(f"Generated configuration for {project_type} project")
         return config
 
-    @flow(name="configure_development_environment", description="Complete development environment configuration flow")  # type: ignore[misc]
+    @flow(name="configure_development_environment", description="Complete development environment configuration flow")
     def configure_development_environment(
         self,
         project_path: Path,

@@ -155,7 +155,7 @@ class EnvironmentReproducer:
         logger.info(f"Environment snapshot captured: {snapshot_id}")
         return snapshot
 
-    @task(name="capture_environment_snapshot", description="Capture complete environment snapshot for reproduction")  # type: ignore[misc]
+    @task(name="capture_environment_snapshot", description="Capture complete environment snapshot for reproduction")
     def capture_environment_snapshot(
         self, project_path: Path | None = None, include_system_info: bool = True, include_configs: bool = True
     ) -> EnvironmentSnapshot:
@@ -238,7 +238,7 @@ class EnvironmentReproducer:
 
         return result
 
-    @task(name="reproduce_environment", description="Reproduce environment from snapshot")  # type: ignore[misc]
+    @task(name="reproduce_environment", description="Reproduce environment from snapshot")
     def reproduce_environment(
         self,
         snapshot: EnvironmentSnapshot,
@@ -304,7 +304,7 @@ class EnvironmentReproducer:
         saved_path = self.snapshot_io.save_snapshot(snapshot, output_path, format)
         return Path(saved_path) if not isinstance(saved_path, Path) else saved_path
 
-    @task(name="save_environment_snapshot", description="Save environment snapshot to file")  # type: ignore[misc]
+    @task(name="save_environment_snapshot", description="Save environment snapshot to file")
     def save_environment_snapshot(self, snapshot: EnvironmentSnapshot, output_path: Path, format: str = "json") -> Path:
         """Prefect task wrapper for save_environment_snapshot."""
         return self._save_environment_snapshot_impl(snapshot, output_path, format)
@@ -412,7 +412,7 @@ class EnvironmentReproducer:
         logger.info(f"Reproducible environment creation {'completed' if results['success'] else 'failed'}")
         return results
 
-    @flow(name="create_reproducible_environment", description="Complete flow for creating reproducible environments")  # type: ignore[misc]
+    @flow(name="create_reproducible_environment", description="Complete flow for creating reproducible environments")
     def create_reproducible_environment(
         self,
         project_path: Path,

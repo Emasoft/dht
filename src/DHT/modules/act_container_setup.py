@@ -122,7 +122,7 @@ CMD ["act --help"]
 """
 
 
-@task(name="build_act_container")  # type: ignore[misc]
+@task(name="build_act_container")
 def build_act_container(runtime: str, image_name: str = "dht-act", tag: str = "latest") -> dict[str, Any]:
     """Build container image with act pre-installed."""
     logger = get_run_logger()
@@ -167,7 +167,7 @@ def build_act_container(runtime: str, image_name: str = "dht-act", tag: str = "l
             return {"success": False, "error": "Build timeout"}
 
 
-@task(name="check_act_image")  # type: ignore[misc]
+@task(name="check_act_image")
 def check_act_image(runtime: str, image_name: str = "dht-act:latest") -> bool:
     """Check if act container image exists."""
     try:
@@ -289,7 +289,7 @@ class ActContainerRunner:
             return {"success": False, "error": str(e)}
 
 
-@flow(name="act_container_workflow")  # type: ignore[misc]
+@flow(name="act_container_workflow")
 def act_container_workflow(
     project_path: str, event: str = "push", job: str | None = None, runtime: str = "podman"
 ) -> dict[str, Any]:
