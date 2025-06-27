@@ -9,8 +9,7 @@ Licensed under the MIT License. See LICENSE file for details.
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, Generator
-from unittest.mock import MagicMock
+from typing import Any
 
 import pytest
 
@@ -111,28 +110,28 @@ def test_profile() -> str:
 
 
 @pytest.fixture(scope="session")
-def test_config(test_profile: str) -> Dict[str, Any]:
+def test_config(test_profile: str) -> dict[str, Any]:
     """Get test configuration for current profile."""
     return TEST_CONFIGS.get(test_profile, TEST_CONFIGS["local"])
 
 
 @pytest.fixture
-def max_retries(test_config: Dict[str, Any]) -> int:
+def max_retries(test_config: dict[str, Any]) -> int:
     """Get maximum retries for current profile."""
     return test_config["max_retries"]
 
 
 @pytest.fixture
-def timeout(test_config: Dict[str, Any]) -> int:
+def timeout(test_config: dict[str, Any]) -> int:
     """Get timeout for current profile."""
     return test_config["timeout"]
 
 
 @pytest.fixture(autouse=True)
-def skip_by_profile(request: pytest.FixtureRequest, test_config: Dict[str, Any]) -> None:
+def skip_by_profile(request: pytest.FixtureRequest, test_config: dict[str, Any]) -> None:
     """Skip tests based on profile configuration."""
     markers = request.node.iter_markers()
-    
+
     for marker in markers:
         if marker.name == "slow" and test_config["skip_slow_tests"]:
             pytest.skip(f"Skipping slow test in {get_test_profile()} profile")

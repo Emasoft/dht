@@ -12,6 +12,9 @@ regexes = [
   '''POSTGRES_USER=postgres''',
   '''POSTGRES_DB=app''',
   '''export \$secret=''',
+  '''<CHANGE-ME-[^>]+>''',
+  '''your-password''',
+  '''your-email@gmail\.com''',
 ]
 
 # Paths to exclude from scanning
@@ -174,6 +177,9 @@ paths = [
   '''compose.*\.ya?ml''',
   # Config generators are creating templates
   '''config_generators\.py''',
+  '''config_generation_tasks\.py''',
+  '''project_type_detector\.py''',
+  '''dhtl_secrets\.sh''',
 ]
 
 [[rules]]

@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Workflow-specific tests for LOCAL and REMOTE profiles in Docker."""
 
 import os
 import subprocess
-import tempfile
-import json
 from pathlib import Path
-from typing import Dict, Any, List
-from unittest.mock import MagicMock, patch
+from typing import Any
+from unittest.mock import patch
 
 import pytest
 
@@ -32,7 +29,7 @@ class TestLocalWorkflows:
         # Create a test project
         test_project = temp_dir / "local_dev_project"
         test_project.mkdir()
-        
+
         # Initialize project structure
         (test_project / "src").mkdir()
         (test_project / "tests").mkdir()
@@ -44,7 +41,7 @@ dependencies = ["requests", "click"]
 [build-system]
 requires = ["setuptools", "wheel"]
 """)
-        
+
         # Run dhtl setup
         os.chdir(test_project)
         result = subprocess.run(
@@ -53,7 +50,7 @@ requires = ["setuptools", "wheel"]
             text=True,
             timeout=120  # Longer timeout for LOCAL
         )
-        
+
         assert result.returncode == 0
         assert (test_project / ".venv").exists()
         assert (test_project / ".dhtconfig").exists()
@@ -67,14 +64,14 @@ requires = ["setuptools", "wheel"]
         # Simulate file watching and hot reload
         watch_dir = temp_dir / "watch_test"
         watch_dir.mkdir()
-        
+
         # Create initial file
         source_file = watch_dir / "app.py"
         source_file.write_text("# Version 1\nprint('Hello')")
-        
+
         # Simulate file change
         source_file.write_text("# Version 2\nprint('Hello World')")
-        
+
         # In LOCAL profile, we can test file watching
         content = source_file.read_text()
         assert "Version 2" in content
@@ -89,11 +86,11 @@ requires = ["setuptools", "wheel"]
         # LOCAL profile should have debugging enabled
         assert os.environ.get("PYTHONDONTWRITEBYTECODE") == "1"
         assert os.environ.get("PYTHONUNBUFFERED") == "1"
-        
+
         # Test debug logging
         import logging
         logger = logging.getLogger("dht.debug")
-        
+
         # In LOCAL, debug logging should be available
         with patch.object(logger, 'debug') as mock_debug:
             logger.debug("Debug message in LOCAL")
@@ -108,7 +105,7 @@ requires = ["setuptools", "wheel"]
         """Test comprehensive test suite execution in LOCAL."""
         # LOCAL profile runs all tests including slow ones
         test_results = []
-        
+
         # Simulate running different test categories
         for test_type in ["unit", "integration", "e2e", "performance"]:
             # In LOCAL, all test types should run
@@ -117,7 +114,7 @@ requires = ["setuptools", "wheel"]
                 "status": "passed",
                 "duration": 1.0 if test_type != "performance" else 5.0
             })
-        
+
         # LOCAL profile should run all tests
         assert len(test_results) == 4
         assert all(r["status"] == "passed" for r in test_results)
@@ -142,7 +139,7 @@ class TestRemoteWorkflows:
             {"name": "Run Tests", "status": "success"},
             {"name": "Build", "status": "success"},
         ]
-        
+
         # Execute each step
         for step in workflow_steps:
             print(f"CI Step: {step['name']} - {step['status']}")
@@ -155,20 +152,20 @@ class TestRemoteWorkflows:
     def test_remote_fast_testing(self) -> None:
         """Test fast test execution in REMOTE profile."""
         import time
-        
+
         # REMOTE profile should skip slow tests
         start = time.time()
-        
+
         # Quick tests only
         test_operations = [
             lambda: 2 + 2,
             lambda: "hello".upper(),
             lambda: [1, 2, 3].append(4),
         ]
-        
+
         for op in test_operations:
             op()
-        
+
         elapsed = time.time() - start
         assert elapsed < 1.0  # Should be very fast
 
@@ -180,17 +177,17 @@ class TestRemoteWorkflows:
         """Test artifact generation for CI/CD."""
         artifacts_dir = temp_dir / "artifacts"
         artifacts_dir.mkdir()
-        
+
         # Generate test artifacts
         artifacts = {
             "test-results.xml": '<?xml version="1.0"?><testsuites></testsuites>',
             "coverage.xml": '<?xml version="1.0"?><coverage></coverage>',
             "build.log": "Build completed successfully",
         }
-        
+
         for filename, content in artifacts.items():
             (artifacts_dir / filename).write_text(content)
-        
+
         # Verify artifacts
         assert len(list(artifacts_dir.glob("*.xml"))) == 2
         assert (artifacts_dir / "build.log").exists()
@@ -203,14 +200,14 @@ class TestRemoteWorkflows:
         """Test dependency caching in REMOTE profile."""
         cache_dir = temp_dir / ".cache"
         cache_dir.mkdir()
-        
+
         # Simulate cache key
         cache_key = "deps-hash-12345"
         cache_file = cache_dir / f"{cache_key}.tar.gz"
-        
+
         # In REMOTE, dependencies should be cached
         cache_file.write_bytes(b"mock cache data")
-        
+
         # Verify cache
         assert cache_file.exists()
         assert cache_file.stat().st_size > 0
@@ -220,7 +217,7 @@ class TestRemoteWorkflows:
 class TestProfileComparison:
     """Tests comparing LOCAL vs REMOTE profile behavior."""
 
-    def test_profile_performance_characteristics(self, profile: str, test_config: Dict[str, Any]) -> None:
+    def test_profile_performance_characteristics(self, profile: str, test_config: dict[str, Any]) -> None:
         """Compare performance characteristics between profiles."""
         if profile == "local":
             # LOCAL: More retries, longer timeouts
@@ -242,7 +239,7 @@ class TestProfileComparison:
                 "debugging": "limited",
                 "network": "restricted",
             }
-        
+
         print(f"Profile {profile} characteristics: {characteristics}")
 
     def test_error_handling_by_profile(self, profile: str) -> None:
@@ -265,17 +262,18 @@ class TestProfileComparison:
                     "traceback": "Limited traceback",
                     "debugging": "Logs only",
                 }
-            
+
             assert error_info["message"] == "Test error"
 
     def test_resource_usage_by_profile(self, profile: str) -> None:
         """Test resource usage patterns by profile."""
-        import psutil
         import os
-        
+
+        import psutil
+
         # Get current process
         process = psutil.Process(os.getpid())
-        
+
         # Memory usage patterns
         if profile == "local":
             # LOCAL: Can use more memory
@@ -283,11 +281,11 @@ class TestProfileComparison:
         else:
             # REMOTE: Conservative memory usage
             memory_limit_mb = 1024
-        
+
         # Current memory usage should be within limits
         memory_usage_mb = process.memory_info().rss / 1024 / 1024
         assert memory_usage_mb < memory_limit_mb
-        
+
         print(f"Profile {profile} - Memory usage: {memory_usage_mb:.2f}MB / {memory_limit_mb}MB")
 
 
@@ -300,11 +298,11 @@ class TestWorkflowIntegration:
         """Test complete local development workflow."""
         if profile != "local":
             pytest.skip("LOCAL workflow test")
-        
+
         project_dir = temp_dir / "full_local_project"
         project_dir.mkdir()
         os.chdir(project_dir)
-        
+
         # Full workflow
         steps = [
             ("init", ["python", str(project_root / "dhtl_entry.py"), "init", "--quiet"]),
@@ -312,7 +310,7 @@ class TestWorkflowIntegration:
             ("test", ["python", str(project_root / "dhtl_entry.py"), "test", "--version"]),
             ("build", ["python", str(project_root / "dhtl_entry.py"), "build"]),
         ]
-        
+
         for step_name, cmd in steps:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
             assert result.returncode == 0, f"Step {step_name} failed: {result.stderr}"
@@ -321,7 +319,7 @@ class TestWorkflowIntegration:
         """Test complete CI/CD workflow."""
         if profile not in ["remote", "ci"]:
             pytest.skip("REMOTE workflow test")
-        
+
         # Simulate CI environment
         ci_env = {
             "CI": "true",
@@ -329,7 +327,7 @@ class TestWorkflowIntegration:
             "GITHUB_WORKFLOW": "test",
             "GITHUB_RUN_ID": "12345",
         }
-        
+
         # CI workflow steps
         workflow = {
             "name": "CI Pipeline",
@@ -343,7 +341,7 @@ class TestWorkflowIntegration:
                 "upload-artifacts",
             ]
         }
-        
+
         # Execute workflow
         for step in workflow["steps"]:
             print(f"Executing CI step: {step}")
