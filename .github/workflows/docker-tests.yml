@@ -1,0 +1,131 @@
+name: Docker Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build runtime image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: runtime
+        tags: dht:runtime
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        load: true
+
+    - name: Build test image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: test-runner
+        tags: dht:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        load: true
+
+    - name: Build development image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: development
+        tags: dht:dev
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        load: true
+
+  docker-test:
+    name: Run Tests in Docker
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Load test image from cache
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: test-runner
+        tags: dht:test
+        cache-from: type=gha
+        load: true
+
+    - name: Run tests in Docker
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/tests:/app/tests:ro \
+          -v ${{ github.workspace }}/src:/app/src:ro \
+          -e DHT_TEST_MODE=1 \
+          -e CI=true \
+          dht:test \
+          pytest -v --tb=short --cov=src --cov-report=xml
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: docker-coverage
+
+  docker-lint:
+    name: Run Linting in Docker
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Load development image from cache
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: development
+        tags: dht:dev
+        cache-from: type=gha
+        load: true
+
+    - name: Run linting in Docker
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/app:ro \
+          dht:dev \
+          dhtl lint --all
+
+  docker-compose-test:
+    name: Test Docker Compose Setup
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test Docker Compose config
+      run: docker compose config
+
+    - name: Build services
+      run: docker compose build
+
+    - name: Run test service
+      run: docker compose run --rm dht-test
+
+    - name: Run lint service
+      run: docker compose run --rm dht-lint
+
+    - name: Clean up
+      run: docker compose down -v

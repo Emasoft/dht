@@ -136,6 +136,9 @@ class CommandRegistry:
         self.register("test_dht", self._test_dht_command, "Test DHT itself")
         self.register("verify_dht", self._verify_dht_command, "Verify DHT")
 
+        # Docker commands
+        self.register("docker", self._docker_command, "Run Docker operations")
+
         # Built-in commands
         self.register("help", self._help_command, "Show help")
         self.register("version", self._version_command, "Show version")
@@ -155,35 +158,35 @@ class CommandRegistry:
     # Placeholder implementations for commands
     # These will be replaced with actual implementations from the converted modules
 
-    def _test_command(self, *args: Any, **kwargs: Any) -> int:
+    def _test_command(self, args: list[str] | None = None) -> int:
         """Run tests."""
         from .dhtl_commands_2 import test_command
 
-        return test_command(*args, **kwargs)
+        return test_command(args)
 
-    def _coverage_command(self, *args: Any, **kwargs: Any) -> int:
+    def _coverage_command(self, args: list[str] | None = None) -> int:
         """Run coverage."""
         from .dhtl_commands_5 import coverage_command
 
-        return coverage_command(*args, **kwargs)
+        return coverage_command(args)
 
-    def _commit_command(self, *args: Any, **kwargs: Any) -> int:
+    def _commit_command(self, args: list[str] | None = None) -> int:
         """Create commit."""
         from .dhtl_commands_6 import commit_command
 
-        return commit_command(*args, **kwargs)
+        return commit_command(args)
 
-    def _publish_command(self, *args: Any, **kwargs: Any) -> int:
+    def _publish_command(self, args: list[str] | None = None) -> int:
         """Publish package."""
         from .dhtl_commands_7 import publish_command
 
-        return publish_command(*args, **kwargs)
+        return publish_command(args)
 
-    def _clean_command(self, *args: Any, **kwargs: Any) -> int:
+    def _clean_command(self, args: list[str] | None = None) -> int:
         """Clean project."""
         from .dhtl_commands_8 import clean_command
 
-        return clean_command(*args, **kwargs)
+        return clean_command(args)
 
     def _env_command(self, *args: Any, **kwargs: Any) -> int:
         """Show environment."""
@@ -197,11 +200,11 @@ class CommandRegistry:
 
         return diagnostics_command(*args, **kwargs)
 
-    def _restore_command(self, *args: Any, **kwargs: Any) -> int:
+    def _restore_command(self, args: list[str] | None = None) -> int:
         """Restore dependencies."""
         from .dhtl_commands_1 import restore_command
 
-        return restore_command(*args, **kwargs)
+        return restore_command(args)
 
     def _tag_command(self, *args: Any, **kwargs: Any) -> int:
         """Create tag."""
@@ -294,6 +297,7 @@ class CommandRegistry:
             "Development": ["build", "sync", "test", "lint", "format", "coverage"],
             "Version Control": ["commit", "tag", "bump", "clone", "fork"],
             "Deployment": ["publish", "deploy_project_in_container", "workflows"],
+            "Docker": ["docker"],
             "Utilities": ["env", "diagnostics", "restore", "guardian"],
             "Help": ["help", "version"],
         }
@@ -306,6 +310,12 @@ class CommandRegistry:
 
         print("\nFor command-specific help: dhtl <command> --help")
         return 0
+
+    def _docker_command(self, args: list[str] | None = None, **kwargs: Any) -> int:
+        """Run Docker operations."""
+        from .dhtl_docker import docker_command
+
+        return docker_command(args or [])
 
     def _version_command(self, *args: Any, **kwargs: Any) -> int:
         """Show version."""

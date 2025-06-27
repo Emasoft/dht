@@ -59,3 +59,41 @@ logs/
 
 # Documentation
 docs/_build/
+*.md
+!README.md
+!CHANGELOG.md
+!CONTRIBUTING.md
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+*.local
+
+# DHT specific
+.dhtconfig
+.dht-cache/
+dht-act/
+
+# Cache directories
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test results
+test_results/
+coverage.xml
+*.cover

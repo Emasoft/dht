@@ -21,14 +21,13 @@ Provides test command functionality for running project tests.
 import os
 import shutil
 import sys
-from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def test_command(*args: Any, **kwargs: Any) -> int:
+def test_command(args: list[str] | None = None) -> int:
     """Run project tests."""
     log_info("🧪 Running project tests...")
 
@@ -72,6 +71,10 @@ def test_command(*args: Any, **kwargs: Any) -> int:
     # Get memory limit
     mem_limit = int(os.environ.get("PYTHON_MEM_LIMIT", "2048"))
 
+    # Add any extra arguments from command line
+    if args:
+        test_cmd.extend(args)
+
     # Run with guardian
     exit_code = run_with_guardian(test_cmd[0], "pytest", mem_limit, *test_cmd[1:])
 
@@ -83,11 +86,5 @@ def test_command(*args: Any, **kwargs: Any) -> int:
     return exit_code
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return test_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["test_command", "placeholder_command"]
+__all__ = ["test_command"]

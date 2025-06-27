@@ -28,7 +28,7 @@ from .common_utils import find_project_root
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 
 
-def commit_command(*args: Any, **kwargs: Any) -> int:
+def commit_command(args: list[str] | None = None) -> int:
     """Create a git commit with smart defaults."""
     log_info("💾 Creating git commit...")
 
@@ -59,7 +59,14 @@ def commit_command(*args: Any, **kwargs: Any) -> int:
 
     # Show current status
     log_info("Current git status:")
-    subprocess.run(["git", "status", "--short"])
+    try:
+        subprocess.run(["git", "status", "--short"], check=False)
+    except Exception:
+        pass  # Non-critical, just for display
+
+    # Default args to empty list
+    if args is None:
+        args = []
 
     # Stage all changes if requested
     if "--all" in args or "-a" in args:
@@ -107,12 +114,22 @@ def commit_command(*args: Any, **kwargs: Any) -> int:
 
     # Create commit
     log_info(f"Creating commit: {message}")
-    result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
+    try:
+        result = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True, check=False)
+    except KeyboardInterrupt:
+        log_warning("Commit interrupted by user")
+        return 130
+    except Exception as e:
+        log_error(f"Failed to create commit: {e}")
+        return 1
 
     if result.returncode == 0:
         log_success("Commit created successfully!")
         # Show the commit
-        subprocess.run(["git", "log", "--oneline", "-1"])
+        try:
+            subprocess.run(["git", "log", "--oneline", "-1"], check=False)
+        except Exception:
+            pass  # Non-critical, just for display
     else:
         log_error("Failed to create commit")
         if result.stderr:
@@ -122,11 +139,5 @@ def commit_command(*args: Any, **kwargs: Any) -> int:
     return 0
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return commit_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["commit_command", "placeholder_command"]
+__all__ = ["commit_command"]

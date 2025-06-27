@@ -21,14 +21,13 @@ Provides package publishing functionality for Python projects.
 
 import os
 import shutil
-from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def publish_command(*args: Any, **kwargs: Any) -> int:
+def publish_command(args: list[str] | None = None) -> int:
     """Publish Python package to PyPI or other repositories."""
     log_info("🚀 Publishing Python package...")
 
@@ -76,6 +75,10 @@ def publish_command(*args: Any, **kwargs: Any) -> int:
         log_error("No distribution files found in dist/")
         log_info("Build the package first: dhtl build")
         return 1
+
+    # Default args to empty list
+    if args is None:
+        args = []
 
     # Determine repository
     repository = "pypi"
@@ -131,11 +134,5 @@ def publish_command(*args: Any, **kwargs: Any) -> int:
     return exit_code
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return publish_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["publish_command", "placeholder_command"]
+__all__ = ["publish_command"]

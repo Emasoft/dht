@@ -1,0 +1,75 @@
+{
+    "name": "DHT Development Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "dht-dev",
+    "workspaceFolder": "/app",
+
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "upgradePackages": true
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": true
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "latest"
+        }
+    },
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/app/.venv/bin/python",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.linting.mypyEnabled": true,
+                "python.formatting.provider": "black",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                    "source.organizeImports": true
+                },
+                "[python]": {
+                    "editor.rulers": [120]
+                }
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.black-formatter",
+                "charliermarsh.ruff",
+                "matangover.mypy",
+                "tamasfe.even-better-toml",
+                "redhat.vscode-yaml",
+                "timonwong.shellcheck",
+                "foxundermoon.shell-format",
+                "eamodio.gitlens",
+                "GitHub.vscode-pull-request-github"
+            ]
+        }
+    },
+
+    "forwardPorts": [],
+
+    "postCreateCommand": "uv sync --frozen && echo 'Container ready!'",
+
+    "postStartCommand": "git config --global --add safe.directory /app",
+
+    "overrideCommand": true,
+
+    "remoteEnv": {
+        "DHT_ENV": "development",
+        "PYTHONDONTWRITEBYTECODE": "1"
+    },
+
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/dhtuser/.ssh,type=bind,consistency=cached",
+        "source=dht-cache,target=/app/.cache,type=volume"
+    ]
+}

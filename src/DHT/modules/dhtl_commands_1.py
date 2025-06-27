@@ -23,14 +23,13 @@ import os
 import shutil
 import subprocess
 import sys
-from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def restore_command(*args: Any, **kwargs: Any) -> int:
+def restore_command(args: list[str] | None = None) -> int:
     """Restore project dependencies from lock files."""
     log_info("📦 Restoring project dependencies...")
 
@@ -142,7 +141,14 @@ def restore_command(*args: Any, **kwargs: Any) -> int:
             log_error("npm is not installed")
             return 1
 
-        result = subprocess.run(["npm", "ci"], cwd=project_root)
+        try:
+            result = subprocess.run(["npm", "ci"], cwd=project_root, check=False)
+        except KeyboardInterrupt:
+            log_warning("Restoration interrupted by user")
+            return 130
+        except Exception as e:
+            log_error(f"Failed to run npm ci: {e}")
+            return 1
         if result.returncode == 0:
             log_success("Node.js dependencies restored successfully!")
             restored = True
@@ -157,7 +163,14 @@ def restore_command(*args: Any, **kwargs: Any) -> int:
             log_error("yarn is not installed")
             return 1
 
-        result = subprocess.run(["yarn", "install", "--frozen-lockfile"], cwd=project_root)
+        try:
+            result = subprocess.run(["yarn", "install", "--frozen-lockfile"], cwd=project_root, check=False)
+        except KeyboardInterrupt:
+            log_warning("Restoration interrupted by user")
+            return 130
+        except Exception as e:
+            log_error(f"Failed to run yarn install: {e}")
+            return 1
         if result.returncode == 0:
             log_success("Node.js dependencies restored successfully!")
             restored = True
@@ -172,7 +185,14 @@ def restore_command(*args: Any, **kwargs: Any) -> int:
             log_error("pnpm is not installed")
             return 1
 
-        result = subprocess.run(["pnpm", "install", "--frozen-lockfile"], cwd=project_root)
+        try:
+            result = subprocess.run(["pnpm", "install", "--frozen-lockfile"], cwd=project_root, check=False)
+        except KeyboardInterrupt:
+            log_warning("Restoration interrupted by user")
+            return 130
+        except Exception as e:
+            log_error(f"Failed to run pnpm install: {e}")
+            return 1
         if result.returncode == 0:
             log_success("Node.js dependencies restored successfully!")
             restored = True
@@ -190,11 +210,5 @@ def restore_command(*args: Any, **kwargs: Any) -> int:
     return 0
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return restore_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["restore_command", "placeholder_command"]
+__all__ = ["restore_command"]

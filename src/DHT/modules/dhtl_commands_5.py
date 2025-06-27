@@ -21,14 +21,13 @@ Provides code coverage functionality for Python projects.
 
 import os
 import shutil
-from typing import Any
 
 from .common_utils import find_project_root, find_virtual_env
 from .dhtl_error_handling import log_error, log_info, log_success, log_warning
 from .dhtl_guardian_utils import run_with_guardian
 
 
-def coverage_command(*args: Any, **kwargs: Any) -> int:
+def coverage_command(args: list[str] | None = None) -> int:
     """Run code coverage analysis."""
     log_info("📊 Running code coverage analysis...")
 
@@ -86,11 +85,5 @@ def coverage_command(*args: Any, **kwargs: Any) -> int:
     return exit_code
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return coverage_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["coverage_command", "placeholder_command"]
+__all__ = ["coverage_command"]

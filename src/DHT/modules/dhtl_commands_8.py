@@ -22,13 +22,12 @@ Provides project cleanup functionality to remove build artifacts and temporary f
 import os
 import shutil
 from pathlib import Path
-from typing import Any
 
 from .common_utils import find_project_root
 from .dhtl_error_handling import log_debug, log_info, log_success, log_warning
 
 
-def clean_command(*args: Any, **kwargs: Any) -> int:
+def clean_command(args: list[str] | None = None) -> int:
     """Clean project by removing build artifacts and temporary files."""
     log_info("🧹 Cleaning project...")
 
@@ -79,12 +78,18 @@ def clean_command(*args: Any, **kwargs: Any) -> int:
         ".cache",
     ]
 
+    # Default args to empty list
+    if args is None:
+        args = []
+
     # Keep these directories if --all is not specified
     keep_dirs = {".venv", ".git", ".github", ".env"}
 
     if "--all" in args:
         log_warning("Cleaning ALL artifacts (including virtual environment)")
         keep_dirs = {".git", ".github"}  # Never delete git
+        # Add .venv to patterns when --all is specified
+        patterns_to_clean.append(".venv")
 
     # Count items cleaned
     cleaned_count = 0
@@ -154,11 +159,5 @@ def clean_command(*args: Any, **kwargs: Any) -> int:
     return 0
 
 
-# For backward compatibility
-def placeholder_command(*args: Any, **kwargs: Any) -> int:
-    """Placeholder command implementation."""
-    return clean_command(*args, **kwargs)
-
-
 # Export command functions
-__all__ = ["clean_command", "placeholder_command"]
+__all__ = ["clean_command"]

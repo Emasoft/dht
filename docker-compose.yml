@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Docker Compose configuration for DHT
+# Provides various services for development, testing, and production
+
+version: '3.8'
+
+services:
+  # Production service - minimal runtime
+  dht:
+    build:
+      context: .
+      target: runtime
+    image: dht:latest
+    container_name: dht-runtime
+    volumes:
+      - ./:/workspace:ro
+      - dht-cache:/app/.cache
+    environment:
+      - DHT_ENV=production
+      - UV_CACHE_DIR=/app/.cache/uv
+    working_dir: /workspace
+    command: ["dhtl", "--help"]
+
+  # Development service - includes dev tools
+  dht-dev:
+    build:
+      context: .
+      target: development
+    image: dht:dev
+    container_name: dht-dev
+    volumes:
+      - ./:/app
+      - dht-cache:/app/.cache
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # For Docker-in-Docker
+    environment:
+      - DHT_ENV=development
+      - UV_CACHE_DIR=/app/.cache/uv
+      - PYTHONDONTWRITEBYTECODE=1
+    stdin_open: true
+    tty: true
+    command: ["bash"]
+
+  # Test runner service
+  dht-test:
+    build:
+      context: .
+      target: test-runner
+    image: dht:test
+    container_name: dht-test
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./src:/app/src:ro
+      - test-results:/app/test-results
+      - dht-cache:/app/.cache
+    environment:
+      - DHT_TEST_MODE=1
+      - UV_CACHE_DIR=/app/.cache/uv
+      - PYTEST_CACHE_DIR=/tmp/.pytest_cache
+      - CI=${CI:-false}
+    command: ["pytest", "-v", "--tb=short", "--cov=src", "--cov-report=html:/app/test-results/htmlcov", "--cov-report=xml:/app/test-results/coverage.xml"]
+
+  # Workflow runner service (for act)
+  dht-workflows:
+    build:
+      context: .
+      target: runtime
+    image: dht:latest
+    container_name: dht-workflows
+    volumes:
+      - ./:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - dht-cache:/app/.cache
+    environment:
+      - DHT_ENV=ci
+      - UV_CACHE_DIR=/app/.cache/uv
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    working_dir: /workspace
+    command: ["dhtl", "act", "--container"]
+
+  # Linting service
+  dht-lint:
+    build:
+      context: .
+      target: development
+    image: dht:dev
+    container_name: dht-lint
+    volumes:
+      - ./:/app:ro
+      - dht-cache:/app/.cache
+    environment:
+      - UV_CACHE_DIR=/app/.cache/uv
+    command: ["dhtl", "lint", "--all"]
+
+  # Format checking service
+  dht-format:
+    build:
+      context: .
+      target: development
+    image: dht:dev
+    container_name: dht-format
+    volumes:
+      - ./:/app
+      - dht-cache:/app/.cache
+    environment:
+      - UV_CACHE_DIR=/app/.cache/uv
+    command: ["dhtl", "format", "--check"]
+
+volumes:
+  dht-cache:
+    name: dht-cache
+  test-results:
+    name: dht-test-results
+
+networks:
+  default:
+    name: dht-network
