@@ -454,7 +454,7 @@ proto-plus==1.26.1
     # via
     #   google-ai-generativelanguage
     #   google-api-core
-protobuf==5.29.4
+protobuf==5.29.5
     # via
     #   google-ai-generativelanguage
     #   google-api-core
@@ -569,7 +569,7 @@ regex==2024.11.6
     #   nltk
     #   tiktoken
     #   transformers
-requests==2.32.3
+requests==2.32.4
     # via
     #   apprise
     #   docker
@@ -681,11 +681,11 @@ tomli==2.2.1
     #   pip-tools
     #   pytest
     #   pytest-env
-torch==2.2.2
+torch==2.7.1
     # via
     #   -r requirements/requirements-help.in
     #   sentence-transformers
-tornado==6.4.2
+tornado==6.5
     # via streamlit
 tqdm==4.67.1
     # via
@@ -760,7 +760,7 @@ ujson==5.10.0
     # via prefect
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3==2.4.0
+urllib3==2.5.0
     # via
     #   docker
     #   mixpanel
