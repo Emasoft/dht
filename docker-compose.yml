@@ -49,16 +49,20 @@ services:
     image: dht:test
     container_name: dht-test
     volumes:
-      - ./tests:/app/tests:ro
-      - ./src:/app/src:ro
+      - ./:/app:ro
       - test-results:/app/test-results
       - dht-cache:/app/.cache
     environment:
       - DHT_TEST_MODE=1
+      - DHT_TEST_PROFILE=docker
       - UV_CACHE_DIR=/app/.cache/uv
       - PYTEST_CACHE_DIR=/tmp/.pytest_cache
       - CI=${CI:-false}
-    command: ["pytest", "-v", "--tb=short", "--cov=src", "--cov-report=html:/app/test-results/htmlcov", "--cov-report=xml:/app/test-results/coverage.xml"]
+      - PYTHONPATH=/app/src:/app
+      - VIRTUAL_ENV=/app/.venv
+      - PATH=/app/.venv/bin:$PATH
+    working_dir: /app
+    command: ["python", "-m", "pytest", "-v", "--tb=short", "--cov=src", "--cov-report=html:/app/test-results/htmlcov", "--cov-report=xml:/app/test-results/coverage.xml"]
 
   # Workflow runner service (for act)
   dht-workflows:

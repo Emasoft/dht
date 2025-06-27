@@ -45,21 +45,21 @@ clean:
 
 # Docker operations using DHT commands
 docker-build:
-	./dhtl.py docker build --target runtime
-	./dhtl.py docker build --target test-runner
-	./dhtl.py docker build --target development
+	python dhtl_entry.py docker build --target runtime
+	python dhtl_entry.py docker build --target test-runner
+	python dhtl_entry.py docker build --target development
 
 docker-test:
-	./dhtl.py docker test
+	python dhtl_entry.py docker test
 
 docker-lint:
-	./dhtl.py docker lint
+	python dhtl_entry.py docker lint
 
 docker-shell:
-	./dhtl.py docker shell
+	python dhtl_entry.py docker shell
 
 docker-workflow:
-	./dhtl.py docker workflow push
+	python dhtl_entry.py docker workflow push
 
 # Docker Compose operations
 compose-up:

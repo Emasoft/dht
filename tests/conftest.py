@@ -9,7 +9,8 @@ Licensed under the MIT License. See LICENSE file for details.
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Generator
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -23,6 +24,96 @@ if dht_dir not in sys.path:
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
+
+
+def is_running_in_ci() -> bool:
+    """Check if tests are running in CI environment."""
+    return any([
+        os.environ.get("CI"),
+        os.environ.get("GITHUB_ACTIONS"),
+        os.environ.get("DHT_IN_DOCKER"),
+        os.environ.get("DHT_TEST_MODE")
+    ])
+
+
+def get_test_profile() -> str:
+    """Get the current test profile."""
+    if os.environ.get("DHT_TEST_PROFILE"):
+        return os.environ.get("DHT_TEST_PROFILE", "local")
+    return "ci" if is_running_in_ci() else "local"
+
+
+# Test configuration based on profile
+TEST_CONFIGS = {
+    "local": {
+        "max_retries": 10,
+        "timeout": 60,
+        "skip_slow_tests": False,
+        "skip_network_tests": False,
+        "skip_docker_tests": False,
+        "api_mock_enabled": True,
+        "temp_dir_prefix": "/tmp/dht_test_",
+        "cleanup_temp_dirs": True,
+    },
+    "ci": {
+        "max_retries": 2,
+        "timeout": 5,
+        "skip_slow_tests": True,
+        "skip_network_tests": False,
+        "skip_docker_tests": True,  # Docker-in-Docker is complex
+        "api_mock_enabled": True,
+        "temp_dir_prefix": "/tmp/dht_ci_test_",
+        "cleanup_temp_dirs": True,
+    },
+    "docker": {
+        "max_retries": 3,
+        "timeout": 10,
+        "skip_slow_tests": False,
+        "skip_network_tests": False,
+        "skip_docker_tests": True,  # Already in Docker
+        "api_mock_enabled": True,
+        "temp_dir_prefix": "/tmp/dht_docker_test_",
+        "cleanup_temp_dirs": True,
+    }
+}
+
+
+@pytest.fixture(scope="session")
+def test_profile() -> str:
+    """Get current test profile."""
+    return get_test_profile()
+
+
+@pytest.fixture(scope="session")
+def test_config(test_profile: str) -> Dict[str, Any]:
+    """Get test configuration for current profile."""
+    return TEST_CONFIGS.get(test_profile, TEST_CONFIGS["local"])
+
+
+@pytest.fixture
+def max_retries(test_config: Dict[str, Any]) -> int:
+    """Get maximum retries for current profile."""
+    return test_config["max_retries"]
+
+
+@pytest.fixture
+def timeout(test_config: Dict[str, Any]) -> int:
+    """Get timeout for current profile."""
+    return test_config["timeout"]
+
+
+@pytest.fixture(autouse=True)
+def skip_by_profile(request: pytest.FixtureRequest, test_config: Dict[str, Any]) -> None:
+    """Skip tests based on profile configuration."""
+    markers = request.node.iter_markers()
+    
+    for marker in markers:
+        if marker.name == "slow" and test_config["skip_slow_tests"]:
+            pytest.skip(f"Skipping slow test in {get_test_profile()} profile")
+        elif marker.name == "network" and test_config["skip_network_tests"]:
+            pytest.skip(f"Skipping network test in {get_test_profile()} profile")
+        elif marker.name == "docker" and test_config["skip_docker_tests"]:
+            pytest.skip(f"Skipping docker test in {get_test_profile()} profile")
 
 
 @pytest.fixture(scope="session")
@@ -108,6 +199,23 @@ def mock_project_with_venv(mock_project_dir) -> Any:
     return mock_project_dir
 
 
+def pytest_configure(config: pytest.Config) -> None:
+    """Configure custom pytest markers."""
+    config.addinivalue_line("markers", "slow: marks tests as slow (deselect with '-m \"not slow\"')")
+    config.addinivalue_line("markers", "network: marks tests that require network access")
+    config.addinivalue_line("markers", "docker: marks tests that require Docker")
+    config.addinivalue_line("markers", "integration: marks integration tests")
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list) -> None:
+    """Modify test collection for better organization."""
+    profile = get_test_profile()
+    for item in items:
+        # Auto-mark integration tests
+        if "integration" in str(item.fspath):
+            item.add_marker(pytest.mark.integration)
+
+
 def pytest_sessionfinish(session, exitstatus) -> Any:
     """Print a summary of test results at the end of the session."""
     try:
@@ -122,5 +230,6 @@ def pytest_sessionfinish(session, exitstatus) -> Any:
             print(f"✅ Passed: {passed}")
             print(f"❌ Failed: {failed}")
             print(f"⏩ Skipped: {skipped}")
+            print(f"🔧 Test Profile: {get_test_profile()}")
     except Exception as e:
         print(f"\nError generating test summary: {e}")
