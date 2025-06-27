@@ -167,7 +167,7 @@ USER dhtuser
 
 # Ensure test dependencies are installed with proper Python
 RUN cd /app && \
-    /app/.venv/bin/python -m pip install --upgrade pip && \
+    chmod +x /app/.venv/bin/python || true && \
     uv sync --frozen --all-extras
 
 # Verify Python setup
