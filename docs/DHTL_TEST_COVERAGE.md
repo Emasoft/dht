@@ -89,7 +89,7 @@ python run_dhtl_action_tests.py --coverage
 docker compose -f docker-compose.profiles.yml run --rm dht-test-local \
   python -m pytest -v tests/docker/test_all_dhtl_actions.py
 
-# Run in REMOTE profile  
+# Run in REMOTE profile
 docker compose -f docker-compose.profiles.yml run --rm dht-test-remote \
   python -m pytest -v tests/docker/test_all_dhtl_actions.py
 ```
@@ -134,7 +134,7 @@ docker run --rm \
 - More retries (10)
 - Comprehensive error messages
 
-### REMOTE Profile Behavior  
+### REMOTE Profile Behavior
 - Skips slow tests
 - Restricted network access
 - Short timeouts (5s)
@@ -188,9 +188,9 @@ def test_new_command(self, tester: DHTLDockerTester, temp_dir: Path) -> None:
     """Test new dhtl command."""
     project_dir = temp_dir / "test_project"
     project_dir.mkdir()
-    
+
     code, out, err = tester.run_dhtl("new_command", ["--arg"], cwd=project_dir)
-    
+
     assert code == 0, f"Command failed: {err}"
     assert "expected output" in out
     assert (project_dir / "expected_file").exists()

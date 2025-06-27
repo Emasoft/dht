@@ -24,17 +24,12 @@ class TestDHTLCoreCommands:
     @pytest.fixture
     def dhtl_runner(self, project_root: Path) -> callable:
         """Create a runner for dhtl commands."""
+
         def run_dhtl(cmd: str, args: list[str] = None, cwd: Path = None) -> tuple[int, str, str]:
             args = args or []
             cmd_list = [sys.executable, str(project_root / "dhtl_entry.py"), cmd] + args
 
-            result = subprocess.run(
-                cmd_list,
-                capture_output=True,
-                text=True,
-                cwd=cwd or project_root,
-                timeout=30
-            )
+            result = subprocess.run(cmd_list, capture_output=True, text=True, cwd=cwd or project_root, timeout=30)
             return result.returncode, result.stdout, result.stderr
 
         return run_dhtl
@@ -481,10 +476,7 @@ version = "0.1.0"
         # Test clone with a small public repo
         clone_dir = temp_dir / "cloned_repo"
 
-        returncode, stdout, stderr = dhtl_runner(
-            "clone",
-            ["https://github.com/pypa/sampleproject.git", str(clone_dir)]
-        )
+        returncode, stdout, stderr = dhtl_runner("clone", ["https://github.com/pypa/sampleproject.git", str(clone_dir)])
 
         if returncode == 0:
             assert clone_dir.exists()

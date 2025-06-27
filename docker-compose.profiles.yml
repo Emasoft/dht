@@ -128,12 +128,9 @@ services:
       - DHT_IN_DOCKER=1
       - PYTHONPATH=/app/src:/app
     working_dir: /app
-    command: ["bash", "-c", "
-      echo '=== Running LOCAL profile tests ===' &&
-      DHT_TEST_PROFILE=local python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles -k profile &&
-      echo '=== Running REMOTE profile tests ===' &&
-      DHT_TEST_PROFILE=remote python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles -k profile
-    "]
+    command: ["bash", "-c", " echo '=== Running LOCAL profile tests ===' && DHT_TEST_PROFILE=local python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles
+        -k profile && echo '=== Running REMOTE profile tests ===' && DHT_TEST_PROFILE=remote python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles
+        -k profile "]
     networks:
       - dht-compare-network
 

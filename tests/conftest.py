@@ -27,12 +27,14 @@ if parent_dir not in sys.path:
 
 def is_running_in_ci() -> bool:
     """Check if tests are running in CI environment."""
-    return any([
-        os.environ.get("CI"),
-        os.environ.get("GITHUB_ACTIONS"),
-        os.environ.get("DHT_IN_DOCKER"),
-        os.environ.get("DHT_TEST_MODE")
-    ])
+    return any(
+        [
+            os.environ.get("CI"),
+            os.environ.get("GITHUB_ACTIONS"),
+            os.environ.get("DHT_IN_DOCKER"),
+            os.environ.get("DHT_TEST_MODE"),
+        ]
+    )
 
 
 def get_test_profile() -> str:
@@ -99,7 +101,7 @@ TEST_CONFIGS = {
         "debug_enabled": False,
         "comprehensive_tests": True,
         "memory_limit_mb": 2048,
-    }
+    },
 }
 
 

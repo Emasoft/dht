@@ -185,10 +185,10 @@ To monitor workflow runs:
 
 1. **Long line warnings in yamllint**
    - Non-critical, but can be fixed by breaking long lines
-   
+
 2. **act on M-series Macs**
    - Use `--container-architecture linux/amd64`
-   
+
 3. **Gitleaks file overwrite**
    - Properly handled with verification script
 

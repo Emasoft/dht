@@ -56,10 +56,7 @@ class TestDockerProfiles:
             # REMOTE profile should be more restrictive
             assert os.environ.get("CI") is not None or os.environ.get("GITHUB_ACTIONS") is not None
 
-    @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() != "local",
-        reason="LOCAL profile specific test"
-    )
+    @pytest.mark.skipif(os.environ.get("DHT_TEST_PROFILE", "").lower() != "local", reason="LOCAL profile specific test")
     def test_local_profile_features(self, temp_dir: Path) -> None:
         """Test features specific to LOCAL profile."""
         # LOCAL profile allows full filesystem access
@@ -74,8 +71,7 @@ class TestDockerProfiles:
         assert elapsed < 60  # LOCAL allows up to 60s timeouts
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"],
-        reason="REMOTE profile specific test"
+        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"], reason="REMOTE profile specific test"
     )
     def test_remote_profile_features(self) -> None:
         """Test features specific to REMOTE profile."""
@@ -103,6 +99,7 @@ class TestDockerProfiles:
             with patch("requests.get") as mock_get:
                 mock_get.return_value.status_code = 200
                 from src.DHT.modules.dhtl_commands_4 import _check_pypi_version
+
                 # This should work in LOCAL profile
                 result = _check_pypi_version("dht")
                 assert mock_get.called or result is None  # May be mocked or real
@@ -130,7 +127,7 @@ class TestDockerProfiles:
             ["echo", f"Running in {profile} profile"],
             capture_output=True,
             text=True,
-            timeout=5 if profile in ["remote", "ci"] else 30
+            timeout=5 if profile in ["remote", "ci"] else 30,
         )
         assert result.returncode == 0
         assert profile in result.stdout
@@ -215,11 +212,7 @@ class TestDockerWorkflows:
     def test_docker_command_execution(self, profile: str) -> None:
         """Test Docker-specific command execution."""
         # Test Python availability
-        result = subprocess.run(
-            [sys.executable, "--version"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run([sys.executable, "--version"], capture_output=True, text=True)
         assert result.returncode == 0
         assert "Python" in result.stdout
 
@@ -246,12 +239,7 @@ class TestProfileIntegration:
         dhtl_path = project_root / "dhtl_entry.py"
 
         # Test help command (should work in all profiles)
-        result = subprocess.run(
-            [sys.executable, str(dhtl_path), "--help"],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
+        result = subprocess.run([sys.executable, str(dhtl_path), "--help"], capture_output=True, text=True, timeout=10)
         assert result.returncode == 0
         assert "Usage:" in result.stdout
 
@@ -259,6 +247,7 @@ class TestProfileIntegration:
         """Test that pytest respects profile configuration."""
         # Get test configuration
         from tests.conftest import TEST_CONFIGS
+
         config = TEST_CONFIGS.get(profile, TEST_CONFIGS["local"])
 
         # Verify pytest is using correct configuration

@@ -25,8 +25,9 @@ class DHTLDockerTester:
         self.profile = os.environ.get("DHT_TEST_PROFILE", "local")
         self.in_docker = os.environ.get("DHT_IN_DOCKER", "0") == "1"
 
-    def run_dhtl(self, command: str, args: list[str] = None,
-                 cwd: Path | None = None, timeout: int = 30) -> tuple[int, str, str]:
+    def run_dhtl(
+        self, command: str, args: list[str] = None, cwd: Path | None = None, timeout: int = 30
+    ) -> tuple[int, str, str]:
         """Run a dhtl command and return result."""
         args = args or []
         cmd = [sys.executable, str(self.dhtl_path), command] + args
@@ -36,13 +37,7 @@ class DHTLDockerTester:
             timeout = min(timeout, 10)
 
         try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                cwd=cwd or self.project_root,
-                timeout=timeout
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd or self.project_root, timeout=timeout)
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
             return -1, "", f"Command timed out after {timeout}s"
@@ -201,8 +196,7 @@ def test_calculate():
         assert (sample_project / "dist").exists()
 
         # Check for wheel or sdist
-        dist_files = list((sample_project / "dist").glob("*.whl")) + \
-                    list((sample_project / "dist").glob("*.tar.gz"))
+        dist_files = list((sample_project / "dist").glob("*.whl")) + list((sample_project / "dist").glob("*.tar.gz"))
         assert len(dist_files) > 0
 
     def test_run_tests(self, tester: DHTLDockerTester, sample_project: Path) -> None:
@@ -295,31 +289,17 @@ version = "0.1.0"
         assert code == 0, f"Commit failed: {err}"
 
         # Verify commit
-        log = subprocess.run(
-            ["git", "log", "--oneline", "-1"],
-            cwd=git_project,
-            capture_output=True,
-            text=True
-        )
+        log = subprocess.run(["git", "log", "--oneline", "-1"], cwd=git_project, capture_output=True, text=True)
         assert "Add new file" in log.stdout
 
     def test_create_tag(self, tester: DHTLDockerTester, git_project: Path) -> None:
         """Test creating git tags."""
-        code, out, err = tester.run_dhtl(
-            "tag",
-            ["--name", "v0.1.0", "--message", "First release"],
-            cwd=git_project
-        )
+        code, out, err = tester.run_dhtl("tag", ["--name", "v0.1.0", "--message", "First release"], cwd=git_project)
 
         assert code == 0, f"Tag failed: {err}"
 
         # Verify tag
-        tags = subprocess.run(
-            ["git", "tag", "-l"],
-            cwd=git_project,
-            capture_output=True,
-            text=True
-        )
+        tags = subprocess.run(["git", "tag", "-l"], cwd=git_project, capture_output=True, text=True)
         assert "v0.1.0" in tags.stdout
 
     def test_bump_version(self, tester: DHTLDockerTester, git_project: Path) -> None:
@@ -370,8 +350,7 @@ class TestDHTLDeployment:
             assert subcmd in out
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "") == "remote",
-        reason="Workflow tests skipped in REMOTE profile"
+        os.environ.get("DHT_TEST_PROFILE", "") == "remote", reason="Workflow tests skipped in REMOTE profile"
     )
     def test_workflows_list(self, tester: DHTLDockerTester, temp_dir: Path) -> None:
         """Test listing workflows."""
@@ -556,9 +535,7 @@ def test_multiply():
 
         # Clone a small repo
         code, _, err = tester.run_dhtl(
-            "clone",
-            ["https://github.com/pypa/sampleproject.git", str(clone_dir)],
-            timeout=120
+            "clone", ["https://github.com/pypa/sampleproject.git", str(clone_dir)], timeout=120
         )
 
         if code == 0:

@@ -111,7 +111,7 @@ def test_with_profile_config(test_config):
     """Test that adapts to profile configuration."""
     max_retries = test_config["max_retries"]
     timeout = test_config["timeout"]
-    
+
     # Adjust test behavior based on profile
     if test_config["comprehensive_tests"]:
         # Run extensive tests in LOCAL

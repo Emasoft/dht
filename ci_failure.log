@@ -1,0 +1,975 @@
+Pre-commit checks	Run pre-commit on all files	﻿2025-06-27T20:34:22.6400495Z ##[group]Run # Run specific pre-commit hooks that are stable
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6400993Z [36;1m# Run specific pre-commit hooks that are stable[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6401455Z [36;1muv run pre-commit run trailing-whitespace --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6401973Z [36;1muv run pre-commit run end-of-file-fixer --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6402462Z [36;1muv run pre-commit run check-yaml --all-files --show-diff-on-failure || true[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6402973Z [36;1muv run pre-commit run check-added-large-files --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6403467Z [36;1muv run pre-commit run check-toml --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6403925Z [36;1muv run pre-commit run check-json --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6404396Z [36;1muv run pre-commit run check-merge-conflict --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6404861Z [36;1muv run pre-commit run uv-lock --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6405315Z [36;1muv run pre-commit run ruff --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6406231Z [36;1muv run pre-commit run ruff-format --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6406678Z [36;1muv run pre-commit run yamlfmt --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6407116Z [36;1muv run pre-commit run yamllint --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6407551Z [36;1muv run pre-commit run shellcheck --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6407984Z [36;1muv run pre-commit run actionlint --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6408426Z [36;1muv run pre-commit run gitleaks --all-files --show-diff-on-failure[0m
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6464879Z shell: /usr/bin/bash -e {0}
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6465128Z env:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6465512Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.6465815Z ##[endgroup]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:22.8497685Z Bytecode compiled 4698 files in 176ms
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:23.0759402Z [INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:23.6044506Z [INFO] Initializing environment for https://github.com/astral-sh/uv-pre-commit.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:24.0312452Z [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:24.4820665Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:24.9079574Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-pyyaml,types-requests,types-toml,types-tabulate.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:25.3074880Z [INFO] Initializing environment for https://github.com/google/yamlfmt.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:25.9305784Z [INFO] Initializing environment for https://github.com/adrienverge/yamllint.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:26.4956748Z [INFO] Initializing environment for https://github.com/shellcheck-py/shellcheck-py.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:26.9433211Z [INFO] Initializing environment for https://github.com/rhysd/actionlint.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:27.6874455Z [INFO] Initializing environment for https://github.com/zricethezav/gitleaks.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:28.2832463Z [INFO] Initializing environment for https://github.com/commitizen-tools/commitizen.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:28.9832624Z [INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:28.9833435Z [INFO] Once installed this environment will be reused.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:28.9833759Z [INFO] This may take a few minutes...
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0063593Z trim trailing whitespace.................................................Failed
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0064636Z - hook id: trailing-whitespace
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0065078Z - exit code: 1
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0065599Z - files were modified by this hook
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0065867Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0066019Z Fixing run_profile_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0066387Z Fixing docs/WORKFLOW_STATUS.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0066758Z Fixing run_dhtl_action_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0067494Z Fixing docs/DOCKER_PROFILES.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0067745Z Fixing docs/DHTL_TEST_COVERAGE.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0068005Z Fixing DOCKER_SETUP_SUMMARY.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0068157Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0068260Z pre-commit hook(s) made changes.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0068656Z If you are seeing this message in CI, reproduce locally with: `pre-commit run --all-files`.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0069177Z To run `pre-commit` as part of git workflow, use `pre-commit install`.
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0069538Z All changes made by hooks:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0291013Z diff --git a/DOCKER_SETUP_SUMMARY.md b/DOCKER_SETUP_SUMMARY.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0291609Z index 9d79761..202cdca 100644
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0292059Z --- a/DOCKER_SETUP_SUMMARY.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0292467Z +++ b/DOCKER_SETUP_SUMMARY.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0292873Z @@ -4,7 +4,7 @@
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0293210Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0293828Z  ### 1. Fixed Dockerfile Python Environment ✅
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0294520Z  - Created multi-stage Dockerfile with proper Python environment setup
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0295229Z -- Fixed virtual environment path issues
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0296026Z +- Fixed virtual environment path issues
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0296648Z  - Added proper environment variables for Python execution
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0297355Z  - Created a simplified test Dockerfile that works correctly
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0297894Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0298352Z diff --git a/docs/DHTL_TEST_COVERAGE.md b/docs/DHTL_TEST_COVERAGE.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0298924Z index a552304..1d339be 100644
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0299316Z --- a/docs/DHTL_TEST_COVERAGE.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0299717Z +++ b/docs/DHTL_TEST_COVERAGE.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0300202Z @@ -89,7 +89,7 @@ python run_dhtl_action_tests.py --coverage
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0300907Z  docker compose -f docker-compose.profiles.yml run --rm dht-test-local \
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0301649Z    python -m pytest -v tests/docker/test_all_dhtl_actions.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0302148Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0302441Z -# Run in REMOTE profile
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0302827Z +# Run in REMOTE profile
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0303375Z  docker compose -f docker-compose.profiles.yml run --rm dht-test-remote \
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0304096Z    python -m pytest -v tests/docker/test_all_dhtl_actions.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0304587Z  ```
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0304876Z @@ -134,7 +134,7 @@ docker run --rm \
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0305270Z  - More retries (10)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0305884Z  - Comprehensive error messages
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0306222Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0306399Z -### REMOTE Profile Behavior
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0306653Z +### REMOTE Profile Behavior
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0306875Z  - Skips slow tests
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0307084Z  - Restricted network access
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0307333Z  - Short timeouts (5s)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0307694Z @@ -188,9 +188,9 @@ def test_new_command(self, tester: DHTLDockerTester, temp_dir: Path) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0308090Z      """Test new dhtl command."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0308349Z      project_dir = temp_dir / "test_project"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0308616Z      project_dir.mkdir()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0308819Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0308977Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0309236Z      code, out, err = tester.run_dhtl("new_command", ["--arg"], cwd=project_dir)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0309560Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0309722Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0309902Z      assert code == 0, f"Command failed: {err}"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0310178Z      assert "expected output" in out
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0310459Z      assert (project_dir / "expected_file").exists()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0310819Z diff --git a/docs/DOCKER_PROFILES.md b/docs/DOCKER_PROFILES.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0311132Z index f20ef88..3d9ab9e 100644
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0311561Z --- a/docs/DOCKER_PROFILES.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0311786Z +++ b/docs/DOCKER_PROFILES.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0312048Z @@ -111,7 +111,7 @@ def test_with_profile_config(test_config):
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0312386Z      """Test that adapts to profile configuration."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0312681Z      max_retries = test_config["max_retries"]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0313070Z      timeout = test_config["timeout"]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0313300Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0313458Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0313637Z      # Adjust test behavior based on profile
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0313909Z      if test_config["comprehensive_tests"]:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0314171Z          # Run extensive tests in LOCAL
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0314490Z diff --git a/docs/WORKFLOW_STATUS.md b/docs/WORKFLOW_STATUS.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0314801Z index e17ed23..86b0efa 100644
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0315027Z --- a/docs/WORKFLOW_STATUS.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0315270Z +++ b/docs/WORKFLOW_STATUS.md
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0315874Z @@ -185,10 +185,10 @@ To monitor workflow runs:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0316131Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0316314Z  1. **Long line warnings in yamllint**
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0316614Z     - Non-critical, but can be fixed by breaking long lines
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0316897Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0317053Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0317218Z  2. **act on M-series Macs**
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0317480Z     - Use `--container-architecture linux/amd64`
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0317731Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0317888Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0318052Z  3. **Gitleaks file overwrite**
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0318310Z     - Properly handled with verification script
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0318563Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0318803Z diff --git a/run_dhtl_action_tests.py b/run_dhtl_action_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0319138Z index b5a6962..e177592 100755
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0319372Z --- a/run_dhtl_action_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0319600Z +++ b/run_dhtl_action_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0319859Z @@ -18,7 +18,7 @@ from typing import Dict, List, Tuple
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0320128Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0320302Z  class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0320574Z      """Runner for comprehensive dhtl action tests."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0320837Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0320990Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0321157Z      def __init__(self):
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0321403Z          self.project_root = Path(__file__).parent
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0321679Z          self.test_files = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0321916Z @@ -26,14 +26,14 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0322220Z              "tests/docker/test_dhtl_commands_complete.py",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0322492Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0322665Z          self.results = {}
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0322866Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0323019Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0323255Z      def run_tests_in_profile(self, profile: str) -> Dict[str, any]:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0323625Z          """Run all dhtl action tests in a specific profile."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0323915Z          print(f"\n{'='*80}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0324378Z          print(f"🧪 Running DHTL Action Tests - {profile.upper()} Profile")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0325259Z          print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0325983Z          print(f"{'='*80}\n")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0326357Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0326628Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0326934Z          # Build Docker command
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0327326Z          docker_cmd = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0327683Z              "docker", "run", "--rm",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0328160Z @@ -45,25 +45,25 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0328480Z              "dht:test-simple",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0328733Z              "python", "-m", "pytest", "-v", "--tb=short",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0328994Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0329161Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0329315Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0329481Z          # Add test files
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0329703Z          docker_cmd.extend(self.test_files)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0330019Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0330381Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0330557Z          # Add profile-specific options
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0330815Z          if profile == "remote":
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0331102Z              docker_cmd.extend(["-m", "not slow", "--maxfail=5"])
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0331374Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0331536Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0331692Z          # Run tests
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0332009Z          start_time = datetime.now()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0332358Z          result = subprocess.run(docker_cmd, capture_output=True, text=True)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0332765Z          duration = (datetime.now() - start_time).total_seconds()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0333053Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0333206Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0333369Z          # Parse results
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0333584Z          output = result.stdout
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0333823Z          passed = output.count(" PASSED")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0334098Z          failed = output.count(" FAILED")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0334372Z          skipped = output.count(" SKIPPED")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0334613Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0334772Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0334925Z          return {
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0335116Z              "profile": profile,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0335600Z              "returncode": result.returncode,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0335973Z @@ -75,7 +75,7 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0336254Z              "output": output,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0336480Z              "errors": result.stderr
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0336708Z          }
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0336869Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0337020Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0337202Z      def run_test_categories(self) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0337465Z          """Run tests by category."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0337699Z          categories = {
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0337927Z @@ -88,13 +88,13 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0338236Z              "Integration": "TestDHTLIntegration",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0338515Z              "Edge Cases": "TestDHTLEdgeCases",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0338765Z          }
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0338927Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0339076Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0339697Z          print("\n📊 Running Tests by Category")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0339998Z          print("="*60)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0340189Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0340341Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0340557Z          for category, test_class in categories.items():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0340932Z              print(f"\n🔄 Testing {category}...")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0341178Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0341350Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0341509Z              cmd = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0341709Z                  "docker", "run", "--rm",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0341989Z                  "-v", f"{self.project_root}:/app:ro",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0342287Z @@ -104,21 +104,21 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0342590Z                  "python", "-m", "pytest", "-v", "-k", test_class,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0342900Z                  "tests/docker/test_all_dhtl_actions.py"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0343162Z              ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0343335Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0343494Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0343740Z              result = subprocess.run(cmd, capture_output=True, text=True)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0344051Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0344209Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0344385Z              if result.returncode == 0:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0344671Z                  passed = result.stdout.count(" PASSED")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0345029Z                  print(f"  ✅ {category}: {passed} tests passed")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0345300Z              else:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0345758Z                  failed = result.stdout.count(" FAILED")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0346123Z                  print(f"  ❌ {category}: {failed} tests failed")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0346391Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0346557Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0346751Z      def generate_coverage_report(self) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0347082Z          """Generate a coverage report of tested commands."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0347466Z          print("\n📋 DHTL Command Coverage Report")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0347914Z          print("="*60)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0348098Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0348257Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0348433Z          # All dhtl commands from registry
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0348680Z          all_commands = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0348895Z              # Project Management
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0349262Z @@ -144,7 +144,7 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0349516Z              # Aliases
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0349732Z              "fmt", "check", "doc", "bin", "ws", "w", "p"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0349985Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0350139Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0350296Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0350491Z          # Commands tested (based on test file content)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0350762Z          tested_commands = {
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0351028Z              "init", "setup", "clean", "build", "test", "lint", "format",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0351362Z @@ -152,43 +152,43 @@ class DHTLActionTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0351694Z              "publish", "docker", "workflows", "env", "diagnostics",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352009Z              "help", "version", "python", "run", "clone"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352256Z          }
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352413Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352564Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352732Z          # Calculate coverage
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0352963Z          total = len(set(all_commands))
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0353217Z          tested = len(tested_commands)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0353472Z          coverage = (tested / total) * 100
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0353705Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0353860Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0354033Z          print(f"\nTotal Commands: {total}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0354299Z          print(f"Tested Commands: {tested}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0354561Z          print(f"Coverage: {coverage:.1f}%")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0354786Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0354946Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0355112Z          # Show untested commands
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0355508Z          untested = set(all_commands) - tested_commands
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0355916Z          if untested:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0356249Z              print(f"\n⚠️  Untested Commands ({len(untested)}):")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0356544Z              for cmd in sorted(untested):
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0356798Z                  print(f"  - {cmd}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0357018Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0357178Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0357404Z      def print_summary(self, results: List[Dict]) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0357698Z          """Print test summary."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0357931Z          print("\n" + "="*80)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0358203Z          print("📊 DHTL ACTION TEST SUMMARY")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0358450Z          print("="*80)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0358636Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0358788Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0359140Z          print("\n┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0359657Z          print("┃ Profile  ┃ Passed ┃ Failed ┃ Skipped ┃ Total    ┃ Duration  ┃ Status   ┃")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0360189Z          print("┣━━━━━━━━━━╋━━━━━━━━╋━━━━━━━━╋━━━━━━━━━╋━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━┫")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0360487Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0360646Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0360809Z          for result in results:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0361151Z              status = "✅ PASS" if result["returncode"] == 0 else "❌ FAIL"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0361499Z              duration = f"{result['duration']:.2f}s"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0361754Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0361915Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0362226Z              print(f"┃ {result['profile'].upper():<8} ┃ {result['passed']:>6} ┃ "
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0362694Z                    f"{result['failed']:>6} ┃ {result['skipped']:>7} ┃ "
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0363089Z                    f"{result['total']:>8} ┃ {duration:>9} ┃ {status:<8} ┃")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0363377Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0363539Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0363858Z          print("┗━━━━━━━━━━┻━━━━━━━━┻━━━━━━━━┻━━━━━━━━━┻━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━┛")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0364398Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0364558Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0364720Z          # Overall status
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0364974Z          all_passed = all(r["returncode"] == 0 for r in results)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0365265Z          if all_passed:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0365592Z @@ -211,12 +211,12 @@ def main():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0365824Z          action="store_true",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0366200Z          help="Show command coverage report"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0366441Z      )
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0366592Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0366746Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0366922Z      args = parser.parse_args()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0367160Z      runner = DHTLActionTestRunner()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0367392Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0367547Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0367698Z      results = []
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0367877Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0368029Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0368198Z      if args.profile == "categories":
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0368452Z          runner.run_test_categories()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0368706Z      elif args.profile == "both":
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0368936Z @@ -227,10 +227,10 @@ def main():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0369203Z          result = runner.run_tests_in_profile(args.profile)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0369496Z          results.append(result)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0369740Z          runner.print_summary(results)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0369966Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0370124Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0370285Z      if args.coverage:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0370533Z          runner.generate_coverage_report()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0370773Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0370930Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0371094Z      # Exit with appropriate code
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0371322Z      if results:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0371575Z          sys.exit(0 if all(r["returncode"] == 0 for r in results) else 1)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0371952Z diff --git a/run_profile_tests.py b/run_profile_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0372246Z index 1ea884d..641e27e 100755
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0372475Z --- a/run_profile_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0372696Z +++ b/run_profile_tests.py
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0372918Z @@ -31,7 +31,7 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0373172Z              "run", "--rm",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0373374Z              service
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0373549Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0373711Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0373867Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0374097Z          print(f"🐋 Running service: {service}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0374438Z          result = subprocess.run(cmd, capture_output=True, text=True)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0374816Z          return result.returncode, result.stdout, result.stderr
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0375134Z @@ -45,17 +45,17 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0375485Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0375669Z          service_name = f"dht-test-{profile}"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0375936Z          start_time = datetime.now()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0376154Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0376312Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0376471Z          # Run the tests
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0376786Z          returncode, stdout, stderr = self.run_docker_compose_service(service_name)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0377141Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0377296Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0377515Z          duration = (datetime.now() - start_time).total_seconds()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0377801Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0377961Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0378115Z          # Parse results
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0378343Z          passed = stdout.count(" passed")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0378603Z          failed = stdout.count(" failed")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0378859Z          skipped = stdout.count(" skipped")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0379097Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0379253Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0379406Z          result = {
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0379596Z              "profile": profile,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0379833Z              "returncode": returncode,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0380092Z @@ -68,17 +68,17 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0380343Z              "output": stdout,
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0380563Z              "errors": stderr
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0380909Z          }
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0381063Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0381221Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0381399Z          self.results[profile] = result
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0381637Z          return result
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0381825Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0382001Z      def run_comparison(self) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0382288Z          """Run tests in both profiles and compare results."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0382788Z          print("\n🔄 Running profile comparison tests...")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0383058Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0383214Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0383375Z          # Run comparison service
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0383730Z          returncode, stdout, stderr = self.run_docker_compose_service("dht-test-compare")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0384088Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0384241Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0384425Z          if returncode == 0:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0384754Z              print("✅ Profile comparison completed successfully")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0385036Z          else:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0385245Z @@ -90,25 +90,25 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0385635Z          """Print summary of test results."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0385890Z          if not self.results:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0386101Z              return
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0386275Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0386427Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0386590Z          print("\n" + "="*80)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0386866Z          print("📊 PROFILE TEST SUMMARY")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0387113Z          print("="*80)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0387293Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0387452Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0387622Z          # Create comparison table
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0388021Z          print("\n┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0388527Z          print("┃ Profile  ┃ Passed ┃ Failed ┃ Skipped ┃ Total    ┃ Duration  ┃ Status   ┃")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0389045Z          print("┣━━━━━━━━━━╋━━━━━━━━╋━━━━━━━━╋━━━━━━━━━╋━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━┫")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0389333Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0389504Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0389709Z          for profile, result in self.results.items():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0390084Z              status = "✅ PASS" if result["success"] else "❌ FAIL"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0390391Z              duration = f"{result['duration']:.2f}s"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0390646Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0390814Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0391179Z              print(f"┃ {profile.upper():<8} ┃ {result['passed']:>6} ┃ {result['failed']:>6} ┃ "
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0391721Z                    f"{result['skipped']:>7} ┃ {result['total']:>8} ┃ {duration:>9} ┃ {status:<8} ┃")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0392062Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0392222Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0392556Z          print("┗━━━━━━━━━━┻━━━━━━━━┻━━━━━━━━┻━━━━━━━━━┻━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━┛")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0392858Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0393020Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0393187Z          # Profile differences
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0393428Z          if len(self.results) == 2:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0393708Z              self.print_profile_differences()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0393992Z @@ -117,19 +117,19 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0394321Z          """Print differences between LOCAL and REMOTE profiles."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0394735Z          if "local" not in self.results or "remote" not in self.results:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0395039Z              return
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0395229Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0395494Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0395668Z          local = self.results["local"]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0395927Z          remote = self.results["remote"]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0396163Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0396320Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0396540Z          print("\n📈 PROFILE DIFFERENCES:")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0397048Z          print(f"• Test Coverage: LOCAL ran {local['total']} tests, REMOTE ran {remote['total']} tests")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0397671Z          print(f"• Skipped Tests: LOCAL skipped {local['skipped']}, REMOTE skipped {remote['skipped']}")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0398465Z          print(f"• Execution Time: LOCAL took {local['duration']:.2f}s, REMOTE took {remote['duration']:.2f}s")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0398867Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0399025Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0399231Z          time_diff = local['duration'] - remote['duration']
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0399516Z          if time_diff > 0:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0400000Z              print(f"• Speed: REMOTE was {time_diff:.2f}s faster ({(time_diff/local['duration']*100):.1f}% improvement)")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0400531Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0400684Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0400989Z          coverage_diff = local['total'] - local['skipped'] - (remote['total'] - remote['skipped'])
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0401379Z          if coverage_diff > 0:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0401739Z              print(f"• Coverage: LOCAL ran {coverage_diff} more actual tests")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0402093Z @@ -138,26 +138,26 @@ class ProfileTestRunner:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0402390Z          """Start an interactive development shell."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0402763Z          service = "dht-dev-local" if profile == "local" else "dht-ci-runner"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0403236Z          print(f"\n🐚 Starting {profile.upper()} development shell...")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0403544Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0403705Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0403853Z          cmd = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0404043Z              "docker", "compose",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0404313Z              "-f", "docker-compose.profiles.yml",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0404580Z              "run", "--rm",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0404786Z              service
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0404970Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0405125Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0405282Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0405624Z          subprocess.run(cmd)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0405909Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0406086Z      def cleanup(self) -> None:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0406325Z          """Clean up Docker resources."""
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0406674Z          print("\n🧹 Cleaning up Docker resources...")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0406933Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0425316Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0425820Z          cmd = [
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0426057Z              "docker", "compose",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0426351Z              "-f", "docker-compose.profiles.yml",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0426644Z              "down", "-v"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0426855Z          ]
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0427043Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0427228Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0427429Z          subprocess.run(cmd, capture_output=True)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0427807Z          print("✅ Cleanup completed")
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0428052Z
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0428214Z @@ -175,10 +175,10 @@ def main():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0428445Z          action="store_true",
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0428720Z          help="Don't clean up Docker resources after tests"
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0428991Z      )
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0429157Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0429319Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0429491Z      args = parser.parse_args()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0429736Z      runner = ProfileTestRunner()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0429966Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0430127Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0430282Z      try:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0430466Z          if args.profile == "shell":
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0430722Z              runner.run_development_shell()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0431004Z @@ -193,10 +193,10 @@ def main():
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0431237Z              # Run single profile
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0431525Z              result = runner.run_profile_tests(args.profile)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0431824Z              runner.print_summary()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0432051Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0432223Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0432401Z              # Exit with test result code
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0432707Z              sys.exit(0 if result["success"] else 1)
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0432957Z -
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0433113Z +
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0433269Z      finally:
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0433497Z          if not args.no_cleanup and args.profile != "shell":
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0433779Z              runner.cleanup()
+Pre-commit checks	Run pre-commit on all files	2025-06-27T20:34:34.0493221Z ##[error]Process completed with exit code 1.
+Code quality checks	Run ruff linter	﻿2025-06-27T20:34:20.4769892Z ##[group]Run echo "Running ruff linter..."
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4770253Z [36;1mecho "Running ruff linter..."[0m
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4770868Z [36;1muv run pre-commit run ruff --all-files --show-diff-on-failure[0m
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4827937Z shell: /usr/bin/bash -e {0}
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4828291Z env:
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4828643Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4828991Z ##[endgroup]
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.4906600Z Running ruff linter...
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.6851927Z Bytecode compiled 4698 files in 174ms
+Code quality checks	Run ruff linter	2025-06-27T20:34:20.9059619Z [INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+Code quality checks	Run ruff linter	2025-06-27T20:34:21.1071256Z [INFO] Initializing environment for https://github.com/astral-sh/uv-pre-commit.
+Code quality checks	Run ruff linter	2025-06-27T20:34:21.2782009Z [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+Code quality checks	Run ruff linter	2025-06-27T20:34:21.4807210Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+Code quality checks	Run ruff linter	2025-06-27T20:34:21.6654374Z [INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-pyyaml,types-requests,types-toml,types-tabulate.
+Code quality checks	Run ruff linter	2025-06-27T20:34:21.8238596Z [INFO] Initializing environment for https://github.com/google/yamlfmt.
+Code quality checks	Run ruff linter	2025-06-27T20:34:22.0567063Z [INFO] Initializing environment for https://github.com/adrienverge/yamllint.
+Code quality checks	Run ruff linter	2025-06-27T20:34:22.2747871Z [INFO] Initializing environment for https://github.com/shellcheck-py/shellcheck-py.
+Code quality checks	Run ruff linter	2025-06-27T20:34:22.4420077Z [INFO] Initializing environment for https://github.com/rhysd/actionlint.
+Code quality checks	Run ruff linter	2025-06-27T20:34:22.7456319Z [INFO] Initializing environment for https://github.com/zricethezav/gitleaks.
+Code quality checks	Run ruff linter	2025-06-27T20:34:23.0044359Z [INFO] Initializing environment for https://github.com/commitizen-tools/commitizen.
+Code quality checks	Run ruff linter	2025-06-27T20:34:23.3572090Z [INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.
+Code quality checks	Run ruff linter	2025-06-27T20:34:23.3574579Z [INFO] Once installed this environment will be reused.
+Code quality checks	Run ruff linter	2025-06-27T20:34:23.3575482Z [INFO] This may take a few minutes...
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8517573Z ruff.....................................................................Failed
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8518106Z - hook id: ruff
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8518383Z - exit code: 1
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8518613Z - files were modified by this hook
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8518830Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8518995Z Found 77 errors (77 fixed, 0 remaining).
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8519318Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8519475Z pre-commit hook(s) made changes.
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8520162Z If you are seeing this message in CI, reproduce locally with: `pre-commit run --all-files`.
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8521251Z To run `pre-commit` as part of git workflow, use `pre-commit install`.
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8521851Z All changes made by hooks:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8759316Z diff --git a/run_dhtl_action_tests.py b/run_dhtl_action_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8760691Z index b5a6962..4d5a39c 100755
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8761140Z --- a/run_dhtl_action_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8761544Z +++ b/run_dhtl_action_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8762308Z @@ -1,13 +1,11 @@
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8762808Z  #!/usr/bin/env python3
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8763353Z -# -*- coding: utf-8 -*-
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8764145Z  """Run comprehensive dhtl action tests in Docker containers."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8765024Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8765430Z +import argparse
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8765963Z  import subprocess
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8766474Z  import sys
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8766926Z -import argparse
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8767472Z -from pathlib import Path
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8768085Z  from datetime import datetime
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8768712Z -from typing import Dict, List, Tuple
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8769158Z +from pathlib import Path
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8769497Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8769836Z  # HERE IS THE CHANGELOG FOR THIS VERSION OF THE FILE:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8770571Z  # - Initial creation of dhtl action test runner
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8771181Z @@ -18,7 +16,7 @@ from typing import Dict, List, Tuple
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8771610Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8772467Z  class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8773114Z      """Runner for comprehensive dhtl action tests."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8773440Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8773617Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8773809Z      def __init__(self):
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8774097Z          self.project_root = Path(__file__).parent
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8774409Z          self.test_files = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8774702Z @@ -26,14 +24,14 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8775080Z              "tests/docker/test_dhtl_commands_complete.py",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8775406Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8775630Z          self.results = {}
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8775875Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8776259Z -    def run_tests_in_profile(self, profile: str) -> Dict[str, any]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8776640Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8776929Z +    def run_tests_in_profile(self, profile: str) -> dict[str, any]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8777377Z          """Run all dhtl action tests in a specific profile."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8777746Z          print(f"\n{'='*80}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8778555Z          print(f"🧪 Running DHTL Action Tests - {profile.upper()} Profile")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8779502Z          print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8779975Z          print(f"{'='*80}\n")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8780324Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8780807Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8781079Z          # Build Docker command
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8781438Z          docker_cmd = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8781786Z              "docker", "run", "--rm",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8782220Z @@ -45,25 +43,25 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8782674Z              "dht:test-simple",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8783117Z              "python", "-m", "pytest", "-v", "--tb=short",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8783592Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8783860Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8784132Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8784398Z          # Add test files
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8784748Z          docker_cmd.extend(self.test_files)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8785236Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8785497Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8785783Z          # Add profile-specific options
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8786203Z          if profile == "remote":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8786688Z              docker_cmd.extend(["-m", "not slow", "--maxfail=5"])
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8787016Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8787212Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8787412Z          # Run tests
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8787647Z          start_time = datetime.now()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8788077Z          result = subprocess.run(docker_cmd, capture_output=True, text=True)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8788556Z          duration = (datetime.now() - start_time).total_seconds()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8788892Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8789092Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8789292Z          # Parse results
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8789533Z          output = result.stdout
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8789816Z          passed = output.count(" PASSED")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8790149Z          failed = output.count(" FAILED")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8790761Z          skipped = output.count(" SKIPPED")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8791090Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8791295Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8791470Z          return {
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8791701Z              "profile": profile,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8791995Z              "returncode": result.returncode,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8792336Z @@ -75,7 +73,7 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8792617Z              "output": output,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8792865Z              "errors": result.stderr
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8793124Z          }
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8793288Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8793466Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8793659Z      def run_test_categories(self) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8793944Z          """Run tests by category."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8794206Z          categories = {
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8794455Z @@ -88,13 +86,13 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8794746Z              "Integration": "TestDHTLIntegration",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8795043Z              "Edge Cases": "TestDHTLEdgeCases",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8795719Z          }
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8795880Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8796056Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8796863Z          print("\n📊 Running Tests by Category")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8797174Z          print("="*60)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8797370Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8797548Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8797777Z          for category, test_class in categories.items():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8798164Z              print(f"\n🔄 Testing {category}...")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8798425Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8798593Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8798747Z              cmd = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8798966Z                  "docker", "run", "--rm",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8799252Z                  "-v", f"{self.project_root}:/app:ro",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8799549Z @@ -104,21 +102,21 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8799878Z                  "python", "-m", "pytest", "-v", "-k", test_class,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8800208Z                  "tests/docker/test_all_dhtl_actions.py"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8800817Z              ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8801018Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8801245Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8801556Z              result = subprocess.run(cmd, capture_output=True, text=True)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8801893Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8802077Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8802266Z              if result.returncode == 0:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8802556Z                  passed = result.stdout.count(" PASSED")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8802953Z                  print(f"  ✅ {category}: {passed} tests passed")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8803248Z              else:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8803463Z                  failed = result.stdout.count(" FAILED")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8803824Z                  print(f"  ❌ {category}: {failed} tests failed")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8804098Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8804299Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8804502Z      def generate_coverage_report(self) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8804823Z          """Generate a coverage report of tested commands."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8805209Z          print("\n📋 DHTL Command Coverage Report")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8805502Z          print("="*60)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8805715Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8805877Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8806068Z          # All dhtl commands from registry
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8806336Z          all_commands = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8806554Z              # Project Management
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8806841Z @@ -144,7 +142,7 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8807120Z              # Aliases
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8807342Z              "fmt", "check", "doc", "bin", "ws", "w", "p"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8807613Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8807787Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8807953Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8808169Z          # Commands tested (based on test file content)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8808457Z          tested_commands = {
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8808744Z              "init", "setup", "clean", "build", "test", "lint", "format",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8809096Z @@ -152,43 +150,43 @@ class DHTLActionTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8809454Z              "publish", "docker", "workflows", "env", "diagnostics",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8809803Z              "help", "version", "python", "run", "clone"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8810056Z          }
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8810237Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8810583Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8810801Z          # Calculate coverage
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8811059Z          total = len(set(all_commands))
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8811336Z          tested = len(tested_commands)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8811597Z          coverage = (tested / total) * 100
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8811844Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8812017Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8812203Z          print(f"\nTotal Commands: {total}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8812489Z          print(f"Tested Commands: {tested}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8812763Z          print(f"Coverage: {coverage:.1f}%")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8813016Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8813173Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8813359Z          # Show untested commands
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8813867Z          untested = set(all_commands) - tested_commands
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8814283Z          if untested:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8814650Z              print(f"\n⚠️  Untested Commands ({len(untested)}):")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8814968Z              for cmd in sorted(untested):
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8815223Z                  print(f"  - {cmd}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8815458Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8815692Z -    def print_summary(self, results: List[Dict]) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8815966Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8816178Z +    def print_summary(self, results: list[dict]) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8816478Z          """Print test summary."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8816706Z          print("\n" + "="*80)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8816994Z          print("📊 DHTL ACTION TEST SUMMARY")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8817265Z          print("="*80)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8817456Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8817605Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8817955Z          print("\n┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8818497Z          print("┃ Profile  ┃ Passed ┃ Failed ┃ Skipped ┃ Total    ┃ Duration  ┃ Status   ┃")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8819024Z          print("┣━━━━━━━━━━╋━━━━━━━━╋━━━━━━━━╋━━━━━━━━━╋━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━┫")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8819324Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8819492Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8819653Z          for result in results:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8820021Z              status = "✅ PASS" if result["returncode"] == 0 else "❌ FAIL"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8820375Z              duration = f"{result['duration']:.2f}s"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8820758Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8820919Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8821236Z              print(f"┃ {result['profile'].upper():<8} ┃ {result['passed']:>6} ┃ "
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8821678Z                    f"{result['failed']:>6} ┃ {result['skipped']:>7} ┃ "
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8822077Z                    f"{result['total']:>8} ┃ {duration:>9} ┃ {status:<8} ┃")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8822372Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8822533Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8822874Z          print("┗━━━━━━━━━━┻━━━━━━━━┻━━━━━━━━┻━━━━━━━━━┻━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━┛")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8823178Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8823354Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8823530Z          # Overall status
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8823795Z          all_passed = all(r["returncode"] == 0 for r in results)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8824095Z          if all_passed:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8824295Z @@ -211,12 +209,12 @@ def main():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8824522Z          action="store_true",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8824773Z          help="Show command coverage report"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8825026Z      )
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8825179Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8825341Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8825556Z      args = parser.parse_args()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8825825Z      runner = DHTLActionTestRunner()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826070Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826236Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826417Z      results = []
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826609Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826777Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8826966Z      if args.profile == "categories":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8827253Z          runner.run_test_categories()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8827512Z      elif args.profile == "both":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8827755Z @@ -227,14 +225,14 @@ def main():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8828034Z          result = runner.run_tests_in_profile(args.profile)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8828344Z          results.append(result)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8828598Z          runner.print_summary(results)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8828843Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8829007Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8829177Z      if args.coverage:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8829400Z          runner.generate_coverage_report()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8829672Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8829837Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8830008Z      # Exit with appropriate code
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8830250Z      if results:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8830699Z          sys.exit(0 if all(r["returncode"] == 0 for r in results) else 1)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8831070Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8831228Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8831403Z  if __name__ == "__main__":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8831933Z -    main()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8832124Z \ No newline at end of file
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8832341Z +    main()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8832585Z diff --git a/run_profile_tests.py b/run_profile_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8832879Z index 1ea884d..85378fb 100755
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8833109Z --- a/run_profile_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8833328Z +++ b/run_profile_tests.py
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8833532Z @@ -1,13 +1,11 @@
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8833726Z  #!/usr/bin/env python3
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8833949Z -# -*- coding: utf-8 -*-
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8834214Z  """Run profile-specific tests in Docker containers."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8834505Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8834672Z +import argparse
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8834851Z  import subprocess
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8835035Z  import sys
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8835204Z -import argparse
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8835392Z -from pathlib import Path
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8835615Z  from datetime import datetime
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8835883Z -from typing import Dict, List, Tuple, Optional
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8836170Z +from pathlib import Path
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8836370Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8836587Z  # HERE IS THE CHANGELOG FOR THIS VERSION OF THE FILE:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8836905Z  # - Initial creation of profile test runner
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8837186Z @@ -21,9 +19,9 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8837426Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8837595Z      def __init__(self):
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8837827Z          self.project_root = Path(__file__).parent
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8838115Z -        self.results: Dict[str, Dict] = {}
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8838402Z +        self.results: dict[str, dict] = {}
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8838635Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8839084Z -    def run_docker_compose_service(self, service: str, compose_file: str = "docker-compose.profiles.yml") -> Tuple[int, str, str]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8839861Z +    def run_docker_compose_service(self, service: str, compose_file: str = "docker-compose.profiles.yml") -> tuple[int, str, str]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8840574Z          """Run a docker-compose service."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8840885Z          cmd = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8841092Z              "docker", "compose",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8841370Z @@ -31,12 +29,12 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8841618Z              "run", "--rm",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8841828Z              service
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8842014Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8842166Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8842330Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8842602Z          print(f"🐋 Running service: {service}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8842949Z          result = subprocess.run(cmd, capture_output=True, text=True)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8843369Z          return result.returncode, result.stdout, result.stderr
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8843671Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8843919Z -    def run_profile_tests(self, profile: str) -> Dict[str, any]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8844291Z +    def run_profile_tests(self, profile: str) -> dict[str, any]:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8844616Z          """Run tests for a specific profile."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8844890Z          print(f"\n{'='*80}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8845228Z          print(f"🔧 Running tests with {profile.upper()} profile")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8845564Z @@ -45,17 +43,17 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8845815Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8846001Z          service_name = f"dht-test-{profile}"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8846287Z          start_time = datetime.now()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8846532Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8846704Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8846863Z          # Run the tests
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8847184Z          returncode, stdout, stderr = self.run_docker_compose_service(service_name)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8847539Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8847690Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8847909Z          duration = (datetime.now() - start_time).total_seconds()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8848207Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8848362Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8848532Z          # Parse results
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8848765Z          passed = stdout.count(" passed")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8849223Z          failed = stdout.count(" failed")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8849662Z          skipped = stdout.count(" skipped")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8849916Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8850076Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8850240Z          result = {
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8850659Z              "profile": profile,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8850952Z              "returncode": returncode,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8851224Z @@ -68,17 +66,17 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8851501Z              "output": stdout,
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8851730Z              "errors": stderr
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8851962Z          }
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8852140Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8852309Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8852480Z          self.results[profile] = result
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8852745Z          return result
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8852943Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8853119Z      def run_comparison(self) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8853433Z          """Run tests in both profiles and compare results."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8853861Z          print("\n🔄 Running profile comparison tests...")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8854143Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8854322Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8854506Z          # Run comparison service
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8854886Z          returncode, stdout, stderr = self.run_docker_compose_service("dht-test-compare")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8855275Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8855450Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8855631Z          if returncode == 0:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8855967Z              print("✅ Profile comparison completed successfully")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8856268Z          else:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8856489Z @@ -90,25 +88,25 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8856769Z          """Print summary of test results."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8857042Z          if not self.results:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8857269Z              return
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8857450Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8857623Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8857801Z          print("\n" + "="*80)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8858070Z          print("📊 PROFILE TEST SUMMARY")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8858355Z          print("="*80)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8858563Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8858716Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8858899Z          # Create comparison table
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8859356Z          print("\n┏━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┓")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8859881Z          print("┃ Profile  ┃ Passed ┃ Failed ┃ Skipped ┃ Total    ┃ Duration  ┃ Status   ┃")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8860550Z          print("┣━━━━━━━━━━╋━━━━━━━━╋━━━━━━━━╋━━━━━━━━━╋━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━┫")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8860905Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8861080Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8861283Z          for profile, result in self.results.items():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8861684Z              status = "✅ PASS" if result["success"] else "❌ FAIL"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8862011Z              duration = f"{result['duration']:.2f}s"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8862275Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8862449Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8862821Z              print(f"┃ {profile.upper():<8} ┃ {result['passed']:>6} ┃ {result['failed']:>6} ┃ "
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8863407Z                    f"{result['skipped']:>7} ┃ {result['total']:>8} ┃ {duration:>9} ┃ {status:<8} ┃")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8863751Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8863922Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8864250Z          print("┗━━━━━━━━━━┻━━━━━━━━┻━━━━━━━━┻━━━━━━━━━┻━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━┛")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8864542Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8864714Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8864899Z          # Profile differences
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8865134Z          if len(self.results) == 2:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8865423Z              self.print_profile_differences()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8865723Z @@ -117,19 +115,19 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8866081Z          """Print differences between LOCAL and REMOTE profiles."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8866466Z          if "local" not in self.results or "remote" not in self.results:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8866786Z              return
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8866974Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8867462Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8867652Z          local = self.results["local"]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8867928Z          remote = self.results["remote"]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8868162Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8868332Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8868610Z          print("\n📈 PROFILE DIFFERENCES:")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8869103Z          print(f"• Test Coverage: LOCAL ran {local['total']} tests, REMOTE ran {remote['total']} tests")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8869759Z          print(f"• Skipped Tests: LOCAL skipped {local['skipped']}, REMOTE skipped {remote['skipped']}")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8870562Z          print(f"• Execution Time: LOCAL took {local['duration']:.2f}s, REMOTE took {remote['duration']:.2f}s")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8870993Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8871152Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8871381Z          time_diff = local['duration'] - remote['duration']
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8871719Z          if time_diff > 0:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8872212Z              print(f"• Speed: REMOTE was {time_diff:.2f}s faster ({(time_diff/local['duration']*100):.1f}% improvement)")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8872668Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8872839Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8873164Z          coverage_diff = local['total'] - local['skipped'] - (remote['total'] - remote['skipped'])
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8873560Z          if coverage_diff > 0:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8873935Z              print(f"• Coverage: LOCAL ran {coverage_diff} more actual tests")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8874290Z @@ -138,26 +136,26 @@ class ProfileTestRunner:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8874574Z          """Start an interactive development shell."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8875031Z          service = "dht-dev-local" if profile == "local" else "dht-ci-runner"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8875531Z          print(f"\n🐚 Starting {profile.upper()} development shell...")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8875847Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8876003Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8876166Z          cmd = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8876353Z              "docker", "compose",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8876610Z              "-f", "docker-compose.profiles.yml",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8876888Z              "run", "--rm",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8877091Z              service
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8877272Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8877449Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8877612Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8877781Z          subprocess.run(cmd)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8878004Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8878186Z      def cleanup(self) -> None:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8878421Z          """Clean up Docker resources."""
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8878770Z          print("\n🧹 Cleaning up Docker resources...")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8879037Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8879184Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8879338Z          cmd = [
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8879533Z              "docker", "compose",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8879797Z              "-f", "docker-compose.profiles.yml",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8880060Z              "down", "-v"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8880266Z          ]
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8880613Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8880821Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8881023Z          subprocess.run(cmd, capture_output=True)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8881360Z          print("✅ Cleanup completed")
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8881585Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8881745Z @@ -175,10 +173,10 @@ def main():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8881966Z          action="store_true",
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8882234Z          help="Don't clean up Docker resources after tests"
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8882507Z      )
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8882657Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8882801Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8882976Z      args = parser.parse_args()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8883217Z      runner = ProfileTestRunner()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8883425Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8883581Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8883727Z      try:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8883903Z          if args.profile == "shell":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8884161Z              runner.run_development_shell()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8884409Z @@ -193,14 +191,14 @@ def main():
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8884636Z              # Run single profile
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8884898Z              result = runner.run_profile_tests(args.profile)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8885469Z              runner.print_summary()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8885700Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8885860Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8886030Z              # Exit with test result code
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8886308Z              sys.exit(0 if result["success"] else 1)
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8886550Z -
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8886704Z +
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8886856Z      finally:
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8887071Z          if not args.no_cleanup and args.profile != "shell":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8887360Z              runner.cleanup()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8887567Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8887705Z
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8887867Z  if __name__ == "__main__":
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8888070Z -    main()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8888254Z \ No newline at end of file
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.8888451Z +    main()
+Code quality checks	Run ruff linter	2025-06-27T20:34:28.9038887Z ##[error]Process completed with exit code 1.

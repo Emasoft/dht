@@ -20,10 +20,7 @@ import pytest
 class TestLocalWorkflows:
     """Tests for LOCAL development workflows."""
 
-    @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() != "local",
-        reason="LOCAL profile only"
-    )
+    @pytest.mark.skipif(os.environ.get("DHT_TEST_PROFILE", "").lower() != "local", reason="LOCAL profile only")
     def test_local_development_setup(self, temp_dir: Path, project_root: Path) -> None:
         """Test local development environment setup."""
         # Create a test project
@@ -48,17 +45,14 @@ requires = ["setuptools", "wheel"]
             ["python", str(project_root / "dhtl_entry.py"), "setup", "--quiet"],
             capture_output=True,
             text=True,
-            timeout=120  # Longer timeout for LOCAL
+            timeout=120,  # Longer timeout for LOCAL
         )
 
         assert result.returncode == 0
         assert (test_project / ".venv").exists()
         assert (test_project / ".dhtconfig").exists()
 
-    @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() != "local",
-        reason="LOCAL profile only"
-    )
+    @pytest.mark.skipif(os.environ.get("DHT_TEST_PROFILE", "").lower() != "local", reason="LOCAL profile only")
     def test_local_hot_reload_workflow(self, temp_dir: Path) -> None:
         """Test hot reload development workflow."""
         # Simulate file watching and hot reload
@@ -77,10 +71,7 @@ requires = ["setuptools", "wheel"]
         assert "Version 2" in content
         assert "World" in content
 
-    @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() != "local",
-        reason="LOCAL profile only"
-    )
+    @pytest.mark.skipif(os.environ.get("DHT_TEST_PROFILE", "").lower() != "local", reason="LOCAL profile only")
     def test_local_debugging_features(self) -> None:
         """Test debugging features available in LOCAL profile."""
         # LOCAL profile should have debugging enabled
@@ -89,17 +80,15 @@ requires = ["setuptools", "wheel"]
 
         # Test debug logging
         import logging
+
         logger = logging.getLogger("dht.debug")
 
         # In LOCAL, debug logging should be available
-        with patch.object(logger, 'debug') as mock_debug:
+        with patch.object(logger, "debug") as mock_debug:
             logger.debug("Debug message in LOCAL")
             # Debug logging behavior depends on configuration
 
-    @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() != "local",
-        reason="LOCAL profile only"
-    )
+    @pytest.mark.skipif(os.environ.get("DHT_TEST_PROFILE", "").lower() != "local", reason="LOCAL profile only")
     @pytest.mark.slow
     def test_local_comprehensive_testing(self, temp_dir: Path) -> None:
         """Test comprehensive test suite execution in LOCAL."""
@@ -109,11 +98,9 @@ requires = ["setuptools", "wheel"]
         # Simulate running different test categories
         for test_type in ["unit", "integration", "e2e", "performance"]:
             # In LOCAL, all test types should run
-            test_results.append({
-                "type": test_type,
-                "status": "passed",
-                "duration": 1.0 if test_type != "performance" else 5.0
-            })
+            test_results.append(
+                {"type": test_type, "status": "passed", "duration": 1.0 if test_type != "performance" else 5.0}
+            )
 
         # LOCAL profile should run all tests
         assert len(test_results) == 4
@@ -125,8 +112,7 @@ class TestRemoteWorkflows:
     """Tests for REMOTE CI/CD workflows."""
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"],
-        reason="REMOTE profile only"
+        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"], reason="REMOTE profile only"
     )
     def test_remote_ci_pipeline(self, temp_dir: Path) -> None:
         """Test CI pipeline workflow in REMOTE profile."""
@@ -146,8 +132,7 @@ class TestRemoteWorkflows:
             assert step["status"] == "success"
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"],
-        reason="REMOTE profile only"
+        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"], reason="REMOTE profile only"
     )
     def test_remote_fast_testing(self) -> None:
         """Test fast test execution in REMOTE profile."""
@@ -170,8 +155,7 @@ class TestRemoteWorkflows:
         assert elapsed < 1.0  # Should be very fast
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"],
-        reason="REMOTE profile only"
+        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"], reason="REMOTE profile only"
     )
     def test_remote_artifact_generation(self, temp_dir: Path) -> None:
         """Test artifact generation for CI/CD."""
@@ -193,8 +177,7 @@ class TestRemoteWorkflows:
         assert (artifacts_dir / "build.log").exists()
 
     @pytest.mark.skipif(
-        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"],
-        reason="REMOTE profile only"
+        os.environ.get("DHT_TEST_PROFILE", "").lower() not in ["remote", "ci"], reason="REMOTE profile only"
     )
     def test_remote_dependency_caching(self, temp_dir: Path) -> None:
         """Test dependency caching in REMOTE profile."""
@@ -339,7 +322,7 @@ class TestWorkflowIntegration:
                 "test",
                 "build",
                 "upload-artifacts",
-            ]
+            ],
         }
 
         # Execute workflow

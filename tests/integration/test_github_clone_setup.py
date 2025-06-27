@@ -27,7 +27,9 @@ class TestGitHubCloneSetup:
         with tempfile.TemporaryDirectory(prefix="dht_clone_test_") as tmpdir:
             yield Path(tmpdir)
 
-    def test_clone_and_setup_github_repo(self, test_repo_url: str, temp_workspace: Path, test_config: dict[str, Any], project_root: Path) -> None:
+    def test_clone_and_setup_github_repo(
+        self, test_repo_url: str, temp_workspace: Path, test_config: dict[str, Any], project_root: Path
+    ) -> None:
         """Test cloning a GitHub repo and setting it up with dhtl setup and build."""
         # Skip if in CI and slow tests are disabled
         if test_config["skip_slow_tests"]:
@@ -39,7 +41,7 @@ class TestGitHubCloneSetup:
             ["git", "clone", test_repo_url, str(clone_dir)],
             capture_output=True,
             text=True,
-            timeout=test_config["timeout"] * 2  # Double timeout for network operations
+            timeout=test_config["timeout"] * 2,  # Double timeout for network operations
         )
         assert result.returncode == 0, f"Git clone failed: {result.stderr}"
         assert clone_dir.exists(), "Clone directory not created"
@@ -53,7 +55,7 @@ class TestGitHubCloneSetup:
             ["python", str(dhtl_path), "setup", "--quiet"],
             capture_output=True,
             text=True,
-            timeout=test_config["timeout"] * 3
+            timeout=test_config["timeout"] * 3,
         )
 
         # Check setup results
@@ -63,10 +65,7 @@ class TestGitHubCloneSetup:
 
         # Run dhtl build
         build_result = subprocess.run(
-            ["python", str(dhtl_path), "build"],
-            capture_output=True,
-            text=True,
-            timeout=test_config["timeout"] * 3
+            ["python", str(dhtl_path), "build"], capture_output=True, text=True, timeout=test_config["timeout"] * 3
         )
 
         # Check build results
@@ -78,7 +77,9 @@ class TestGitHubCloneSetup:
         assert len(dist_files) > 0, "No wheel files created"
 
     @pytest.mark.docker
-    def test_clone_and_setup_in_docker(self, test_repo_url: str, test_config: dict[str, Any], project_root: Path) -> None:
+    def test_clone_and_setup_in_docker(
+        self, test_repo_url: str, test_config: dict[str, Any], project_root: Path
+    ) -> None:
         """Test cloning and setup inside Docker container."""
         # This test runs the clone and setup inside a Docker container
 
@@ -93,39 +94,42 @@ class TestGitHubCloneSetup:
             cwd=project_root,
             capture_output=True,
             text=True,
-            timeout=300  # 5 minutes for build
+            timeout=300,  # 5 minutes for build
         )
         assert build_result.returncode == 0, f"Docker build failed: {build_result.stderr}"
 
         # Run the test inside Docker
         docker_cmd = [
-            "docker", "run", "--rm",
-            "-e", "DHT_TEST_PROFILE=docker",
-            "-e", "DHT_TEST_MODE=1",
-            "-v", f"{project_root}:/app",
+            "docker",
+            "run",
+            "--rm",
+            "-e",
+            "DHT_TEST_PROFILE=docker",
+            "-e",
+            "DHT_TEST_MODE=1",
+            "-v",
+            f"{project_root}:/app",
             "dht:test",
-            "bash", "-c",
-            f"cd /tmp && git clone {test_repo_url} testproject && cd testproject && python /app/dhtl_entry.py setup --quiet && python /app/dhtl_entry.py build"
+            "bash",
+            "-c",
+            f"cd /tmp && git clone {test_repo_url} testproject && cd testproject && python /app/dhtl_entry.py setup --quiet && python /app/dhtl_entry.py build",
         ]
 
-        result = subprocess.run(
-            docker_cmd,
-            capture_output=True,
-            text=True,
-            timeout=test_config["timeout"] * 10
-        )
+        result = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=test_config["timeout"] * 10)
 
         assert result.returncode == 0, f"Docker test failed: {result.stderr}"
-        assert "Successfully" in result.stdout or "built" in result.stdout.lower(), "Build did not complete successfully"
+        assert "Successfully" in result.stdout or "built" in result.stdout.lower(), (
+            "Build did not complete successfully"
+        )
 
-    def test_dhtl_regenerate_after_clone(self, test_repo_url: str, temp_workspace: Path, test_config: dict[str, Any], project_root: Path) -> None:
+    def test_dhtl_regenerate_after_clone(
+        self, test_repo_url: str, temp_workspace: Path, test_config: dict[str, Any], project_root: Path
+    ) -> None:
         """Test regenerating environment from .dhtconfig after clone."""
         # First clone and setup
         clone_dir = temp_workspace / "sampleproject"
         subprocess.run(
-            ["git", "clone", test_repo_url, str(clone_dir)],
-            capture_output=True,
-            timeout=test_config["timeout"] * 2
+            ["git", "clone", test_repo_url, str(clone_dir)], capture_output=True, timeout=test_config["timeout"] * 2
         )
 
         os.chdir(clone_dir)
@@ -133,21 +137,17 @@ class TestGitHubCloneSetup:
 
         # Setup
         subprocess.run(
-            ["python", str(dhtl_path), "setup", "--quiet"],
-            capture_output=True,
-            timeout=test_config["timeout"] * 3
+            ["python", str(dhtl_path), "setup", "--quiet"], capture_output=True, timeout=test_config["timeout"] * 3
         )
 
         # Remove .venv to simulate fresh clone with .dhtconfig
         import shutil
+
         shutil.rmtree(clone_dir / ".venv")
 
         # Run regenerate
         regenerate_result = subprocess.run(
-            ["python", str(dhtl_path), "regenerate"],
-            capture_output=True,
-            text=True,
-            timeout=test_config["timeout"] * 3
+            ["python", str(dhtl_path), "regenerate"], capture_output=True, text=True, timeout=test_config["timeout"] * 3
         )
 
         assert regenerate_result.returncode == 0, f"dhtl regenerate failed: {regenerate_result.stderr}"
@@ -158,6 +158,6 @@ class TestGitHubCloneSetup:
             ["python", str(dhtl_path), "test", "--version"],
             capture_output=True,
             text=True,
-            timeout=test_config["timeout"]
+            timeout=test_config["timeout"],
         )
         assert test_result.returncode == 0, "Environment not functional after regeneration"
