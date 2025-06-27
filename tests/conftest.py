@@ -54,6 +54,24 @@ TEST_CONFIGS = {
         "api_mock_enabled": True,
         "temp_dir_prefix": "/tmp/dht_test_",
         "cleanup_temp_dirs": True,
+        "allow_network": True,
+        "debug_enabled": True,
+        "comprehensive_tests": True,
+        "memory_limit_mb": 4096,
+    },
+    "remote": {
+        "max_retries": 2,
+        "timeout": 5,
+        "skip_slow_tests": True,
+        "skip_network_tests": False,
+        "skip_docker_tests": True,
+        "api_mock_enabled": True,
+        "temp_dir_prefix": "/tmp/dht_remote_test_",
+        "cleanup_temp_dirs": True,
+        "allow_network": False,
+        "debug_enabled": False,
+        "comprehensive_tests": False,
+        "memory_limit_mb": 1024,
     },
     "ci": {
         "max_retries": 2,
@@ -64,6 +82,10 @@ TEST_CONFIGS = {
         "api_mock_enabled": True,
         "temp_dir_prefix": "/tmp/dht_ci_test_",
         "cleanup_temp_dirs": True,
+        "allow_network": False,
+        "debug_enabled": False,
+        "comprehensive_tests": False,
+        "memory_limit_mb": 1024,
     },
     "docker": {
         "max_retries": 3,
@@ -74,6 +96,10 @@ TEST_CONFIGS = {
         "api_mock_enabled": True,
         "temp_dir_prefix": "/tmp/dht_docker_test_",
         "cleanup_temp_dirs": True,
+        "allow_network": True,
+        "debug_enabled": False,
+        "comprehensive_tests": True,
+        "memory_limit_mb": 2048,
     }
 }
 

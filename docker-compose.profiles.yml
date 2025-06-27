@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Docker Compose configuration for profile-specific testing
+# Provides LOCAL and REMOTE workflow environments
+
+version: '3.8'
+
+services:
+  # LOCAL profile - Full development environment
+  dht-test-local:
+    build:
+      context: .
+      target: test-runner
+    image: dht:test
+    container_name: dht-test-local
+    volumes:
+      - ./:/app
+      - test-results-local:/app/test-results
+      - dht-cache-local:/app/.cache
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # For Docker operations
+    environment:
+      - DHT_TEST_MODE=1
+      - DHT_TEST_PROFILE=local
+      - DHT_IN_DOCKER=1
+      - DHT_ALLOW_NETWORK=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - DEBUG_MODE=true
+      - UV_CACHE_DIR=/app/.cache/uv
+      - PYTEST_CACHE_DIR=/tmp/.pytest_cache
+      - VIRTUAL_ENV=/app/.venv
+      - PATH=/app/.venv/bin:$PATH
+      - PYTHONPATH=/app/src:/app
+    working_dir: /app
+    command: ["python", "-m", "pytest", "-v", "--tb=long", "--capture=no", "tests/docker/"]
+    networks:
+      - dht-local-network
+
+  # REMOTE profile - CI/CD simulation environment
+  dht-test-remote:
+    build:
+      context: .
+      target: test-runner
+    image: dht:test
+    container_name: dht-test-remote
+    volumes:
+      - ./:/app:ro  # Read-only for REMOTE
+      - test-results-remote:/app/test-results
+      - dht-cache-remote:/app/.cache
+    environment:
+      - DHT_TEST_MODE=1
+      - DHT_TEST_PROFILE=remote
+      - DHT_IN_DOCKER=1
+      - CI=true
+      - GITHUB_ACTIONS=true
+      - DHT_ALLOW_NETWORK=0
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - DEBUG_MODE=false
+      - UV_CACHE_DIR=/app/.cache/uv
+      - PYTEST_CACHE_DIR=/tmp/.pytest_cache
+      - VIRTUAL_ENV=/app/.venv
+      - PATH=/app/.venv/bin:$PATH
+      - PYTHONPATH=/app/src:/app
+    working_dir: /app
+    command: ["python", "-m", "pytest", "-v", "--tb=short", "-m", "not slow", "--maxfail=3", "tests/docker/"]
+    networks:
+      - dht-remote-network
+
+  # LOCAL development shell
+  dht-dev-local:
+    build:
+      context: .
+      target: development
+    image: dht:dev
+    container_name: dht-dev-local
+    volumes:
+      - ./:/app
+      - dht-cache-local:/app/.cache
+      - ~/.gitconfig:/home/dhtuser/.gitconfig:ro
+      - ~/.ssh:/home/dhtuser/.ssh:ro
+    environment:
+      - DHT_TEST_PROFILE=local
+      - DHT_ENV=development
+      - DHT_IN_DOCKER=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - DEBUG_MODE=true
+      - UV_CACHE_DIR=/app/.cache/uv
+    stdin_open: true
+    tty: true
+    command: ["bash"]
+    networks:
+      - dht-local-network
+
+  # REMOTE CI runner
+  dht-ci-runner:
+    build:
+      context: .
+      target: runtime
+    image: dht:runtime
+    container_name: dht-ci-runner
+    volumes:
+      - ./:/workspace:ro
+      - ci-artifacts:/artifacts
+    environment:
+      - DHT_TEST_PROFILE=remote
+      - CI=true
+      - GITHUB_ACTIONS=true
+      - GITHUB_WORKFLOW=test
+      - DHT_IN_DOCKER=1
+    working_dir: /workspace
+    command: ["bash", "-c", "echo 'CI Runner Started' && python dhtl_entry.py test --ci && python dhtl_entry.py build"]
+    networks:
+      - dht-remote-network
+
+  # Test comparison service - runs tests in both profiles
+  dht-test-compare:
+    build:
+      context: .
+      target: test-runner
+    image: dht:test
+    container_name: dht-test-compare
+    volumes:
+      - ./:/app:ro
+      - test-results-compare:/app/test-results
+    environment:
+      - DHT_IN_DOCKER=1
+      - PYTHONPATH=/app/src:/app
+    working_dir: /app
+    command: ["bash", "-c", "
+      echo '=== Running LOCAL profile tests ===' &&
+      DHT_TEST_PROFILE=local python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles -k profile &&
+      echo '=== Running REMOTE profile tests ===' &&
+      DHT_TEST_PROFILE=remote python -m pytest -v tests/docker/test_docker_profiles.py::TestDockerProfiles -k profile
+    "]
+    networks:
+      - dht-compare-network
+
+volumes:
+  dht-cache-local:
+    name: dht-cache-local
+  dht-cache-remote:
+    name: dht-cache-remote
+  test-results-local:
+    name: dht-test-results-local
+  test-results-remote:
+    name: dht-test-results-remote
+  test-results-compare:
+    name: dht-test-results-compare
+  ci-artifacts:
+    name: dht-ci-artifacts
+
+networks:
+  dht-local-network:
+    name: dht-local-network
+    driver: bridge
+  dht-remote-network:
+    name: dht-remote-network
+    driver: bridge
+  dht-compare-network:
+    name: dht-compare-network
+    driver: bridge
