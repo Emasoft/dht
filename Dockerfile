@@ -132,20 +132,16 @@ RUN apt-get update && apt-get install -y \
 # Copy uv
 COPY --from=uv /uv /uvx /bin/
 
+# Create non-root user first
+RUN useradd -m -u 1000 -s /bin/bash dhtuser
+
 # Set working directory
 WORKDIR /app
 
 # Copy everything from builder with proper ownership
-COPY --from=builder --chown=1000:1000 /app /app
+COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
-# Create non-root user
-RUN useradd -m -u 1000 -s /bin/bash dhtuser
-
-# Fix Python paths before switching user
-RUN python -m ensurepip --upgrade && \
-    python -m pip install --upgrade pip setuptools wheel
-
-# Set environment variables properly
+# Set environment variables
 ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
@@ -158,20 +154,18 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
 ENV HOME=/home/dhtuser
 
-# Create directories and fix permissions for the virtual environment
+# Create directories with correct ownership
 RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
-    chown -R dhtuser:dhtuser /app /tmp/.pytest_cache && \
-    chmod -R 755 /app/.venv && \
-    find /app/.venv/bin -type f -exec chmod +x {} \;
+    chown -R dhtuser:dhtuser /app/test-results /tmp/.pytest_cache
 
 # Switch to non-root user
 USER dhtuser
 
 # Verify Python setup and dhtl installation
-RUN /app/.venv/bin/python --version && \
-    /app/.venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
+RUN python --version && \
+    python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
     which dhtl && \
     dhtl --version
 
 # Default to running all tests
-CMD ["/app/.venv/bin/python", "-m", "pytest", "-v", "--tb=short"]
+CMD ["python", "-m", "pytest", "-v", "--tb=short"]
