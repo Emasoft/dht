@@ -158,21 +158,19 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
 ENV HOME=/home/dhtuser
 
-# Create directories and set ownership
+# Create directories and fix permissions for the virtual environment
 RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
-    chown -R dhtuser:dhtuser /app /tmp/.pytest_cache
+    chown -R dhtuser:dhtuser /app /tmp/.pytest_cache && \
+    chmod -R 755 /app/.venv
 
 # Switch to non-root user
 USER dhtuser
 
-# Create virtual environment and install test dependencies as dhtuser
-RUN cd /app && \
-    uv venv && \
-    uv sync --frozen --all-extras
-
-# Verify Python setup
+# Verify Python setup and dhtl installation
 RUN /app/.venv/bin/python --version && \
-    /app/.venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)"
+    /app/.venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
+    which dhtl && \
+    dhtl --version
 
 # Default to running all tests
 CMD ["/app/.venv/bin/python", "-m", "pytest", "-v", "--tb=short"]
