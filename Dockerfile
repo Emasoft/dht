@@ -72,19 +72,12 @@ RUN useradd -m -u 1000 -s /bin/bash dhtuser
 # Set working directory
 WORKDIR /app
 
-# Copy the virtual environment and application from builder
+# Copy the virtual environment from builder to /opt/venv
+COPY --from=builder /app/.venv /opt/venv
 COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
-# Copy the virtual environment to a location that won't be overwritten by mounts
-# and fix Python symlinks to use the system Python
-RUN cp -r /app/.venv /opt/venv && \
-    chown -R dhtuser:dhtuser /opt/venv && \
-    # Fix Python symlinks to point to system Python instead of uv-managed Python
-    cd /opt/venv/bin && \
-    rm -f python python3 python3.* && \
-    ln -s /usr/local/bin/python3.11 python && \
-    ln -s /usr/local/bin/python3.11 python3 && \
-    ln -s /usr/local/bin/python3.11 python3.11
+# Fix ownership
+RUN chown -R dhtuser:dhtuser /opt/venv
 
 # Set environment variables to use the copied venv
 ENV VIRTUAL_ENV=/opt/venv
@@ -153,30 +146,29 @@ RUN useradd -m -u 1000 -s /bin/bash dhtuser
 # Set working directory
 WORKDIR /app
 
-# Copy everything from builder with proper ownership
-COPY --from=builder --chown=dhtuser:dhtuser /app /app
+# Create venv at /opt/venv directly
+RUN uv venv /opt/venv && \
+    chown -R dhtuser:dhtuser /opt/venv
 
-# Fix execute permissions on venv binaries before switching user
-RUN chmod -R 755 /app/.venv && \
-    find /app/.venv/bin -type f -exec chmod +x {} \;
-
-# Copy the virtual environment to a location that won't be overwritten by mounts
-# and fix Python symlinks to use the system Python
-RUN cp -r /app/.venv /opt/venv && \
-    chown -R dhtuser:dhtuser /opt/venv && \
-    # Fix Python symlinks to point to system Python instead of uv-managed Python
-    cd /opt/venv/bin && \
-    rm -f python python3 python3.* && \
-    ln -s /usr/local/bin/python3.11 python && \
-    ln -s /usr/local/bin/python3.11 python3 && \
-    ln -s /usr/local/bin/python3.11 python3.11
-
-# Set environment variables to use the copied venv
+# Set environment to use /opt/venv
 ENV VIRTUAL_ENV=/opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
-ENV UV_SYSTEM_PYTHON=1
 ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy dependency files first
+COPY --chown=dhtuser:dhtuser pyproject.toml uv.lock* ./
+
+# Install dependencies into /opt/venv
+RUN uv sync --frozen --all-extras
+
+# Copy the rest of the application
+COPY --chown=dhtuser:dhtuser . .
+
+# Ensure permissions are correct
+RUN chown -R dhtuser:dhtuser /app /opt/venv
+
+# Set additional environment variables
+ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
 ENV DHT_IN_DOCKER=1
 ENV DHT_TEST_MODE=1
 ENV DHT_TEST_PROFILE=docker
@@ -195,9 +187,8 @@ USER dhtuser
 # Verify Python setup
 RUN python --version && \
     python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
-    ls -la /opt/venv/bin/python* && \
-    ls -la /opt/venv/bin/pytest && \
-    ls -la /opt/venv/bin/dhtl || true
+    which pytest && \
+    pytest --version
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]
