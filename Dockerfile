@@ -158,16 +158,16 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
 ENV HOME=/home/dhtuser
 
-# Create directories with proper permissions
+# Create directories and fix permissions
 RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
-    chown -R dhtuser:dhtuser /app /tmp/.pytest_cache
+    chown -R dhtuser:dhtuser /app /tmp/.pytest_cache && \
+    chmod -R 755 /app/.venv
 
 # Switch to non-root user
 USER dhtuser
 
 # Ensure test dependencies are installed with proper Python
 RUN cd /app && \
-    chmod +x /app/.venv/bin/python || true && \
     uv sync --frozen --all-extras
 
 # Verify Python setup
