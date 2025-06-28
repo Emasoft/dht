@@ -161,7 +161,8 @@ ENV HOME=/home/dhtuser
 # Create directories and fix permissions for the virtual environment
 RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
     chown -R dhtuser:dhtuser /app /tmp/.pytest_cache && \
-    chmod -R 755 /app/.venv
+    chmod -R 755 /app/.venv && \
+    chmod +x /app/.venv/bin/*
 
 # Switch to non-root user
 USER dhtuser
