@@ -30,7 +30,7 @@ WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1
 
 # Copy dependency files first for better caching
-COPY pyproject.toml uv.lock* ./
+COPY pyproject.toml uv.lock* README.md ./
 
 # Create virtual environment and install dependencies
 RUN uv venv && uv sync --frozen --no-install-project
@@ -156,7 +156,7 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy dependency files first
-COPY --chown=dhtuser:dhtuser pyproject.toml uv.lock* ./
+COPY --chown=dhtuser:dhtuser pyproject.toml uv.lock* README.md ./
 
 # Install dependencies into /opt/venv
 RUN uv sync --frozen --all-extras
