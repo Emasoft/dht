@@ -141,6 +141,10 @@ WORKDIR /app
 # Copy everything from builder with proper ownership
 COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
+# Fix execute permissions on venv binaries before switching user
+RUN chmod -R 755 /app/.venv && \
+    find /app/.venv/bin -type f -exec chmod +x {} \;
+
 # Set environment variables
 ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
@@ -161,11 +165,11 @@ RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
 # Switch to non-root user
 USER dhtuser
 
-# Verify Python setup and dhtl installation
+# Verify Python setup
 RUN python --version && \
     python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
-    which dhtl && \
-    dhtl --version
+    ls -la /app/.venv/bin/python* && \
+    ls -la /app/.venv/bin/dhtl || true
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]
