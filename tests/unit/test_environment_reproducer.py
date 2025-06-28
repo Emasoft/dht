@@ -128,7 +128,7 @@ class TestEnvironmentReproducer:
     @pytest.fixture(autouse=True)
     def mock_prefect_tasks(self) -> Any:
         """Mock all Prefect-decorated methods to avoid circular imports."""
-        with patch("DHT.modules.environment_reproducer.check_uv_available") as mock_check_uv:
+        with patch("DHT.modules.uv_python_tasks.check_uv_available") as mock_check_uv:
             mock_check_uv.return_value = {"available": True, "version": "0.1.32"}
 
             # Mock environment_snapshot_io methods
@@ -813,7 +813,7 @@ class TestIntegration:
     @pytest.fixture(autouse=True)
     def mock_prefect_tasks(self) -> Any:
         """Mock all Prefect-decorated methods to avoid circular imports."""
-        with patch("DHT.modules.environment_reproducer.check_uv_available") as mock_check_uv:
+        with patch("DHT.modules.uv_python_tasks.check_uv_available") as mock_check_uv:
             mock_check_uv.return_value = {"available": True, "version": "0.1.32"}
 
             # Mock subprocess.run to avoid actual command execution
