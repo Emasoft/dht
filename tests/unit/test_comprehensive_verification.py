@@ -150,7 +150,7 @@ class TestComprehensiveVerification:
             "src/DHT/modules/command_dispatcher.py",
             "src/DHT/modules/command_registry.py",
             "src/DHT/modules/dhtl_commands.py",
-            "src/DHT/modules/dhtl_environment_1.py",
+            "src/DHT/modules/dhtl_environment_utils.py",
             "src/DHT/modules/dhtl_utils.py",
             "src/DHT/modules/dhtl_error_handling.py",
             "src/DHT/modules/dhtl_commands_workflows.py",
@@ -284,7 +284,7 @@ class TestComprehensiveVerification:
         content = orchestrator_file.read_text()
 
         # Essential modules that should be imported
-        essential_modules = ["dhtl_error_handling", "dhtl_environment_1", "dhtl_utils", "command_dispatcher"]
+        essential_modules = ["dhtl_error_handling", "dhtl_environment_utils", "dhtl_utils", "command_dispatcher"]
 
         missing_imports = []
         for module in essential_modules:

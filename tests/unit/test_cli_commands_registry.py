@@ -97,6 +97,16 @@ class TestCommandStructure:
             "cloud_tools",
             "network_tools",
             "system_tools",
+            "text_processing",
+            "archive_managers",
+            "ci_cd_tools",
+            "database_tools",
+            "documentation_tools",
+            "hardware_info",
+            "ide_editors",
+            "monitoring_tools",
+            "security_tools",
+            "testing_tools",
         ]
 
         for category in categories:

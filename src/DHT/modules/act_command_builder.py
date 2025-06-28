@@ -52,8 +52,13 @@ class ActCommandBuilder:
         cmd = []
 
         if use_container:
-            # Container commands are handled by container manager
-            raise NotImplementedError("Use ActContainerManager for container execution")
+            # Container commands are handled by ActContainerManager
+            # This is intentional - container execution requires special setup
+            raise NotImplementedError(
+                "Container execution should use ActContainerManager.run_in_container() method. "
+                "Example: container_manager = ActContainerManager(project_path); "
+                "container_manager.run_in_container(act_args, config)"
+            )
 
         # Determine act command
         if preferred_method == "gh-extension" or self.config.use_gh_extension:

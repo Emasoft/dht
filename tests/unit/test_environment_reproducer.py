@@ -264,7 +264,7 @@ class TestEnvironmentReproducer:
     @patch("platform.platform")
     @patch("platform.machine")
     @patch("platform.system")
-    @patch("DHT.modules.environment_reproducer.build_system_report")
+    @patch("DHT.diagnostic_reporter_v2.build_system_report")
     @patch("subprocess.run")
     @patch("sys.executable", "/usr/bin/python3")
     def test_capture_environment_snapshot(
@@ -534,7 +534,7 @@ class TestEnvironmentReproducer:
             assert len(result.warnings) > 0  # Should have compatibility warning
 
     @patch("shutil.which")
-    @patch("DHT.modules.environment_reproducer.subprocess.run")
+    @patch("subprocess.run")
     def test_verify_tools_success(self, mock_subprocess, mock_which, reproducer, sample_snapshot) -> Any:
         """Test successful tool verification."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
@@ -570,7 +570,7 @@ class TestEnvironmentReproducer:
         assert result.tools_verified.get("git") is False
 
     @patch("shutil.which")
-    @patch("DHT.modules.environment_reproducer.subprocess.run")
+    @patch("subprocess.run")
     def test_verify_tools_version_mismatch(self, mock_subprocess, mock_which, reproducer, sample_snapshot) -> Any:
         """Test tool verification with version mismatch."""
         result = ReproductionResult(success=False, snapshot_id=sample_snapshot.snapshot_id, platform="darwin")
@@ -854,8 +854,8 @@ class TestIntegration:
                         }
                         yield
 
-    @patch("DHT.modules.environment_reproducer.build_system_report")
-    @patch("DHT.modules.environment_reproducer.subprocess.run")
+    @patch("DHT.diagnostic_reporter_v2.build_system_report")
+    @patch("subprocess.run")
     def test_end_to_end_snapshot_and_reproduction(
         self, mock_subprocess, mock_build_system_report, sample_project_path
     ) -> Any:
