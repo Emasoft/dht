@@ -76,8 +76,15 @@ WORKDIR /app
 COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
 # Copy the virtual environment to a location that won't be overwritten by mounts
+# and fix Python symlinks to use the system Python
 RUN cp -r /app/.venv /opt/venv && \
-    chown -R dhtuser:dhtuser /opt/venv
+    chown -R dhtuser:dhtuser /opt/venv && \
+    # Fix Python symlinks to point to system Python instead of uv-managed Python
+    cd /opt/venv/bin && \
+    rm -f python python3 python3.* && \
+    ln -s /usr/local/bin/python3.11 python && \
+    ln -s /usr/local/bin/python3.11 python3 && \
+    ln -s /usr/local/bin/python3.11 python3.11
 
 # Set environment variables to use the copied venv
 ENV VIRTUAL_ENV=/opt/venv
@@ -154,8 +161,15 @@ RUN chmod -R 755 /app/.venv && \
     find /app/.venv/bin -type f -exec chmod +x {} \;
 
 # Copy the virtual environment to a location that won't be overwritten by mounts
+# and fix Python symlinks to use the system Python
 RUN cp -r /app/.venv /opt/venv && \
-    chown -R dhtuser:dhtuser /opt/venv
+    chown -R dhtuser:dhtuser /opt/venv && \
+    # Fix Python symlinks to point to system Python instead of uv-managed Python
+    cd /opt/venv/bin && \
+    rm -f python python3 python3.* && \
+    ln -s /usr/local/bin/python3.11 python && \
+    ln -s /usr/local/bin/python3.11 python3 && \
+    ln -s /usr/local/bin/python3.11 python3.11
 
 # Set environment variables to use the copied venv
 ENV VIRTUAL_ENV=/opt/venv
