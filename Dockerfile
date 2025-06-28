@@ -162,7 +162,7 @@ ENV HOME=/home/dhtuser
 RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
     chown -R dhtuser:dhtuser /app /tmp/.pytest_cache && \
     chmod -R 755 /app/.venv && \
-    chmod +x /app/.venv/bin/*
+    find /app/.venv/bin -type f -exec chmod +x {} \;
 
 # Switch to non-root user
 USER dhtuser
