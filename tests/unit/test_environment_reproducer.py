@@ -17,7 +17,8 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from DHT.modules.environment_reproducer import EnvironmentReproducer, EnvironmentSnapshot, ReproductionResult
+from DHT.modules.environment_reproducer import EnvironmentReproducer
+from DHT.modules.environment_snapshot_models import EnvironmentSnapshot, ReproductionResult
 
 
 @pytest.fixture
