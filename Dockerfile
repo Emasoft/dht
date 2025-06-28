@@ -66,18 +66,22 @@ RUN curl -s https://api.github.com/repos/rhysd/actionlint/releases/latest | \
 # Copy uv for runtime usage
 COPY --from=uv /uv /uvx /bin/
 
+# Create non-root user first
+RUN useradd -m -u 1000 -s /bin/bash dhtuser
+
 # Set working directory
 WORKDIR /app
 
 # Copy the virtual environment and application from builder
-COPY --from=builder --chown=1000:1000 /app /app
+COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
-# Create non-root user
-RUN useradd -m -u 1000 -s /bin/bash dhtuser
+# Copy the virtual environment to a location that won't be overwritten by mounts
+RUN cp -r /app/.venv /opt/venv && \
+    chown -R dhtuser:dhtuser /opt/venv
 
-# Set environment variables
-ENV VIRTUAL_ENV=/app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+# Set environment variables to use the copied venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:$PYTHONPATH"
 ENV UV_SYSTEM_PYTHON=1
 ENV DHT_IN_DOCKER=1
@@ -96,8 +100,10 @@ FROM runtime AS development
 # Switch to root for installations
 USER root
 
-# Install development dependencies
-RUN uv sync --frozen --all-extras
+# Install development dependencies in the opt venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN cd /app && uv sync --frozen --all-extras
 
 # Install additional dev tools
 RUN apt-get update && apt-get install -y \
@@ -145,9 +151,13 @@ COPY --from=builder --chown=dhtuser:dhtuser /app /app
 RUN chmod -R 755 /app/.venv && \
     find /app/.venv/bin -type f -exec chmod +x {} \;
 
-# Set environment variables
-ENV VIRTUAL_ENV=/app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+# Copy the virtual environment to a location that won't be overwritten by mounts
+RUN cp -r /app/.venv /opt/venv && \
+    chown -R dhtuser:dhtuser /opt/venv
+
+# Set environment variables to use the copied venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
 ENV UV_SYSTEM_PYTHON=1
 ENV DHT_IN_DOCKER=1
@@ -168,8 +178,9 @@ USER dhtuser
 # Verify Python setup
 RUN python --version && \
     python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
-    ls -la /app/.venv/bin/python* && \
-    ls -la /app/.venv/bin/dhtl || true
+    ls -la /opt/venv/bin/python* && \
+    ls -la /opt/venv/bin/pytest && \
+    ls -la /opt/venv/bin/dhtl || true
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]

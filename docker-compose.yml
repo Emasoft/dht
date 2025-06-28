@@ -18,7 +18,7 @@ services:
       - dht-cache:/app/.cache
     environment:
       - DHT_ENV=production
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
     working_dir: /workspace
     command: ["dhtl", "--help"]
 
@@ -35,7 +35,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro  # For Docker-in-Docker
     environment:
       - DHT_ENV=development
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
       - PYTHONDONTWRITEBYTECODE=1
     stdin_open: true
     tty: true
@@ -49,18 +49,21 @@ services:
     image: dht:test
     container_name: dht-test
     volumes:
-      - ./:/app:ro
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./pyproject.toml:/app/pyproject.toml:ro
+      - ./uv.lock:/app/uv.lock:ro
       - test-results:/app/test-results
-      - dht-cache:/app/.cache
+      - dht-cache:/tmp/.cache
     environment:
       - DHT_TEST_MODE=1
       - DHT_TEST_PROFILE=docker
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
       - PYTEST_CACHE_DIR=/tmp/.pytest_cache
       - CI=${CI:-false}
       - PYTHONPATH=/app/src:/app
-      - VIRTUAL_ENV=/app/.venv
-      - PATH=/app/.venv/bin:$PATH
+      - VIRTUAL_ENV=/opt/venv
+      - PATH=/opt/venv/bin:$PATH
     working_dir: /app
     command: ["python", "-m", "pytest", "-v", "--tb=short", "--cov=src", "--cov-report=html:/app/test-results/htmlcov", "--cov-report=xml:/app/test-results/coverage.xml"]
 
@@ -77,7 +80,7 @@ services:
       - dht-cache:/app/.cache
     environment:
       - DHT_ENV=ci
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     working_dir: /workspace
     command: ["dhtl", "act", "--container"]
@@ -93,7 +96,7 @@ services:
       - ./:/app:ro
       - dht-cache:/app/.cache
     environment:
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
     command: ["dhtl", "lint", "--all"]
 
   # Format checking service
@@ -107,7 +110,7 @@ services:
       - ./:/app
       - dht-cache:/app/.cache
     environment:
-      - UV_CACHE_DIR=/app/.cache/uv
+      - UV_CACHE_DIR=/tmp/.cache/uv
     command: ["dhtl", "format", "--check"]
 
 volumes:
