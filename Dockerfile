@@ -84,6 +84,7 @@ ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:$PYTHONPATH"
 ENV UV_SYSTEM_PYTHON=1
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV DHT_IN_DOCKER=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -115,6 +116,7 @@ RUN apt-get update && apt-get install -y \
 
 # Set development environment variables
 ENV DHT_ENV=development
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
 # Switch back to non-root user
 USER dhtuser
@@ -160,6 +162,7 @@ ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
 ENV UV_SYSTEM_PYTHON=1
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV DHT_IN_DOCKER=1
 ENV DHT_TEST_MODE=1
 ENV DHT_TEST_PROFILE=docker

@@ -20,7 +20,7 @@ services:
       - DHT_ENV=production
       - UV_CACHE_DIR=/tmp/.cache/uv
     working_dir: /workspace
-    command: ["dhtl", "--help"]
+    command: ["/opt/venv/bin/dhtl", "--help"]
 
   # Development service - includes dev tools
   dht-dev:
@@ -65,7 +65,15 @@ services:
       - VIRTUAL_ENV=/opt/venv
       - PATH=/opt/venv/bin:$PATH
     working_dir: /app
-    command: ["python", "-m", "pytest", "-v", "--tb=short", "--cov=src", "--cov-report=html:/app/test-results/htmlcov", "--cov-report=xml:/app/test-results/coverage.xml"]
+    command:
+      - /opt/venv/bin/python
+      - -m
+      - pytest
+      - -v
+      - --tb=short
+      - --cov=src
+      - --cov-report=html:/app/test-results/htmlcov
+      - --cov-report=xml:/app/test-results/coverage.xml
 
   # Workflow runner service (for act)
   dht-workflows:
@@ -83,7 +91,7 @@ services:
       - UV_CACHE_DIR=/tmp/.cache/uv
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     working_dir: /workspace
-    command: ["dhtl", "act", "--container"]
+    command: ["/opt/venv/bin/dhtl", "act", "--container"]
 
   # Linting service
   dht-lint:
@@ -97,7 +105,7 @@ services:
       - dht-cache:/app/.cache
     environment:
       - UV_CACHE_DIR=/tmp/.cache/uv
-    command: ["dhtl", "lint", "--all"]
+    command: ["/opt/venv/bin/dhtl", "lint", "--all"]
 
   # Format checking service
   dht-format:
@@ -111,7 +119,7 @@ services:
       - dht-cache:/app/.cache
     environment:
       - UV_CACHE_DIR=/tmp/.cache/uv
-    command: ["dhtl", "format", "--check"]
+    command: ["/opt/venv/bin/dhtl", "format", "--check"]
 
 volumes:
   dht-cache:
