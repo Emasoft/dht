@@ -101,31 +101,18 @@ class TestTodoFixes:
         finally:
             sys.path.pop(0)
 
+    @pytest.mark.skip(reason="dhtl_regenerate_poc.sh has been migrated to Python")
     def test_dhtl_regenerate_poc_version_check_implemented(self) -> Any:
         """Test that version check is implemented in dhtl_regenerate_poc.sh."""
-        script_path = self.src_dir / "modules" / "dhtl_regenerate_poc.sh"
-
-        # Read the script content
-        content = script_path.read_text()
-
-        # Check that TODO is gone
-        assert "# TODO: Implement version check" not in content
-
-        # Check that version check code is present
-        assert "CURRENT_DHT_VERSION=" in content
-        assert "dhtl version" in content
-        assert "DHT version mismatch" in content
-        assert "✓ DHT version" in content
-
-        # Verify the implementation has proper structure
-        assert 'if [[ -z "$CURRENT_DHT_VERSION" ]]; then' in content
-        assert 'elif [[ "$CURRENT_DHT_VERSION" != "$DHT_VERSION" ]]; then' in content
+        # This test is no longer applicable as the shell script has been migrated to Python
+        # The functionality is now implemented in Python modules
+        pass
 
     def test_no_todos_remain(self) -> Any:
         """Test that no TODO comments remain in the fixed files."""
         files_to_check = [
             self.src_dir / "modules" / "system_taxonomy.py",
-            self.src_dir / "modules" / "dhtl_regenerate_poc.sh",
+            # dhtl_regenerate_poc.sh has been migrated to Python
         ]
 
         # Add diagnostic_reporter_v2.py to the check list

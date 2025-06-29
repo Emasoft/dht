@@ -95,6 +95,12 @@ def find_dht_root() -> Path:
         # Also check for old layout (dhtl.sh and DHT)
         if (current / "dhtl.sh").exists() and (current / "DHT").is_dir():
             return current
+        # Docker environment check - look for pyproject.toml and src/DHT
+        if (current / "pyproject.toml").exists() and (current / "src" / "DHT").is_dir():
+            return current
+        # Check if we're in /app (common Docker working directory)
+        if str(current) == "/app" and (current / "src" / "DHT").is_dir():
+            return current
         current = current.parent
     raise RuntimeError("Could not find DHT root directory")
 

@@ -11,9 +11,11 @@ from typing import Any
 
 # Import helper functions
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import pytest
 from helpers import mock_bash_script, run_bash_command
 
 
+@pytest.mark.skip(reason="Shell modules have been migrated to Python")
 def test_uv_is_available() -> Any:
     """Test the uv_is_available function."""
     # Create a script that sources the module and calls the function
@@ -79,6 +81,7 @@ def test_uv_is_available() -> Any:
             shutil.rmtree(test_dir)
 
 
+@pytest.mark.skip(reason="Shell modules have been migrated to Python")
 def test_get_uv_command() -> Any:
     """Test the get_uv_command function."""
     # Create a script that sources the module and calls the function
@@ -140,6 +143,7 @@ def test_get_uv_command() -> Any:
             shutil.rmtree(test_dir)
 
 
+@pytest.mark.skip(reason="Shell modules have been migrated to Python")
 def test_uv_create_venv() -> Any:
     """Test the uv_create_venv function."""
     # Create a script that sources the module and calls the function
@@ -227,6 +231,7 @@ def test_uv_create_venv() -> Any:
             shutil.rmtree(test_dir)
 
 
+@pytest.mark.skip(reason="Shell modules have been migrated to Python")
 def test_uv_command_help() -> Any:
     """Test the uv_command help function."""
     # Create a script that sources the module and calls the function

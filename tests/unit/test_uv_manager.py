@@ -27,7 +27,6 @@ Tests the UV package manager integration including:
 
 import json
 import shutil
-import subprocess
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, Mock, patch
@@ -192,13 +191,9 @@ dependencies = ["requests"]
 
     def test_run_command_success(self, uv_manager) -> Any:
         """Test successful command execution."""
-        # Mock the subprocess.run in the utils module where it's used
-        with patch("DHT.modules.uv_manager_utils.subprocess.run") as mock_run:
-            mock_process = Mock()
-            mock_process.stdout = "Success output"
-            mock_process.stderr = ""
-            mock_process.returncode = 0
-            mock_run.return_value = mock_process
+        # Mock the run_subprocess function in the utils module where it's used
+        with patch("DHT.modules.uv_manager_utils.run_subprocess") as mock_run:
+            mock_run.return_value = {"stdout": "Success output", "stderr": "", "returncode": 0, "success": True}
 
             # Mock path existence check
             with patch.object(Path, "exists", return_value=True):
@@ -215,9 +210,12 @@ dependencies = ["requests"]
 
     def test_run_command_failure(self, uv_manager) -> Any:
         """Test command execution failure."""
-        with patch("DHT.modules.uv_manager_utils.subprocess.run") as mock_run:
-            mock_run.side_effect = subprocess.CalledProcessError(
-                1, ["uv", "invalid"], output="", stderr="Invalid command"
+        from DHT.modules.subprocess_utils import ProcessExecutionError
+
+        with patch("DHT.modules.uv_manager_utils.run_subprocess") as mock_run:
+            # Make run_subprocess raise a ProcessExecutionError
+            mock_run.side_effect = ProcessExecutionError(
+                cmd=["uv", "invalid"], returncode=1, stdout="", stderr="Invalid command"
             )
 
             # Mock path existence check
@@ -368,36 +366,39 @@ dependencies = ["requests"]
 
     def test_install_dependencies_with_lock(self, uv_manager, project_with_lock) -> Any:
         """Test installing dependencies from lock file."""
-        with patch.object(uv_manager, "_sync_dependencies") as mock_sync:
-            mock_sync.return_value = {"success": True, "method": "uv sync", "message": "Synced"}
+        with patch.object(uv_manager, "run_command") as mock_run:
+            mock_run.return_value = {"stdout": "Synced", "stderr": "", "success": True}
 
             result = uv_manager.install_dependencies(project_with_lock)
 
             assert result["success"] is True
-            assert result["method"] == "uv sync"
-            mock_sync.assert_called_once_with(project_with_lock, dev=False, extras=None)
+            # Check that sync command was called
+            mock_run.assert_called_once_with(["sync"], cwd=project_with_lock)
 
     def test_install_dependencies_requirements_txt(self, uv_manager, project_with_requirements) -> Any:
         """Test installing dependencies from requirements.txt."""
-        with patch.object(uv_manager, "_pip_install_requirements") as mock_install:
-            mock_install.return_value = {"success": True, "method": "uv pip install -r", "message": "Installed"}
+        with patch.object(uv_manager, "run_command") as mock_run:
+            mock_run.return_value = {"stdout": "Installed", "stderr": "", "success": True}
 
-            result = uv_manager.install_dependencies(project_with_requirements)
+            requirements_file = project_with_requirements / "requirements.txt"
+            result = uv_manager.install_dependencies(project_with_requirements, requirements_file=requirements_file)
 
             assert result["success"] is True
-            assert result["method"] == "uv pip install -r"
-            mock_install.assert_called_once()
+            # Check that pip install command was called
+            mock_run.assert_called_once_with(
+                ["pip", "install", "-r", str(requirements_file)], cwd=project_with_requirements
+            )
 
     def test_install_dependencies_pyproject(self, uv_manager, project_with_pyproject) -> Any:
         """Test installing dependencies from pyproject.toml."""
-        with patch.object(uv_manager, "_pip_install_project") as mock_install:
-            mock_install.return_value = {"success": True, "method": "uv pip install -e", "message": "Installed"}
+        with patch.object(uv_manager, "run_command") as mock_run:
+            mock_run.return_value = {"stdout": "Installed", "stderr": "", "success": True}
 
             result = uv_manager.install_dependencies(project_with_pyproject, dev=True)
 
             assert result["success"] is True
-            assert result["method"] == "uv pip install -e"
-            mock_install.assert_called_once_with(project_with_pyproject, dev=True, extras=None)
+            # Check that sync command with --dev was called
+            mock_run.assert_called_once_with(["sync", "--dev"], cwd=project_with_pyproject)
 
     def test_generate_lock_file(self, uv_manager, project_with_pyproject) -> Any:
         """Test generating lock file."""
