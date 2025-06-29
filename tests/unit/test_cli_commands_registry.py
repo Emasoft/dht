@@ -145,8 +145,8 @@ class TestPlatformFiltering:
 
         # Should include apt
         assert "apt" in commands
-        # Should not include brew
-        assert "brew" not in commands
+        # Brew can be installed on Linux (Linuxbrew), so it should be included
+        assert "brew" in commands
         # Should include cross-platform tools
         assert "git" in commands
         assert "python" in commands

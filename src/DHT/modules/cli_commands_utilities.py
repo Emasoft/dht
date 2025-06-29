@@ -352,7 +352,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "version": "jenkins --version 2>&1 || java -jar jenkins.war --version 2>&1",
             "help": 'jenkins --help 2>&1 || echo "Jenkins CLI"',
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
     "travis": {
@@ -360,7 +360,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "version": "travis version",
             "help": "travis help",
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
     "circleci": {
@@ -368,7 +368,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "version": "circleci version",
             "config_validate": "circleci config validate",
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
     "gitlab-runner": {
@@ -376,7 +376,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "version": "gitlab-runner --version",
             "list": "gitlab-runner list",
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
     "gh": {
@@ -385,7 +385,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "auth_status": "gh auth status",
             "repo_view": "gh repo view --json name,description,url",
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
     "act": {
@@ -393,7 +393,7 @@ UTILITY_COMMANDS: dict[str, dict[str, Any]] = {
             "version": "act --version",
             "list": "act -l",
         },
-        "category": "cicd_tools",
+        "category": "ci_cd_tools",
         "format": "auto",
     },
 }
