@@ -205,7 +205,7 @@ class DHTLauncher:
         except ImportError:
             # Try absolute import when running as script
             try:
-                from modules.command_dispatcher import CommandDispatcher  # type: ignore[no-redef]
+                from DHT.modules.command_dispatcher import CommandDispatcher  # type: ignore[no-redef]
             except ImportError as e:
                 # Fallback if command dispatcher not available
                 self.logger.warning(f"Command dispatcher not available: {e}")

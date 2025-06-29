@@ -22,7 +22,7 @@ def test_guardian_prefect_module() -> Any:
         import sys
 
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-        from modules import guardian_prefect
+        from DHT.modules import guardian_prefect
 
         assert hasattr(guardian_prefect, "GuardianResult")
         assert hasattr(guardian_prefect, "ResourceLimits")

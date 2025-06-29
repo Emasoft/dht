@@ -59,14 +59,13 @@ services:
       - DHT_TEST_MODE=1
       - DHT_TEST_PROFILE=docker
       - UV_CACHE_DIR=/tmp/.cache/uv
+      - UV_SYSTEM_PYTHON=1
       - PYTEST_CACHE_DIR=/tmp/.pytest_cache
       - CI=${CI:-false}
       - PYTHONPATH=/app/src:/app
-      - VIRTUAL_ENV=/opt/venv
-      - PATH=/opt/venv/bin:$PATH
     working_dir: /app
     command:
-      - /opt/venv/bin/python
+      - python
       - -m
       - pytest
       - -v

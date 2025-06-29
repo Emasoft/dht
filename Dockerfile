@@ -146,26 +146,22 @@ RUN useradd -m -u 1000 -s /bin/bash dhtuser
 # Set working directory
 WORKDIR /app
 
-# Create venv at /opt/venv directly
-RUN uv venv /opt/venv && \
-    chown -R dhtuser:dhtuser /opt/venv
+# Copy dependency files first as root
+COPY pyproject.toml uv.lock* README.md ./
 
-# Set environment to use /opt/venv
-ENV VIRTUAL_ENV=/opt/venv
-ENV UV_PROJECT_ENVIRONMENT=/opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Copy dependency files first
-COPY --chown=dhtuser:dhtuser pyproject.toml uv.lock* README.md ./
-
-# Install dependencies into /opt/venv
-RUN uv sync --frozen --all-extras
+# Install dependencies using UV in system Python (no venv)
+ENV UV_SYSTEM_PYTHON=1
+RUN uv sync --frozen --all-extras --no-dev
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
 
-# Ensure permissions are correct
-RUN chown -R dhtuser:dhtuser /app /opt/venv
+# Set ownership
+RUN chown -R dhtuser:dhtuser /app
+
+# Create cache directories with correct ownership
+RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
+    chown -R dhtuser:dhtuser /tmp/.cache /tmp/.pytest_cache /app/test-results
 
 # Set additional environment variables
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
@@ -175,11 +171,8 @@ ENV DHT_TEST_PROFILE=docker
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
+ENV UV_CACHE_DIR=/tmp/.cache/uv
 ENV HOME=/home/dhtuser
-
-# Create directories with correct ownership
-RUN mkdir -p /app/test-results /tmp/.pytest_cache && \
-    chown -R dhtuser:dhtuser /app/test-results /tmp/.pytest_cache
 
 # Switch to non-root user
 USER dhtuser
