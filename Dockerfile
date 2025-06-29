@@ -159,8 +159,9 @@ COPY --chown=dhtuser:dhtuser . .
 # Install the project itself
 RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
 
-# Set ownership
-RUN chown -R dhtuser:dhtuser /app /opt/venv
+# Set ownership and ensure execute permissions on binaries
+RUN chown -R dhtuser:dhtuser /app /opt/venv && \
+    chmod -R u+x /opt/venv/bin/*
 
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
