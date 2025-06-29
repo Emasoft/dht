@@ -149,21 +149,25 @@ WORKDIR /app
 # Copy dependency files first as root
 COPY pyproject.toml uv.lock* README.md ./
 
-# Install dependencies using UV in system Python (no venv)
-ENV UV_SYSTEM_PYTHON=1
-RUN uv sync --frozen --all-extras
+# Create virtual environment and install dependencies
+RUN uv venv /opt/venv && \
+    /opt/venv/bin/python -m pip install --upgrade pip && \
+    uv sync --frozen --all-extras
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
 
 # Set ownership
-RUN chown -R dhtuser:dhtuser /app
+RUN chown -R dhtuser:dhtuser /app /opt/venv
 
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
     chown -R dhtuser:dhtuser /tmp/.cache /tmp/.pytest_cache /app/test-results
 
-# Set additional environment variables
+# Set environment to use venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
 ENV DHT_IN_DOCKER=1
 ENV DHT_TEST_MODE=1
