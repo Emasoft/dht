@@ -143,7 +143,7 @@ def test_dhtl_guardian_prefect_module() -> Any:
         import sys
 
         sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-        from modules import dhtl_guardian_prefect
+        from DHT.modules import dhtl_guardian_prefect
 
         # This module should provide a Python interface for the guardian
         assert hasattr(dhtl_guardian_prefect, "parse_args")
