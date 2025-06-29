@@ -29,7 +29,7 @@ try:
     import yaml
 except ImportError:
     yaml = None  # type: ignore[assignment]
-from prefect import flow, get_run_logger, task
+from .prefect_compat import flow, get_run_logger, task
 
 
 @dataclass

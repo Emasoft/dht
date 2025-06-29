@@ -25,8 +25,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, cast
 
-from prefect import task
-
+from ..prefect_compat import task
 from .workspace_base import WorkspaceBase
 
 logger = logging.getLogger(__name__)

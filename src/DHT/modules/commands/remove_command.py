@@ -23,7 +23,7 @@ import logging
 import subprocess
 from typing import Any, cast
 
-from prefect import task
+from ..prefect_compat import task
 
 logger = logging.getLogger(__name__)
 
