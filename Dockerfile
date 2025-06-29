@@ -67,7 +67,9 @@ RUN curl -s https://api.github.com/repos/rhysd/actionlint/releases/latest | \
 COPY --from=uv /uv /uvx /bin/
 
 # Create non-root user first
-RUN useradd -m -u 1000 -s /bin/bash dhtuser
+RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
+    mkdir -p /home/dhtuser/.prefect && \
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
 
 # Set working directory
 WORKDIR /app
@@ -141,7 +143,9 @@ RUN apt-get update && apt-get install -y \
 COPY --from=uv /uv /uvx /bin/
 
 # Create non-root user first
-RUN useradd -m -u 1000 -s /bin/bash dhtuser
+RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
+    mkdir -p /home/dhtuser/.prefect && \
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
 
 # Set working directory
 WORKDIR /app
@@ -168,6 +172,10 @@ RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras && \
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
     chown -R dhtuser:dhtuser /tmp/.cache /tmp/.pytest_cache /app/test-results
+
+# Create Prefect configuration directory with correct ownership
+RUN mkdir -p /home/dhtuser/.prefect && \
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
 
 # Set environment to use venv
 ENV VIRTUAL_ENV=/opt/venv
