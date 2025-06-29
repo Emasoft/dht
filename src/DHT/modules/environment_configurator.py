@@ -126,27 +126,27 @@ class EnvironmentConfigurator:
 
     def _detect_tools_from_project(self, project_path: Path, project_info: dict[str, Any]) -> list[str]:
         """Delegate to environment analyzer."""
-        return cast(list[str], self.env_analyzer.detect_tools_from_project(project_path, project_info))
+        return cast(list[str], self.env_analyzer._detect_tools_from_project(project_path, project_info))
 
     def _recommend_tools(self, project_info: dict[str, Any]) -> list[str]:
         """Delegate to environment analyzer."""
-        return cast(list[str], self.env_analyzer.recommend_tools(project_info))
+        return cast(list[str], self.env_analyzer._recommend_tools(project_info))
 
     def _determine_system_requirements(self, project_info: dict[str, Any]) -> list[str]:
         """Delegate to environment analyzer."""
-        return cast(list[str], self.env_analyzer.determine_system_requirements(project_info))
+        return cast(list[str], self.env_analyzer._determine_system_requirements(project_info))
 
     def _determine_python_requirements(self, project_path: Path, project_info: dict[str, Any]) -> dict[str, Any]:
         """Delegate to environment analyzer."""
-        return cast(dict[str, Any], self.env_analyzer.determine_python_requirements(project_path, project_info))
+        return cast(dict[str, Any], self.env_analyzer._determine_python_requirements(project_path, project_info))
 
     def _recommend_quality_tools(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Delegate to environment analyzer."""
-        return cast(dict[str, Any], self.env_analyzer.recommend_quality_tools(project_info))
+        return cast(dict[str, Any], self.env_analyzer._recommend_quality_tools(project_info))
 
     def _recommend_ci_setup(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """Delegate to environment analyzer."""
-        return cast(dict[str, Any], self.env_analyzer.recommend_ci_setup(project_info))
+        return cast(dict[str, Any], self.env_analyzer._recommend_ci_setup(project_info))
 
     @task(name="generate_environment_config", description="Generate environment configuration from analysis")
     def generate_environment_config(
