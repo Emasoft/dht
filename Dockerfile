@@ -181,10 +181,10 @@ ENV HOME=/home/dhtuser
 USER dhtuser
 
 # Verify Python setup
-RUN python --version && \
-    python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
-    which pytest && \
-    pytest --version
+RUN /opt/venv/bin/python --version && \
+    /opt/venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
+    which /opt/venv/bin/pytest && \
+    /opt/venv/bin/pytest --version
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]
