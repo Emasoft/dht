@@ -63,11 +63,14 @@ class TestComprehensiveVerification:
     def test_no_shell_scripts_remain(self) -> Any:
         """Test that no shell scripts remain after Python migration."""
         shell_files = list(self.project_root.rglob("*.sh"))
-        # Exclude third-party directories
+        # Exclude third-party directories and GitHub workflow scripts
         shell_files = [
             f
             for f in shell_files
-            if "tree-sitter-bash" not in str(f) and ".venv" not in str(f) and "node_modules" not in str(f)
+            if "tree-sitter-bash" not in str(f)
+            and ".venv" not in str(f)
+            and "node_modules" not in str(f)
+            and ".github/scripts" not in str(f)  # Allow GitHub workflow utility scripts
         ]
 
         assert len(shell_files) == 0, (
