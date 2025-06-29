@@ -151,8 +151,7 @@ COPY pyproject.toml uv.lock* README.md ./
 
 # Create virtual environment and install dependencies
 RUN uv venv /opt/venv && \
-    /opt/venv/bin/python -m pip install --upgrade pip && \
-    uv sync --frozen --all-extras
+    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
