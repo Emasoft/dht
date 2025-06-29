@@ -179,16 +179,21 @@ ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
 ENV UV_CACHE_DIR=/tmp/.cache/uv
 ENV HOME=/home/dhtuser
 
+# Verify Python setup and dependencies as root first
+RUN ls -la /opt/venv/bin/python* && \
+    /opt/venv/bin/python --version && \
+    /opt/venv/bin/python -c "import prefect; print('Prefect version:', prefect.__version__)" && \
+    /opt/venv/bin/python -m pip list | grep -E "prefect|dht-toolkit"
+
 # Switch to non-root user
 USER dhtuser
 
-# Verify Python setup and dependencies
-RUN /opt/venv/bin/python --version && \
-    /opt/venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
-    /opt/venv/bin/python -c "import prefect; print('Prefect version:', prefect.__version__)" && \
-    /opt/venv/bin/python -m pip list | grep -E "prefect|dht-toolkit" && \
-    which /opt/venv/bin/pytest && \
-    /opt/venv/bin/pytest --version
+# Verify we can run as user
+RUN whoami && \
+    which python && \
+    python --version && \
+    which pytest && \
+    pytest --version
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]
