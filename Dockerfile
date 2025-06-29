@@ -33,13 +33,13 @@ ENV UV_COMPILE_BYTECODE=1
 COPY pyproject.toml uv.lock* README.md ./
 
 # Create virtual environment and install dependencies
-RUN uv venv && uv sync --frozen --no-install-project
+RUN uv venv /opt/venv && UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --no-install-project
 
 # Copy the rest of the application
 COPY . .
 
 # Install the project
-RUN uv sync --frozen
+RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen
 
 # Stage 3: Runtime stage - minimal image for running
 FROM python:3.11-slim AS runtime
@@ -72,8 +72,8 @@ RUN useradd -m -u 1000 -s /bin/bash dhtuser
 # Set working directory
 WORKDIR /app
 
-# Copy the virtual environment from builder to /opt/venv
-COPY --from=builder /app/.venv /opt/venv
+# Copy the virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
 # Fix ownership
@@ -104,7 +104,7 @@ USER root
 # Install development dependencies in the opt venv
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN cd /app && uv sync --frozen --all-extras
+RUN cd /app && UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
 
 # Install additional dev tools
 RUN apt-get update && apt-get install -y \
