@@ -156,6 +156,9 @@ RUN uv venv /opt/venv && \
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
 
+# Install the project itself
+RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
+
 # Set ownership
 RUN chown -R dhtuser:dhtuser /app /opt/venv
 
@@ -180,9 +183,11 @@ ENV HOME=/home/dhtuser
 # Switch to non-root user
 USER dhtuser
 
-# Verify Python setup
+# Verify Python setup and dependencies
 RUN /opt/venv/bin/python --version && \
     /opt/venv/bin/python -c "import sys; print('Python executable:', sys.executable); print('Python path:', sys.path)" && \
+    /opt/venv/bin/python -c "import prefect; print('Prefect version:', prefect.__version__)" && \
+    /opt/venv/bin/python -m pip list | grep -E "prefect|dht-toolkit" && \
     which /opt/venv/bin/pytest && \
     /opt/venv/bin/pytest --version
 
