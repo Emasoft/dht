@@ -149,6 +149,9 @@ WORKDIR /app
 # Copy dependency files first as root
 COPY pyproject.toml uv.lock* README.md ./
 
+# Set UV to install Python in a shared location
+ENV UV_PYTHON_INSTALL_DIR=/opt/uv-python
+
 # Create virtual environment and install dependencies
 RUN uv venv /opt/venv && \
     UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras --no-install-project
@@ -159,7 +162,8 @@ COPY --chown=dhtuser:dhtuser . .
 # Install the project itself and fix permissions
 RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras && \
     chown -R dhtuser:dhtuser /app /opt/venv && \
-    chmod -R a+x /opt/venv/bin/*
+    chmod -R a+rx /opt/venv && \
+    chmod -R a+rx /opt/uv-python || true
 
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
