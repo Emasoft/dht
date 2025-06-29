@@ -151,17 +151,15 @@ COPY pyproject.toml uv.lock* README.md ./
 
 # Create virtual environment and install dependencies
 RUN uv venv /opt/venv && \
-    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
+    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras --no-install-project
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
 
-# Install the project itself
-RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras
-
-# Set ownership and ensure execute permissions on binaries
-RUN chown -R dhtuser:dhtuser /app /opt/venv && \
-    chmod -R u+x /opt/venv/bin/*
+# Install the project itself and fix permissions
+RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras && \
+    chown -R dhtuser:dhtuser /app /opt/venv && \
+    chmod -R a+x /opt/venv/bin/*
 
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
