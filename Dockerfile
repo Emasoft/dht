@@ -157,8 +157,11 @@ COPY pyproject.toml uv.lock* README.md ./
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv-python
 
 # Create virtual environment and install dependencies
-RUN uv venv /opt/venv && \
-    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras --no-install-project
+# Ensure we use system Python that has the standard library
+RUN uv venv /opt/venv --python /usr/local/bin/python3 && \
+    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras --no-install-project && \
+    # Ensure coverage is properly installed with all its files
+    UV_PROJECT_ENVIRONMENT=/opt/venv uv pip install --force-reinstall coverage[toml]
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
@@ -182,6 +185,10 @@ ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV PYTHONPATH="/app/src:/app:$PYTHONPATH"
+# Ensure Python can find its standard library
+ENV PYTHONHOME=""
+ENV UV_SYSTEM_PYTHON=1
+# Test environment variables
 ENV DHT_IN_DOCKER=1
 ENV DHT_TEST_MODE=1
 ENV DHT_TEST_PROFILE=docker
@@ -190,6 +197,8 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTEST_CACHE_DIR=/tmp/.pytest_cache
 ENV UV_CACHE_DIR=/tmp/.cache/uv
 ENV HOME=/home/dhtuser
+# Coverage settings to avoid HTML generation issues
+ENV COVERAGE_CORE=sysmon
 
 # Verify Python setup and dependencies as root first
 RUN ls -la /opt/venv/bin/python* && \
