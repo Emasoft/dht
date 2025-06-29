@@ -188,12 +188,13 @@ RUN ls -la /opt/venv/bin/python* && \
 # Switch to non-root user
 USER dhtuser
 
+# Re-export PATH for the user
+ENV PATH="/opt/venv/bin:$PATH"
+
 # Verify we can run as user
 RUN whoami && \
-    which python && \
-    python --version && \
-    which pytest && \
-    pytest --version
+    /opt/venv/bin/python --version && \
+    /opt/venv/bin/pytest --version
 
 # Default to running all tests
 CMD ["python", "-m", "pytest", "-v", "--tb=short"]
