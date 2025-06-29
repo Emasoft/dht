@@ -106,16 +106,17 @@ class UniversalBuildDetector:
             return None
 
         # Parse pyproject.toml to determine project type
-        import tomllib
+        try:
+            import tomllib  # Python 3.11+
+        except ImportError:
+            import tomli as tomllib  # Python 3.10 and below
 
         with open(pyproject_path, "rb") as f:
             try:
                 pyproject = tomllib.load(f)
-            except (AttributeError, tomllib.TOMLDecodeError):
-                # Fallback for older Python without tomllib
-                import toml
-
-                pyproject = toml.load(pyproject_path)
+            except tomllib.TOMLDecodeError:
+                # Handle malformed TOML
+                return None
 
         # Check for Poetry
         if "tool" in pyproject and "poetry" in pyproject["tool"]:

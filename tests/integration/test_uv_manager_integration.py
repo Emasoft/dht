@@ -106,7 +106,10 @@ build-backend = "hatchling.build"
         assert (project_path / ".python-version").exists()
 
         # Check pyproject.toml has correct structure
-        import tomllib
+        try:
+            import tomllib  # Python 3.11+
+        except ImportError:
+            import tomli as tomllib  # Python 3.10 and below
 
         with open(project_path / "pyproject.toml", "rb") as f:
             pyproject = tomllib.load(f)
@@ -162,7 +165,10 @@ build-backend = "hatchling.build"
         assert add_result["success"]
 
         # Check it was added to pyproject.toml
-        import tomllib
+        try:
+            import tomllib  # Python 3.11+
+        except ImportError:
+            import tomli as tomllib  # Python 3.10 and below
 
         with open(project_path / "pyproject.toml", "rb") as f:
             pyproject = tomllib.load(f)
