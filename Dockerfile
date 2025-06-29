@@ -161,7 +161,7 @@ ENV UV_PYTHON_INSTALL_DIR=/opt/uv-python
 RUN uv venv /opt/venv --python /usr/local/bin/python3 && \
     UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras --no-install-project && \
     # Ensure coverage is properly installed with all its files
-    UV_PROJECT_ENVIRONMENT=/opt/venv uv pip install --force-reinstall coverage[toml]
+    /opt/venv/bin/pip install --force-reinstall coverage[toml]
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
