@@ -10,10 +10,16 @@ on:
   - cron: '0 2 * * *'
   workflow_dispatch:
 
+# Cancel in-progress runs when a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   gitleaks:
     name: Gitleaks Secret Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
     - name: Checkout repository

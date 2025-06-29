@@ -7,6 +7,11 @@ on:
     branches: [main, develop]
   workflow_dispatch:
 
+# Cancel in-progress runs when a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   UV_CACHE_DIR: /tmp/.uv-cache
 
@@ -14,6 +19,7 @@ jobs:
   pre-commit:
     name: Pre-commit checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: Checkout repository
@@ -62,6 +68,7 @@ jobs:
   dependency-check:
     name: Dependency analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
     - name: Checkout repository
@@ -95,6 +102,7 @@ jobs:
   code-quality:
     name: Code quality checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: Checkout repository
@@ -132,6 +140,7 @@ jobs:
   lock-file-check:
     name: Check lock file
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
     - name: Checkout repository

@@ -7,10 +7,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancel in-progress runs when a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   docker-build:
     name: Build Docker Images
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
     - uses: actions/checkout@v4
 
@@ -69,6 +75,7 @@ jobs:
     - name: Run tests in Docker
       run: |
         docker run --rm \
+          --init \
           -v ${{ github.workspace }}/tests:/app/tests:ro \
           -v ${{ github.workspace }}/src:/app/src:ro \
           -e DHT_TEST_MODE=1 \
@@ -87,6 +94,7 @@ jobs:
     name: Run Linting in Docker
     needs: docker-build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
     - uses: actions/checkout@v4
 
@@ -112,6 +120,7 @@ jobs:
   docker-compose-test:
     name: Test Docker Compose Setup
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
 
