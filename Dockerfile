@@ -183,7 +183,7 @@ ENV HOME=/home/dhtuser
 RUN ls -la /opt/venv/bin/python* && \
     /opt/venv/bin/python --version && \
     /opt/venv/bin/python -c "import prefect; print('Prefect version:', prefect.__version__)" && \
-    /opt/venv/bin/python -m pip list | grep -E "prefect|dht-toolkit"
+    /opt/venv/bin/python -c "import DHT; print('DHT module found')"
 
 # Switch to non-root user
 USER dhtuser
