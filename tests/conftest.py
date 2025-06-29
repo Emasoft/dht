@@ -145,8 +145,21 @@ def skip_by_profile(request: pytest.FixtureRequest, test_config: dict[str, Any])
 
 @pytest.fixture(scope="session")
 def project_root() -> Any:
-    """Returns the project root directory (parent of DHT)."""
-    return Path(__file__).parent.parent.parent
+    """Returns the project root directory."""
+    # Start from conftest.py location
+    current = Path(__file__).parent.parent  # tests/ -> project root
+
+    # In Docker, we might be directly in /app
+    # In local dev, we might be in /path/to/DHT/dht
+    # Check if we have the expected structure
+    if (current / "src" / "DHT").is_dir():
+        return current
+    elif current.parent and (current.parent / "dht" / "src" / "DHT").is_dir():
+        # We might be one level too deep
+        return current.parent
+    else:
+        # Default to current
+        return current
 
 
 @pytest.fixture

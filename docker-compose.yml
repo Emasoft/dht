@@ -3,8 +3,6 @@
 # Docker Compose configuration for DHT
 # Provides various services for development, testing, and production
 
-version: '3.8'
-
 services:
   # Production service - minimal runtime
   dht:

@@ -13,9 +13,19 @@ Licensed under the MIT License. See LICENSE file for details.
 
 def test_dht_core_files_exist(project_root) -> Any:
     """Test that essential DHT core files exist after Python migration."""
-    # UV-style src layout - project_root points to /Users/emanuelesabetta/Code/DHT
-    # The actual project is in the dht subdirectory
-    actual_project_root = project_root / "dht"
+    # Handle both local development and Docker environments
+    # In Docker: project_root might be /app directly
+    # In local: project_root is /Users/.../DHT and actual project is in dht subdirectory
+    if (project_root / "src" / "DHT").is_dir():
+        # Docker or direct project structure
+        actual_project_root = project_root
+    elif (project_root / "dht" / "src" / "DHT").is_dir():
+        # Local development structure
+        actual_project_root = project_root / "dht"
+    else:
+        # Fallback: assume we're already in the project directory
+        actual_project_root = project_root
+
     dht_dir = actual_project_root / "src" / "DHT"
     assert dht_dir.is_dir(), f"DHT directory {dht_dir} does not exist"
 
@@ -61,9 +71,17 @@ def test_dht_core_files_exist(project_root) -> Any:
 
 def test_dht_parsers_exist(project_root) -> Any:
     """Test that parser modules exist."""
-    # UV-style src layout - project_root points to /Users/emanuelesabetta/Code/DHT
-    # The actual project is in the dht subdirectory
-    actual_project_root = project_root / "dht"
+    # Handle both local development and Docker environments
+    if (project_root / "src" / "DHT").is_dir():
+        # Docker or direct project structure
+        actual_project_root = project_root
+    elif (project_root / "dht" / "src" / "DHT").is_dir():
+        # Local development structure
+        actual_project_root = project_root / "dht"
+    else:
+        # Fallback: assume we're already in the project directory
+        actual_project_root = project_root
+
     parsers_dir = actual_project_root / "src" / "DHT" / "modules" / "parsers"
     assert parsers_dir.is_dir(), f"Parsers directory {parsers_dir} does not exist"
 

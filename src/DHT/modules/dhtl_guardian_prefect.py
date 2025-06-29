@@ -24,7 +24,8 @@ try:
     import yaml
 except ImportError:
     yaml = None  # type: ignore[assignment]
-from prefect.deployments import run_deployment
+# Prefect 3.x removed deployments module - using flows directly
+# from prefect.deployments import run_deployment
 
 from .guardian_prefect import (
     ResourceLimits,
@@ -175,13 +176,11 @@ def run(
 
     try:
         if deployment:
-            # Run via deployment
-            click.echo(f"Running via deployment: {deployment}")
-            run_deployment(
-                name=f"{deployment}/guardian-sequential" if sequential else f"{deployment}/guardian-batch",
-                parameters={"commands": command_list, "default_limits": limits, "stop_on_failure": stop_on_failure},
-            )
-        else:
+            # Deployments are not supported in Prefect 3.x - run flows directly
+            click.echo("Warning: Deployment mode is not supported in Prefect 3.x, running flows directly")
+            deployment = None
+
+        if not deployment:
             # Run directly
             if batch:
                 click.echo(f"Running in batch mode (batch_size={batch})")
