@@ -9,9 +9,13 @@ Licensed under the MIT License. See LICENSE file for details.
 # HERE IS THE CHANGELOG FOR THIS VERSION OF THE FILE:
 # - Created __init__.py for modules package
 # - Exports main command modules and utilities
+# - Import prefect_compat early to ensure Prefect 3.x compatibility
 #
 
 """DHT Modules Package."""
+
+# Import prefect_compat first to ensure Prefect 3.x compatibility patches are applied
+from . import prefect_compat
 
 # Version info
 __version__ = "1.0.0"
@@ -33,4 +37,5 @@ __all__ = [
     "log_warning",
     "log_success",
     "log_debug",
+    "prefect_compat",
 ]

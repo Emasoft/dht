@@ -10,6 +10,7 @@ Licensed under the MIT License. See LICENSE file for details.
 # - Create add command module for adding dependencies
 # - Wraps uv add functionality
 # - Integrates with Prefect runner
+# - Use prefect_compat module for Prefect 3.x compatibility
 #
 
 """
@@ -23,7 +24,8 @@ import logging
 import subprocess
 from typing import Any, cast
 
-from prefect import task
+# Import from compatibility module to ensure Prefect 3.x compatibility
+from DHT.modules.prefect_compat import task
 
 logger = logging.getLogger(__name__)
 

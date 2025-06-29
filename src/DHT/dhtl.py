@@ -10,6 +10,7 @@ Licensed under the MIT License. See LICENSE file for details.
 # - Minimal entry point for DHT
 # - Delegates to DHTLauncher class for actual functionality
 # - Keeps file size under 10KB as per CLAUDE.md
+# - Import prefect_compat early for Prefect 3.x compatibility
 #
 
 """
@@ -22,6 +23,13 @@ It maintains the shell-based architecture while providing Python coordination.
 import argparse
 import sys
 from typing import Any
+
+# Import prefect_compat early to apply Prefect 3.x compatibility patches
+try:
+    from .modules import prefect_compat  # noqa: F401
+except ImportError:
+    # If we can't import it here, it will be imported later
+    pass
 
 try:
     from .launcher import DHTLauncher
