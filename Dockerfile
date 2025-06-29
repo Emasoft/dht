@@ -151,7 +151,7 @@ COPY pyproject.toml uv.lock* README.md ./
 
 # Install dependencies using UV in system Python (no venv)
 ENV UV_SYSTEM_PYTHON=1
-RUN uv sync --frozen --all-extras --no-dev
+RUN uv sync --frozen --all-extras
 
 # Copy the rest of the application
 COPY --chown=dhtuser:dhtuser . .
