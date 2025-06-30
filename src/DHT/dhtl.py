@@ -87,7 +87,8 @@ def main(argv: list[str] | None = None) -> None:
         command_args = remaining[1:]
 
     # Run the command
-    return launcher.run_command(command, command_args)  # type: ignore[return-value]
+    exit_code = launcher.run_command(command, command_args)
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

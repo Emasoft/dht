@@ -53,7 +53,7 @@ class CommandDispatcher:
             self.logger.info(f"Unknown command '{command}', attempting to run as script")  # type: ignore[attr-defined]
             # Pass to run command
             if "run" in self.commands:
-                run_handler = self.commands["run"]["handler"]
+                run_handler = self.commands["run"]
                 # Prepend the command to args
                 all_args = [command] + args
                 return self.dispatch("run", all_args)

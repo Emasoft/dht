@@ -19,24 +19,22 @@ class TestDockerManager:
 
     def test_find_docker_command(self, tmp_path: Path) -> None:
         """Test finding Docker or Podman command."""
-        manager = DockerManager(tmp_path)
-
         # Mock shutil.which
         with patch("src.DHT.modules.dhtl_docker.shutil.which") as mock_which:
             # Test Docker found
             mock_which.side_effect = lambda cmd: cmd == "docker"
             manager = DockerManager(tmp_path)
-            assert manager._find_docker_command() == "docker"
+            assert manager.docker_cmd == "docker"
 
             # Test Podman found
             mock_which.side_effect = lambda cmd: cmd == "podman"
             manager = DockerManager(tmp_path)
-            assert manager._find_docker_command() == "podman"
+            assert manager.docker_cmd == "podman"
 
             # Test neither found
-            mock_which.return_value = None
+            mock_which.side_effect = lambda cmd: None
             manager = DockerManager(tmp_path)
-            assert manager._find_docker_command() is None
+            assert manager.docker_cmd is None
 
     def test_is_docker_available(self, tmp_path: Path) -> None:
         """Test checking Docker availability."""
@@ -78,7 +76,9 @@ class TestDockerManager:
                 assert manager.check_docker_compose() is True
 
                 # Test none available
-                mock_which.return_value = None
+                manager.docker_cmd = "docker"
+                mock_run.return_value = MagicMock(returncode=1)
+                mock_which.side_effect = lambda cmd: False
                 assert manager.check_docker_compose() is False
 
     def test_get_compose_command(self, tmp_path: Path) -> None:
@@ -179,13 +179,13 @@ class TestDockerTasks:
             mock_manager_class.return_value = mock_manager
 
             # Test successful build
-            result = docker_build_task("runtime", "test:latest")
+            result = docker_build_task.fn("runtime", "test:latest")
             assert result is True
             mock_manager.build_image.assert_called_once_with("runtime", "test:latest")
 
             # Test Docker not available
             mock_manager.is_docker_available.return_value = False
-            result = docker_build_task("runtime")
+            result = docker_build_task.fn("runtime")
             assert result is False
 
     def test_docker_test_task(self, tmp_path: Path) -> None:
@@ -199,7 +199,7 @@ class TestDockerTasks:
             mock_manager_class.return_value = mock_manager
 
             # Test successful test run
-            result = docker_test_task(["-k", "test_something"], coverage=True)
+            result = docker_test_task.fn(["-k", "test_something"], coverage=True)
             assert result == 0
 
             # Verify build was called

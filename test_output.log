@@ -1,0 +1,123 @@
+Bytecode compiled 4643 files in 1.41s
+============================= test session starts ==============================
+collected 577 items
+
+tests/unit/test_bash_parser.py ................                       [ 16/577]
+tests/unit/test_bolt_compatibility.py .......................         [ 39/577]
+tests/unit/test_cli_commands_registry.py ............................ [ 67/577]
+.                                                                     [ 68/577]
+tests/unit/test_comprehensive_verification.py .F.....F...F            [ 80/577]
+tests/unit/test_core_presence.py ..                                   [ 82/577]
+tests/unit/test_critical_fixes.py ....                                [ 86/577]
+tests/unit/test_dht_flows.py FFFFFFF
+📊 DHT Test Summary
+Total Tests: 93
+✅ Passed: 83
+❌ Failed: 10
+⏩ Skipped: 0
+🔧 Test Profile: ci
+
+
+=================================== FAILURES ===================================
+__________ TestComprehensiveVerification.test_no_shell_scripts_remain __________
+tests/unit/test_comprehensive_verification.py:76: in test_no_shell_scripts_remain
+    assert len(shell_files) == 0, (
+E   AssertionError: Shell files should be removed, found: ['cleanup_docker.sh']
+E   assert 1 == 0
+E    +  where 1 = len([PosixPath('/Users/emanuelesabetta/Code/DHT/dht/cleanup_docker.sh')])
+_ TestComprehensiveVerification.test_orchestrator_imports_all_required_modules _
+tests/unit/test_comprehensive_verification.py:301: in test_orchestrator_imports_all_required_modules
+    assert len(missing_imports) == 0, f"Orchestrator missing imports for: {missing_imports}"
+E   AssertionError: Orchestrator missing imports for: ['dhtl_environment_utils', 'dhtl_utils', 'command_dispatcher']
+E   assert 3 == 0
+E    +  where 3 = len(['dhtl_environment_utils', 'dhtl_utils', 'command_dispatcher'])
+____ TestComprehensiveVerification.test_no_large_files_violating_guidelines ____
+tests/unit/test_comprehensive_verification.py:390: in test_no_large_files_violating_guidelines
+    assert len(large_files) < 30, f"Too many large files ({len(large_files)}) - consider refactoring"
+E   AssertionError: Too many large files (40) - consider refactoring
+E   assert 40 < 30
+E    +  where 40 = len(['environment_validator.py: 13.0KB (Python >10KB)', 'environment_configurator.py: 16.2KB (Python >10KB)', 'dhtl_guardi... (Python >10KB)', 'act_integration.py: 18.8KB (Python >10KB)', 'environment_reproducer.py: 17.8KB (Python >10KB)', ...])
+----------------------------- Captured stdout call -----------------------------
+
+Files exceeding size guidelines:
+  - environment_validator.py: 13.0KB (Python >10KB)
+  - environment_configurator.py: 16.2KB (Python >10KB)
+  - dhtl_guardian_prefect.py: 11.2KB (Python >10KB)
+  - project_analyzer.py: 14.1KB (Python >10KB)
+  - act_integration.py: 18.8KB (Python >10KB)
+  - environment_reproducer.py: 17.8KB (Python >10KB)
+  - dhtl_guardian_command.py: 10.8KB (Python >10KB)
+  - dhtl_utils.py: 12.5KB (Python >10KB)
+  - command_runner.py: 10.1KB (Python >10KB)
+  - guardian_prefect.py: 18.4KB (Python >10KB)
+  - act_container_setup.py: 11.1KB (Python >10KB)
+  - cli_commands_utilities.py: 10.4KB (Python >10KB)
+  - dockerfile_generator.py: 17.9KB (Python >10KB)
+  - command_dispatcher.py: 17.5KB (Python >10KB)
+  - environment_installer.py: 10.4KB (Python >10KB)
+  - dhtl_commands_setup.py: 11.8KB (Python >10KB)
+  - dhtl_docker.py: 16.3KB (Python >10KB)
+  - project_type_detection_helpers.py: 13.8KB (Python >10KB)
+  - lock_file_manager.py: 10.5KB (Python >10KB)
+  - dhtl_version.py: 11.7KB (Python >10KB)
+  - container_test_runner.py: 14.1KB (Python >10KB)
+  - dhtl_error_handling.py: 16.6KB (Python >10KB)
+  - dhtl_commands_workflows.py: 12.5KB (Python >10KB)
+  - subprocess_utils.py: 17.7KB (Python >10KB)
+  - docker_manager.py: 13.4KB (Python >10KB)
+  - environment_analyzer.py: 11.4KB (Python >10KB)
+  - command_registry.py: 11.9KB (Python >10KB)
+  - system_taxonomy.py: 13.6KB (Python >10KB)
+  - universal_build_detector.py: 15.4KB (Python >10KB)
+  - bash_parser_tree_sitter.py: 10.8KB (Python >10KB)
+  - python_parser.py: 18.9KB (Python >10KB)
+  - pyproject_parser.py: 13.0KB (Python >10KB)
+  - workspace_base.py: 11.1KB (Python >10KB)
+  - database_config_tasks.py: 12.9KB (Python >10KB)
+  - project_generator_flow.py: 11.8KB (Python >10KB)
+  - config_generation_tasks.py: 16.2KB (Python >10KB)
+  - project_setup_flow.py: 10.1KB (Python >10KB)
+  - testing_config_tasks.py: 12.9KB (Python >10KB)
+  - test_flow.py: 15.5KB (Python >10KB)
+  - restore_flow.py: 13.2KB (Python >10KB)
+____________ TestRestoreFlow.test_find_project_root_with_pyproject _____________
+tests/unit/test_dht_flows.py:74: in test_find_project_root_with_pyproject
+    assert root.resolve() == project_path.resolve()
+E   AttributeError: 'NoneType' object has no attribute 'resolve'
+_______________ TestRestoreFlow.test_find_project_root_with_git ________________
+tests/unit/test_dht_flows.py:91: in test_find_project_root_with_git
+    assert root == project_dir
+E   AssertionError: assert None == PosixPath('/private/var/folders/j5/4vmcr_496wsbmt3dl3k8f11r0000gn/T/pytest-of-emanuelesabetta/pytest-187/test_find_project_root_with_gi0/git_project')
+_______________ TestRestoreFlow.test_find_project_root_not_found _______________
+tests/unit/test_dht_flows.py:98: in test_find_project_root_not_found
+    with pytest.raises(ValueError, match="Could not find project root"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+____________ TestRestoreFlow.test_detect_virtual_environment_exists ____________
+tests/unit/test_dht_flows.py:109: in test_detect_virtual_environment_exists
+    exists, detected_path = detect_virtual_environment(project_path)
+E   TypeError: cannot unpack non-iterable NoneType object
+__________ TestRestoreFlow.test_detect_virtual_environment_not_exists __________
+tests/unit/test_dht_flows.py:122: in test_detect_virtual_environment_not_exists
+    exists, suggested_path = detect_virtual_environment(project_path)
+E   TypeError: cannot unpack non-iterable NoneType object
+_______________ TestRestoreFlow.test_create_virtual_environment ________________
+tests/unit/test_dht_flows.py:141: in test_create_virtual_environment
+    assert result == venv_path
+E   AssertionError: assert None == PosixPath('/tmp/test_venv')
+_____________ TestRestoreFlow.test_install_dependencies_with_lock ______________
+tests/unit/test_dht_flows.py:171: in test_install_dependencies_with_lock
+    assert result["success"] is True
+E   TypeError: 'NoneType' object is not subscriptable
+=========================== short test summary info ============================
+FAILED tests/unit/test_comprehensive_verification.py::TestComprehensiveVerification::test_no_shell_scripts_remain
+FAILED tests/unit/test_comprehensive_verification.py::TestComprehensiveVerification::test_orchestrator_imports_all_required_modules
+FAILED tests/unit/test_comprehensive_verification.py::TestComprehensiveVerification::test_no_large_files_violating_guidelines
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_find_project_root_with_pyproject
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_find_project_root_with_git
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_find_project_root_not_found
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_detect_virtual_environment_exists
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_detect_virtual_environment_not_exists
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_create_virtual_environment
+FAILED tests/unit/test_dht_flows.py::TestRestoreFlow::test_install_dependencies_with_lock
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 10 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+================== 10 failed, 83 passed, 4 warnings in 3.22s ===================

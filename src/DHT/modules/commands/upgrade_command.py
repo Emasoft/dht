@@ -75,6 +75,7 @@ class UpgradeCommand:
 
         try:
             # Execute uv command
+            print(f"Running: {' '.join(cmd)}")  # Debug output
             result = subprocess.run(
                 cmd,
                 capture_output=True,
@@ -89,6 +90,9 @@ class UpgradeCommand:
                 message = "Upgraded all packages"
 
             self.logger.info(message)
+            print(message)  # Ensure output is visible
+            if result.stdout:
+                print(result.stdout)
 
             return {"success": True, "message": message, "packages": packages, "output": result.stdout}
 
