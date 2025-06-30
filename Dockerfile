@@ -69,9 +69,7 @@ COPY --from=uv /uv /uvx /bin/
 # Create non-root user first
 RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
     mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
-    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
-    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
 
 # Set working directory
 WORKDIR /app
@@ -92,6 +90,8 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV DHT_IN_DOCKER=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+# Disable Prefect profiles in tests to avoid configuration issues
+ENV PREFECT_PROFILES_PATH=/dev/null
 
 # Switch to non-root user
 USER dhtuser
@@ -147,9 +147,7 @@ COPY --from=uv /uv /uvx /bin/
 # Create non-root user first
 RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
     mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
-    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
-    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
 
 # Set working directory
 WORKDIR /app

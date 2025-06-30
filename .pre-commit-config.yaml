@@ -15,11 +15,14 @@ repos:
     hooks:
       - id: uv-lock
         args: [--locked]
+        exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
       - id: uv-export
         args: [--no-hashes, --output-file=requirements.txt]
+        exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
       - id: uv-export
         name: Export dev requirements
         args: [--no-hashes, --output-file=requirements-dev.txt, --all-extras]
+        exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.4
