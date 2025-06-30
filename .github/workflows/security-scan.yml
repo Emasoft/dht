@@ -41,7 +41,7 @@ jobs:
     - name: Run gitleaks on git history (allow failures for historical commits)
       run: |
         echo "Scanning git history for secrets..."
-        gitleaks git --source . --config .gitleaks.toml --verbose || echo "Historical secrets found - please review"
+        gitleaks git . --config .gitleaks.toml --verbose || echo "Historical secrets found - please review"
 
     - name: Upload gitleaks report
       if: failure()

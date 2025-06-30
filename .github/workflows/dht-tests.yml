@@ -61,8 +61,8 @@ jobs:
       run: uv run pytest tests/unit/ -v --tb=short --cov=src/DHT --cov-report=term --cov-report=xml
 
     - name: Run integration tests
-      run: uv run pytest tests/integration/ -v --tb=short --timeout=300 --cov=src/DHT --cov-append --cov-report=term --cov-report=xml
-
+      run: >
+        uv run pytest tests/integration/ -v --tb=short --timeout=300 --cov=src/DHT --cov-append --cov-report=term --cov-report=xml #magic___^_^___line
     - name: Build DHT package
       run: uv build
 
