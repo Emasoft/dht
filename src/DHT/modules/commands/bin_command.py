@@ -22,7 +22,7 @@ typically the virtual environment's bin or Scripts directory.
 import logging
 import platform
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -103,4 +103,4 @@ class BinCommand:
 def bin_command(**kwargs: Any) -> dict[str, Any]:
     """Execute bin command."""
     cmd = BinCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

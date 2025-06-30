@@ -22,7 +22,7 @@ Provides functionality to run commands in a specific workspace member.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 from .workspace_base import WorkspaceBase
@@ -198,4 +198,4 @@ class WorkspaceCommand(WorkspaceBase):
 def workspace_command(**kwargs: Any) -> dict[str, Any]:
     """Execute workspace command."""
     cmd = WorkspaceCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

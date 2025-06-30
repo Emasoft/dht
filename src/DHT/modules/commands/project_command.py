@@ -23,7 +23,7 @@ excluding workspace members.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 from .workspace_base import WorkspaceBase
@@ -121,4 +121,4 @@ class ProjectCommand(WorkspaceBase):
 def project_command(**kwargs: Any) -> dict[str, Any]:
     """Execute project command."""
     cmd = ProjectCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

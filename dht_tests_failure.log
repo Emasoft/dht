@@ -1,208 +1,194 @@
-Test Python 3.11 on ubuntu-latest	Run linters	﻿2025-06-27T20:34:18.7013104Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7013469Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7013754Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7070272Z shell: /usr/bin/bash -e {0}
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7070510Z env:
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7070745Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.7071025Z ##[endgroup]
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.9209731Z Bytecode compiled 4698 files in 186ms
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:18.9711823Z All checks passed!
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.1858665Z Bytecode compiled 4698 files in 189ms
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2443425Z Would reformat: tests/conftest.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2444300Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2445997Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2446613Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2447172Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2447771Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2448631Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.11 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2496001Z ##[error]Process completed with exit code 1.
-Test Python 3.12 on macos-latest	Run linters	﻿2025-06-27T20:34:26.6858160Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6858420Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6858640Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6908220Z shell: /bin/bash -e {0}
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6908370Z env:
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6908520Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.6908720Z ##[endgroup]
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.9123230Z Bytecode compiled 4698 files in 178ms
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:26.9958390Z All checks passed!
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.1764850Z Bytecode compiled 4698 files in 160ms
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2390480Z Would reformat: tests/conftest.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2391380Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2392160Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2393150Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2393710Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2394060Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2394400Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.12 on macos-latest	Run linters	2025-06-27T20:34:27.2414360Z ##[error]Process completed with exit code 1.
-Test Python 3.11 on macos-latest	Run linters	﻿2025-06-27T20:34:26.6568550Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6568820Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6569030Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6621930Z shell: /bin/bash -e {0}
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6622180Z env:
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6622390Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.6622600Z ##[endgroup]
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.8508360Z Bytecode compiled 4698 files in 147ms
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:26.9884730Z All checks passed!
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.1534640Z Bytecode compiled 4698 files in 149ms
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2136070Z Would reformat: tests/conftest.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2137410Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2137840Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2138270Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2138600Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2138990Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2139410Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.11 on macos-latest	Run linters	2025-06-27T20:34:27.2160600Z ##[error]Process completed with exit code 1.
-Test Python 3.10 on macos-latest	Run linters	﻿2025-06-27T20:34:27.9810100Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9810420Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9810690Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9880860Z shell: /bin/bash -e {0}
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9881030Z env:
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9881290Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:27.9881670Z ##[endgroup]
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.2096210Z Bytecode compiled 4698 files in 166ms
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.2929000Z All checks passed!
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.4790500Z Bytecode compiled 4698 files in 169ms
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5487610Z Would reformat: tests/conftest.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5490590Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5491280Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5491790Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5498200Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5500110Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5500870Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.10 on macos-latest	Run linters	2025-06-27T20:34:28.5512870Z ##[error]Process completed with exit code 1.
-Test Python 3.10 on ubuntu-latest	Run linters	﻿2025-06-27T20:34:19.2567214Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2567551Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2567831Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2623703Z shell: /usr/bin/bash -e {0}
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2623933Z env:
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2624173Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2624452Z ##[endgroup]
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.4658444Z Bytecode compiled 4698 files in 176ms
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.5296773Z All checks passed!
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7267554Z Bytecode compiled 4698 files in 173ms
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7871157Z Would reformat: tests/conftest.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7872798Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7873426Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7874062Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7874634Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7875253Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7876244Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.10 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7922712Z ##[error]Process completed with exit code 1.
-Test Python 3.12 on ubuntu-latest	Run linters	﻿2025-06-27T20:34:19.1988217Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.1988828Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.1989119Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2046051Z shell: /usr/bin/bash -e {0}
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2046285Z env:
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2046507Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.2046776Z ##[endgroup]
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.4155548Z Bytecode compiled 4698 files in 183ms
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.4793457Z All checks passed!
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.6803404Z Bytecode compiled 4698 files in 176ms
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7389685Z Would reformat: tests/conftest.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7390087Z Would reformat: tests/docker/test_all_dhtl_actions.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7390662Z Would reformat: tests/docker/test_dhtl_commands_complete.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7391240Z Would reformat: tests/docker/test_docker_profiles.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7391783Z Would reformat: tests/docker/test_workflow_profiles.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7392364Z Would reformat: tests/integration/test_github_clone_setup.py
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7393044Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.12 on ubuntu-latest	Run linters	2025-06-27T20:34:19.7441085Z ##[error]Process completed with exit code 1.
-Test Python 3.10 on windows-latest	Run linters	﻿2025-06-27T20:34:44.8572190Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8572601Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8572887Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8605186Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8605516Z env:
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8605732Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8606016Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8606254Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:44.8606467Z ##[endgroup]
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:45.7183403Z Bytecode compiled 5149 files in 604ms
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:45.8229084Z All checks passed!
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4129512Z Bytecode compiled 5149 files in 546ms
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4918340Z Would reformat: tests\conftest.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4919090Z Would reformat: tests\docker\test_all_dhtl_actions.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4919630Z Would reformat: tests\docker\test_dhtl_commands_complete.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4920068Z Would reformat: tests\docker\test_docker_profiles.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4920401Z Would reformat: tests\docker\test_workflow_profiles.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4920776Z Would reformat: tests\integration\test_github_clone_setup.py
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.4921124Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.10 on windows-latest	Run linters	2025-06-27T20:34:46.5958423Z ##[error]Process completed with exit code 1.
-Test Python 3.11 on windows-latest	Run linters	﻿2025-06-27T20:34:40.6918215Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6918668Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6918991Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6950700Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6950999Z env:
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6951182Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6951445Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6951682Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:40.6951894Z ##[endgroup]
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:41.5122525Z Bytecode compiled 5149 files in 586ms
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:41.6097973Z All checks passed!
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2077269Z Bytecode compiled 5149 files in 551ms
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2873161Z Would reformat: tests\conftest.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2873923Z Would reformat: tests\docker\test_all_dhtl_actions.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2874601Z Would reformat: tests\docker\test_dhtl_commands_complete.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2875302Z Would reformat: tests\docker\test_docker_profiles.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2875805Z Would reformat: tests\docker\test_workflow_profiles.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2876359Z Would reformat: tests\integration\test_github_clone_setup.py
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.2876955Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.11 on windows-latest	Run linters	2025-06-27T20:34:42.3859637Z ##[error]Process completed with exit code 1.
-Test Python 3.12 on windows-latest	Run linters	﻿2025-06-27T20:34:46.8036003Z ##[group]Run uv run ruff check src/ tests/
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8036404Z [36;1muv run ruff check src/ tests/[0m
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8036678Z [36;1muv run ruff format --check src/ tests/[0m
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8067842Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8068177Z env:
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8068369Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8068632Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8068875Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:46.8069088Z ##[endgroup]
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:47.6252210Z Bytecode compiled 5149 files in 585ms
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:47.7249275Z All checks passed!
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3133883Z Bytecode compiled 5149 files in 543ms
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3927085Z Would reformat: tests\conftest.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3927645Z Would reformat: tests\docker\test_all_dhtl_actions.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3928184Z Would reformat: tests\docker\test_dhtl_commands_complete.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3928810Z Would reformat: tests\docker\test_docker_profiles.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3929313Z Would reformat: tests\docker\test_workflow_profiles.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3929838Z Would reformat: tests\integration\test_github_clone_setup.py
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.3930387Z 6 files would be reformatted, 252 files already formatted
-Test Python 3.12 on windows-latest	Run linters	2025-06-27T20:34:48.4946220Z ##[error]Process completed with exit code 1.
-Combine coverage	Combine coverage	﻿2025-06-27T20:35:26.6037727Z ##[group]Run uv run coverage combine coverage-reports/*/.coverage
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6038222Z [36;1muv run coverage combine coverage-reports/*/.coverage[0m
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6038553Z [36;1muv run coverage report[0m
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6038769Z [36;1muv run coverage html[0m
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6096078Z shell: /usr/bin/bash -e {0}
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6096308Z env:
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6096540Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6096823Z ##[endgroup]
-Combine coverage	Combine coverage	2025-06-27T20:35:26.6480150Z    Building dht-toolkit @ file:///home/runner/work/dht/dht
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7065871Z Downloading virtualenv (5.8MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7068703Z Downloading apprise (1.3MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7106824Z Downloading asyncpg (2.8MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7411095Z Downloading mypy (12.0MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7416306Z Downloading prefect (5.7MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7420681Z Downloading ruff (11.0MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7425615Z Downloading cryptography (4.2MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7436847Z Downloading uv (17.0MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7442492Z Downloading deptry (1.7MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7445347Z Downloading pydantic-core (1.9MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7448868Z Downloading sqlalchemy (3.0MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7454123Z Downloading pygments (1.2MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:26.7460059Z Downloading tree-sitter-language-pack (16.6MiB)
-Combine coverage	Combine coverage	2025-06-27T20:35:27.3637147Z  Downloading deptry
-Combine coverage	Combine coverage	2025-06-27T20:35:27.3854547Z  Downloading pydantic-core
-Combine coverage	Combine coverage	2025-06-27T20:35:27.4673187Z  Downloading apprise
-Combine coverage	Combine coverage	2025-06-27T20:35:27.5346538Z  Downloading asyncpg
-Combine coverage	Combine coverage	2025-06-27T20:35:27.7541517Z  Downloading sqlalchemy
-Combine coverage	Combine coverage	2025-06-27T20:35:27.7606761Z  Downloading virtualenv
-Combine coverage	Combine coverage	2025-06-27T20:35:27.7895973Z  Downloading pygments
-Combine coverage	Combine coverage	2025-06-27T20:35:27.8309757Z  Downloading cryptography
-Combine coverage	Combine coverage	2025-06-27T20:35:27.9230978Z       Built dht-toolkit @ file:///home/runner/work/dht/dht
-Combine coverage	Combine coverage	2025-06-27T20:35:28.0315257Z  Downloading ruff
-Combine coverage	Combine coverage	2025-06-27T20:35:28.2325695Z  Downloading uv
-Combine coverage	Combine coverage	2025-06-27T20:35:28.2730034Z  Downloading prefect
-Combine coverage	Combine coverage	2025-06-27T20:35:28.2769631Z  Downloading tree-sitter-language-pack
-Combine coverage	Combine coverage	2025-06-27T20:35:28.3870955Z  Downloading mypy
-Combine coverage	Combine coverage	2025-06-27T20:35:28.5054459Z Installed 141 packages in 117ms
-Combine coverage	Combine coverage	2025-06-27T20:35:31.0660414Z Bytecode compiled 4642 files in 2.56s
-Combine coverage	Combine coverage	2025-06-27T20:35:31.1901432Z Couldn't combine from non-existent path 'coverage-reports/*/.coverage'
-Combine coverage	Combine coverage	2025-06-27T20:35:31.2085801Z ##[error]Process completed with exit code 1.
+Test Python 3.11 on ubuntu-latest	Run type checker	﻿2025-06-30T08:31:22.9045626Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:22.9048510Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:22.9105372Z shell: /usr/bin/bash -e {0}
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:22.9105591Z env:
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:22.9105798Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:22.9106101Z ##[endgroup]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:25.3290584Z Bytecode compiled 4698 files in 2.39s
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6634772Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6682563Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6730071Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6789668Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6813303Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6833422Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.6926053Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.7048980Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.7099701Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:57.8768107Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:58.0345327Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.11 on ubuntu-latest	Run type checker	2025-06-30T08:31:58.0844501Z ##[error]Process completed with exit code 1.
+Test Python 3.11 on windows-latest	Run type checker	﻿2025-06-30T08:30:32.2024786Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2029701Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2085623Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2086151Z env:
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2086499Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2086955Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2087389Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:32.2087767Z ##[endgroup]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:30:35.9762888Z Bytecode compiled 5149 files in 3.54s
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8567240Z src\DHT\modules\commands\workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8622863Z src\DHT\modules\commands\upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8677141Z src\DHT\modules\commands\remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8745922Z src\DHT\modules\commands\project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8772423Z src\DHT\modules\commands\install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8796705Z src\DHT\modules\commands\fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.8901599Z src\DHT\modules\commands\doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.9034002Z src\DHT\modules\commands\check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:14.9092044Z src\DHT\modules\commands\bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:15.1044126Z src\DHT\modules\commands\workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:15.2887292Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.11 on windows-latest	Run type checker	2025-06-30T08:31:15.3991697Z ##[error]Process completed with exit code 1.
+Test Python 3.12 on windows-latest	Run type checker	﻿2025-06-30T08:31:58.8766347Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8769102Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8800759Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8801066Z env:
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8801281Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8801548Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8801787Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:31:58.8801989Z ##[endgroup]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:02.6793116Z Bytecode compiled 5149 files in 3.57s
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6255562Z src\DHT\modules\commands\workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6310210Z src\DHT\modules\commands\upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6363855Z src\DHT\modules\commands\remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6432629Z src\DHT\modules\commands\project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6460124Z src\DHT\modules\commands\install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6483579Z src\DHT\modules\commands\fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6590869Z src\DHT\modules\commands\doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6726114Z src\DHT\modules\commands\check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.6785311Z src\DHT\modules\commands\bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:40.8705958Z src\DHT\modules\commands\workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:41.0550052Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.12 on windows-latest	Run type checker	2025-06-30T08:32:41.1703785Z ##[error]Process completed with exit code 1.
+Test Python 3.10 on macos-latest	Run type checker	﻿2025-06-30T08:30:32.3441220Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:32.3443550Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:32.3490360Z shell: /bin/bash -e {0}
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:32.3490590Z env:
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:32.3490750Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:32.3490980Z ##[endgroup]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:33.3813390Z Bytecode compiled 4698 files in 990ms
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9291830Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9312810Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9332050Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9356470Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9367980Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9376560Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9414920Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9467460Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:51.9486630Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:52.0128840Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:52.0768860Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.10 on macos-latest	Run type checker	2025-06-30T08:30:52.0882520Z ##[error]Process completed with exit code 1.
+Test Python 3.10 on ubuntu-latest	Run type checker	﻿2025-06-30T08:33:12.5577422Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:12.5580419Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:12.5638206Z shell: /usr/bin/bash -e {0}
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:12.5638682Z env:
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:12.5638900Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:12.5639212Z ##[endgroup]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:15.0372804Z Bytecode compiled 4698 files in 2.44s
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2420764Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2468877Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2515456Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2575670Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2599360Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2619910Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2712509Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2836429Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.2887581Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.4532729Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.6108806Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.10 on ubuntu-latest	Run type checker	2025-06-30T08:33:47.6602148Z ##[error]Process completed with exit code 1.
+Test Python 3.11 on macos-latest	Run type checker	﻿2025-06-30T08:30:04.4497070Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:04.4499650Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:04.4550860Z shell: /bin/bash -e {0}
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:04.4551040Z env:
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:04.4551240Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:04.4551520Z ##[endgroup]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:05.8785200Z Bytecode compiled 4698 files in 1.37s
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5746680Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5800790Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5802110Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5843590Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5844630Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5848570Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5882820Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5945860Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.5970010Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.6657040Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.7380700Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.11 on macos-latest	Run type checker	2025-06-30T08:30:28.7500580Z ##[error]Process completed with exit code 1.
+Test Python 3.12 on ubuntu-latest	Run type checker	﻿2025-06-30T08:32:03.7077056Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:03.7081886Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:03.7167544Z shell: /usr/bin/bash -e {0}
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:03.7167941Z env:
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:03.7168316Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:03.7168848Z ##[endgroup]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:06.1613813Z Bytecode compiled 4698 files in 2.41s
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5047491Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5095652Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5144347Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5204769Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5228474Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5248901Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5340809Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5466736Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.5517962Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.7177247Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.8741630Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.12 on ubuntu-latest	Run type checker	2025-06-30T08:32:38.9216871Z ##[error]Process completed with exit code 1.
+Test Python 3.12 on macos-latest	Run type checker	﻿2025-06-30T08:31:48.7040250Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:48.7042420Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:48.7099220Z shell: /bin/bash -e {0}
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:48.7099400Z env:
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:48.7099590Z   UV_CACHE_DIR: /Users/runner/work/_temp/setup-uv-cache
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:48.7099880Z ##[endgroup]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:31:50.3184710Z Bytecode compiled 4698 files in 1.56s
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9819890Z src/DHT/modules/commands/workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9853620Z src/DHT/modules/commands/upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9868340Z src/DHT/modules/commands/remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9895560Z src/DHT/modules/commands/project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9907270Z src/DHT/modules/commands/install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9916960Z src/DHT/modules/commands/fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:12.9958430Z src/DHT/modules/commands/doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:13.0015680Z src/DHT/modules/commands/check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:13.0036700Z src/DHT/modules/commands/bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:13.0720740Z src/DHT/modules/commands/workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:13.1447670Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.12 on macos-latest	Run type checker	2025-06-30T08:32:13.1640260Z ##[error]Process completed with exit code 1.
+Test Python 3.10 on windows-latest	Run type checker	﻿2025-06-30T08:32:55.5815662Z ##[group]Run uv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5820837Z [36;1muv run mypy src/DHT/ --ignore-missing-imports --strict --disable-error-code=misc --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=assignment --disable-error-code=call-overload --disable-error-code=attr-defined --disable-error-code=arg-type --disable-error-code=index --disable-error-code=union-attr --disable-error-code=unused-coroutine --disable-error-code=return-value[0m
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5877396Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5877920Z env:
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5878246Z   UV_CACHE_DIR: D:\a\_temp\setup-uv-cache
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5878702Z   UV_TOOL_BIN_DIR: D:\a\_temp\uv-tool-bin-dir
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5879124Z   UV_TOOL_DIR: D:\a\_temp\uv-tool-dir
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:55.5879506Z ##[endgroup]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:32:59.4223252Z Bytecode compiled 5149 files in 3.59s
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6194334Z src\DHT\modules\commands\workspaces_command.py:210: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6247713Z src\DHT\modules\commands\upgrade_command.py:109: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6301409Z src\DHT\modules\commands\remove_command.py:105: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6369144Z src\DHT\modules\commands\project_command.py:124: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6395590Z src\DHT\modules\commands\install_command.py:107: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6418527Z src\DHT\modules\commands\fmt_command.py:76: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6521367Z src\DHT\modules\commands\doc_command.py:223: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6650691Z src\DHT\modules\commands\check_command.py:133: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.6708731Z src\DHT\modules\commands\bin_command.py:106: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:37.8618728Z src\DHT\modules\commands\workspace_command.py:201: error: Redundant cast to "dict[str, Any]"  [redundant-cast]
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:38.0409883Z Found 10 errors in 10 files (checked 183 source files)
+Test Python 3.10 on windows-latest	Run type checker	2025-06-30T08:33:38.1563871Z ##[error]Process completed with exit code 1.
+Combine coverage	Combine coverage	﻿2025-06-30T08:34:01.9202963Z ##[group]Run # Find all .coverage files and combine them
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9203353Z [36;1m# Find all .coverage files and combine them[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9203718Z [36;1mfind coverage-reports -name ".coverage" -exec echo {} \;[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9204249Z [36;1muv run coverage combine coverage-reports/*/.coverage || echo "No coverage files found to combine"[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9204712Z [36;1m# If coverage files exist, generate reports[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9204983Z [36;1mif [ -f .coverage ]; then[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9205209Z [36;1m  uv run coverage report[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9205431Z [36;1m  uv run coverage html[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9205635Z [36;1melse[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9205846Z [36;1m  echo "No combined coverage data available"[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9206089Z [36;1mfi[0m
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9262902Z shell: /usr/bin/bash -e {0}
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9263124Z env:
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9263333Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9263631Z ##[endgroup]
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9352147Z find: ‘coverage-reports’: No such file or directory
+Combine coverage	Combine coverage	2025-06-30T08:34:01.9365818Z ##[error]Process completed with exit code 1.

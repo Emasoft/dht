@@ -20,7 +20,7 @@ for users coming from other development tools.
 """
 
 import logging
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -73,4 +73,4 @@ class FmtCommand:
 def fmt_command(**kwargs: Any) -> dict[str, Any]:
     """Execute fmt command."""
     cmd = FmtCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

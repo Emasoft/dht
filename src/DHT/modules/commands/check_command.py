@@ -22,7 +22,7 @@ separate from the broader lint command.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -130,4 +130,4 @@ class CheckCommand:
 def check_command(**kwargs: Any) -> dict[str, Any]:
     """Execute check command."""
     cmd = CheckCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

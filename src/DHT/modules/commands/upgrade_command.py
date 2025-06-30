@@ -21,7 +21,7 @@ wrapping the UV package manager's upgrade functionality.
 
 import logging
 import subprocess
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -106,4 +106,4 @@ class UpgradeCommand:
 def upgrade_command(packages: list[str] | None = None, **kwargs: Any) -> dict[str, Any]:
     """Execute upgrade command."""
     cmd = UpgradeCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, packages, **kwargs))
+    return cmd.execute.fn(cmd, packages, **kwargs)

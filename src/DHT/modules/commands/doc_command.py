@@ -22,7 +22,7 @@ automatically detecting which tool is configured.
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -220,4 +220,4 @@ class DocCommand:
 def doc_command(**kwargs: Any) -> dict[str, Any]:
     """Execute doc command."""
     cmd = DocCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)

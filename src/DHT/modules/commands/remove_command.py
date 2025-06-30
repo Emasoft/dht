@@ -21,7 +21,7 @@ wrapping the UV package manager's remove functionality.
 
 import logging
 import subprocess
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 
@@ -102,4 +102,4 @@ class RemoveCommand:
 def remove_command(packages: list[str], **kwargs: Any) -> dict[str, Any]:
     """Execute remove command."""
     cmd = RemoveCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, packages, **kwargs))
+    return cmd.execute.fn(cmd, packages, **kwargs)

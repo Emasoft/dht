@@ -23,7 +23,7 @@ leveraging UV's workspace support.
 import logging
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from ..prefect_compat import task
 from .workspace_base import WorkspaceBase
@@ -207,4 +207,4 @@ class WorkspacesCommand(WorkspaceBase):
 def workspaces_command(**kwargs: Any) -> dict[str, Any]:
     """Execute workspaces command."""
     cmd = WorkspacesCommand()
-    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))
+    return cmd.execute.fn(cmd, **kwargs)
