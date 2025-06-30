@@ -24,20 +24,19 @@ import sys
 from typing import Any
 
 
-def _patch_visualization_module() -> None:
-    """Create and patch the visualization module with missing functions."""
-    # First ensure the module structure exists
+def _patch_missing_modules() -> None:
+    """Create and patch missing modules that were removed in Prefect 3.x."""
+    from types import ModuleType
+
+    import prefect
+
+    # Patch visualization module
     try:
         import prefect.utilities.visualization
 
         viz_module = prefect.utilities.visualization
     except ImportError:
         # Create the module structure if it doesn't exist
-        from types import ModuleType
-
-        # Ensure prefect.utilities exists
-        import prefect
-
         if not hasattr(prefect, "utilities"):
             utilities = ModuleType("prefect.utilities")
             sys.modules["prefect.utilities"] = utilities
@@ -47,6 +46,26 @@ def _patch_visualization_module() -> None:
         viz_module = ModuleType("prefect.utilities.visualization")
         sys.modules["prefect.utilities.visualization"] = viz_module
         prefect.utilities.visualization = viz_module
+
+    # Patch task_engine module (removed in Prefect 3.x)
+    if "prefect.task_engine" not in sys.modules:
+        task_engine = ModuleType("prefect.task_engine")
+        sys.modules["prefect.task_engine"] = task_engine
+        prefect.task_engine = task_engine  # type: ignore
+
+        # Add commonly used attributes
+        task_engine.TaskEngine = type("TaskEngine", (), {})  # type: ignore
+        task_engine.run_task = lambda *args, **kwargs: None  # type: ignore
+
+    # Patch flow_engine module (removed in Prefect 3.x)
+    if "prefect.flow_engine" not in sys.modules:
+        flow_engine = ModuleType("prefect.flow_engine")
+        sys.modules["prefect.flow_engine"] = flow_engine
+        prefect.flow_engine = flow_engine  # type: ignore
+
+        # Add commonly used attributes
+        flow_engine.FlowEngine = type("FlowEngine", (), {})  # type: ignore
+        flow_engine.run_flow = lambda *args, **kwargs: None  # type: ignore
 
     # Add missing functions that Prefect 3.x task decorator expects
     if not hasattr(viz_module, "get_task_viz_tracker"):
@@ -83,7 +102,7 @@ def _patch_visualization_module() -> None:
 
 
 # Apply patches immediately when module is imported
-_patch_visualization_module()
+_patch_missing_modules()
 
 
 # Check Prefect version for reference

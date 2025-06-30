@@ -69,7 +69,9 @@ COPY --from=uv /uv /uvx /bin/
 # Create non-root user first
 RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
     mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
+    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
+    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
 
 # Set working directory
 WORKDIR /app
@@ -145,7 +147,9 @@ COPY --from=uv /uv /uvx /bin/
 # Create non-root user first
 RUN useradd -m -u 1000 -s /bin/bash dhtuser && \
     mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
+    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
+    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
 
 # Set working directory
 WORKDIR /app
@@ -178,7 +182,10 @@ RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
 
 # Create Prefect configuration directory with correct ownership
 RUN mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
+    # Create default Prefect settings to avoid missing file errors
+    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
+    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
 
 # Set environment to use venv
 ENV VIRTUAL_ENV=/opt/venv
