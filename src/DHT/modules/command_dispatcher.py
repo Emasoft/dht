@@ -105,7 +105,15 @@ class CommandDispatcher:
                 if isinstance(handler.__self__, DHTLCommands):
                     # Parse arguments for DHTLCommands methods
                     parsed_args = self._parse_command_args(command, args)
-                    result = handler(**parsed_args)
+
+                    # Check if handler is a Prefect task
+                    if hasattr(handler, "fn"):
+                        # Call the underlying function for Prefect tasks
+                        logger.debug(f"Calling Prefect task {command} with args: {parsed_args}")
+                        result = handler.fn(handler.__self__, **parsed_args)
+                        logger.debug(f"Result from {command}: {result}")
+                    else:
+                        result = handler(**parsed_args)
 
                     # Handle result
                     if isinstance(result, dict):
@@ -138,7 +146,11 @@ class CommandDispatcher:
             return 130
         except Exception as e:
             logger.error(f"Command '{command}' failed: {e}", exc_info=True)
-            print(f"❌ Error: {e}")
+            import traceback
+
+            print(f"\n❌ Error executing command '{command}': {e}")
+            print("\nFull traceback:")
+            traceback.print_exc()
             return 1
 
     def _parse_command_args(self, command: str, args: list[str]) -> dict[str, Any]:
@@ -260,7 +272,26 @@ class CommandDispatcher:
 
         # Parse arguments
         parsed = parser.parse_args(args)
-        return vars(parsed)
+        parsed_dict = vars(parsed)
+
+        # Handle special conversions for init command
+        if command == "init":
+            # Convert no_package to package
+            if "no_package" in parsed_dict:
+                parsed_dict["package"] = not parsed_dict.pop("no_package")
+            # If neither package nor no_package is set, use default
+            elif "package" not in parsed_dict:
+                parsed_dict["package"] = False
+
+            # Remove lib and app flags - they're handled by UV directly
+            parsed_dict.pop("lib", None)
+            parsed_dict.pop("app", None)
+
+            # Remove other UV-specific flags
+            parsed_dict.pop("ci", None)
+            parsed_dict.pop("pre_commit", None)
+
+        return parsed_dict
 
     def show_help(self, args: list[str] | None = None) -> int:
         """Show help message."""

@@ -207,4 +207,4 @@ class WorkspacesCommand(WorkspaceBase):
 def workspaces_command(**kwargs: Any) -> dict[str, Any]:
     """Execute workspaces command."""
     cmd = WorkspacesCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

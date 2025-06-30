@@ -103,4 +103,4 @@ class BinCommand:
 def bin_command(**kwargs: Any) -> dict[str, Any]:
     """Execute bin command."""
     cmd = BinCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

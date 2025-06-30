@@ -121,4 +121,4 @@ class ProjectCommand(WorkspaceBase):
 def project_command(**kwargs: Any) -> dict[str, Any]:
     """Execute project command."""
     cmd = ProjectCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

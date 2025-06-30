@@ -104,4 +104,4 @@ class InstallCommand:
 def install_command(**kwargs: Any) -> dict[str, Any]:
     """Execute install command."""
     cmd = InstallCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

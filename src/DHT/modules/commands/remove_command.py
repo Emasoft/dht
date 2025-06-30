@@ -102,4 +102,4 @@ class RemoveCommand:
 def remove_command(packages: list[str], **kwargs: Any) -> dict[str, Any]:
     """Execute remove command."""
     cmd = RemoveCommand()
-    return cast(dict[str, Any], cmd.execute(packages, **kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, packages, **kwargs))

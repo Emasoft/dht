@@ -73,4 +73,4 @@ class FmtCommand:
 def fmt_command(**kwargs: Any) -> dict[str, Any]:
     """Execute fmt command."""
     cmd = FmtCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

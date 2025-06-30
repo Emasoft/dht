@@ -220,4 +220,4 @@ class DocCommand:
 def doc_command(**kwargs: Any) -> dict[str, Any]:
     """Execute doc command."""
     cmd = DocCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

@@ -129,4 +129,5 @@ class AddCommand:
 def add_command(packages: list[str], **kwargs: Any) -> dict[str, Any]:
     """Execute add command."""
     cmd = AddCommand()
-    return cast(dict[str, Any], cmd.execute(packages, **kwargs))
+    # Call the Prefect task's underlying function directly
+    return cast(dict[str, Any], cmd.execute.fn(cmd, packages, **kwargs))

@@ -296,6 +296,11 @@ index-strategy = "first-index"
 keyring-provider = "subprocess"
 no-build-isolation-package = []
 
+[tool.uv.workspace]
+members = [
+    "test_tmp",
+]
+
 # Constraint environments for platform-specific builds
 # This is specified as a list of environment markers
 # [tool.uv.environments]

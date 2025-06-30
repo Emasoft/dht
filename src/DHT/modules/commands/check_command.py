@@ -130,4 +130,4 @@ class CheckCommand:
 def check_command(**kwargs: Any) -> dict[str, Any]:
     """Execute check command."""
     cmd = CheckCommand()
-    return cast(dict[str, Any], cmd.execute(**kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, **kwargs))

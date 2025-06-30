@@ -83,22 +83,22 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and message
         """
-        return cast(
-            dict[str, Any],
-            self._init_cmd.init(
-                self.uv_manager,
-                path=path,
-                name=name,
-                python=python,
-                package=package,
-                with_dev=with_dev,
-                author=author,
-                email=email,
-                license=license,
-                with_ci=with_ci,
-                from_requirements=from_requirements,
-            ),
+        # Call the Prefect task's underlying function directly
+        result = self._init_cmd.init.fn(
+            self._init_cmd,
+            self.uv_manager,
+            path=path,
+            name=name,
+            python=python,
+            package=package,
+            with_dev=with_dev,
+            author=author,
+            email=email,
+            license=license,
+            with_ci=with_ci,
+            from_requirements=from_requirements,
         )
+        return cast(dict[str, Any], result)
 
     def setup(
         self,
@@ -129,21 +129,21 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and details
         """
-        return cast(
-            dict[str, Any],
-            self._setup_cmd.setup(
-                self.uv_manager,
-                path=path,
-                python=python,
-                dev=dev,
-                from_requirements=from_requirements,
-                all_packages=all_packages,
-                compile_bytecode=compile_bytecode,
-                editable=editable,
-                index_url=index_url,
-                install_pre_commit=install_pre_commit,
-            ),
+        # Call the Prefect task's underlying function directly
+        result = self._setup_cmd.setup.fn(
+            self._setup_cmd,
+            self.uv_manager,
+            path=path,
+            python=python,
+            dev=dev,
+            from_requirements=from_requirements,
+            all_packages=all_packages,
+            compile_bytecode=compile_bytecode,
+            editable=editable,
+            index_url=index_url,
+            install_pre_commit=install_pre_commit,
         )
+        return cast(dict[str, Any], result)
 
     def build(
         self,
@@ -165,17 +165,17 @@ class DHTLCommands:
         Returns:
             Dict with build results
         """
-        return cast(
-            dict[str, Any],
-            self._build_cmd.build(
-                self.uv_manager,
-                path=path,
-                wheel=wheel,
-                sdist=sdist,
-                no_checks=no_checks,
-                out_dir=out_dir,
-            ),
+        # Call the Prefect task's underlying function directly
+        result = self._build_cmd.build.fn(
+            self._build_cmd,
+            self.uv_manager,
+            path=path,
+            wheel=wheel,
+            sdist=sdist,
+            no_checks=no_checks,
+            out_dir=out_dir,
         )
+        return cast(dict[str, Any], result)
 
     def sync(
         self,
@@ -204,20 +204,20 @@ class DHTLCommands:
         Returns:
             Result dictionary with success status and message
         """
-        return cast(
-            dict[str, Any],
-            self._sync_cmd.sync(
-                self.uv_manager,
-                path=path,
-                locked=locked,
-                dev=dev,
-                no_dev=no_dev,
-                extras=extras,
-                upgrade=upgrade,
-                all_extras=all_extras,
-                package=package,
-            ),
+        # Call the Prefect task's underlying function directly
+        result = self._sync_cmd.sync.fn(
+            self._sync_cmd,
+            self.uv_manager,
+            path=path,
+            locked=locked,
+            dev=dev,
+            no_dev=no_dev,
+            extras=extras,
+            upgrade=upgrade,
+            all_extras=all_extras,
+            package=package,
         )
+        return cast(dict[str, Any], result)
 
     def deploy_project_in_container(
         self,

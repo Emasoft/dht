@@ -106,4 +106,4 @@ class UpgradeCommand:
 def upgrade_command(packages: list[str] | None = None, **kwargs: Any) -> dict[str, Any]:
     """Execute upgrade command."""
     cmd = UpgradeCommand()
-    return cast(dict[str, Any], cmd.execute(packages, **kwargs))
+    return cast(dict[str, Any], cmd.execute.fn(cmd, packages, **kwargs))
