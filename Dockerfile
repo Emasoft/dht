@@ -78,6 +78,9 @@ WORKDIR /app
 COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder --chown=dhtuser:dhtuser /app /app
 
+# Copy Prefect configuration for testing
+COPY --chown=dhtuser:dhtuser prefect_test_config.toml /home/dhtuser/.prefect/profiles.toml
+
 # Fix ownership
 RUN chown -R dhtuser:dhtuser /opt/venv
 
@@ -90,8 +93,6 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV DHT_IN_DOCKER=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-# Disable Prefect profiles in tests to avoid configuration issues
-ENV PREFECT_PROFILES_PATH=/dev/null
 
 # Switch to non-root user
 USER dhtuser

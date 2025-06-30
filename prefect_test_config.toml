@@ -1,0 +1,8 @@
+# Minimal Prefect configuration for testing
+active = "default"
+
+[profiles.default]
+name = "default"
+
+[profiles.ephemeral]
+name = "ephemeral"

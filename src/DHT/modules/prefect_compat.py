@@ -115,6 +115,21 @@ except Exception:
 
 
 # Re-export common Prefect imports after patching
+import os
+
+# Disable Prefect profiles in Docker test environment to avoid configuration issues
+if os.environ.get("DHT_IN_DOCKER") and os.environ.get("DHT_TEST_MODE"):
+    os.environ["PREFECT_PROFILE"] = "default"
+    # If running as non-root user in Docker, use home directory
+    import pathlib
+
+    home = pathlib.Path.home()
+    prefect_home = home / ".prefect"
+    if not prefect_home.exists():
+        os.environ["PREFECT_HOME"] = "/tmp/.prefect"
+        os.environ["PREFECT_LOCAL_STORAGE_PATH"] = "/tmp/.prefect/storage"
+        pathlib.Path("/tmp/.prefect").mkdir(parents=True, exist_ok=True)
+
 from prefect import flow, get_run_logger, task
 from prefect.context import FlowRunContext, TaskRunContext
 
