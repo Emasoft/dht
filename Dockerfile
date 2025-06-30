@@ -174,7 +174,12 @@ COPY --chown=dhtuser:dhtuser . .
 RUN UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --all-extras && \
     chown -R dhtuser:dhtuser /app /opt/venv && \
     chmod -R a+rx /opt/venv && \
-    chmod -R a+rx /opt/uv-python || true
+    chmod -R a+rx /opt/uv-python || true && \
+    # Create Prefect profiles.toml in the installed package location
+    PREFECT_PATH=$(/opt/venv/bin/python -c "import prefect; import os; print(os.path.dirname(prefect.__file__))") && \
+    mkdir -p "${PREFECT_PATH}/settings" && \
+    echo "active = 'default'" > "${PREFECT_PATH}/settings/profiles.toml" && \
+    chmod a+r "${PREFECT_PATH}/settings/profiles.toml"
 
 # Create cache directories with correct ownership
 RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \

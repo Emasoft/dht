@@ -103,13 +103,17 @@ class BashParserUtils:
             path_candidates.append(Path(path))
         else:
             # Relative paths
-            path_candidates.extend(
-                [
-                    Path(path),
-                    Path.cwd() / path,
-                    Path.home() / path,
-                ]
-            )
+            path_candidates.append(Path(path))
+
+            # Try to get current working directory
+            try:
+                cwd = Path.cwd()
+                path_candidates.append(cwd / path)
+            except FileNotFoundError:
+                # Current directory might not exist in some test environments
+                pass
+
+            path_candidates.append(Path.home() / path)
 
             # Common bash config locations
             if not path.startswith("."):

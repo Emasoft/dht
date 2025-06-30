@@ -92,13 +92,19 @@ class TestGitHubReposWorkflow:
     def setup_test_environment(self, test_dir) -> Any:
         """Set up test environment."""
         # Change to test directory
-        original_dir = os.getcwd()
+        try:
+            original_dir = os.getcwd()
+        except FileNotFoundError:
+            # Current directory might not exist in some test environments
+            original_dir = None
+
         os.chdir(test_dir)
 
         yield
 
         # Cleanup - change back to original directory
-        os.chdir(original_dir)
+        if original_dir:
+            os.chdir(original_dir)
 
     def run_dhtl_command(
         self, dhtl_path: Path, command: str, args: list[str] | None = None, timeout: int = 300
