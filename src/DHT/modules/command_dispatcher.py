@@ -138,8 +138,40 @@ class CommandDispatcher:
                     # Function takes no arguments
                     return cast(int, handler())
                 else:
-                    # Function takes arguments
-                    return cast(int, handler(args) if args else handler())
+                    # Check if this is a command that needs parsed arguments
+                    if command in [
+                        "add",
+                        "remove",
+                        "upgrade",
+                        "install",
+                        "setup",
+                        "build",
+                        "sync",
+                        "check",
+                        "fmt",
+                        "doc",
+                        "bin",
+                        "workspace",
+                        "workspaces",
+                        "project",
+                    ]:
+                        # Parse arguments for these commands
+                        parsed_args = self._parse_command_args(command, args)
+                        result = handler(**parsed_args)
+
+                        # Handle result
+                        if isinstance(result, dict):
+                            if result.get("success", False):
+                                return 0
+                            else:
+                                error_msg = result.get("error", "Command failed")
+                                print(f"❌ Error: {error_msg}")
+                                return 1
+                        else:
+                            return 0 if result else 1
+                    else:
+                        # Function takes raw arguments list
+                        return cast(int, handler(args) if args else handler())
 
         except KeyboardInterrupt:
             print("\n⚠️  Interrupted by user")
