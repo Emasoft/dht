@@ -17,3 +17,7 @@ tree-sitter-bash/
 requirements.txt
 requirements-dev.txt
 logs/
+
+# Utility scripts
+cleanup_docker.sh
+run_all_checks.sh
