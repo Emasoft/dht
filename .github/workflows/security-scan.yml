@@ -16,16 +16,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  placeholder:
-    name: Security Scan Placeholder
+  gitleaks-safe:
+    name: Gitleaks Safe Secret Scan
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for scanning all commits
 
-    - name: Security check placeholder
-      run: |-
-        echo "Security scanning placeholder"
-        echo "Add security scanning tools as needed"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install gitleaks-safe
+      run: |
+        pip install --upgrade pip
+        # Install from PyPI when available, for now use GitHub
+        pip install git+https://github.com/Emasoft/gitleaks-safe.git@main
+        which gitleaks-safe
+        gitleaks-safe --version || echo "Version command not available"
+
+    - name: Run gitleaks-safe scan
+      run: |
+        echo "Running gitleaks-safe scan with custom config..."
+        gitleaks-safe detect --source . --config .gitleaks.toml --verbose --no-git
+
+    - name: Run gitleaks-safe on git history
+      run: |
+        echo "Scanning git history for secrets..."
+        gitleaks-safe detect --source . --config .gitleaks.toml --verbose || echo "Historical secrets found - please review"
+
+    - name: Upload scan results
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: gitleaks-report
+        path: |
+          gitleaks-report.json
+          .gitleaks.log
+        retention-days: 30

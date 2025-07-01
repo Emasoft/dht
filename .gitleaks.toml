@@ -1,0 +1,24 @@
+# Gitleaks configuration for DHT project
+# This configuration allows only specific git author and email
+
+title = "DHT Gitleaks Configuration"
+
+[allowlist]
+  description = "Global allowlist"
+
+  # Allow specific patterns
+  regexes = [
+    # Git author and email (CRITICAL - only these are allowed)
+    '''Emasoft''',
+    '''713559\+Emasoft@users\.noreply\.github\.com''',
+
+    # Localhost and example domains
+    '''(localhost|127\.0\.0\.1|0\.0\.0\.0)(:[0-9]{1,5})?''',
+    '''example\.(com|org|net)''',
+
+    # Placeholder patterns
+    '''(PLACEHOLDER|DUMMY|EXAMPLE|TEST)_[A-Z_]+''',
+    '''(test|demo|sample|example)[-_]?(api[-_]?)?key'''
+  ]
+
+# Use default rules - gitleaks has excellent built-in rules
