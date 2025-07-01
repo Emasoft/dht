@@ -1,56 +1,29 @@
-# Sequential pre-commit configuration with memory management
-# This configuration ensures hooks run one at a time to prevent resource exhaustion
-
-# Set default language version
-default_language_version:
-  python: python3.10
-
-# Ensure sequential execution
-default_stages: [pre-commit]
-
 repos:
-  # Basic file checks (lightweight, run first)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        stages: [pre-commit]
       - id: end-of-file-fixer
-        stages: [pre-commit]
       - id: check-yaml
-        stages: [pre-commit]
       - id: check-added-large-files
-        stages: [pre-commit]
       - id: check-toml
-        stages: [pre-commit]
       - id: check-json
-        stages: [pre-commit]
       - id: check-merge-conflict
-        stages: [pre-commit]
 
-  # UV operations (memory intensive, run with limits)
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.7.13
     hooks:
       - id: uv-lock
         args: [--locked]
         exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
-        stages: [pre-commit]
-        # Force sequential execution
-        require_serial: true
       - id: uv-export
         args: [--no-hashes, --output-file=requirements.txt]
         exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
-        stages: [pre-commit]
-        require_serial: true
       - id: uv-export
         name: Export dev requirements
         args: [--no-hashes, --output-file=requirements-dev.txt, --all-extras]
         exclude: ^(test_temp/|test_upgrade/|tmp/|temp/|tests/.*_temp.*/)
-        stages: [pre-commit]
-        require_serial: true
 
-  # Ruff (fast, but run serially to avoid conflicts)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.4
     hooks:
@@ -59,23 +32,15 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
         exclude: ^(tree-sitter-bash/|node_modules/)
         files: \.py$
-        stages: [pre-commit]
-        require_serial: true
       - id: ruff-format
         exclude: ^(tree-sitter-bash/|node_modules/)
         files: \.py$
-        stages: [pre-commit]
-        require_serial: true
 
-  # Resource-intensive local hooks with memory limits
-  - repo: local
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.1
     hooks:
-      # MyPy with memory wrapper
       - id: mypy
-        name: MyPy type checking (memory limited)
-        entry: .pre-commit-wrappers/memory-limited-hook.sh uv run mypy
-        language: system
-        types: [python]
+        additional_dependencies: [types-pyyaml, types-requests, types-toml, types-tabulate]
         args:
           - --ignore-missing-imports
           - --strict
@@ -91,31 +56,18 @@ repos:
           - --disable-error-code=unused-coroutine
           - --disable-error-code=return-value
         exclude: ^(tests/|tree-sitter-bash/)
-        require_serial: true
-        pass_filenames: true
-        stages: [pre-commit]
+        files: \.py$
 
-      # Deptry with memory wrapper
+  - repo: local
+    hooks:
       - id: deptry
-        name: Dependency checker (memory limited)
-        entry: .pre-commit-wrappers/memory-limited-hook.sh uv run deptry
+        name: deptry
+        entry: uv run deptry
         language: system
         pass_filenames: false
         args: [src, --config, pyproject.toml]
         files: \.(py|toml)$
-        require_serial: true
-        stages: [pre-commit]
 
-      # Trufflehog with resource limits
-      - id: trufflehog-limited
-        name: Secret detection (resource limited)
-        entry: .pre-commit-wrappers/trufflehog-limited.sh
-        language: system
-        pass_filenames: false
-        require_serial: true
-        stages: [pre-commit]
-
-  # YAML formatting (lightweight, but run serially)
   - repo: https://github.com/google/yamlfmt
     rev: v0.17.1
     hooks:
@@ -123,8 +75,6 @@ repos:
         name: yamlfmt (GitHub workflows)
         files: ^\.github/.*\.ya?ml$
         args: [-conf, .yamlfmt]
-        stages: [pre-commit]
-        require_serial: true
 
   - repo: https://github.com/google/yamlfmt
     rev: v0.17.1
@@ -134,46 +84,43 @@ repos:
         files: \.ya?ml$
         exclude: ^(\.github/|tree-sitter-bash/|node_modules/|logs/|.venv/)
         args: [-conf, .yamlfmt-general]
-        stages: [pre-commit]
-        require_serial: true
 
-  # YAML linting
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.37.1
     hooks:
       - id: yamllint
         args: [-c, .yamllint.yml]
         exclude: ^(tree-sitter-bash/|node_modules/|src/DHT/GITHUB_WORKFLOWS/)
-        stages: [pre-commit]
-        require_serial: true
 
-  # Shell script checking
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
         args: [--severity=error, --extended-analysis=true]
         exclude: ^(tree-sitter-bash/|node_modules/)
-        stages: [pre-commit]
-        require_serial: true
 
-  # GitHub Action linting
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.7
     hooks:
       - id: actionlint
         exclude: ^src/DHT/GITHUB_WORKFLOWS/
-        stages: [pre-commit]
-        require_serial: true
 
-  # Commit message checking (only runs on commit-msg stage)
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.8.3
     hooks:
       - id: commitizen
         stages: [commit-msg]
 
-# CI configuration
+  # Trufflehog secret detection
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: Detect secrets with Trufflehog
+        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail'
+        language: system
+        pass_filenames: false
+
 ci:
   autofix_commit_msg: |
     chore: pre-commit auto-fixes
@@ -184,6 +131,7 @@ ci:
   autofix_prs: true
   autoupdate_schedule: weekly
   skip:
-    - mypy  # Too resource intensive for CI
-    - deptry  # Too resource intensive for CI
-    - trufflehog-limited  # Security scanning in separate CI job
+    - uv-lock
+    - uv-export
+    - mypy
+    - deptry
