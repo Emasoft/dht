@@ -189,10 +189,10 @@ RUN mkdir -p /tmp/.cache/uv /tmp/.pytest_cache /app/test-results && \
 
 # Create Prefect configuration directory with correct ownership
 RUN mkdir -p /home/dhtuser/.prefect && \
-    chown -R dhtuser:dhtuser /home/dhtuser/.prefect && \
-    # Create default Prefect settings to avoid missing file errors
-    echo "active = 'default'" > /home/dhtuser/.prefect/profiles.toml && \
-    chown dhtuser:dhtuser /home/dhtuser/.prefect/profiles.toml
+    chown -R dhtuser:dhtuser /home/dhtuser/.prefect
+
+# Copy Prefect configuration for testing
+COPY --chown=dhtuser:dhtuser prefect_test_config.toml /home/dhtuser/.prefect/profiles.toml
 
 # Set environment to use venv
 ENV VIRTUAL_ENV=/opt/venv
@@ -213,6 +213,9 @@ ENV UV_CACHE_DIR=/tmp/.cache/uv
 ENV HOME=/home/dhtuser
 # Coverage settings to avoid HTML generation issues
 ENV COVERAGE_CORE=sysmon
+# Set Prefect profile to avoid ephemeral profile issues
+ENV PREFECT_PROFILE=default
+ENV PREFECT_HOME=/home/dhtuser/.prefect
 
 # Verify Python setup and dependencies as root first
 RUN ls -la /opt/venv/bin/python* && \
