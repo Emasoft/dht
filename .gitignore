@@ -21,3 +21,14 @@ logs/
 # Utility scripts
 cleanup_docker.sh
 run_all_checks.sh
+
+# Coverage files
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Pytest cache
+.pytest_cache/
+pytest-cov-report.xml
+junit.xml
