@@ -273,3 +273,11 @@ def pytest_sessionfinish(session, exitstatus) -> Any:
             print(f"🔧 Test Profile: {get_test_profile()}")
     except Exception as e:
         print(f"\nError generating test summary: {e}")
+
+    # Clean up any Prefect processes
+    try:
+        from tests.conftest_prefect import cleanup_prefect_processes
+
+        cleanup_prefect_processes()
+    except ImportError:
+        pass

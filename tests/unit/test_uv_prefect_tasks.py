@@ -20,6 +20,7 @@ Licensed under the MIT License. See LICENSE file for details.
 Unit tests for the UV Prefect tasks module.
 """
 
+import atexit
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,21 @@ import pytest
 from prefect.testing.utilities import prefect_test_harness
 
 from DHT.modules.guardian_prefect import GuardianResult
+
+
+def cleanup_prefect_processes():
+    """Clean up any lingering Prefect processes."""
+    import subprocess
+
+    try:
+        # Kill any uvicorn processes running Prefect
+        subprocess.run(["pkill", "-f", "uvicorn.*prefect"], check=False)
+    except Exception:
+        pass
+
+
+# Register cleanup at module exit
+atexit.register(cleanup_prefect_processes)
 from DHT.modules.uv_prefect_tasks import (
     add_dependency,
     build_project,
@@ -51,14 +67,20 @@ from DHT.modules.uv_task_utils import (
 class TestUVPrefectTasks:
     """Test cases for UV Prefect tasks."""
 
-    @pytest.fixture(autouse=True)
+    @pytest.fixture(autouse=True, scope="class")
     def setup_prefect(self) -> Any:
-        """Setup Prefect test harness."""
+        """Setup Prefect test harness for the entire test class."""
         # Clear the LRU cache before each test
         find_uv_executable.cache_clear()
 
+        # Use a single Prefect server for all tests in this class
         with prefect_test_harness():
             yield
+
+        # Ensure cleanup happens
+        import gc
+
+        gc.collect()
 
     def test_extract_min_python_version(self) -> Any:
         """Test Python version extraction from constraints."""
