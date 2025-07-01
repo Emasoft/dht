@@ -2,7 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## General Development Guidelines and Rules
+# PART 1: GENERAL DEVELOPMENT GUIDELINES
+*These guidelines apply to all projects and are not specific to DHT/dhtl*
+
+## Core Development Principles
+
+### Critical Rules
 - *CRITICAL*: when reading the lines of the source files, do not read just few lines like you usually do. Instead always read all the lines of the file (until you reach the limit of available context memory). No matter what is the situation, searching or editing a file, ALWAYS OBEY TO THIS RULE!!!.
 - *CRITICAL*: do not ever do unplanned things or take decisions without asking the user first. All non trivial changes to the code must be planned first, approved by the user, and added to the tasks_checklist.md first. Unless something was specifically instructed by the user, you must not do it. Do not make changes to the codebase without discussing those with the user first and get those approved. Be conservative and act on a strict need-to-be-changed basis.
 - *CRITICAL*: COMMIT AFTER EACH CHANGE TO THE CODE, NO MATTER HOW SMALL!!!
@@ -12,65 +17,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - *CRITICAL*: Never use GREP! Use RIPGREP instead!
 - *CRITICAL*: Never spawn multiple subagents that need to use git at the same time. It can cause conflicting git operations that lead to repo corruption.
 - *CRITICAL*: Never use pip. Use `uv pip <commands>` instead. Consider pip deprecated in favor of uv pip.
+
+### Code Quality Standards
 - be extremely meticulous and accurate. always check twice any line of code for errors when you edit it.
 - never output code that is abridged or with parts replaced by placeholder comments like `# ... rest of the code ...`, `# ... rest of the function as before ...`, `# ... rest of the code remains the same ...`, or similar. You are not chatting. The code you output is going to be saved and linted, so omitting parts of it will cause errors and broken files.
 - Be conservative. only change the code that it is strictly necessary to change to implement a feature or fix an issue. Do not change anything else. You must report the user if there is a way to improve certain parts of the code, but do not attempt to do it unless the user explicitly asks you to.
 - when fixing the code, if you find that there are multiple possible solutions, do not start immediately but first present the user all the options and ask him to choose the one to try. For trivial bugs you don't need to do this, of course.
 - never remove unused code or variables unless they are wrong, since the program is a WIP and those unused parts are likely going to be developed and used in the future. The only exception is if the user explicitly tells you to do it.
 - don't worry about functions imported from external modules, since those dependencies cannot be always included in the chat for your context limit. Do not remove them or implement them just because you can''t find the module or source file they are imported from. You just assume that the imported modules and imported functions work as expected. If you need to change them, ask the user to include them in the chat.
+
+### Development Best Practices
 - Always update the project version after changes. Use semantic version format for updating the project version: `{major - breaking changes or features}.{minor - non breaking changes or features}.{patch - small changes/fixes}`.
 - spend a long time thinking deeply to understand completely the code flow and inner working of the program before writing any code or making any change.
 - if the user asks you to implement a feature or to make a change, always check the source code to ensure that the feature was not already implemented before or it is implemented in another form. Never start a task without checking if that task was already implemented or done somewhere in the codebase.
 - if you must write a function, always check if there are already similar functions that can be extended or parametrized to do what new function need to do. Avoid writing duplicated or similar code by reusing the same flexible helper functions where is possible.
 - keep the source files as small as possible. If you need to create new functions or classes, prefer creating them in new modules in new files and import them instead of putting them in the same source file that will use them. Small reusable modules are always preferable to big functions and spaghetti code.
+- always keep the size of source code files below 10Kb. If writing new code in a source file will make the file size bigger than 10Kb, create a new source file , write the code there, and import it as a module. Refactor big files in multiple smaller modules.
+
+### Git and Version Control
 - commit should be atomic, specific, and focus on WHAT changed in subject line with WHY explained in body when needed.
 - use semantic commit messages following the format in the Git Commit Message Format memory
-- Write only shippable, production ready code. If you wouldn’t ship it, don’t write it.
+- When commit, never mention Claude as the author of the commits or as a Co-author.
+- always use `Emasoft` as the user name, author and committer name for the git repo.
+- always use `713559+Emasoft@users.noreply.github.com` as the user email and git committer email for the git repo.
+
+### Code Style and Documentation
+- Write only shippable, production ready code. If you wouldn't ship it, don't write it.
 - Don't drastically change existing patterns without explicit instruction
-- before you execute a terminal command, trigger the command line syntax help or use `cheat <command>` to learn the correct syntax and avoid failed commands.
-- if you attempt to run a command and the command is not found, first check the path, and then install it using `brew install`.
-- never take shortcuts to skirt around errors. fix them.
-- If the solution to a problem is not obvious, take a step back and look at the bigger picture.
-- If you are unsure, stop and ask the user for help or additional information.
-- if something you are trying to implement or fix does not work, do not fallback to a simpler solution and do not use workarounds to avoid implement it. Do not give up or compromise with a lesser solution. You must always attempt to implement the original planned solution, and if after many attempts it still fails, ask the user for instructions.
 - always use type annotations
-- always keep the size of source code files below 10Kb. If writing new code in a source file will make the file size bigger than 10Kb, create a new source file , write the code there, and import it as a module. Refactor big files in multiple smaller modules.
 - always preserve comments and add them when writing new code.
 - always write the docstrings of all functions and improve the existing ones. Use Google-style docstrings with Args/Returns sections, but do not use markdown.
 - never use markdown in comments.
-- when using the Bash tool, always set the timeout parameter to 1800000 (30 minutes).
-- always tabulate the tests result in a nice table.
-- do not use mockup tests or mocked behaviours unless it is absolutely impossible to do otherwise. If you need to use a service, local or remote, do not mock it, just ask the user to activate it for the duration of the tests. Results of mocked tests are completely useless. Only real tests can discover issues with the codebase.
-- always use a **Test-Driven Development (TDD)** methodology (write tests first, the implementation later) when implementing new features or change the existing ones. But first check that the existing tests are written correctly.
-- always plan in advance your actions, and break down your plan into very small tasks. Save a file named `DEVELOPMENT_PLAN.md` and write all tasks inside it. Update it with the status of each tasks after any changes.
-- Plan all the changes in detail first. Identify potential issues before starting, and revise the plan until it will not create issues before starting.
-- When making changes, identify all files that would need import updates first
-- After each change, check all type annotations for consistency
-- Make all changes in a single, well-planned operation with surgical edits
-- Always lint the file after making all the changes to it, but not before
-- Always run the tests relevant to the changed files after making all the changes planned, but not before
-- Do one comprehensive commit at the end of each operation if the code passes the tests
-- If you make errors while implementing the changes, examine you errors, ultrathink about them and write the lessons learned from them into CLAUDE.md for future references, so you won't repeat the same errors in the future.
-- Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
-- Install `https://github.com/fpgmaas/deptry/` and run it at every commit.
-- Install and use Trufflehog for secret detection in pre-commit and pre-push hooks.
-- Add deptry to the project pre-commit configuration following these instructions: `https://github.com/astral-sh/uv-pre-commit`.
-- Add deptry to both the local and the remote github workflows actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: `https://docs.astral.sh/uv/guides/integration/github/`.
-- You can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: `https://github.com/nektos/act`.
-- Since `act` requires Docker, follow these instructions to setup docker containers with uv: https://docs.astral.sh/uv/guides/integration/docker/
-- If you use Docker containers to test or run workflows locally, always delete the container after you completed the tests/workflows. The space on disc must be freed since is limited!
-- do not create prototypes or sketched/abridged versions of the features you need to develop. That is only a waste of time. Instead break down the new features in its elemental components and functions, subdivide it in small autonomous modules with a specific function, and develop one module at time. When each module will be completed (passing the test for the module), then you will be able to implement the original feature easily just combining the modules. The modules can be helper functions, data structures, external librries, anything that is focused and reusable. Prefer functions at classes, but you can create small classes as specialized handlers for certain data and tasks, then also classes can be used as pieces for building the final feature.
-- When commit, never mention Claude as the author of the commits or as a Co-author.
-- when refactoring, enter thinking mode first, examine the program flow, be attentive to what you're changing, and how it subsequently affects the rest of the codebase as a matter of its blast radius, the codebase landscape, and possible regressions. Also bear in mind the existing type structures and interfaces that compose the makeup of the specific code you're changing.
-- Generate complete, tested code on first attempt.
-- Always anchor with date/time and available tools.
-- Clearly label the 4 TDD phases (analysis --> tests implementation --> code implementation -> debugging).
-- Implement concrete solutions, no placeholders or abridged versions.
-- Batch related tool calls and parallelize where safe.
-- Proactively handle all edge cases on first attempt.
-- Before marking a todo as complete, always spawn a subagent that especially checks the edited test files for tampering, then lint both the edited tests files and the edited code files, and finally run the tests relative to that todo again. If the tests pass, mark the todo task as complete.
-- always use `Emasoft` as the user name, author and committer name for the git repo.
-- always use `713559+Emasoft@users.noreply.github.com` as the user email and git committer email for the git repo.
 - always add the following shebang at the beginning of each python file:
 
 ```python
@@ -85,6 +62,69 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # <this file changelog here…>
 #
 ```
+
+### Command Line and Error Handling
+- before you execute a terminal command, trigger the command line syntax help or use `cheat <command>` to learn the correct syntax and avoid failed commands.
+- if you attempt to run a command and the command is not found, first check the path, and then install it using `brew install`.
+- never take shortcuts to skirt around errors. fix them.
+- If the solution to a problem is not obvious, take a step back and look at the bigger picture.
+- If you are unsure, stop and ask the user for help or additional information.
+- if something you are trying to implement or fix does not work, do not fallback to a simpler solution and do not use workarounds to avoid implement it. Do not give up or compromise with a lesser solution. You must always attempt to implement the original planned solution, and if after many attempts it still fails, ask the user for instructions.
+
+### Testing Philosophy
+- when using the Bash tool, always set the timeout parameter to 1800000 (30 minutes).
+- always tabulate the tests result in a nice table.
+- do not use mockup tests or mocked behaviours unless it is absolutely impossible to do otherwise. If you need to use a service, local or remote, do not mock it, just ask the user to activate it for the duration of the tests. Results of mocked tests are completely useless. Only real tests can discover issues with the codebase.
+- always use a **Test-Driven Development (TDD)** methodology (write tests first, the implementation later) when implementing new features or change the existing ones. But first check that the existing tests are written correctly.
+- Always convert the xtests in normal tests. Negative tests are confusing. Just make the test explicitly check for the negative outcome instead, and if the outcome is negative, the test is passed.
+- Always show a nicely color formatted table with the list of all tests (the functions, not the file) and the outcome (fail, success, skip, error).
+- The table must use unicode border blocks to delimit the cells, thicker for the header row.
+- The table should report not only the name of the function, but the description of the test function in the docstrings.
+- All tests functions should include a meaningful one-line string that synthetically describes the test and its aim.
+- If a test function lacks this description, add it to the source files of the tests.
+- All test functions must have docstrings with a short description that will be used by the table to describe the test.
+- Mark the slow tests (those usually skipped when running tests on GitHub, or that need some extra big dependencies installed) with the emoji of a snail 🐌. Be sure to account for the extra character in the table formatting.
+
+### Development Workflow
+- always plan in advance your actions, and break down your plan into very small tasks. Save a file named `DEVELOPMENT_PLAN.md` and write all tasks inside it. Update it with the status of each tasks after any changes.
+- Plan all the changes in detail first. Identify potential issues before starting, and revise the plan until it will not create issues before starting.
+- When making changes, identify all files that would need import updates first
+- After each change, check all type annotations for consistency
+- Make all changes in a single, well-planned operation with surgical edits
+- Always lint the file after making all the changes to it, but not before
+- Always run the tests relevant to the changed files after making all the changes planned, but not before
+- Do one comprehensive commit at the end of each operation if the code passes the tests
+- If you make errors while implementing the changes, examine you errors, ultrathink about them and write the lessons learned from them into CLAUDE.md for future references, so you won't repeat the same errors in the future.
+
+### Architecture Principles
+- do not create prototypes or sketched/abridged versions of the features you need to develop. That is only a waste of time. Instead break down the new features in its elemental components and functions, subdivide it in small autonomous modules with a specific function, and develop one module at time. When each module will be completed (passing the test for the module), then you will be able to implement the original feature easily just combining the modules. The modules can be helper functions, data structures, external librries, anything that is focused and reusable. Prefer functions at classes, but you can create small classes as specialized handlers for certain data and tasks, then also classes can be used as pieces for building the final feature.
+- when refactoring, enter thinking mode first, examine the program flow, be attentive to what you're changing, and how it subsequently affects the rest of the codebase as a matter of its blast radius, the codebase landscape, and possible regressions. Also bear in mind the existing type structures and interfaces that compose the makeup of the specific code you're changing.
+
+### Quality Assurance
+- Generate complete, tested code on first attempt.
+- Always anchor with date/time and available tools.
+- Clearly label the 4 TDD phases (analysis --> tests implementation --> code implementation -> debugging).
+- Implement concrete solutions, no placeholders or abridged versions.
+- Batch related tool calls and parallelize where safe.
+- Proactively handle all edge cases on first attempt.
+- Before marking a todo as complete, always spawn a subagent that especially checks the edited test files for tampering, then lint both the edited tests files and the edited code files, and finally run the tests relative to that todo again. If the tests pass, mark the todo task as complete.
+
+## Tool-Specific Guidelines
+
+### Prefect
+- Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
+
+### Code Quality Tools
+- Install `https://github.com/fpgmaas/deptry/` and run it at every commit.
+- Install and use Trufflehog for secret detection in pre-commit and pre-push hooks.
+- Add deptry to the project pre-commit configuration following these instructions: `https://github.com/astral-sh/uv-pre-commit`.
+- Add deptry to both the local and the remote github workflows actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: `https://docs.astral.sh/uv/guides/integration/github/`.
+- Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
+
+### Docker and Act
+- You can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: `https://github.com/nektos/act`.
+- Since `act` requires Docker, follow these instructions to setup docker containers with uv: https://docs.astral.sh/uv/guides/integration/docker/
+- If you use Docker containers to test or run workflows locally, always delete the container after you completed the tests/workflows. The space on disc must be freed since is limited!
 
 ### Formatting Rules
 - Use only ruff format for formatting python files. Read how here: https://docs.astral.sh/ruff/formatter/
@@ -105,8 +145,8 @@ Then create this configuration file (`.yamlfmt`):
 formatter:
   indent: 2                      # Use 2-space indentation (standard in GitHub workflows)
   retain_line_breaks: true       # Preserve existing blank lines between blocks
-  indentless_arrays: true        # Don’t add extra indent before each “-” list item
-  scan_folded_as_literal: true   # Keep multi-line “>”-style blocks as-is, avoid collapsing
+  indentless_arrays: true        # Don't add extra indent before each "-" list item
+  scan_folded_as_literal: true   # Keep multi-line ">"-style blocks as-is, avoid collapsing
   trim_trailing_whitespace: true # Remove trailing spaces at end of lines
   eof_newline: true              # Ensure the file ends with exactly one newline
 gitignore_excludes: true
@@ -130,8 +170,6 @@ yamlfmt -path .github/workflows
   - `.yamlfmt-general` - For all other YAML files in the project with standard YAML formatting
 - The pre-commit hooks run yamlfmt twice with different configs to handle both types of YAML files properly.
 
-
-
 ### Linting Rules
 - Use `ruff check` and mypy for python
 - Use autofix to lint pull-requests automatically. Read how here: https://autofix.ci/setup
@@ -148,28 +186,15 @@ yamlfmt -path .github/workflows
 - Use deptry to check the dependencies. To install deptry follow these instructions: `https://github.com/fpgmaas/deptry/`
 - Add deptry to the project pre-commit configuration following these instructions: https://github.com/astral-sh/uv-pre-commit .
 - Add deptry to both the local and the remote github workflows/ actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: https://docs.astral.sh/uv/guides/integration/github/ .
-- Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
 - If you need to, you can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: https://github.com/nektos/act
-
-
-
-
 
 ### Testing Rules
 - Always use pytest and pytest-cov for testing
 - Run tests with uv (`uv run pytest`) or `pnpm run tests`
 - For coverage reports: `uv run pytest --cov=. --cov-report=html`
 - Add git hooks that uses uv-pre-commit to run the tests at each commit, read the guide here: `https://docs.astral.sh/uv/guides/integration/pre-commit/`
-- Always convert the xtests in normal tests. Negative tests are confusing. Just make the test explicitly check for the negative outcome instead, and if the outcome is negative, the test is passed.
-- Always show a nicely color formatted table with the list of all tests (the functions, not the file) and the outcome (fail, success, skip, error).
-- The table must use unicode border blocks to delimit the cells, thicker for the header row.
-- The table should report not only the name of the function, but the description of the test function in the docstrings.
-- All tests functions should include a meaningful one-line string that synthetically describes the test and its aim.
-- If a test function lacks this description, add it to the source files of the tests.
-- All test functions must have docstrings with a short description that will be used by the table to describe the test.
-- Mark the slow tests (those usually skipped when running tests on GitHub, or that need some extra big dependencies installed) with the emoji of a snail 🐌. Be sure to account for the extra character in the table formatting.
 
-## GITHUB WORKFLOWS AFTER PUSHING
+## GitHub Workflows Best Practices
 - Use GH cli tool to interact with github
 - Keep synching, linting, formatting, testing and building, releasing and publishing separated in different workflows.
     - synch.yml = update the dependency libraries and the dev tools to the version indicated in the configuration files (i.e. `pyproject.toml`, `package.json`, `requirements-dev.txt`, etc.). Use uv synch for python.
@@ -217,7 +242,6 @@ Then examine the log files saved in the ./logs/ subdir. Think ultrahard to find 
 - OpenRouter provides unified cost tracking across all models
 - Model names are automatically mapped (e.g., "gpt-4o-mini" → "openai/gpt-4o-mini")
 
-
 ### Key Principles for CI/CD Success:
 
 1. **Avoid Super-Linter** - Use a simpler lint workflow that runs tools directly
@@ -263,13 +287,13 @@ def is_running_in_test() -> bool:
 
 ## pre-commit: install it with uv
 
-It is recommended to install pre-commit using uv’s tool mechanism, using this command:
+It is recommended to install pre-commit using uv's tool mechanism, using this command:
 
 ```
 $ uv tool install pre-commit --with pre-commit-uv
 ```
 
-Running it, you’ll see output describing the installation process:
+Running it, you'll see output describing the installation process:
 
 ```
 $ uv tool install pre-commit --with pre-commit-uv
@@ -286,7 +310,7 @@ $ pre-commit --version
 pre-commit 4.2.0 (pre-commit-uv=4.1.4, uv=0.7.2)
 ```
 
-The install command also adds [pre-commit-uv](https://pypi.org/project/pre-commit-uv/), a plugin that patches pre-commit to use uv to install Python-based tools. This drastically speeds up using Python-based hooks, a common use case. (Unfortunately, it seems pre-commit itself won’t be adding uv support.)
+The install command also adds [pre-commit-uv](https://pypi.org/project/pre-commit-uv/), a plugin that patches pre-commit to use uv to install Python-based tools. This drastically speeds up using Python-based hooks, a common use case. (Unfortunately, it seems pre-commit itself won't be adding uv support.)
 
 With pre-commit installed globally, you can now install its Git hook in relevant repositories per usual:
 
@@ -408,9 +432,7 @@ Important Notes
 - When checking implementations, be specific about what you're looking for to get accurate results
 - Always REDACT secrets and private informations from the prompt before sending it to Gemini. Never send or give access to secrets or private informations to GEMINI.
 
-
-
-
+# PART 2: DHT/DHTL PROJECT-SPECIFIC INSTRUCTIONS
 
 ## Project DHT Overview
 
@@ -552,9 +574,9 @@ uv run python -m build    # Build wheel only
 ```
 .
 ├── .venv
-│   ├── bin
-│   ├── lib
-│   └── pyvenv.cfg
+│   ├── bin
+│   ├── lib
+│   └── pyvenv.cfg
 ├── .python-version
 ├── README.md
 ├── main.py
@@ -1421,8 +1443,6 @@ Pinned `.python-version` to `3.11`
 
 
 ------------------------------------------
-
-
 
 ## Architecture
 
