@@ -93,6 +93,9 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 ENV DHT_IN_DOCKER=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+# Set Prefect profile to avoid ephemeral profile issues
+ENV PREFECT_PROFILE=default
+ENV PREFECT_HOME=/home/dhtuser/.prefect
 
 # Switch to non-root user
 USER dhtuser
