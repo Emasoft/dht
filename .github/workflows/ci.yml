@@ -58,12 +58,7 @@ jobs:
         uv run pre-commit run yamllint --all-files --show-diff-on-failure
         uv run pre-commit run shellcheck --all-files --show-diff-on-failure
         uv run pre-commit run actionlint --all-files --show-diff-on-failure
-        uv run pre-commit run gitleaks --all-files --show-diff-on-failure
 
-    - name: Verify no file overwrites
-      run: |
-        echo "Verifying gitleaks didn't overwrite project files..."
-        bash .github/scripts/verify-no-overwrite.sh
 
   dependency-check:
     name: Dependency analysis

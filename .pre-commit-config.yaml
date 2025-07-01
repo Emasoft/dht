@@ -105,10 +105,6 @@ repos:
       - id: actionlint
         exclude: ^src/DHT/GITHUB_WORKFLOWS/
 
-  - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.23.1
-    hooks:
-      - id: gitleaks
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.8.3

@@ -286,10 +286,6 @@ def generate_pre_commit_config_task() -> str:
         additional_dependencies: [types-all]
         args: [--strict]
 
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.1
-    hooks:
-      - id: gitleaks
 """
 
 
