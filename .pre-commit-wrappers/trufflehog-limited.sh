@@ -16,13 +16,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         # Fallback: run in background and kill after timeout
         trufflehog git file://. --since-commit HEAD~3 --only-verified --fail --no-update &
         PID=$!
-        
+
         # Wait up to 30 seconds
         SECONDS=0
         while kill -0 $PID 2>/dev/null && [ $SECONDS -lt 30 ]; do
             sleep 1
         done
-        
+
         # Kill if still running
         if kill -0 $PID 2>/dev/null; then
             echo "⏱️  Trufflehog timeout after 30 seconds"
@@ -31,7 +31,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
             kill -KILL $PID 2>/dev/null || true
             exit 1
         fi
-        
+
         # Get exit code
         wait $PID
     fi

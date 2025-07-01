@@ -13,7 +13,7 @@ cleanup() {
     if [[ "$COMMAND" == *"python"* ]] || [[ "$COMMAND" == *"uv"* ]]; then
         python3 -c "import gc; gc.collect()" 2>/dev/null || true
     fi
-    
+
     # Small delay to allow memory reclamation
     sleep 0.5
 }
