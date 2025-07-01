@@ -17,6 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - *CRITICAL*: Never use GREP! Use RIPGREP instead!
 - *CRITICAL*: Never spawn multiple subagents that need to use git at the same time. It can cause conflicting git operations that lead to repo corruption.
 - *CRITICAL*: Never use pip. Use `uv pip <commands>` instead. Consider pip deprecated in favor of uv pip.
+- *CRITICAL*: **Subagent Resource Management**: Subagents must NEVER access the same resource or perform the same operation concurrently. Each subagent must have a specific, unique task. Only ONE of the following operations can execute at any given moment: lint, format, test, commit, push, or any git/GitHub operation. Operations MUST be sequential - one subagent at a time is sufficient. Two subagents must NEVER run tests simultaneously, access git simultaneously, or modify files simultaneously. This prevents resource conflicts, file corruption, and system crashes.
 
 ### Code Quality Standards
 - be extremely meticulous and accurate. always check twice any line of code for errors when you edit it.
@@ -25,6 +26,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - when fixing the code, if you find that there are multiple possible solutions, do not start immediately but first present the user all the options and ask him to choose the one to try. For trivial bugs you don't need to do this, of course.
 - never remove unused code or variables unless they are wrong, since the program is a WIP and those unused parts are likely going to be developed and used in the future. The only exception is if the user explicitly tells you to do it.
 - don't worry about functions imported from external modules, since those dependencies cannot be always included in the chat for your context limit. Do not remove them or implement them just because you can''t find the module or source file they are imported from. You just assume that the imported modules and imported functions work as expected. If you need to change them, ask the user to include them in the chat.
+
+### Subagent Coordination and Resource Management
+
+When using subagents, follow these strict rules to prevent conflicts:
+
+1. **Sequential Execution Only**: 
+   - Never spawn multiple subagents that perform similar operations
+   - Wait for one subagent to complete before starting another
+   - One subagent per task type at any given time
+
+2. **Exclusive Resource Access**:
+   - Git operations: Only one subagent can perform git commands
+   - File modifications: Only one subagent can modify files at a time
+   - Testing: Only one subagent can run tests at a time
+   - Linting/Formatting: Must be done sequentially, never in parallel
+
+3. **Task Specialization**:
+   - Each subagent must have a unique, specific task
+   - Never duplicate work across subagents
+   - Examples of proper subagent usage:
+     - Subagent 1: Search for patterns in codebase (read-only)
+     - Subagent 2: Run tests (after Subagent 1 completes)
+     - Subagent 3: Format code (after Subagent 2 completes)
+
+4. **Resource Locking Order**:
+   - Always follow this order to prevent deadlocks:
+     1. File reading operations
+     2. Code analysis operations
+     3. File writing operations
+     4. Linting/formatting operations
+     5. Testing operations
+     6. Git operations
+     7. GitHub/remote operations
 
 ### Development Best Practices
 - Always update the project version after changes. Use semantic version format for updating the project version: `{major - breaking changes or features}.{minor - non breaking changes or features}.{patch - small changes/fixes}`.
@@ -107,7 +141,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Implement concrete solutions, no placeholders or abridged versions.
 - Batch related tool calls and parallelize where safe.
 - Proactively handle all edge cases on first attempt.
-- Before marking a todo as complete, always spawn a subagent that especially checks the edited test files for tampering, then lint both the edited tests files and the edited code files, and finally run the tests relative to that todo again. If the tests pass, mark the todo task as complete.
+- Before marking a todo as complete, perform these checks SEQUENTIALLY (not with a subagent if you're already in the main conversation): check the edited test files for tampering, lint both the edited tests files and the edited code files, and finally run the tests relative to that todo again. If the tests pass, mark the todo task as complete. If you must use a subagent for this, ensure no other subagents are running.
 
 ## Tool-Specific Guidelines
 
@@ -221,7 +255,7 @@ yamlfmt -path .github/workflows
 - Make sure the tests have a configuration for remote run on github that is different from the local one. Make API tests flexible so they can use different parameters when run locally and remotely.
 - Let the test retry counts and all retry logic in the code be configurable with different max values for local and remote for faster CI execution
 - After committing and pushing the project to github, always check if the push passed the github actions and checks. Wait few seconds, according to the average time needed for the lint and tests to run.
-- If you can, spawn a subagent that will monitor the GitHub Actions execution and will report back once the workflows transition from queued status. So you don't have to wait without doing nothing.
+- If you need to monitor GitHub Actions execution, do it yourself by periodically checking the status using the gh commands below. Do NOT spawn a subagent for this if other operations are pending.
 - use the following commands to retrieve the last logs of the last actions:
 ```
 gh run list --limit <..max number of recent actions logs to list...>
@@ -357,7 +391,7 @@ For more information, read the uv tool upgrade documentation: `https://docs.astr
 context window. Use `gemini -p` to leverage Google Gemini's large context capacity.
 - *CRITICAL*: Remember that GEMINI CLI is in free plan and is limited to 60 requests per minute and max 1000 requests per day! Use it wisely! Always put out all your questions inside a single prompt each time if you can, to consume less requests. There is a 1M tokens limit to the prompt lenght, so do not worry about the lenght of the prompt. Batch as many questions you can in a single prompt.
 - *CRITICAL*: Always use Gemini 2.5 Pro as model. Specify this exact model adding this to the command `--model "gemini-2.5-pro"`.
-- *CRITICAL*: Always spawn a subagent to run Gemini cli, since it is slow and requires a lot of context memory.
+- *CRITICAL*: Only use a subagent for Gemini CLI if no other subagents are running and no git/test/lint operations are pending. Gemini CLI is slow and requires a lot of context memory. If other operations are in progress, wait for them to complete first.
 - Use `gemini --help` to get the options.
 - Always force the model with the `--model "gemini-2.5-pro"` flag.
 - Always force to include all files in the context with the `--all_files` flag.
