@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## General Development Guidelines and Rules
 - *CRITICAL*: when reading the lines of the source files, do not read just few lines like you usually do. Instead always read all the lines of the file (until you reach the limit of available context memory). No matter what is the situation, searching or editing a file, ALWAYS OBEY TO THIS RULE!!!.
-- *CRITICAL*: do not ever do unplanned things or take decisions without asking the user first. All non trivial changes to the code must be planned first, approved by the user, and added to the tasks_checklist.md first. Unless something was specifically instructed by the user, you must not do it. Do not make changes to the codebase without duscussing those with the user first and get those approved. Be conservative and act on a strict need-to-be-changed basis.
+- *CRITICAL*: do not ever do unplanned things or take decisions without asking the user first. All non trivial changes to the code must be planned first, approved by the user, and added to the tasks_checklist.md first. Unless something was specifically instructed by the user, you must not do it. Do not make changes to the codebase without discussing those with the user first and get those approved. Be conservative and act on a strict need-to-be-changed basis.
 - *CRITICAL*: COMMIT AFTER EACH CHANGE TO THE CODE, NO MATTER HOW SMALL!!!
 - *CRITICAL*: after receiving instructions from the user, before you proceed, confirm if you understand and tell the user your plan. If instead you do not understand something, or if there are choices to make, ask the user to clarify, then tell the user your plan. Do not proceed with the plan if the user does not approve it.
 - *CRITICAL*: **Auto-Lint after changes**: Always run the linters (like ruff, shellcheck, mypy, yamllint, eslint, etc.) after any changes to the code files! ALWAYS DO IT BEFORE COMMITTING!!
@@ -56,7 +56,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Install and use Trufflehog for secret detection in pre-commit and pre-push hooks.
 - Add deptry to the project pre-commit configuration following these instructions: `https://github.com/astral-sh/uv-pre-commit`.
 - Add deptry to both the local and the remote github workflows actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: `https://docs.astral.sh/uv/guides/integration/github/`.
-- Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
 - You can run the github yaml files locally with `act`. Install act and read the docs to configure it to work with uv: `https://github.com/nektos/act`.
 - Since `act` requires Docker, follow these instructions to setup docker containers with uv: https://docs.astral.sh/uv/guides/integration/docker/
 - If you use Docker containers to test or run workflows locally, always delete the container after you completed the tests/workflows. The space on disc must be freed since is limited!
@@ -90,7 +89,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Formatting Rules
 - Use only ruff format for formatting python files. Read how here: https://docs.astral.sh/ruff/formatter/
 - Set ruff format to allows line lenght up to 320 chars, using the `--line-length=320`
-- Do not use pyproject.toml or ruff.toml to configure ruff, since there are too many variations of the command used in the workflows. Aleays run it in isolated mode with `--isolated` and set all options via cli.
+- Do not use pyproject.toml or ruff.toml to configure ruff, since there are too many variations of the command used in the workflows. Always run it in isolated mode with `--isolated` and set all options via cli.
 - Use autofix to format pull-requests automatically. Read how here: https://autofix.ci/setup
 - Use Prettier to format all other code files (except python and yaml).
 - Use `pnpm run format` to run Prettier on node.js source files.
@@ -136,17 +135,17 @@ yamlfmt -path .github/workflows
 ### Linting Rules
 - Use `ruff check` and mypy for python
 - Use autofix to lint pull-requests automatically. Read how here: https://autofix.ci/setup
-- Do not use pyproject.toml or ruff.toml to configure `ruff check`, since there are too many variations of the command used in the workflows. Aleays run it in isolated mode with `--isolated` and set all options via cli.
+- Do not use pyproject.toml or ruff.toml to configure `ruff check`, since there are too many variations of the command used in the workflows. Always run it in isolated mode with `--isolated` and set all options via cli.
 - Use eslint for javascript
 - Use shellcheck for bash
-- Use actionlint snd yamllint for yaml
+- Use actionlint and yamllint for yaml
 - Use jsonlint for json
 - Run ruff using this command: `uv run ruff check --ignore E203,E402,E501,E266,W505,F841,F842,F401,W293,I001,UP015,C901,W291 --isolated --fix --output-format full`
 - Run mypy using this command: `COLUMNS=400 uv run mypy --strict --show-error-context --pretty --install-types --no-color-output --show-error-codes --show-error-code-links --no-error-summary --follow-imports=normal <files> >mypy_lint_log.txt`
 - use shellcheck-py if you need to use shellcheck from a python script
 - Use `pnpm run lint` to run eslint on node.js source files.
 - Add git hooks that uses uv-pre-commit to run the linting at each commit, read the guide here: `https://docs.astral.sh/uv/guides/integration/pre-commit/`
-- Use deptry to check the dependencies. To install deptry follow hese instructions: `https://github.com/fpgmaas/deptry/`
+- Use deptry to check the dependencies. To install deptry follow these instructions: `https://github.com/fpgmaas/deptry/`
 - Add deptry to the project pre-commit configuration following these instructions: https://github.com/astral-sh/uv-pre-commit .
 - Add deptry to both the local and the remote github workflows/ actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: https://docs.astral.sh/uv/guides/integration/github/ .
 - Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
@@ -179,7 +178,7 @@ yamlfmt -path .github/workflows
     - test.yml = run the tests for all code files (pytest, pytest-cov, playwright, etc.)
     - build.yml = build the project packages with uv build
     - release.yml = add a new release to github from the latest build, bump the semantic version and update the changelog
-    - publish.yml = publish the ladt release to PyPi and other online indexes
+    - publish.yml = publish the last release to PyPi and other online indexes
     - metrics.yml = compute varous code metrics and statistics to be used to define the health of the project, the coverage, the issues/bugs open, the repo tars, repo size, etc. to be used in the docs and in the README.md
     - docs.yml = update the README.md file and all the docs with the latest changes. Also update the PyPi package info page if available and up to date.
     - ci.yml = orchestrator for the whole CI pipeline (it calls: synch, lint, format, test, build, release, publish, docs)
@@ -332,7 +331,7 @@ For more information, read the uv tool upgrade documentation: `https://docs.astr
 
 - When analyzing large codebases or multiple files that might exceed context limits, use the Gemini CLI with its massive
 context window. Use `gemini -p` to leverage Google Gemini's large context capacity.
-- *CRITICAL*: Remember that GEMINI CLI is in free plan and is limited to 60 requests per minute and max 1000 requests per day! Use it wisely! Always put ut all your questions inside a single prompt each time if you can, to consume less requests. There is a 1M tokens limit to the prompt lenght, so do not worry about the lenght of the prompt. Batch as many questions you can in a single prompt.
+- *CRITICAL*: Remember that GEMINI CLI is in free plan and is limited to 60 requests per minute and max 1000 requests per day! Use it wisely! Always put out all your questions inside a single prompt each time if you can, to consume less requests. There is a 1M tokens limit to the prompt lenght, so do not worry about the lenght of the prompt. Batch as many questions you can in a single prompt.
 - *CRITICAL*: Always use Gemini 2.5 Pro as model. Specify this exact model adding this to the command `--model "gemini-2.5-pro"`.
 - *CRITICAL*: Always spawn a subagent to run Gemini cli, since it is slow and requires a lot of context memory.
 - Use `gemini --help` to get the options.
@@ -441,28 +440,7 @@ DHT aims to be a comprehensive development automation tool that enables develope
 
 The goal is to eliminate repetitive setup tasks and provide intelligent project analysis that adapts to any codebase structure.
 
-
-## GITHUB WORKFLOWS AFTER PUSHING
-After commit and pushing the project to github, always check if the push passed the github actions and checks.
-Wait few seconds, according to the average time needed for the lint and tests to run, then use the following commands to retrieve the last logs of the last actions:
-```
-gh run list --limit <..max number of recent actions logs to list...>
-gh run view <... run number ...> --log-failed
-```
-Example:
-```
-> gh run list --limit 10
-> mkdir -p ./logs && gh run view 15801201757 --log-failed > ./logs/15801201757.log
-etc..
-
-```
-Then examine the log files saved in the ./logs/ subdir. Think ultrahard to find the causes. Use actionlint, yamllint and act to test and verify the workflows issues. Then report the issues causing the failings.
-
-
-
 ## Common Development Commands
-
-- Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
 
 ### Build and Package Management
 
@@ -523,8 +501,6 @@ dhtl format
 
 # Check formatting without changes
 dhtl format --check
-
-### Code Quality
 
 # Python formatting and linting commands syntax:
 uv run ruff format       # format with ruff
@@ -1259,7 +1235,7 @@ $ uv python pin 3.11
 Pinned `.python-version` to `3.11`
 
 
-A global .python-version file can be created in the user configuration directory with the uv python pin --global command. (not reccomended)
+A global .python-version file can be created in the user configuration directory with the uv python pin --global command. (not recommended)
 
 ## Discovery of .python-version files can be disabled with --no-config.
 uv will not search for .python-version files beyond project or workspace boundaries (with the exception of the user configuration directory).
@@ -1299,7 +1275,7 @@ All of the Python version request formats are supported except those that are us
 By default uv python install will verify that a managed Python version is installed or install the latest version. If a .python-version file is present, uv will install the Python version listed in the file. A project that requires multiple Python versions may define a .python-versions file. If present, uv will install all of the Python versions listed in the file.
 
 Important:
-The available Python versions are frozen for each uv release. To install new Python versions, you may need upgrade uv.
+The available Python versions are frozen for each uv release. To install new Python versions, you may need to upgrade uv.
 
 ## Installing Python executables
 
@@ -1380,7 +1356,7 @@ To ignore virtual environments, use the --system flag:
 
 $ uv python find --system
 
-But it is not reccomended.
+But it is not recommended.
 
 ## Discovery of Python versions
 When searching for a Python version, the following locations are checked:
@@ -1446,52 +1422,6 @@ Pinned `.python-version` to `3.11`
 
 ------------------------------------------
 
-# Frontend only
-pnpm run dev
-
-
-### Testing
-
-# Python tests only
-uv run pytest .
-uv run pytest ./tests/test_file.py         # Specific file
-uv run pytest ./tests/test_file.py::test_function  # Specific test
-uv run pytest -k "test_name"               # By test name pattern
-uv run pytest -m "not slow"                # Skip slow tests
-
-# Frontend E2E tests
-pnpm run e2e
-npx playwright test                        # Alternative
-npx playwright test --ui                   # With UI mode
-
-
-### Code Quality
-
-# Python formatting and linting
-just format              # or: uv run ruff format .
-just lint                # or: uv run ruff check .
-uv run ruff check --fix  # Auto-fix linting issues
-
-# TypeScript/JavaScript
-pnpm run lint            # ESLint
-pnpm run format          # Prettier
-pnpm run check           # Check formatting without fixing
-
-
-
-### Building and Packaging
-
-# Frontend build
-pnpm run build
-
-# Build Python package (includes Electron app)
-./install.sh              # Full installation from source
-uv run python -m build    # Build wheel only
-
-# Install package
-pip install dist/*.whl    # Install built wheel
-pip install -e .         # Development install
-
 
 
 ## Architecture
@@ -1503,7 +1433,7 @@ pip install -e .         # Development install
   - `dhtl_commands_*.sh`: Command implementations (8 files)
   - `dhtl_environment_*.sh`: Environment detection and setup
   - `dhtl_uv.sh`: UV package manager integration
-  - `dhtl_guardian_*.sh`: Process runner using Precept for queue and resource management
+  - `dhtl_guardian_*.sh`: Process runner using Prefect for queue and resource management
   - `dhtl_diagnostics.sh`: System diagnostics
   - `dhtl_error_handling.sh`: Error handling utilities
 
