@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 When using subagents, follow these strict rules to prevent conflicts:
 
-1. **Sequential Execution Only**: 
+1. **Sequential Execution Only**:
    - Never spawn multiple subagents that perform similar operations
    - Wait for one subagent to complete before starting another
    - One subagent per task type at any given time
