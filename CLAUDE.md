@@ -53,7 +53,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - If you make errors while implementing the changes, examine you errors, ultrathink about them and write the lessons learned from them into CLAUDE.md for future references, so you won't repeat the same errors in the future.
 - Use Prefect for all scripted processing ( https://github.com/PrefectHQ/prefect/ ), with max_concurrency=1 for max safety.
 - Install `https://github.com/fpgmaas/deptry/` and run it at every commit.
-- Install gitleaks-safe and use it at every commit to check both git and dir (do not use gitleaks directly). See the gitleaks-safe dedicated section for instructions.
+- Install and use Trufflehog for secret detection in pre-commit and pre-push hooks.
 - Add deptry to the project pre-commit configuration following these instructions: `https://github.com/astral-sh/uv-pre-commit`.
 - Add deptry to both the local and the remote github workflows actions, so it can be used in the CI/CD pipeline automatically at every push/release as instructed here: `https://docs.astral.sh/uv/guides/integration/github/`.
 - Install and run yamllint and actionlint at each commit (add them to pre-commit both local and remote, run them with `uv run`).
@@ -543,93 +543,12 @@ uv run shellcheck --severity=error --extended-analysis=true  # Shellcheck (alway
 uv run yamllint
 uv run actionlint
 
-### gitleaks-safe: Memory-Safe Secret Detection
-- **CRITICAL**: Do not install or use `gitleaks` directly! Use `gitleaks-safe` instead of `gitleaks` directly to prevent memory exhaustion issues when running concurrent scans.
-
-#### Installation
-
-Install gitleaks-safe globally as a uv tool (one time):
-
-```bash
-# Install gitleaks-safe from PyPI (not available yet!)
-uv tool install gitleaks-safe # not available yet!
-
-# Or install gitleaks-safe from the independent local repository
-uv tool install --from /Users/emanuelesabetta/Code/gitleaks-safe
-```
-
-#### Usage in Projects
-
-1. **Install git hooks** in each project:
-```bash
-# Install pre-push hook (recommended)
-install-safe-git-hooks --pre-push
-
-# Or install pre-commit hook
-install-safe-git-hooks --pre-commit
-
-# Install both hooks
-install-safe-git-hooks --both
-
-# Non-interactive mode (auto-install gitleaks if missing)
-install-safe-git-hooks --pre-push --non-interactive
-```
-
-2. **Manual scans** with gitleaks-safe:
-```bash
-# Scan entire repository
-gitleaks-safe detect --source . --verbose
-
-# Scan staged changes only
-gitleaks-safe protect --staged
-
-# Use custom config file
-gitleaks-safe detect --config .gitleaks.toml --source .
-
-# Increase timeout for large repositories
-GITLEAKS_TIMEOUT=600 gitleaks-safe detect --source .
-```
-
-3. **Clean up processes** if needed:
-```bash
-# Smart cleanup (preserves safe instances)
-cleanup-gitleaks
-
-# Force cleanup all processes
-cleanup-gitleaks --all
-
-# Skip confirmation
-cleanup-gitleaks --force
-```
-
-#### Features
-
-- **Multi-Instance Support**: Run gitleaks safely in multiple projects simultaneously
-- **Smart Process Management**: Only kills unsafe gitleaks processes, preserves managed ones
-- **Docker Container Support**: Detects and manages gitleaks processes in containers
-- **Cross-Platform**: Works on macOS, Linux, Windows, and Docker
-- **Automatic Installation**: Can install gitleaks automatically if not found
-
-#### Configuration
-
-Environment variables to customize behavior:
-
-```bash
-# Timeout for scans (default: 120 seconds)
-export GITLEAKS_TIMEOUT=300
-
-# Enable verbose output
-export GITLEAKS_VERBOSE=true
-
-# Number of retry attempts (default: 1)
-export GITLEAKS_RETRIES=3
-```
-
-#### .gitleaks.toml configuration
-- **CRITICAL**: create/edit `.gitleaks.toml` to allows only:
+### Trufflehog: Secret Detection
+- **CRITICAL**: Use Trufflehog for secret detection. It is configured to run on pre-commit and pre-push hooks.
+- Trufflehog is configured to allow only the following git information:
   - Git author: `Emasoft`
   - Git email: `713559+Emasoft@users.noreply.github.com`
-  - All other secrets are blocked
+  - All other secrets, API keys, passwords, etc. are blocked
 
 
 

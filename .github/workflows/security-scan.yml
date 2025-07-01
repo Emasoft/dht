@@ -16,8 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gitleaks-safe:
-    name: Gitleaks Safe Secret Scan
+  trufflehog:
+    name: Trufflehog Secret Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -27,35 +27,8 @@ jobs:
       with:
         fetch-depth: 0  # Full history for scanning all commits
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Run TruffleHog
+      uses: trufflesecurity/trufflehog@main
       with:
-        python-version: '3.11'
-
-    - name: Install gitleaks-safe
-      run: |
-        pip install --upgrade pip
-        # Install from PyPI when available, for now use GitHub
-        pip install git+https://github.com/Emasoft/gitleaks-safe.git@main
-        which gitleaks-safe
-        gitleaks-safe --version || echo "Version command not available"
-
-    - name: Run gitleaks-safe scan
-      run: |
-        echo "Running gitleaks-safe scan with custom config..."
-        gitleaks-safe detect --source . --config .gitleaks.toml --verbose --no-git
-
-    - name: Run gitleaks-safe on git history
-      run: |
-        echo "Scanning git history for secrets..."
-        gitleaks-safe detect --source . --config .gitleaks.toml --verbose || echo "Historical secrets found - please review"
-
-    - name: Upload scan results
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: gitleaks-report
-        path: |
-          gitleaks-report.json
-          .gitleaks.log
-        retention-days: 30
+        # Additional arguments
+        extra_args: --only-verified --fail

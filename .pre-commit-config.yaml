@@ -112,15 +112,14 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
-  # Gitleaks secret detection (using gitleaks-safe wrapper)
+  # Trufflehog secret detection
   - repo: local
     hooks:
-      - id: gitleaks-safe
-        name: Detect hardcoded secrets (gitleaks-safe)
-        entry: gitleaks-safe
+      - id: trufflehog
+        name: Detect secrets with Trufflehog
+        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail'
         language: system
         pass_filenames: false
-        args: [detect, --source, ., --config, .gitleaks.toml, --no-git]
 
 ci:
   autofix_commit_msg: |

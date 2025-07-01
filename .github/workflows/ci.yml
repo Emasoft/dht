@@ -59,14 +59,10 @@ jobs:
         uv run pre-commit run shellcheck --all-files --show-diff-on-failure
         uv run pre-commit run actionlint --all-files --show-diff-on-failure
 
-    - name: Install gitleaks-safe
+    - name: Run Trufflehog secret detection
       run: |
-        pip install git+https://github.com/Emasoft/gitleaks-safe.git@main
-
-    - name: Run gitleaks-safe check
-      run: |
-        echo "Running gitleaks-safe secret detection..."
-        uv run pre-commit run gitleaks-safe --all-files --show-diff-on-failure
+        echo "Running Trufflehog secret detection..."
+        uv run pre-commit run trufflehog --all-files --show-diff-on-failure
 
 
   dependency-check:
