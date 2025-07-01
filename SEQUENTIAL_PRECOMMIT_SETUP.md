@@ -84,8 +84,8 @@ The sequential configuration includes:
 
 1. **`require_serial: true`** on all hooks
 2. **Memory-limited wrappers** for resource-intensive tools
-3. **Reduced Trufflehog scan depth** (HEAD~3 instead of HEAD~10)
-4. **30-second timeout** on Trufflehog execution
+3. **Full-depth Trufflehog scanning** with timeout protection
+4. **2-minute timeout** on Trufflehog execution (5 minutes for pre-push)
 5. **Local hooks** for mypy and deptry with memory management
 
 ### Wrapper Scripts
@@ -96,9 +96,10 @@ The sequential configuration includes:
 - Adds cleanup on exit
 
 #### trufflehog-limited.sh
-- 30-second execution timeout
-- Reduced git history scan depth
+- 2-minute execution timeout for pre-commit
+- Full git history scanning (no depth limits)
 - Graceful termination on timeout
+- Maintains complete security coverage
 
 ## Usage
 
