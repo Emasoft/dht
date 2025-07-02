@@ -1,17 +1,22 @@
-# Sequential Pre-commit Setup Guide
+# Sequential Pre-commit Setup Guide with Resource Monitoring
 
-This guide provides a project-local solution for configuring pre-commit hooks to run sequentially, preventing system resource exhaustion. All configuration is contained within the project directory - no system or user configuration files are modified.
+This guide provides a project-local solution for configuring pre-commit hooks to run sequentially with comprehensive resource monitoring, preventing system resource exhaustion. All configuration is contained within the project directory - no system or user configuration files are modified.
 
-## Why Sequential Execution
+## Why Sequential Execution with Monitoring
 
 Parallel pre-commit hooks can cause:
 - Memory exhaustion from concurrent linters/formatters
-- File access conflicts when multiple tools modify the same files
-- Git operation conflicts from simultaneous operations
+- File descriptor leaks from improper cleanup
+- Process proliferation from uncontrolled spawning
 - System crashes on resource-constrained machines
 - Unpredictable hook execution order
 
-Sequential execution prioritizes stability and minimal resource usage over speed.
+Sequential execution with resource monitoring provides:
+- Predictable resource usage patterns
+- Real-time monitoring of memory, file descriptors, and processes
+- Automatic termination when limits are exceeded
+- Detailed logs for debugging resource issues
+- Protection against runaway processes
 
 ## Prerequisites
 
@@ -21,50 +26,20 @@ Only global tool installations are required:
 - uv (install with: `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - Optionally: Homebrew (macOS/Linux) for system tools
 
-## Project-Local Setup
+## Enhanced Setup with Resource Monitoring
 
-### 1. Initialize Virtual Environment with Sequential Configuration
-
-Create `.venv/bin/activate.d/sequential-precommit.sh` (or `.venv/Scripts/activate.d/` on Windows):
-
-```bash
-#!/usr/bin/env bash
-# Project-local environment configuration for sequential pre-commit
-# This file is sourced automatically when the virtual environment is activated
-
-# Force sequential execution
-export PRE_COMMIT_MAX_WORKERS=1
-export PYTHONDONTWRITEBYTECODE=1
-export UV_NO_CACHE=1
-export PRE_COMMIT_NO_CONCURRENCY=1
-
-# Resource limits
-export MEMORY_LIMIT_MB=2048
-export TIMEOUT_SECONDS=600
-
-# Tool-specific limits
-export TRUFFLEHOG_TIMEOUT=300
-export TRUFFLEHOG_MEMORY_MB=1024
-export TRUFFLEHOG_CONCURRENCY=1
-
-echo "Sequential pre-commit environment activated"
-echo "  Max workers: 1 (sequential execution)"
-echo "  Memory limit: ${MEMORY_LIMIT_MB}MB"
-echo "  Timeout: ${TIMEOUT_SECONDS}s"
-```
-
-### 2. Project Setup Script
+### 1. Project Setup Script with Monitoring
 
 Create `setup-sequential-precommit.sh` in your project root:
 
 ```bash
 #!/usr/bin/env bash
-# Setup script for sequential pre-commit execution
+# Enhanced setup script for sequential pre-commit execution with resource monitoring
 # All configuration is project-local - no system files are modified
 
 set -euo pipefail
 
-echo "Setting up project-local sequential pre-commit..."
+echo "Setting up project-local sequential pre-commit with resource monitoring..."
 
 # Create virtual environment if it doesn't exist
 if [ ! -d ".venv" ]; then
@@ -72,11 +47,20 @@ if [ ! -d ".venv" ]; then
     uv venv
 fi
 
-# Create activation hooks directory
-mkdir -p .venv/bin/activate.d 2>/dev/null || mkdir -p .venv/Scripts/activate.d 2>/dev/null
+# Create activation hooks directory for environment variables
+echo "Setting up project-local environment configuration..."
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+    # Windows (Git Bash)
+    mkdir -p .venv/Scripts/activate.d
+    ACTIVATE_DIR=".venv/Scripts/activate.d"
+else
+    # macOS/Linux
+    mkdir -p .venv/bin/activate.d
+    ACTIVATE_DIR=".venv/bin/activate.d"
+fi
 
-# Create environment configuration
-cat > .venv/bin/activate.d/sequential-precommit.sh << 'EOF'
+# Create environment configuration that will be sourced on activation
+cat > "$ACTIVATE_DIR/sequential-precommit.sh" << 'EOF'
 #!/usr/bin/env bash
 # Project-local environment configuration
 export PRE_COMMIT_MAX_WORKERS=1
@@ -90,14 +74,29 @@ export TRUFFLEHOG_MEMORY_MB=1024
 export TRUFFLEHOG_CONCURRENCY=1
 EOF
 
-chmod +x .venv/bin/activate.d/sequential-precommit.sh 2>/dev/null || true
+chmod +x "$ACTIVATE_DIR/sequential-precommit.sh" 2>/dev/null || true
 
 # Activate virtual environment
-source .venv/bin/activate
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+    source .venv/Scripts/activate
+else
+    source .venv/bin/activate
+fi
 
-# Install pre-commit as a uv tool (project-local)
+# Install pre-commit
 echo "Installing pre-commit..."
-uv tool install pre-commit --with pre-commit-uv
+if ! command -v pre-commit &> /dev/null; then
+    # Try installing as a uv tool first
+    if uv tool install pre-commit --with pre-commit-uv 2>/dev/null; then
+        echo "✓ Pre-commit installed as uv tool"
+    else
+        # Fallback to pip install
+        echo "Installing pre-commit with pip..."
+        uv pip install pre-commit
+    fi
+else
+    echo "✓ Pre-commit already installed"
+fi
 
 # Create wrapper scripts directory
 mkdir -p .pre-commit-wrappers
@@ -133,6 +132,8 @@ cleanup() {
     fi
 }
 trap cleanup EXIT INT TERM
+
+echo "Running (memory limited to ${MEMORY_LIMIT_MB}MB): $COMMAND $*"
 
 # Execute with timeout
 if command -v timeout &> /dev/null; then
@@ -193,10 +194,11 @@ EOF
 
 chmod +x .pre-commit-wrappers/*.sh
 
-# Create git hook that sources project environment
+# Create git hook with resource monitoring
 cat > .git/hooks/pre-commit << 'EOF'
 #!/usr/bin/env bash
-# Git pre-commit hook - sources project environment
+# Git pre-commit hook with resource monitoring
+# Monitors memory, file descriptors, and processes during pre-commit execution
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$PROJECT_ROOT" || exit 1
@@ -204,17 +206,238 @@ cd "$PROJECT_ROOT" || exit 1
 # Source project virtual environment
 if [ -f ".venv/bin/activate" ]; then
     source .venv/bin/activate
+elif [ -f ".venv/Scripts/activate" ]; then
+    source .venv/Scripts/activate
 fi
 
 # Source sequential configuration
 if [ -f ".venv/bin/activate.d/sequential-precommit.sh" ]; then
     source .venv/bin/activate.d/sequential-precommit.sh
+elif [ -f ".venv/Scripts/activate.d/sequential-precommit.sh" ]; then
+    source .venv/Scripts/activate.d/sequential-precommit.sh
 fi
+
+# Configuration
+MEMORY_LIMIT_MB="${MEMORY_LIMIT_MB:-4096}"
+LOG_DIR=".pre-commit-logs"
+MONITOR_INTERVAL=1
+
+# Create log directory
+mkdir -p "$LOG_DIR"
+
+# Generate timestamp for log file
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+LOG_FILE="$LOG_DIR/resource_usage_${TIMESTAMP}.log"
+
+# Use project-local temp directory for PID file to avoid permission issues
+TEMP_DIR="$PROJECT_ROOT/.pre-commit-temp"
+mkdir -p "$TEMP_DIR"
+MONITOR_PID_FILE="$TEMP_DIR/pre-commit-monitor-$$.pid"
+
+# Function to get memory usage in MB
+get_memory_usage() {
+    local pid=$1
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: Get RSS in bytes and convert to MB
+        ps -o rss= -p "$pid" 2>/dev/null | awk '{print int($1/1024)}' || echo "0"
+    else
+        # Linux: Get RSS in KB and convert to MB
+        ps -o rss= -p "$pid" 2>/dev/null | awk '{print int($1/1024)}' || echo "0"
+    fi
+}
+
+# Function to get open file descriptors
+get_fd_count() {
+    local pid=$1
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        lsof -p "$pid" 2>/dev/null | wc -l || echo "0"
+    else
+        ls /proc/"$pid"/fd 2>/dev/null | wc -l || echo "0"
+    fi
+}
+
+# Function to count child processes
+get_child_count() {
+    local pid=$1
+    pgrep -P "$pid" 2>/dev/null | wc -l || echo "0"
+}
+
+# Function to get system-wide metrics
+get_system_metrics() {
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local mem_free mem_total
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        mem_info=$(vm_stat | grep -E "(free|inactive|active|wired)")
+        page_size=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
+        mem_free=$(echo "$mem_info" | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
+        mem_free=$((mem_free * page_size / 1024 / 1024))
+    else
+        # Linux
+        mem_free=$(free -m | awk 'NR==2{print $4}')
+    fi
+
+    echo "[$timestamp] System - Free Memory: ${mem_free}MB"
+}
+
+# Monitoring function
+monitor_resources() {
+    local parent_pid=$1
+    echo "=== Pre-commit Resource Monitor ===" > "$LOG_FILE"
+    echo "Started: $(date)" >> "$LOG_FILE"
+    echo "Memory limit: ${MEMORY_LIMIT_MB}MB" >> "$LOG_FILE"
+    echo "Monitoring PID: $parent_pid" >> "$LOG_FILE"
+    echo "===================================" >> "$LOG_FILE"
+
+    local warning_issued=false
+    local critical_issued=false
+    local max_memory=0
+    local max_fd=0
+    local max_children=0
+
+    while kill -0 "$parent_pid" 2>/dev/null; do
+        local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        local memory_mb=$(get_memory_usage "$parent_pid")
+        local fd_count=$(get_fd_count "$parent_pid")
+        local child_count=$(get_child_count "$parent_pid")
+
+        # Track maximums
+        [ "$memory_mb" -gt "$max_memory" ] && max_memory=$memory_mb
+        [ "$fd_count" -gt "$max_fd" ] && max_fd=$fd_count
+        [ "$child_count" -gt "$max_children" ] && max_children=$child_count
+
+        # Log current metrics
+        echo "[$timestamp] PID $parent_pid - Memory: ${memory_mb}MB, FDs: $fd_count, Children: $child_count" >> "$LOG_FILE"
+
+        # Get all child processes and their memory
+        local total_memory=$memory_mb
+        for child_pid in $(pgrep -P "$parent_pid" 2>/dev/null); do
+            local child_mem=$(get_memory_usage "$child_pid")
+            local child_cmd=$(ps -p "$child_pid" -o comm= 2>/dev/null || echo "unknown")
+            total_memory=$((total_memory + child_mem))
+            if [ "$child_mem" -gt 10 ]; then  # Only log children using >10MB
+                echo "  └─ Child PID $child_pid ($child_cmd) - Memory: ${child_mem}MB" >> "$LOG_FILE"
+            fi
+        done
+
+        # Check for issues
+        local issues=()
+
+        # Memory checks
+        if [ "$total_memory" -gt "$MEMORY_LIMIT_MB" ]; then
+            issues+=("CRITICAL: Total memory usage (${total_memory}MB) exceeds limit (${MEMORY_LIMIT_MB}MB)")
+            critical_issued=true
+        elif [ "$total_memory" -gt $((MEMORY_LIMIT_MB * 80 / 100)) ] && [ "$warning_issued" = false ]; then
+            issues+=("WARNING: Memory usage (${total_memory}MB) is above 80% of limit")
+            warning_issued=true
+        fi
+
+        # File descriptor checks
+        if [ "$fd_count" -gt 1000 ]; then
+            issues+=("WARNING: High file descriptor count: $fd_count")
+        elif [ "$fd_count" -gt 500 ]; then
+            issues+=("NOTICE: Elevated file descriptor count: $fd_count")
+        fi
+
+        # Child process checks
+        if [ "$child_count" -gt 50 ]; then
+            issues+=("WARNING: High child process count: $child_count")
+        elif [ "$child_count" -gt 20 ]; then
+            issues+=("NOTICE: Elevated child process count: $child_count")
+        fi
+
+        # Log issues
+        for issue in "${issues[@]}"; do
+            echo "[$timestamp] $issue" >> "$LOG_FILE"
+        done
+
+        # Kill if memory exceeded
+        if [ "$critical_issued" = true ]; then
+            echo "[$timestamp] !!! KILLING PROCESS DUE TO MEMORY LIMIT EXCEEDED !!!" >> "$LOG_FILE"
+            get_system_metrics >> "$LOG_FILE"
+
+            # Get process tree before killing
+            echo "[$timestamp] Process tree before termination:" >> "$LOG_FILE"
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+                # macOS doesn't have ps auxf, use ps aux instead
+                ps aux | grep -E "(pre-commit|python|node|npm)" | grep -v grep >> "$LOG_FILE" 2>/dev/null || true
+            else
+                # Linux has ps auxf for tree view
+                ps auxf | grep -E "(pre-commit|python|node|npm)" >> "$LOG_FILE" 2>/dev/null || true
+            fi
+
+            # Kill all child processes first
+            for child_pid in $(pgrep -P "$parent_pid" 2>/dev/null); do
+                echo "[$timestamp] Killing child process $child_pid" >> "$LOG_FILE"
+                kill -TERM "$child_pid" 2>/dev/null || true
+            done
+
+            sleep 1
+
+            # Kill parent
+            echo "[$timestamp] Killing parent process $parent_pid" >> "$LOG_FILE"
+            kill -TERM "$parent_pid" 2>/dev/null || true
+            sleep 1
+            kill -KILL "$parent_pid" 2>/dev/null || true
+
+            echo "[$timestamp] Process terminated due to resource limits" >> "$LOG_FILE"
+            break
+        fi
+
+        # Log system metrics every 10 seconds
+        if [ $(($(date +%s) % 10)) -eq 0 ]; then
+            get_system_metrics >> "$LOG_FILE"
+        fi
+
+        sleep "$MONITOR_INTERVAL"
+    done
+
+    # Final summary
+    echo "" >> "$LOG_FILE"
+    echo "=== Resource Usage Summary ===" >> "$LOG_FILE"
+    echo "Ended: $(date)" >> "$LOG_FILE"
+    echo "Peak Memory: ${max_memory}MB" >> "$LOG_FILE"
+    echo "Peak File Descriptors: $max_fd" >> "$LOG_FILE"
+    echo "Peak Child Processes: $max_children" >> "$LOG_FILE"
+    echo "=============================" >> "$LOG_FILE"
+}
+
+# Start resource monitor in background
+monitor_resources $$ &
+MONITOR_PID=$!
+echo "$MONITOR_PID" > "$MONITOR_PID_FILE"
+
+# Cleanup function
+cleanup_monitor() {
+    if [ -f "$MONITOR_PID_FILE" ]; then
+        local monitor_pid=$(cat "$MONITOR_PID_FILE")
+        if kill -0 "$monitor_pid" 2>/dev/null; then
+            kill -TERM "$monitor_pid" 2>/dev/null || true
+        fi
+        rm -f "$MONITOR_PID_FILE"
+    fi
+
+    # Clean up temp directory
+    if [ -d "$TEMP_DIR" ]; then
+        rm -rf "$TEMP_DIR"
+    fi
+
+    # Display log summary
+    if [ -f "$LOG_FILE" ]; then
+        echo ""
+        echo "Resource usage log saved to: $LOG_FILE"
+        tail -n 20 "$LOG_FILE" | grep -E "(Peak|WARNING|CRITICAL|Summary)" || true
+    fi
+}
+
+# Set trap to cleanup monitor on exit
+trap cleanup_monitor EXIT INT TERM
 
 # Check memory before running
 if [[ "$OSTYPE" == "darwin"* ]]; then
     FREE_MB=$(vm_stat | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
-    PAGE_SIZE=$(pagesize 2>/dev/null || echo 16384)
+    PAGE_SIZE=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
     FREE_MB=$((FREE_MB * PAGE_SIZE / 1024 / 1024))
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     FREE_MB=$(free -m | awk 'NR==2{print $4}')
@@ -222,10 +445,20 @@ fi
 
 if [ "${FREE_MB:-1024}" -lt 512 ]; then
     echo "Warning: Low memory (${FREE_MB}MB). Consider closing other applications."
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: Starting with low system memory: ${FREE_MB}MB" >> "$LOG_FILE"
 fi
 
 # Run pre-commit
-exec pre-commit run
+echo "Starting pre-commit with resource monitoring..."
+echo "Monitor log: $LOG_FILE"
+pre-commit run "$@"
+PRE_COMMIT_EXIT_CODE=$?
+
+# Give monitor time to write final metrics
+sleep 2
+
+# Return pre-commit's exit code
+exit $PRE_COMMIT_EXIT_CODE
 EOF
 
 chmod +x .git/hooks/pre-commit
@@ -235,18 +468,43 @@ echo "Installing pre-commit hooks..."
 pre-commit install --install-hooks
 pre-commit install --hook-type commit-msg
 
-echo "✓ Sequential pre-commit setup complete!"
+# Create .gitignore entries for logs and temp files
+if [ -f .gitignore ]; then
+    if ! grep -q "^\.pre-commit-logs" .gitignore 2>/dev/null; then
+        echo ".pre-commit-logs/" >> .gitignore
+    fi
+    if ! grep -q "^\.pre-commit-temp" .gitignore 2>/dev/null; then
+        echo ".pre-commit-temp/" >> .gitignore
+    fi
+else
+    cat > .gitignore << 'EOF'
+.pre-commit-logs/
+.pre-commit-temp/
+EOF
+fi
+
+echo "✓ Sequential pre-commit with resource monitoring setup complete!"
 echo ""
 echo "To activate the environment:"
 echo "  source .venv/bin/activate"
 echo ""
 echo "The following variables are now set (project-local):"
 echo "  PRE_COMMIT_MAX_WORKERS=1"
-echo "  MEMORY_LIMIT_MB=2048"
+echo "  MEMORY_LIMIT_MB=2048 (hooks), 4096 (monitoring kill threshold)"
 echo "  TIMEOUT_SECONDS=600"
+echo ""
+echo "Resource usage logs will be saved to: .pre-commit-logs/"
+echo ""
+echo "Features enabled:"
+echo "  • Sequential hook execution (no parallelism)"
+echo "  • Memory usage monitoring and logging"
+echo "  • File descriptor tracking"
+echo "  • Child process monitoring"
+echo "  • Automatic process termination at 4GB memory"
+echo "  • Peak usage statistics"
 ```
 
-### 3. Pre-commit Configuration
+### 2. Pre-commit Configuration
 
 Create `.pre-commit-config.yaml` with all hooks configured for sequential execution:
 
@@ -320,7 +578,7 @@ ci:
     - trufflehog-limited
 ```
 
-### 4. GitHub Actions Workflow
+### 3. GitHub Actions Workflow
 
 Create `.github/workflows/pre-commit-sequential.yml`:
 
@@ -422,22 +680,50 @@ jobs:
 
 That's it! No system or user configuration files are modified.
 
-## Tool Installation
+## Understanding Resource Logs
 
-If specific tools are needed globally, install them with package managers:
+After each pre-commit run, check the logs in `.pre-commit-logs/`:
 
 ```bash
-# macOS with Homebrew
-brew install trufflehog
-
-# Linux with package manager
-sudo apt-get install -y <tool>  # Debian/Ubuntu
-sudo yum install -y <tool>       # RHEL/CentOS
-
-# Or install to project-local directory
-mkdir -p .local/bin
-export PATH=".local/bin:$PATH"  # Add to .venv activation script
+cat .pre-commit-logs/resource_usage_*.log
 ```
+
+Example log output:
+```
+=== Pre-commit Resource Monitor ===
+Started: Wed Jul  2 11:10:12 CEST 2025
+Memory limit: 4096MB
+Monitoring PID: 89506
+===================================
+[2025-07-02 11:10:12] PID 89506 - Memory: 4MB, FDs: 9, Children: 1
+  └─ Child PID 89526 (python) - Memory: 101MB
+[2025-07-02 11:10:13] WARNING: Memory usage (3500MB) is above 80% of limit
+[2025-07-02 11:10:14] NOTICE: Elevated file descriptor count: 523
+
+=== Resource Usage Summary ===
+Ended: Wed Jul  2 11:10:16 CEST 2025
+Peak Memory: 105MB
+Peak File Descriptors: 523
+Peak Child Processes: 3
+=============================
+```
+
+## Resource Limits and Thresholds
+
+The monitoring system tracks:
+
+1. **Memory Usage**:
+   - Individual hook limit: 2048MB (enforced by wrappers)
+   - Total pre-commit limit: 4096MB (kills process if exceeded)
+   - Warning at 80% of limit
+
+2. **File Descriptors**:
+   - Notice at 500 FDs
+   - Warning at 1000 FDs
+
+3. **Child Processes**:
+   - Notice at 20 children
+   - Warning at 50 children
 
 ## Customization
 
@@ -449,6 +735,13 @@ Edit `.venv/bin/activate.d/sequential-precommit.sh`:
 export MEMORY_LIMIT_MB=4096      # Increase for large projects
 export TIMEOUT_SECONDS=1200      # 20 minutes for slow operations
 export TRUFFLEHOG_TIMEOUT=600    # 10 minutes for deep scanning
+```
+
+### Changing Kill Threshold
+
+In `.git/hooks/pre-commit`, modify:
+```bash
+MEMORY_LIMIT_MB="${MEMORY_LIMIT_MB:-8192}"  # Kill at 8GB instead of 4GB
 ```
 
 ### Adding New Hooks
@@ -468,16 +761,18 @@ Always include `require_serial: true` for resource-intensive hooks:
 
 ## Docker Alternative
 
-For complete isolation, use Docker:
+For complete isolation with monitoring, use Docker:
 
 ```dockerfile
 # .devcontainer/Dockerfile
 FROM python:3.10-slim
 
-# Install tools
+# Install monitoring tools
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    procps \
+    lsof \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
@@ -489,39 +784,74 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV MEMORY_LIMIT_MB=2048
 ENV TIMEOUT_SECONDS=600
 
+# Add monitoring script
+COPY .pre-commit-wrappers/resource-monitor.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/resource-monitor.sh
+
 WORKDIR /workspace
 ```
 
-## Benefits of This Approach
+## Benefits of Enhanced Monitoring
 
-1. **No System Pollution**: All configuration is project-local
-2. **Portable**: Works on any system without modifying user files
-3. **Version Controlled**: All configuration is in the repository
-4. **Easy Cleanup**: Just delete the project directory
-5. **Team Friendly**: Everyone gets the same configuration automatically
-6. **CI/CD Compatible**: Same configuration works locally and in CI
+1. **Visibility**: See exactly what resources each hook consumes
+2. **Protection**: Automatic termination prevents system crashes
+3. **Debugging**: Detailed logs help identify problematic hooks
+4. **Optimization**: Peak usage stats guide resource allocation
+5. **Reliability**: Predictable resource usage patterns
 
 ## Troubleshooting
 
-### Pre-commit not using sequential configuration?
+### High Memory Usage Detected?
 
-Ensure you've activated the virtual environment:
+Check which hooks are consuming resources:
 ```bash
-source .venv/bin/activate
-env | grep PRE_COMMIT  # Should show MAX_WORKERS=1
+grep -E "(Child PID|Memory:)" .pre-commit-logs/resource_usage_*.log | tail -20
 ```
 
-### Tools not found?
+### Process Killed Due to Memory?
 
-Install them to the project-local directory:
+Look for the CRITICAL entries:
 ```bash
-mkdir -p .venv/bin
-# Download tool to .venv/bin
-chmod +x .venv/bin/<tool>
+grep -E "(CRITICAL|KILLING)" .pre-commit-logs/resource_usage_*.log
 ```
 
-### Memory limits not working on macOS?
+### Too Many File Descriptors?
 
-macOS doesn't support `ulimit -v`. The configuration still prevents parallel execution, which is the main benefit.
+Some tools don't clean up properly. Add explicit cleanup:
+```bash
+# In your wrapper script
+cleanup() {
+    # Close file descriptors
+    exec 3>&- 4>&- 5>&- 2>/dev/null || true
+    # Kill child processes
+    pkill -P $$ 2>/dev/null || true
+}
+trap cleanup EXIT
+```
 
-Remember: This setup prioritizes stability and minimal resource usage. The longer execution time is a worthwhile trade-off for preventing system crashes and ensuring consistent results.
+### Monitor Not Working?
+
+Ensure the monitor has permissions:
+```bash
+chmod +x .git/hooks/pre-commit
+chmod +x .pre-commit-wrappers/*.sh
+```
+
+## Platform-Specific Notes
+
+### macOS
+- Memory limits (`ulimit -v`) don't work, but monitoring still tracks usage
+- Use `lsof` for file descriptor counting
+- Install GNU coreutils for better `timeout` command: `brew install coreutils`
+
+### Linux
+- Full memory limiting support via `ulimit`
+- `/proc` filesystem provides detailed process info
+- Native `timeout` command available
+
+### Windows (Git Bash/WSL)
+- WSL2 provides Linux-like behavior
+- Git Bash has limited process monitoring
+- Consider using WSL2 for better resource control
+
+Remember: This setup prioritizes stability and visibility. The resource monitoring ensures you always know what's happening and prevents system resource exhaustion, making your development workflow more reliable and predictable.
