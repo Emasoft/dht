@@ -1,0 +1,197 @@
+name: Sequential Pre-commit Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, develop]
+
+# Force sequential execution across workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: false  # Don't cancel, queue instead
+
+env:
+  # Force sequential execution
+  PRE_COMMIT_MAX_WORKERS: 1
+  PYTHONDONTWRITEBYTECODE: 1
+  # Memory limits
+  MEMORY_LIMIT_MB: 2048
+  TIMEOUT_SECONDS: 300
+  # Tool-specific limits
+  TRUFFLEHOG_TIMEOUT: 120
+  TRUFFLEHOG_MEMORY_MB: 1024
+  TRUFFLEHOG_CONCURRENCY: 1
+
+jobs:
+  pre-commit-sequential:
+    name: Run Pre-commit Hooks Sequentially
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for Trufflehog
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: System info and memory check
+      run: |
+        echo "=== System Information ==="
+        echo "CPU cores: $(nproc)"
+        echo "Total memory: $(free -h | awk 'NR==2{print $2}')"
+        echo "Available memory: $(free -h | awk 'NR==2{print $7}')"
+        echo "Disk space: $(df -h / | awk 'NR==2{print $4}')"
+        echo
+
+    - name: Create virtual environment
+      run: |
+        uv venv
+        echo "Virtual environment created"
+
+    - name: Install dependencies
+      run: |
+        source .venv/bin/activate
+        uv sync --all-extras
+        uv pip install pre-commit
+
+    - name: Cache pre-commit environments
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+        restore-keys: |
+          pre-commit-${{ runner.os }}-
+
+    - name: Install pre-commit hooks
+      run: |
+        source .venv/bin/activate
+        pre-commit install-hooks
+        echo "Pre-commit hooks installed"
+
+    # Run hooks in groups for better control and error reporting
+    - name: Run basic file checks
+      run: |
+        source .venv/bin/activate
+        echo "=== Running basic file checks ==="
+        pre-commit run trailing-whitespace --all-files || true
+        pre-commit run end-of-file-fixer --all-files || true
+        pre-commit run check-yaml --all-files || true
+        pre-commit run check-toml --all-files || true
+        pre-commit run check-json --all-files || true
+        pre-commit run check-merge-conflict --all-files || true
+        pre-commit run check-added-large-files --all-files || true
+
+    - name: Clear caches after basic checks
+      run: |
+        find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        find . -type f -name "*.pyc" -delete 2>/dev/null || true
+        sync
+        echo "Memory after basic checks: $(free -h | awk 'NR==2{print $7}')"
+
+    - name: Run Python formatting
+      run: |
+        source .venv/bin/activate
+        echo "=== Running Python formatting ==="
+        pre-commit run ruff-format --all-files --show-diff-on-failure || true
+
+    - name: Run Python linting
+      run: |
+        source .venv/bin/activate
+        echo "=== Running Python linting ==="
+        pre-commit run ruff --all-files || true
+
+    - name: Clear caches after Python checks
+      run: |
+        find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        python3 -c "import gc; gc.collect()" 2>/dev/null || true
+        sync
+        echo "Memory after Python checks: $(free -h | awk 'NR==2{print $7}')"
+
+    - name: Run type checking (if not skipped)
+      if: ${{ !contains(github.event.head_commit.message, '[skip-mypy]') }}
+      run: |
+        source .venv/bin/activate
+        echo "=== Running type checking ==="
+        # Run with memory limit
+        ulimit -v $((MEMORY_LIMIT_MB * 1024)) 2>/dev/null || true
+        pre-commit run mypy --all-files || true
+
+    - name: Run dependency checking
+      run: |
+        source .venv/bin/activate
+        echo "=== Running dependency checking ==="
+        pre-commit run deptry --all-files || true
+
+    - name: Clear caches after intensive checks
+      run: |
+        find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+        sync
+        echo "Memory after intensive checks: $(free -h | awk 'NR==2{print $7}')"
+
+    - name: Run YAML formatting and linting
+      run: |
+        source .venv/bin/activate
+        echo "=== Running YAML checks ==="
+        pre-commit run yamlfmt --all-files || true
+        pre-commit run yamllint --all-files || true
+
+    - name: Run shell script checking
+      run: |
+        source .venv/bin/activate
+        echo "=== Running shell script checks ==="
+        pre-commit run shellcheck --all-files || true
+
+    - name: Run GitHub Actions linting
+      run: |
+        source .venv/bin/activate
+        echo "=== Running GitHub Actions linting ==="
+        pre-commit run actionlint --all-files || true
+
+    - name: Run security scanning (separate job recommended)
+      if: ${{ !contains(github.event.head_commit.message, '[skip-security]') }}
+      run: |
+        source .venv/bin/activate
+        echo "=== Running security scanning ==="
+        # Install Trufflehog if not available
+        if ! command -v trufflehog &> /dev/null; then
+          echo "Installing Trufflehog..."
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | \
+            sudo sh -s -- -b /usr/local/bin
+        fi
+        pre-commit run trufflehog-limited --all-files || true
+
+    - name: Final memory report
+      if: always()
+      run: |
+        echo "=== Final System Status ==="
+        echo "Memory usage: $(free -h | awk 'NR==2{print $3}')"
+        echo "Available memory: $(free -h | awk 'NR==2{print $7}')"
+        echo "Disk usage: $(df -h / | awk 'NR==2{print $5}')"
+
+    # Run all hooks together as final check
+    - name: Run all pre-commit hooks
+      run: |
+        source .venv/bin/activate
+        echo "=== Running all pre-commit hooks ==="
+        pre-commit run --all-files --show-diff-on-failure
+
+    - name: Upload pre-commit log on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pre-commit-log
+        path: ~/.cache/pre-commit/pre-commit.log
+        retention-days: 7

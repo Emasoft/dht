@@ -6,18 +6,28 @@ on:
   pull_request:
     branches: [main, develop]
 
-# Cancel in-progress runs when a new commit is pushed
+# Force sequential execution
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true  # Always cancel for lint jobs
+  cancel-in-progress: false  # Queue instead of cancel
+
+env:
+  # Force sequential execution
+  PRE_COMMIT_MAX_WORKERS: 1
+  PYTHONDONTWRITEBYTECODE: 1
+  # Memory limits
+  MEMORY_LIMIT_MB: 2048
+  TIMEOUT_SECONDS: 300
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for better analysis
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -30,6 +40,12 @@ jobs:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
 
+    - name: System info
+      run: |
+        echo "CPU cores: $(nproc)"
+        echo "Memory: $(free -h | awk 'NR==2{print $2}')"
+        echo "Available: $(free -h | awk 'NR==2{print $7}')"
+
     - name: Create virtual environment
       run: uv venv
 
@@ -38,23 +54,43 @@ jobs:
         uv sync --all-extras
         uv pip install pre-commit
 
-    - name: Run pre-commit on all files
+    - name: Cache pre-commit environments
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+
+    - name: Run pre-commit on all files (sequential)
       run: |
         source .venv/bin/activate
         pre-commit run --all-files --show-diff-on-failure
+      env:
+        PRE_COMMIT_MAX_WORKERS: 1
+
+    - name: Clear caches between checks
+      run: |
+        find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+        sync
 
     - name: Run additional Python linters via pre-commit
       run: |-
         source .venv/bin/activate
         # Run individual pre-commit hooks for detailed output
-        echo "Running ruff checks..."
+        echo "=== Running ruff checks ==="
         pre-commit run ruff --all-files || true
 
-        echo "Running mypy type checking..."
+        # Clear memory
+        python3 -c "import gc; gc.collect()" 2>/dev/null || true
+
+        echo "=== Running mypy type checking ==="
+        ulimit -v $((MEMORY_LIMIT_MB * 1024)) 2>/dev/null || true
         pre-commit run mypy --all-files || true
 
-        echo "Running formatting checks..."
+        # Clear memory
+        find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+
+        echo "=== Running formatting checks ==="
         pre-commit run ruff-format --all-files --show-diff-on-failure || true
 
-        echo "Running dependency checks..."
+        echo "=== Running dependency checks ==="
         pre-commit run deptry --all-files || true

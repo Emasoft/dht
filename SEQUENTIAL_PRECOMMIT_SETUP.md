@@ -74,7 +74,7 @@ repos:
         stages: [pre-commit]
 
   # Python-specific hooks (choose based on your project needs)
-  
+
   # Option A: If using uv for dependency management
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.7.13  # Check for latest version
@@ -178,7 +178,7 @@ shift
 # Platform-specific memory limiting
 limit_memory() {
     local limit_mb="$1"
-    
+
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Linux: use ulimit
         ulimit -v $((limit_mb * 1024)) 2>/dev/null || true
@@ -196,7 +196,7 @@ limit_memory() {
 cleanup() {
     # Kill any child processes
     pkill -P $$ 2>/dev/null || true
-    
+
     # Force garbage collection if Python
     if [[ "$COMMAND" == *"python"* ]] || [[ "$COMMAND" == *"uv"* ]]; then
         python3 -c "import gc; gc.collect()" 2>/dev/null || true
@@ -216,7 +216,7 @@ else
     # Fallback for systems without timeout command
     "$COMMAND" "$@" &
     PID=$!
-    
+
     # Simple timeout implementation
     SECONDS=0
     while kill -0 $PID 2>/dev/null; do
@@ -229,7 +229,7 @@ else
         fi
         sleep 1
     done
-    
+
     wait $PID
 fi
 ```
@@ -268,10 +268,10 @@ check_memory() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
         local free_pages=$(vm_stat | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
-        local page_size=$(pagesize)
+        local page_size=$(pagesize 2>/dev/null || echo 16384)
         local free_mb=$((free_pages * page_size / 1024 / 1024))
         echo "Free memory: ${free_mb}MB"
-        
+
         if [ "$free_mb" -lt 1024 ]; then
             echo -e "${YELLOW}Warning: Low memory available${NC}"
         fi
@@ -279,7 +279,7 @@ check_memory() {
         # Linux
         local free_mb=$(free -m | awk 'NR==2{print $4}')
         echo "Free memory: ${free_mb}MB"
-        
+
         if [ "$free_mb" -lt 1024 ]; then
             echo -e "${YELLOW}Warning: Low memory available${NC}"
         fi
@@ -289,17 +289,17 @@ check_memory() {
 # Clear system caches (platform-specific)
 clear_caches() {
     echo -e "${YELLOW}Clearing caches...${NC}"
-    
+
     # Python cache
     find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
     find . -type f -name "*.pyc" -delete 2>/dev/null || true
-    
+
     # Force garbage collection
     python3 -c "import gc; gc.collect()" 2>/dev/null || true
-    
+
     # Sync filesystem
     sync
-    
+
     # Small delay for system cleanup
     sleep 1
 }
@@ -363,7 +363,6 @@ fi
 2. **Create script directory**:
    ```bash
    mkdir -p .pre-commit-scripts
-   chmod +x .pre-commit-scripts/*.sh
    ```
 
 3. **Copy configuration files** from this guide to your project
@@ -406,7 +405,7 @@ ci:
   skip:
     - mypy-limited      # Run in separate job
     - security-scan     # Run in security workflow
-  
+
   # Or use different commands for CI
   # Example: lighter checks in CI
   autofix_prs: false    # Prevent automatic fixes in PRs
