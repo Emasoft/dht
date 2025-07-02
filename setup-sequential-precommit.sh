@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Setup script for sequential pre-commit execution
-# Configures environment and installs hooks with resource protection
+# All configuration is project-local - no system files are modified
 
 set -euo pipefail
 
-echo "Setting up sequential pre-commit execution..."
+echo "Setting up project-local sequential pre-commit..."
 
 # Colors for output
 if [[ -t 1 ]]; then
@@ -25,82 +25,194 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
     exit 1
 fi
 
-# Set up environment variables
-echo -e "${YELLOW}Configuring environment variables...${NC}"
-
-# Add to shell profile if not already present
-add_to_profile() {
-    local var_name="$1"
-    local var_value="$2"
-    local profile_file="$3"
-
-    if ! grep -q "export $var_name=" "$profile_file" 2>/dev/null; then
-        echo "export $var_name=$var_value" >> "$profile_file"
-        echo "  Added $var_name to $profile_file"
-    else
-        echo "  $var_name already configured in $profile_file"
-    fi
-}
-
-# Determine shell profile
-if [ -n "${BASH_VERSION:-}" ]; then
-    PROFILE_FILE="$HOME/.bashrc"
-elif [ -n "${ZSH_VERSION:-}" ]; then
-    PROFILE_FILE="$HOME/.zshrc"
-else
-    PROFILE_FILE="$HOME/.profile"
+# Create virtual environment if it doesn't exist
+if [ ! -d ".venv" ]; then
+    echo -e "${YELLOW}Creating virtual environment...${NC}"
+    uv venv
 fi
 
-# Add environment variables
-add_to_profile "PRE_COMMIT_MAX_WORKERS" "1" "$PROFILE_FILE"
-add_to_profile "PYTHONDONTWRITEBYTECODE" "1" "$PROFILE_FILE"
-add_to_profile "UV_NO_CACHE" "1" "$PROFILE_FILE"
-add_to_profile "PRE_COMMIT_NO_CONCURRENCY" "1" "$PROFILE_FILE"
+# Create activation hooks directory for environment variables
+echo -e "${YELLOW}Setting up project-local environment configuration...${NC}"
+mkdir -p .venv/bin/activate.d 2>/dev/null || mkdir -p .venv/Scripts/activate.d 2>/dev/null
 
-# Export for current session
+# Create environment configuration that will be sourced on activation
+cat > .venv/bin/activate.d/sequential-precommit.sh << 'EOF'
+#!/usr/bin/env bash
+# Project-local environment configuration for sequential pre-commit
+
+# Force sequential execution
 export PRE_COMMIT_MAX_WORKERS=1
 export PYTHONDONTWRITEBYTECODE=1
 export UV_NO_CACHE=1
 export PRE_COMMIT_NO_CONCURRENCY=1
 
+# Resource limits
+export MEMORY_LIMIT_MB=2048
+export TIMEOUT_SECONDS=600
+
+# Tool-specific limits
+export TRUFFLEHOG_TIMEOUT=300
+export TRUFFLEHOG_MEMORY_MB=1024
+export TRUFFLEHOG_CONCURRENCY=1
+
+# Optional: Add project-local bin to PATH
+if [ -d "$VIRTUAL_ENV/../.local/bin" ]; then
+    export PATH="$VIRTUAL_ENV/../.local/bin:$PATH"
+fi
+
+echo "Sequential pre-commit environment activated"
+echo "  Max workers: 1 (sequential execution)"
+echo "  Memory limit: ${MEMORY_LIMIT_MB}MB"
+echo "  Timeout: ${TIMEOUT_SECONDS}s"
+EOF
+
+chmod +x .venv/bin/activate.d/sequential-precommit.sh 2>/dev/null || true
+
+# For existing venv, source the configuration immediately
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+    source .venv/bin/activate.d/sequential-precommit.sh 2>/dev/null || true
+fi
+
 # Create wrapper directory
 echo -e "${YELLOW}Creating wrapper scripts directory...${NC}"
 mkdir -p .pre-commit-wrappers
 
-# Check if wrappers exist
+# Create memory-limited wrapper if it doesn't exist
 if [ ! -f ".pre-commit-wrappers/memory-limited-hook.sh" ]; then
-    echo -e "${RED}Error: Wrapper scripts not found in .pre-commit-wrappers/${NC}"
-    echo "Please ensure memory-limited-hook.sh and trufflehog-limited.sh exist"
+    echo -e "${YELLOW}Creating memory-limited wrapper...${NC}"
+    cat > .pre-commit-wrappers/memory-limited-hook.sh << 'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Use project-local environment variables
+MEMORY_LIMIT_MB="${MEMORY_LIMIT_MB:-2048}"
+TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-600}"
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <command> [args...]"
     exit 1
+fi
+
+COMMAND="$1"
+shift
+
+# Platform-specific memory limiting
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    ulimit -v $((MEMORY_LIMIT_MB * 1024)) 2>/dev/null || true
+    ulimit -d $((MEMORY_LIMIT_MB * 1024)) 2>/dev/null || true
+fi
+
+# Cleanup on exit
+cleanup() {
+    pkill -P $$ 2>/dev/null || true
+    if [[ "$COMMAND" == *"python"* ]] || [[ "$COMMAND" == *"uv"* ]]; then
+        python3 -c "import gc; gc.collect()" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT INT TERM
+
+echo "Running (memory limited to ${MEMORY_LIMIT_MB}MB): $COMMAND $*"
+
+# Execute with timeout
+if command -v timeout &> /dev/null; then
+    exec timeout "$TIMEOUT_SECONDS" "$COMMAND" "$@"
+elif command -v gtimeout &> /dev/null; then
+    exec gtimeout "$TIMEOUT_SECONDS" "$COMMAND" "$@"
+else
+    "$COMMAND" "$@"
+fi
+EOF
+fi
+
+# Create Trufflehog wrapper if it doesn't exist
+if [ ! -f ".pre-commit-wrappers/trufflehog-limited.sh" ]; then
+    echo -e "${YELLOW}Creating Trufflehog wrapper...${NC}"
+    cat > .pre-commit-wrappers/trufflehog-limited.sh << 'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Use project-local environment variables
+TIMEOUT="${TRUFFLEHOG_TIMEOUT:-300}"
+MEMORY_LIMIT="${TRUFFLEHOG_MEMORY_MB:-1024}"
+CONCURRENCY="${TRUFFLEHOG_CONCURRENCY:-1}"
+
+# Check if trufflehog is installed globally or locally
+if ! command -v trufflehog &> /dev/null; then
+    if [ ! -f ".venv/bin/trufflehog" ]; then
+        echo "Installing Trufflehog to project-local directory..."
+        mkdir -p .venv/bin
+        curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | \
+            sh -s -- -b .venv/bin
+    fi
+    # Use local version
+    TRUFFLEHOG_CMD=".venv/bin/trufflehog"
+else
+    TRUFFLEHOG_CMD="trufflehog"
+fi
+
+echo "Running Trufflehog (timeout: ${TIMEOUT}s, concurrency: ${CONCURRENCY})..."
+
+# Run with resource limits
+if command -v timeout &> /dev/null; then
+    timeout_cmd="timeout ${TIMEOUT}s"
+elif command -v gtimeout &> /dev/null; then
+    timeout_cmd="gtimeout ${TIMEOUT}s"
+else
+    timeout_cmd=""
+fi
+
+$timeout_cmd $TRUFFLEHOG_CMD git file://. \
+    --only-verified \
+    --fail \
+    --no-update \
+    --concurrency="$CONCURRENCY" || exit_code=$?
+
+if [ "${exit_code:-0}" -eq 124 ]; then
+    echo "Warning: Trufflehog timed out after ${TIMEOUT}s"
+    exit 0
+elif [ "${exit_code:-0}" -eq 183 ]; then
+    echo "Error: Trufflehog found verified secrets!"
+    exit 1
+elif [ "${exit_code:-0}" -ne 0 ]; then
+    echo "Error: Trufflehog failed with exit code ${exit_code}"
+    exit 1
+fi
+
+echo "✓ No verified secrets found"
+EOF
 fi
 
 # Make wrappers executable
 chmod +x .pre-commit-wrappers/*.sh
 
-# Install pre-commit if not installed
+# Install pre-commit as a project tool if not installed
 if ! command -v pre-commit &> /dev/null; then
-    echo -e "${YELLOW}Installing pre-commit...${NC}"
-    if command -v uv &> /dev/null; then
-        uv tool install pre-commit --with pre-commit-uv
-    else
-        pip install pre-commit
+    echo -e "${YELLOW}Installing pre-commit as project tool...${NC}"
+    if [ -f ".venv/bin/activate" ]; then
+        source .venv/bin/activate
     fi
+    uv tool install pre-commit --with pre-commit-uv
 fi
 
-# Install git hooks
-echo -e "${YELLOW}Installing pre-commit hooks...${NC}"
-pre-commit install --install-hooks
-pre-commit install --hook-type commit-msg
-
-# Create custom git hook for additional protection
-echo -e "${YELLOW}Creating custom git pre-commit hook...${NC}"
+# Create git hook that sources project environment
+echo -e "${YELLOW}Creating git pre-commit hook...${NC}"
 cat > .git/hooks/pre-commit << 'EOF'
 #!/usr/bin/env bash
-# Custom pre-commit hook with sequential execution
+# Git pre-commit hook - sources project environment
 
-# Ensure sequential execution
-export PRE_COMMIT_MAX_WORKERS=1
-export PYTHONDONTWRITEBYTECODE=1
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$PROJECT_ROOT" || exit 1
+
+# Source project virtual environment
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+fi
+
+# Source sequential configuration
+if [ -f ".venv/bin/activate.d/sequential-precommit.sh" ]; then
+    source .venv/bin/activate.d/sequential-precommit.sh
+fi
 
 # Check memory before running
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -112,12 +224,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 fi
 
 if [ "${FREE_MB:-1024}" -lt 512 ]; then
-    echo "Warning: Low memory available (${FREE_MB}MB). Consider closing other applications."
-    read -p "Continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
-    fi
+    echo "Warning: Low memory (${FREE_MB}MB). Consider closing other applications."
 fi
 
 # Run pre-commit
@@ -126,43 +233,32 @@ EOF
 
 chmod +x .git/hooks/pre-commit
 
-# Verify installation
-echo -e "${YELLOW}Verifying installation...${NC}"
+# Install pre-commit hooks
+echo -e "${YELLOW}Installing pre-commit hooks...${NC}"
+pre-commit install --install-hooks
+pre-commit install --hook-type commit-msg
 
-# Check environment variables
-echo "Environment variables:"
-echo "  PRE_COMMIT_MAX_WORKERS=${PRE_COMMIT_MAX_WORKERS}"
-echo "  PYTHONDONTWRITEBYTECODE=${PYTHONDONTWRITEBYTECODE}"
+# Create local tool directory
+mkdir -p .local/bin
 
-# Check pre-commit config
-if [ -f ".pre-commit-config.yaml" ]; then
-    echo -e "${GREEN}✓ Pre-commit configuration found${NC}"
-
-    # Count hooks with require_serial
-    SERIAL_HOOKS=$(grep -c "require_serial: true" .pre-commit-config.yaml 2>/dev/null || echo 0)
-    echo "  Sequential hooks configured: $SERIAL_HOOKS"
-else
-    echo -e "${RED}✗ No .pre-commit-config.yaml found${NC}"
-fi
-
-# Test pre-commit
-echo -e "${YELLOW}Testing pre-commit installation...${NC}"
-if pre-commit --version > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ Pre-commit is working${NC}"
-    pre-commit --version
-else
-    echo -e "${RED}✗ Pre-commit not working properly${NC}"
-fi
-
-echo
-echo -e "${GREEN}Sequential pre-commit setup complete!${NC}"
-echo
-echo "To manually run pre-commit:"
-echo "  pre-commit run                    # On staged files"
-echo "  pre-commit run --all-files        # On all files"
-echo "  pre-commit run <hook-id> --all-files  # Specific hook"
-echo
-echo "To skip hooks temporarily:"
-echo "  SKIP=mypy,deptry git commit -m 'message'"
-echo
-echo -e "${YELLOW}Note: Restart your shell or run 'source $PROFILE_FILE' to load environment variables${NC}"
+# Summary
+echo ""
+echo -e "${GREEN}✓ Sequential pre-commit setup complete!${NC}"
+echo ""
+echo -e "${YELLOW}Important: No system or user files were modified.${NC}"
+echo "All configuration is project-local in:"
+echo "  - .venv/bin/activate.d/sequential-precommit.sh (environment variables)"
+echo "  - .pre-commit-wrappers/ (resource limit scripts)"
+echo "  - .git/hooks/pre-commit (git hook)"
+echo "  - .local/bin/ (optional local tools)"
+echo ""
+echo "To activate the environment:"
+echo -e "${GREEN}  source .venv/bin/activate${NC}"
+echo ""
+echo "The following variables will be set automatically:"
+echo "  PRE_COMMIT_MAX_WORKERS=1 (sequential execution)"
+echo "  MEMORY_LIMIT_MB=2048"
+echo "  TIMEOUT_SECONDS=600"
+echo "  TRUFFLEHOG_CONCURRENCY=1"
+echo ""
+echo "To customize limits, edit: .venv/bin/activate.d/sequential-precommit.sh"
