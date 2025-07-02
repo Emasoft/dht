@@ -1,0 +1,14 @@
+=== Pre-commit Resource Monitor ===
+Started: Wed Jul  2 19:20:59 CEST 2025
+Memory limit: 2048MB
+Monitoring PID: 88179
+===================================
+[2025-07-02 19:20:59] PID 88179 - Memory: 3MB, FDs: 9, Children: 1
+  └─ Child PID 88203 (/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3) - Memory: 35MB
+[2025-07-02 19:21:00] PID 88179 - Memory: 4MB, FDs: 9, Children: 1
+  └─ Child PID 88203 (/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3) - Memory: 103MB
+[2025-07-02 19:21:00] System - Free Memory: 17157MB
+[2025-07-02 19:21:01] PID 88179 - Memory: 4MB, FDs: 9, Children: 1
+  └─ Child PID 88203 (/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3) - Memory: 103MB
+[2025-07-02 19:21:02] PID 88179 - Memory: 4MB, FDs: 9, Children: 1
+[2025-07-02 19:21:03] PID 88179 - Memory: 4MB, FDs: 9, Children: 1

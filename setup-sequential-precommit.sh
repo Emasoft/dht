@@ -14,18 +14,14 @@ fi
 
 # Create activation hooks directory for environment variables
 echo "Setting up project-local environment configuration..."
-if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
-    # Windows (Git Bash)
-    mkdir -p .venv/Scripts/activate.d
-    ACTIVATE_DIR=".venv/Scripts/activate.d"
-else
-    # macOS/Linux
-    mkdir -p .venv/bin/activate.d
-    ACTIVATE_DIR=".venv/bin/activate.d"
+# Note: activate.d is not standard - we'll create our own activation script
+ACTIVATE_DIR=".venv/bin"
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    ACTIVATE_DIR=".venv/Scripts"
 fi
 
-# Create environment configuration that will be sourced on activation
-cat > "$ACTIVATE_DIR/sequential-precommit.sh" << 'EOF'
+# Create our custom environment script
+cat > "${ACTIVATE_DIR}/sequential-precommit-env.sh" << 'EOF'
 #!/usr/bin/env bash
 # Project-local environment configuration
 export PRE_COMMIT_MAX_WORKERS=1
@@ -39,29 +35,14 @@ export TRUFFLEHOG_MEMORY_MB=1024
 export TRUFFLEHOG_CONCURRENCY=1
 EOF
 
-chmod +x "$ACTIVATE_DIR/sequential-precommit.sh" 2>/dev/null || true
+chmod +x "${ACTIVATE_DIR}/sequential-precommit-env.sh" 2>/dev/null || true
 
 # Activate virtual environment
-if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
-    source .venv/Scripts/activate
-else
-    source .venv/bin/activate
-fi
+source .venv/bin/activate
 
-# Install pre-commit
+# Install pre-commit as a uv tool (project-local)
 echo "Installing pre-commit..."
-if ! command -v pre-commit &> /dev/null; then
-    # Try installing as a uv tool first
-    if uv tool install pre-commit --with pre-commit-uv 2>/dev/null; then
-        echo "✓ Pre-commit installed as uv tool"
-    else
-        # Fallback to pip install
-        echo "Installing pre-commit with pip..."
-        uv pip install pre-commit
-    fi
-else
-    echo "✓ Pre-commit already installed"
-fi
+uv tool install pre-commit --with pre-commit-uv
 
 # Create wrapper scripts directory
 mkdir -p .pre-commit-wrappers
@@ -91,7 +72,11 @@ fi
 
 # Cleanup on exit
 cleanup() {
-    pkill -P $$ 2>/dev/null || true
+    # Only kill direct children of this specific command, not all children of the shell
+    local cmd_pid=$!
+    if [ -n "${cmd_pid:-}" ] && kill -0 "$cmd_pid" 2>/dev/null; then
+        kill -TERM "$cmd_pid" 2>/dev/null || true
+    fi
     if [[ "$COMMAND" == *"python"* ]] || [[ "$COMMAND" == *"uv"* ]]; then
         python3 -c "import gc; gc.collect()" 2>/dev/null || true
     fi
@@ -140,11 +125,18 @@ else
     timeout_cmd=""
 fi
 
+# Check if exclude file exists
+EXCLUDE_ARGS=""
+if [ -f ".trufflehog-exclude" ]; then
+    EXCLUDE_ARGS="--exclude-paths=.trufflehog-exclude"
+fi
+
 $timeout_cmd trufflehog git file://. \
     --only-verified \
     --fail \
     --no-update \
-    --concurrency="$CONCURRENCY" || exit_code=$?
+    --concurrency="$CONCURRENCY" \
+    $EXCLUDE_ARGS || exit_code=$?
 
 if [ "${exit_code:-0}" -eq 124 ]; then
     echo "Warning: Trufflehog timed out after ${TIMEOUT}s"
@@ -157,10 +149,41 @@ fi
 echo "✓ No verified secrets found"
 EOF
 
-# Create resource monitor script
-cat > .pre-commit-wrappers/resource-monitor.sh << 'EOF'
+chmod +x .pre-commit-wrappers/*.sh
+
+# Create git hook with resource monitoring
+cat > .git/hooks/pre-commit << 'EOF'
 #!/usr/bin/env bash
-# Resource monitoring script for pre-commit
+# Git pre-commit hook with resource monitoring
+# Monitors memory, file descriptors, and processes during pre-commit execution
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$PROJECT_ROOT" || exit 1
+
+# Source project virtual environment
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+fi
+
+# Source sequential configuration
+if [ -f ".venv/bin/sequential-precommit-env.sh" ]; then
+    source .venv/bin/sequential-precommit-env.sh
+elif [ -f ".venv/Scripts/sequential-precommit-env.sh" ]; then
+    source .venv/Scripts/sequential-precommit-env.sh
+fi
+
+# Configuration
+MEMORY_LIMIT_MB="${MEMORY_LIMIT_MB:-4096}"
+LOG_DIR=".pre-commit-logs"
+MONITOR_INTERVAL=1
+
+# Create log directory
+mkdir -p "$LOG_DIR"
+
+# Generate timestamp for log file
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+LOG_FILE="$LOG_DIR/resource_usage_${TIMESTAMP}.log"
+MONITOR_PID_FILE="/tmp/pre-commit-monitor-$$.pid"
 
 # Function to get memory usage in MB
 get_memory_usage() {
@@ -190,18 +213,36 @@ get_child_count() {
     pgrep -P "$pid" 2>/dev/null | wc -l || echo "0"
 }
 
-# Main monitoring loop
+# Function to get system-wide metrics
+get_system_metrics() {
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local mem_free mem_total
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        mem_info=$(vm_stat | grep -E "(free|inactive|active|wired)")
+        page_size=$(pagesize 2>/dev/null || echo 16384)
+        mem_free=$(echo "$mem_info" | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
+        mem_free=$((mem_free * page_size / 1024 / 1024))
+    else
+        # Linux
+        mem_free=$(free -m | awk 'NR==2{print $4}')
+    fi
+
+    echo "[$timestamp] System - Free Memory: ${mem_free}MB"
+}
+
+# Monitoring function
 monitor_resources() {
     local parent_pid=$1
-    local log_file=$2
-    local memory_limit=$3
+    echo "=== Pre-commit Resource Monitor ===" > "$LOG_FILE"
+    echo "Started: $(date)" >> "$LOG_FILE"
+    echo "Memory limit: ${MEMORY_LIMIT_MB}MB" >> "$LOG_FILE"
+    echo "Monitoring PID: $parent_pid" >> "$LOG_FILE"
+    echo "===================================" >> "$LOG_FILE"
 
-    echo "=== Pre-commit Resource Monitor ===" > "$log_file"
-    echo "Started: $(date)" >> "$log_file"
-    echo "Memory limit: ${memory_limit}MB" >> "$log_file"
-    echo "Monitoring PID: $parent_pid" >> "$log_file"
-    echo "===================================" >> "$log_file"
-
+    local warning_issued=false
+    local critical_issued=false
     local max_memory=0
     local max_fd=0
     local max_children=0
@@ -218,7 +259,7 @@ monitor_resources() {
         [ "$child_count" -gt "$max_children" ] && max_children=$child_count
 
         # Log current metrics
-        echo "[$timestamp] PID $parent_pid - Memory: ${memory_mb}MB, FDs: $fd_count, Children: $child_count" >> "$log_file"
+        echo "[$timestamp] PID $parent_pid - Memory: ${memory_mb}MB, FDs: $fd_count, Children: $child_count" >> "$LOG_FILE"
 
         # Get all child processes and their memory
         local total_memory=$memory_mb
@@ -227,95 +268,92 @@ monitor_resources() {
             local child_cmd=$(ps -p "$child_pid" -o comm= 2>/dev/null || echo "unknown")
             total_memory=$((total_memory + child_mem))
             if [ "$child_mem" -gt 10 ]; then  # Only log children using >10MB
-                echo "  └─ Child PID $child_pid ($child_cmd) - Memory: ${child_mem}MB" >> "$log_file"
+                echo "  └─ Child PID $child_pid ($child_cmd) - Memory: ${child_mem}MB" >> "$LOG_FILE"
             fi
         done
 
-        # Check if memory limit exceeded
-        if [ "$total_memory" -gt "$memory_limit" ]; then
-            echo "[$timestamp] CRITICAL: Total memory usage (${total_memory}MB) exceeds limit (${memory_limit}MB)" >> "$log_file"
+        # Check for issues
+        local issues=()
+
+        # Memory checks
+        if [ "$total_memory" -gt "$MEMORY_LIMIT_MB" ]; then
+            issues+=("CRITICAL: Total memory usage (${total_memory}MB) exceeds limit (${MEMORY_LIMIT_MB}MB)")
+            critical_issued=true
+        elif [ "$total_memory" -gt $((MEMORY_LIMIT_MB * 80 / 100)) ] && [ "$warning_issued" = false ]; then
+            issues+=("WARNING: Memory usage (${total_memory}MB) is above 80% of limit")
+            warning_issued=true
+        fi
+
+        # File descriptor checks
+        if [ "$fd_count" -gt 1000 ]; then
+            issues+=("WARNING: High file descriptor count: $fd_count")
+        elif [ "$fd_count" -gt 500 ]; then
+            issues+=("NOTICE: Elevated file descriptor count: $fd_count")
+        fi
+
+        # Child process checks
+        if [ "$child_count" -gt 50 ]; then
+            issues+=("WARNING: High child process count: $child_count")
+        elif [ "$child_count" -gt 20 ]; then
+            issues+=("NOTICE: Elevated child process count: $child_count")
+        fi
+
+        # Log issues
+        for issue in "${issues[@]}"; do
+            echo "[$timestamp] $issue" >> "$LOG_FILE"
+        done
+
+        # Kill if memory exceeded
+        if [ "$critical_issued" = true ]; then
+            echo "[$timestamp] !!! KILLING PROCESS DUE TO MEMORY LIMIT EXCEEDED !!!" >> "$LOG_FILE"
+            get_system_metrics >> "$LOG_FILE"
+
+            # Get process tree before killing
+            echo "[$timestamp] Process tree before termination:" >> "$LOG_FILE"
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+                ps aux | grep -E "(pre-commit|python|node|npm)" >> "$LOG_FILE" 2>/dev/null || true
+            else
+                ps auxf | grep -E "(pre-commit|python|node|npm)" >> "$LOG_FILE" 2>/dev/null || true
+            fi
 
             # Kill all child processes first
             for child_pid in $(pgrep -P "$parent_pid" 2>/dev/null); do
-                echo "[$timestamp] Killing child process $child_pid" >> "$log_file"
+                echo "[$timestamp] Killing child process $child_pid" >> "$LOG_FILE"
                 kill -TERM "$child_pid" 2>/dev/null || true
             done
 
             sleep 1
 
             # Kill parent
-            echo "[$timestamp] Killing parent process $parent_pid" >> "$log_file"
+            echo "[$timestamp] Killing parent process $parent_pid" >> "$LOG_FILE"
             kill -TERM "$parent_pid" 2>/dev/null || true
             sleep 1
             kill -KILL "$parent_pid" 2>/dev/null || true
 
+            echo "[$timestamp] Process terminated due to resource limits" >> "$LOG_FILE"
             break
         fi
 
-        sleep 1
+        # Log system metrics every 10 seconds
+        if [ $(($(date +%s) % 10)) -eq 0 ]; then
+            get_system_metrics >> "$LOG_FILE"
+        fi
+
+        sleep "$MONITOR_INTERVAL"
     done
 
     # Final summary
-    echo "" >> "$log_file"
-    echo "=== Resource Usage Summary ===" >> "$log_file"
-    echo "Ended: $(date)" >> "$log_file"
-    echo "Peak Memory: ${max_memory}MB" >> "$log_file"
-    echo "Peak File Descriptors: $max_fd" >> "$log_file"
-    echo "Peak Child Processes: $max_children" >> "$log_file"
-    echo "==============================" >> "$log_file"
+    echo "" >> "$LOG_FILE"
+    echo "=== Resource Usage Summary ===" >> "$LOG_FILE"
+    echo "Ended: $(date)" >> "$LOG_FILE"
+    echo "Peak Memory: ${max_memory}MB" >> "$LOG_FILE"
+    echo "Peak File Descriptors: $max_fd" >> "$LOG_FILE"
+    echo "Peak Child Processes: $max_children" >> "$LOG_FILE"
+    echo "==============================" >> "$LOG_FILE"
 }
 
-# Export the function so it can be used
-export -f get_memory_usage get_fd_count get_child_count monitor_resources
-EOF
-
-chmod +x .pre-commit-wrappers/*.sh
-
-# Create git hook with resource monitoring
-cat > .git/hooks/pre-commit << 'EOF'
-#!/usr/bin/env bash
-# Git pre-commit hook with resource monitoring
-# Monitors memory, file descriptors, and processes during pre-commit execution
-
-PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-cd "$PROJECT_ROOT" || exit 1
-
-# Source project virtual environment
-if [ -f ".venv/bin/activate" ]; then
-    source .venv/bin/activate
-elif [ -f ".venv/Scripts/activate" ]; then
-    source .venv/Scripts/activate
-fi
-
-# Source sequential configuration
-if [ -f ".venv/bin/activate.d/sequential-precommit.sh" ]; then
-    source .venv/bin/activate.d/sequential-precommit.sh
-elif [ -f ".venv/Scripts/activate.d/sequential-precommit.sh" ]; then
-    source .venv/Scripts/activate.d/sequential-precommit.sh
-fi
-
-# Configuration
-MEMORY_LIMIT_MB="${MEMORY_LIMIT_MB:-4096}"
-LOG_DIR=".pre-commit-logs"
-MONITOR_INTERVAL=1
-
-# Create log directory
-mkdir -p "$LOG_DIR"
-
-# Generate timestamp for log file
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_FILE="$LOG_DIR/resource_usage_${TIMESTAMP}.log"
-
-# Use project-local temp directory for PID file to avoid permission issues
-TEMP_DIR="$PROJECT_ROOT/.pre-commit-temp"
-mkdir -p "$TEMP_DIR"
-MONITOR_PID_FILE="$TEMP_DIR/pre-commit-monitor-$$.pid"
-
-# Source monitor functions
-source .pre-commit-wrappers/resource-monitor.sh
-
 # Start resource monitor in background
-monitor_resources $$ "$LOG_FILE" "$MEMORY_LIMIT_MB" &
+monitor_resources $$ &
 MONITOR_PID=$!
 echo "$MONITOR_PID" > "$MONITOR_PID_FILE"
 
@@ -327,11 +365,6 @@ cleanup_monitor() {
             kill -TERM "$monitor_pid" 2>/dev/null || true
         fi
         rm -f "$MONITOR_PID_FILE"
-    fi
-
-    # Clean up temp directory
-    if [ -d "$TEMP_DIR" ]; then
-        rm -rf "$TEMP_DIR"
     fi
 
     # Display log summary
@@ -348,7 +381,7 @@ trap cleanup_monitor EXIT INT TERM
 # Check memory before running
 if [[ "$OSTYPE" == "darwin"* ]]; then
     FREE_MB=$(vm_stat | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
-    PAGE_SIZE=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
+    PAGE_SIZE=$(pagesize 2>/dev/null || echo 16384)
     FREE_MB=$((FREE_MB * PAGE_SIZE / 1024 / 1024))
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     FREE_MB=$(free -m | awk 'NR==2{print $4}')
@@ -359,11 +392,26 @@ if [ "${FREE_MB:-1024}" -lt 512 ]; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: Starting with low system memory: ${FREE_MB}MB" >> "$LOG_FILE"
 fi
 
-# Run pre-commit
+# Run pre-commit using the pre-commit framework
 echo "Starting pre-commit with resource monitoring..."
 echo "Monitor log: $LOG_FILE"
-pre-commit run "$@"
-PRE_COMMIT_EXIT_CODE=$?
+
+# Call the pre-commit framework
+INSTALL_PYTHON="${PROJECT_ROOT}/.venv/bin/python3"
+ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ARGS+=(--hook-dir "$HERE" -- "$@")
+
+if [ -x "$INSTALL_PYTHON" ]; then
+    "$INSTALL_PYTHON" -mpre_commit "${ARGS[@]}"
+    PRE_COMMIT_EXIT_CODE=$?
+elif command -v pre-commit > /dev/null; then
+    pre-commit "${ARGS[@]}"
+    PRE_COMMIT_EXIT_CODE=$?
+else
+    echo '`pre-commit` not found.  Did you forget to activate your virtualenv?' 1>&2
+    PRE_COMMIT_EXIT_CODE=1
+fi
 
 # Give monitor time to write final metrics
 sleep 2
@@ -379,25 +427,42 @@ echo "Installing pre-commit hooks..."
 pre-commit install --install-hooks
 pre-commit install --hook-type commit-msg
 
-# Create .gitignore entries for logs and temp files
-if [ -f .gitignore ]; then
-    if ! grep -q "^\.pre-commit-logs" .gitignore 2>/dev/null; then
-        echo ".pre-commit-logs/" >> .gitignore
-    fi
-    if ! grep -q "^\.pre-commit-temp" .gitignore 2>/dev/null; then
-        echo ".pre-commit-temp/" >> .gitignore
-    fi
-else
-    cat > .gitignore << 'EOF'
-.pre-commit-logs/
-.pre-commit-temp/
-EOF
+# Create .gitignore entry for logs
+if ! grep -q ".pre-commit-logs" .gitignore 2>/dev/null; then
+    echo ".pre-commit-logs/" >> .gitignore
 fi
+
+# Create TruffleHog exclude file
+cat > .trufflehog-exclude << 'EOF'
+snapshot_report.html
+**/snapshot_report.html
+.pre-commit-logs/
+.pytest_cache/
+**/__pycache__/
+.git/
+*.pyc
+*.pyo
+*.log
+*.tmp
+.venv/
+venv/
+env/
+.env
+node_modules/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+EOF
 
 echo "✓ Sequential pre-commit with resource monitoring setup complete!"
 echo ""
 echo "To activate the environment:"
 echo "  source .venv/bin/activate"
+echo "  source ${ACTIVATE_DIR}/sequential-precommit-env.sh"
 echo ""
 echo "The following variables are now set (project-local):"
 echo "  PRE_COMMIT_MAX_WORKERS=1"

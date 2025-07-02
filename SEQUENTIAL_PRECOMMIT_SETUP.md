@@ -21,7 +21,7 @@ Sequential execution with resource monitoring provides:
 ## Prerequisites
 
 Only global tool installations are required:
-- Python 3.8+
+- Python 3.8+ (3.12 recommended for consistency)
 - Git
 - uv (install with: `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - Optionally: Homebrew (macOS/Linux) for system tools
@@ -49,18 +49,14 @@ fi
 
 # Create activation hooks directory for environment variables
 echo "Setting up project-local environment configuration..."
-if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
-    # Windows (Git Bash)
-    mkdir -p .venv/Scripts/activate.d
-    ACTIVATE_DIR=".venv/Scripts/activate.d"
-else
-    # macOS/Linux
-    mkdir -p .venv/bin/activate.d
-    ACTIVATE_DIR=".venv/bin/activate.d"
+# Note: activate.d is not standard - we'll create our own activation script
+ACTIVATE_DIR=".venv/bin"
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    ACTIVATE_DIR=".venv/Scripts"
 fi
 
-# Create environment configuration that will be sourced on activation
-cat > "$ACTIVATE_DIR/sequential-precommit.sh" << 'EOF'
+# Create our custom environment script
+cat > "${ACTIVATE_DIR}/sequential-precommit-env.sh" << 'EOF'
 #!/usr/bin/env bash
 # Project-local environment configuration
 export PRE_COMMIT_MAX_WORKERS=1
@@ -74,29 +70,14 @@ export TRUFFLEHOG_MEMORY_MB=1024
 export TRUFFLEHOG_CONCURRENCY=1
 EOF
 
-chmod +x "$ACTIVATE_DIR/sequential-precommit.sh" 2>/dev/null || true
+chmod +x "${ACTIVATE_DIR}/sequential-precommit-env.sh" 2>/dev/null || true
 
 # Activate virtual environment
-if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
-    source .venv/Scripts/activate
-else
-    source .venv/bin/activate
-fi
+source .venv/bin/activate
 
-# Install pre-commit
+# Install pre-commit as a uv tool (project-local)
 echo "Installing pre-commit..."
-if ! command -v pre-commit &> /dev/null; then
-    # Try installing as a uv tool first
-    if uv tool install pre-commit --with pre-commit-uv 2>/dev/null; then
-        echo "✓ Pre-commit installed as uv tool"
-    else
-        # Fallback to pip install
-        echo "Installing pre-commit with pip..."
-        uv pip install pre-commit
-    fi
-else
-    echo "✓ Pre-commit already installed"
-fi
+uv tool install pre-commit --with pre-commit-uv
 
 # Create wrapper scripts directory
 mkdir -p .pre-commit-wrappers
@@ -126,7 +107,11 @@ fi
 
 # Cleanup on exit
 cleanup() {
-    pkill -P $$ 2>/dev/null || true
+    # Only kill direct children of this specific command, not all children of the shell
+    local cmd_pid=$!
+    if [ -n "${cmd_pid:-}" ] && kill -0 "$cmd_pid" 2>/dev/null; then
+        kill -TERM "$cmd_pid" 2>/dev/null || true
+    fi
     if [[ "$COMMAND" == *"python"* ]] || [[ "$COMMAND" == *"uv"* ]]; then
         python3 -c "import gc; gc.collect()" 2>/dev/null || true
     fi
@@ -175,11 +160,18 @@ else
     timeout_cmd=""
 fi
 
+# Check if exclude file exists
+EXCLUDE_ARGS=""
+if [ -f ".trufflehog-exclude" ]; then
+    EXCLUDE_ARGS="--exclude-paths=.trufflehog-exclude"
+fi
+
 $timeout_cmd trufflehog git file://. \
     --only-verified \
     --fail \
     --no-update \
-    --concurrency="$CONCURRENCY" || exit_code=$?
+    --concurrency="$CONCURRENCY" \
+    $EXCLUDE_ARGS || exit_code=$?
 
 if [ "${exit_code:-0}" -eq 124 ]; then
     echo "Warning: Trufflehog timed out after ${TIMEOUT}s"
@@ -206,15 +198,13 @@ cd "$PROJECT_ROOT" || exit 1
 # Source project virtual environment
 if [ -f ".venv/bin/activate" ]; then
     source .venv/bin/activate
-elif [ -f ".venv/Scripts/activate" ]; then
-    source .venv/Scripts/activate
 fi
 
 # Source sequential configuration
-if [ -f ".venv/bin/activate.d/sequential-precommit.sh" ]; then
-    source .venv/bin/activate.d/sequential-precommit.sh
-elif [ -f ".venv/Scripts/activate.d/sequential-precommit.sh" ]; then
-    source .venv/Scripts/activate.d/sequential-precommit.sh
+if [ -f ".venv/bin/sequential-precommit-env.sh" ]; then
+    source .venv/bin/sequential-precommit-env.sh
+elif [ -f ".venv/Scripts/sequential-precommit-env.sh" ]; then
+    source .venv/Scripts/sequential-precommit-env.sh
 fi
 
 # Configuration
@@ -228,11 +218,7 @@ mkdir -p "$LOG_DIR"
 # Generate timestamp for log file
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 LOG_FILE="$LOG_DIR/resource_usage_${TIMESTAMP}.log"
-
-# Use project-local temp directory for PID file to avoid permission issues
-TEMP_DIR="$PROJECT_ROOT/.pre-commit-temp"
-mkdir -p "$TEMP_DIR"
-MONITOR_PID_FILE="$TEMP_DIR/pre-commit-monitor-$$.pid"
+MONITOR_PID_FILE="/tmp/pre-commit-monitor-$$.pid"
 
 # Function to get memory usage in MB
 get_memory_usage() {
@@ -270,7 +256,7 @@ get_system_metrics() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
         mem_info=$(vm_stat | grep -E "(free|inactive|active|wired)")
-        page_size=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
+        page_size=$(pagesize 2>/dev/null || echo 16384)
         mem_free=$(echo "$mem_info" | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
         mem_free=$((mem_free * page_size / 1024 / 1024))
     else
@@ -360,10 +346,8 @@ monitor_resources() {
             # Get process tree before killing
             echo "[$timestamp] Process tree before termination:" >> "$LOG_FILE"
             if [[ "$OSTYPE" == "darwin"* ]]; then
-                # macOS doesn't have ps auxf, use ps aux instead
-                ps aux | grep -E "(pre-commit|python|node|npm)" | grep -v grep >> "$LOG_FILE" 2>/dev/null || true
+                ps aux | grep -E "(pre-commit|python|node|npm)" >> "$LOG_FILE" 2>/dev/null || true
             else
-                # Linux has ps auxf for tree view
                 ps auxf | grep -E "(pre-commit|python|node|npm)" >> "$LOG_FILE" 2>/dev/null || true
             fi
 
@@ -400,7 +384,7 @@ monitor_resources() {
     echo "Peak Memory: ${max_memory}MB" >> "$LOG_FILE"
     echo "Peak File Descriptors: $max_fd" >> "$LOG_FILE"
     echo "Peak Child Processes: $max_children" >> "$LOG_FILE"
-    echo "=============================" >> "$LOG_FILE"
+    echo "==============================" >> "$LOG_FILE"
 }
 
 # Start resource monitor in background
@@ -418,11 +402,6 @@ cleanup_monitor() {
         rm -f "$MONITOR_PID_FILE"
     fi
 
-    # Clean up temp directory
-    if [ -d "$TEMP_DIR" ]; then
-        rm -rf "$TEMP_DIR"
-    fi
-
     # Display log summary
     if [ -f "$LOG_FILE" ]; then
         echo ""
@@ -437,7 +416,7 @@ trap cleanup_monitor EXIT INT TERM
 # Check memory before running
 if [[ "$OSTYPE" == "darwin"* ]]; then
     FREE_MB=$(vm_stat | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
-    PAGE_SIZE=$(sysctl -n hw.pagesize 2>/dev/null || echo 16384)
+    PAGE_SIZE=$(pagesize 2>/dev/null || echo 16384)
     FREE_MB=$((FREE_MB * PAGE_SIZE / 1024 / 1024))
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     FREE_MB=$(free -m | awk 'NR==2{print $4}')
@@ -448,11 +427,26 @@ if [ "${FREE_MB:-1024}" -lt 512 ]; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: Starting with low system memory: ${FREE_MB}MB" >> "$LOG_FILE"
 fi
 
-# Run pre-commit
+# Run pre-commit using the pre-commit framework
 echo "Starting pre-commit with resource monitoring..."
 echo "Monitor log: $LOG_FILE"
-pre-commit run "$@"
-PRE_COMMIT_EXIT_CODE=$?
+
+# Call the pre-commit framework
+INSTALL_PYTHON="${PROJECT_ROOT}/.venv/bin/python3"
+ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ARGS+=(--hook-dir "$HERE" -- "$@")
+
+if [ -x "$INSTALL_PYTHON" ]; then
+    "$INSTALL_PYTHON" -mpre_commit "${ARGS[@]}"
+    PRE_COMMIT_EXIT_CODE=$?
+elif command -v pre-commit > /dev/null; then
+    pre-commit "${ARGS[@]}"
+    PRE_COMMIT_EXIT_CODE=$?
+else
+    echo '`pre-commit` not found.  Did you forget to activate your virtualenv?' 1>&2
+    PRE_COMMIT_EXIT_CODE=1
+fi
 
 # Give monitor time to write final metrics
 sleep 2
@@ -468,25 +462,42 @@ echo "Installing pre-commit hooks..."
 pre-commit install --install-hooks
 pre-commit install --hook-type commit-msg
 
-# Create .gitignore entries for logs and temp files
-if [ -f .gitignore ]; then
-    if ! grep -q "^\.pre-commit-logs" .gitignore 2>/dev/null; then
-        echo ".pre-commit-logs/" >> .gitignore
-    fi
-    if ! grep -q "^\.pre-commit-temp" .gitignore 2>/dev/null; then
-        echo ".pre-commit-temp/" >> .gitignore
-    fi
-else
-    cat > .gitignore << 'EOF'
-.pre-commit-logs/
-.pre-commit-temp/
-EOF
+# Create .gitignore entry for logs
+if ! grep -q ".pre-commit-logs" .gitignore 2>/dev/null; then
+    echo ".pre-commit-logs/" >> .gitignore
 fi
+
+# Create TruffleHog exclude file
+cat > .trufflehog-exclude << 'EOF'
+snapshot_report.html
+**/snapshot_report.html
+.pre-commit-logs/
+.pytest_cache/
+**/__pycache__/
+.git/
+*.pyc
+*.pyo
+*.log
+*.tmp
+.venv/
+venv/
+env/
+.env
+node_modules/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+EOF
 
 echo "✓ Sequential pre-commit with resource monitoring setup complete!"
 echo ""
 echo "To activate the environment:"
 echo "  source .venv/bin/activate"
+echo "  source ${ACTIVATE_DIR}/sequential-precommit-env.sh"
 echo ""
 echo "The following variables are now set (project-local):"
 echo "  PRE_COMMIT_MAX_WORKERS=1"
@@ -513,7 +524,7 @@ Create `.pre-commit-config.yaml` with all hooks configured for sequential execut
 # All hooks run one at a time to minimize resource usage
 
 default_language_version:
-  python: python3.10
+  python: python3.12  # Use consistent Python version
 
 default_stages: [pre-commit]
 
@@ -528,6 +539,7 @@ repos:
         stages: [pre-commit]
       - id: check-yaml
         stages: [pre-commit]
+        args: ['--allow-multiple-documents']
       - id: check-added-large-files
         stages: [pre-commit]
         args: ['--maxkb=1000']
@@ -618,7 +630,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.12'  # Match local Python version
 
     - name: Install uv
       uses: astral-sh/setup-uv@v5
@@ -649,6 +661,9 @@ jobs:
         export MEMORY_LIMIT_MB=2048
         export TIMEOUT_SECONDS=600
 
+        # Make wrapper scripts executable
+        chmod +x .pre-commit-wrappers/*.sh || true
+
         # Run all hooks
         pre-commit run --all-files --show-diff-on-failure
 
@@ -657,6 +672,35 @@ jobs:
       run: |
         echo "Final memory usage:"
         free -h || true
+```
+
+### 4. TruffleHog Exclusion File
+
+Create `.trufflehog-exclude` to properly exclude files from secret scanning:
+
+```
+snapshot_report.html
+**/snapshot_report.html
+.pre-commit-logs/
+.pytest_cache/
+**/__pycache__/
+.git/
+*.pyc
+*.pyo
+*.log
+*.tmp
+.venv/
+venv/
+env/
+.env
+node_modules/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 ```
 
 ## Installation
@@ -676,9 +720,34 @@ jobs:
 3. **Activate the environment**:
    ```bash
    source .venv/bin/activate
+   # Also source the environment variables
+   source .venv/bin/sequential-precommit-env.sh  # or .venv/Scripts/ on Windows
    ```
 
 That's it! No system or user configuration files are modified.
+
+## Key Improvements in This Version
+
+1. **Cross-Platform Compatibility**:
+   - Handles Windows vs Unix path differences for activation scripts
+   - Uses dynamic `PROJECT_ROOT` instead of hardcoded paths
+   - Detects OS for `ps` command variations (macOS doesn't support `auxf`)
+
+2. **Better Process Management**:
+   - More careful cleanup that only kills specific command processes
+   - Avoids overly aggressive `pkill -P $$`
+
+3. **Consistent Python Version**:
+   - Uses Python 3.12 throughout for consistency
+   - Matches local and CI environments
+
+4. **TruffleHog v3 Support**:
+   - Proper exclude file configuration
+   - Handles evolving v3 configuration format
+
+5. **CI/CD Improvements**:
+   - Ensures wrapper scripts are executable in GitHub Actions
+   - Proper environment variable export
 
 ## Understanding Resource Logs
 
@@ -729,7 +798,7 @@ The monitoring system tracks:
 
 ### Adjusting Resource Limits
 
-Edit `.venv/bin/activate.d/sequential-precommit.sh`:
+Edit `.venv/bin/sequential-precommit-env.sh` (or `.venv/Scripts/` on Windows):
 
 ```bash
 export MEMORY_LIMIT_MB=4096      # Increase for large projects
@@ -765,7 +834,7 @@ For complete isolation with monitoring, use Docker:
 
 ```dockerfile
 # .devcontainer/Dockerfile
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Install monitoring tools
 RUN apt-get update && apt-get install -y \
@@ -823,8 +892,11 @@ Some tools don't clean up properly. Add explicit cleanup:
 cleanup() {
     # Close file descriptors
     exec 3>&- 4>&- 5>&- 2>/dev/null || true
-    # Kill child processes
-    pkill -P $$ 2>/dev/null || true
+    # Kill specific command process
+    local cmd_pid=$!
+    if [ -n "${cmd_pid:-}" ] && kill -0 "$cmd_pid" 2>/dev/null; then
+        kill -TERM "$cmd_pid" 2>/dev/null || true
+    fi
 }
 trap cleanup EXIT
 ```
@@ -837,21 +909,36 @@ chmod +x .git/hooks/pre-commit
 chmod +x .pre-commit-wrappers/*.sh
 ```
 
+### TruffleHog Still Finding Secrets?
+
+Check that `.trufflehog-exclude` exists and is properly formatted. TruffleHog v3 uses this file with the `--exclude-paths` parameter.
+
 ## Platform-Specific Notes
 
 ### macOS
 - Memory limits (`ulimit -v`) don't work, but monitoring still tracks usage
 - Use `lsof` for file descriptor counting
 - Install GNU coreutils for better `timeout` command: `brew install coreutils`
+- `ps` command doesn't support `auxf` option - uses `aux` instead
 
 ### Linux
 - Full memory limiting support via `ulimit`
 - `/proc` filesystem provides detailed process info
 - Native `timeout` command available
+- Full `ps auxf` support for process trees
 
 ### Windows (Git Bash/WSL)
 - WSL2 provides Linux-like behavior
 - Git Bash has limited process monitoring
 - Consider using WSL2 for better resource control
+- Scripts detect Windows and use `.venv/Scripts/` directory
+
+## Best Practices
+
+1. **Regular Monitoring**: Check resource logs periodically to identify trends
+2. **Hook Optimization**: Use peak usage data to optimize resource-intensive hooks
+3. **CI/CD Alignment**: Keep local and CI configurations synchronized
+4. **Exclude Files**: Maintain `.trufflehog-exclude` for test artifacts and generated files
+5. **Python Version**: Use consistent Python version across all environments
 
 Remember: This setup prioritizes stability and visibility. The resource monitoring ensures you always know what's happening and prevents system resource exhaustion, making your development workflow more reliable and predictable.

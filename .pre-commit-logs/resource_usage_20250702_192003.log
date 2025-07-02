@@ -1,0 +1,11 @@
+=== Pre-commit Resource Monitor ===
+Started: Wed Jul  2 19:20:03 CEST 2025
+Memory limit: 2048MB
+Monitoring PID: 86402
+===================================
+[2025-07-02 19:20:03] PID 86402 - Memory: 4MB, FDs: 9, Children: 1
+  └─ Child PID 86426 (/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3) - Memory: 36MB
+[2025-07-02 19:20:04] PID 86402 - Memory: 4MB, FDs: 9, Children: 1
+  └─ Child PID 86426 (/Users/emanuelesabetta/Code/DHT/dht/.venv/bin/python3) - Memory: 102MB
+[2025-07-02 19:20:05] PID 86402 - Memory: 4MB, FDs: 9, Children: 1
+[2025-07-02 19:20:06] PID 86402 - Memory: 4MB, FDs: 9, Children: 1
